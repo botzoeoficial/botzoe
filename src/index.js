@@ -15,7 +15,7 @@ class BotTutorial extends Client {
 	}
 
 	login(token) {
-		token = 'ODg3NDU1NDU4OTY3ODI2NTIz.YUEZTQ.YedWTzIQfKhE3JQcQhhaR0ZPMv8';
+		token = 'ODg3NDU1NDU4OTY3ODI2NTIz.YUEZTQ.I7w4RC-EeqCIFDlOnPu5E8ZrECc';
 		return super.login(token);
 	}
 
