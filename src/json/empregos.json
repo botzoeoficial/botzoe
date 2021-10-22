@@ -1,0 +1,52 @@
+[
+    {
+        "level": "1",
+        "salario": "899",
+        "trabalho": "Jovem Aprendiz"
+    },
+    {
+        "level": "2",
+        "salario": "1750",
+        "trabalho": "Recepcionista"
+    },
+    {
+        "level": "4",
+        "salario": "2600",
+        "trabalho": "Editor"
+    },
+    {
+        "level": "6",
+        "salario": "3950",
+        "trabalho": "Jornalista"
+    },
+    {
+        "level": "8",
+        "salario": "5100",
+        "trabalho": "Professor"
+    },
+    {
+        "level": "10",
+        "salario": "7375",
+        "trabalho": "Designer"
+    },
+    {
+        "level": "13",
+        "salario": "9550",
+        "trabalho": "Gerente Geral"
+    },
+    {
+        "level": "16",
+        "salario": "11850",
+        "trabalho": "Advogado"
+    },
+    {
+        "level": "18",
+        "salario": "14000",
+        "trabalho": "Engenheiro Químico"
+    },
+    {
+        "level": "20",
+        "salario": "18350",
+        "trabalho": "Empresário"
+    }
+]

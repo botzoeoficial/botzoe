@@ -1,0 +1,19 @@
+const abbrev = require('./plugins/abbrev.js');
+const formatNumber = require('./plugins/numberFormat');
+const getRandomNumber = require('./plugins/randomNumber');
+
+module.exports = class Util {
+
+	static toAbbrev(num) {
+		return abbrev(num);
+	}
+
+	static numberFormat(num) {
+		return formatNumber(num);
+	}
+
+	static randomNumber(min, max) {
+		return getRandomNumber(min, max);
+	}
+
+};

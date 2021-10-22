@@ -1,0 +1,25 @@
+{
+  "name": "zoe",
+  "version": "1.0.0",
+  "description": "Bot feito para a TD2CÚPULA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "NathanDark#3530",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "klaw": "^3.0.0",
+    "moment": "^2.29.1",
+    "mongoose": "^5.13.3",
+    "parse-ms": "^2.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-tesseract": "github:MenuDocs/eslint-config-tesseract"
+  }
+}

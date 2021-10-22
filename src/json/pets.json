@@ -1,0 +1,182 @@
+{
+    "animais": [
+        {
+            "comum": [
+                {
+                    "img": "https://media.discordapp.net/attachments/862850292160266251/888863856888266852/si_cachorroinstagram_home.png?width=905&height=603",
+                    "nome": "Cachorro",
+                    "pet": "🐶"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888864220182114364/gato-sem-raca-INOVA-1024x683.png?width=904&height=603",
+                    "nome": "Gato",
+                    "pet": "🐱"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888885472888225842/passaros-domesticos-pet.png",
+                    "nome": "Pássaro",
+                    "pet": "🐦"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888885754279919697/cuidados-com-higiene-de-hamsters.png?width=894&height=603",
+                    "nome": "Hamster",
+                    "pet": "🐹"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888886217972785172/como-cuidar-de-coelho-1.png",
+                    "nome": "Coelho",
+                    "pet": "🐰"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888892813033500672/peixe.png",
+                    "nome": "Peixe",
+                    "pet": "🐟"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888891657230098442/images.png",
+                    "nome": "Porco",
+                    "pet": "🐷"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888892159036629032/2Q.png",
+                    "nome": "Vaca",
+                    "pet": "🐮"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888892092544344134/13-08_sapinhos_SITE.png?width=905&height=603",
+                    "nome": "Sapo",
+                    "pet": "🐸"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888892461152366592/images.png",
+                    "nome": "Cavalo",
+                    "pet": "🐴"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888890559790460968/9k.png",
+                    "nome": "Galinha",
+                    "pet": "🐓"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888890516643668008/Pato-Nadando-no-Lago-e1602638632331.png",
+                    "nome": "Pato",
+                    "pet": "🦆"
+                }
+            ],
+            "epico": [
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888894931878416435/leao-126767138.png?width=896&height=603",
+                    "nome": "Leão",
+                    "pet": "🦁"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888890888401616966/pinguim01-cke.png",
+                    "nome": "Pinguim",
+                    "pet": "🐧"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888891473943228416/mundo-urso-pardo-20181227-002-copy-1.png?width=904&height=603",
+                    "nome": "Urso",
+                    "pet": "🐻"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888891445061255199/Z.png",
+                    "nome": "Urso Polar",
+                    "pet": "🐻‍❄️"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888892597521760276/Z.png",
+                    "nome": "Lagarto",
+                    "pet": "🦎"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888893096203522078/images.png",
+                    "nome": "Zebra",
+                    "pet": "🦓"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888893420750385152/camelo_competencias_experiencia_habilidade.png?width=904&height=603",
+                    "nome": "Camelo",
+                    "pet": "🐫"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888893703828160552/2Q.png",
+                    "nome": "Canguru",
+                    "pet": "🦘"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888893757779497030/muitas-pessoas-temem-os-tubaroes-devido-agressividade-entretanto-muitas-especies-nao-sao-perigosas-5.png",
+                    "nome": "Tubarão",
+                    "pet": "🦈"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888894242506813450/images.png",
+                    "nome": "T-Rex",
+                    "pet": "🦖"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888894240413843466/australotitan_cooperensis_vladkonstantinov_scotthocknull_ceromanganaturalhistorymuseum_lowres.png",
+                    "nome": "Dinossauro",
+                    "pet": "🦕"
+                }
+            ],
+            "raro": [
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888886550996348968/panda.png",
+                    "nome": "Panda",
+                    "pet": "🐼"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888887667700404317/2Q.png",
+                    "nome": "Koala",
+                    "pet": "🐨"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888888187123036180/2Q.png",
+                    "nome": "Tigre",
+                    "pet": "🐯"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888889608014790666/macacos-daltonicos_site.png?width=905&height=603",
+                    "nome": "Macaco",
+                    "pet": "🐵"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888889948491616296/202540-004-FAD17CA7.png",
+                    "nome": "Aranha",
+                    "pet": "🕷️"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888890034407735306/115482333_gettyimages-641517806.png",
+                    "nome": "Cobra",
+                    "pet": "🐍"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888891136222035968/nas-urnas-populacao-colorado-vota-reintroducao-lobo-cinzento-conexao-planeta.png",
+                    "nome": "Lobo",
+                    "pet": "🐺"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888892431393783848/tartaruga-gigante-galapagos-conexao-planeta.png",
+                    "nome": "Tartaruga",
+                    "pet": "🐢"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888893455655403531/2Q.png",
+                    "nome": "Elefante",
+                    "pet": "🐘"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888893073487183892/captura_de_tela_2019-03-21_as_11.png?width=922&height=603",
+                    "nome": "Crocodilo",
+                    "pet": "🐊"
+                },
+                {
+                    "img": "https://media.discordapp.net/attachments/887089600726720512/888891272394330132/2Q.png",
+                    "nome": "Raposa",
+                    "pet": "🦊"
+                }
+            ]
+        }
+    ]
+}
