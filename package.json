@@ -16,7 +16,8 @@
     "klaw": "^3.0.0",
     "moment": "^2.29.1",
     "mongoose": "^5.13.3",
-    "parse-ms": "^2.1.0"
+    "parse-ms": "^2.1.0",
+    "string-progressbar": "^1.0.4"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
