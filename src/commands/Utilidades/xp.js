@@ -23,6 +23,19 @@ module.exports = class Xp extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -33,10 +46,11 @@ module.exports = class Xp extends Command {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
 		const user = await this.client.database.users.findOne({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no meu banco de dados.');
+		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
 		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 

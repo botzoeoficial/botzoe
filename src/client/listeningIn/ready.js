@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
 /* eslint-disable id-length */
@@ -9,6 +10,8 @@ const Guild = require('../../database/Schemas/Guild'),
 const c = require('colors');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
+const cron = require('node-cron');
+const Utils = require('../../utils/Util');
 
 module.exports = class Ready {
 
@@ -29,185 +32,297 @@ module.exports = class Ready {
 			type: 'WATCHING'
 		});
 
-		const random2 = Math.floor(Math.random() * 91);
+		const allUsers = await User.find({});
+		const allGuilds = await Guild.find({});
+		const allItens = await Shop.find({});
 
-		const server2 = await this.client.database.guilds.findOne({
-			_id: '830972296176992296'
+		const hasDocGuild = await Guild.find({
+			'exportador.canal': {
+				$exists: true
+			}
 		});
 
-		if (server2) {
-			server2.bolsa.valor = random2;
-			server2.bolsa.tempo = Date.now();
-			server2.save();
-		}
+		const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
+		if (!arrayCanais) return;
 
-		const allUsers = await User.find({});
+		const filtroCanais = arrayCanais.filter((item) => item !== 0);
+		if (!filtroCanais) return;
 
-		const allGuilds = await Guild.find({});
+		cron.schedule('48 */4 * * *', async () => {
+			const randomQuantia = Utils.randomNumber(50, 100);
+			const mapDroga = ['Maconha', 'Cocaína', 'LSD', 'Metanfetamina'];
+			const randomDroga = mapDroga[Math.floor(Math.random() * mapDroga.length)];
+			let tempo = 600000;
+			let atualDroga = 0;
 
-		allGuilds.forEach(async (a) => {
-			a.vip.forEach((_, index2) => {
-				if (new Date(a.vip[index2].tempo).getTime() - Date.now() > 0) {
-					setTimeout(async () => {
-						this.client.users.cache.get(a.vip[index2].id).roles.remove('830972296260485189');
+			const embed = new ClientEmbed(this.client.user)
+				.setTitle('Exportando Drogas')
+				.setDescription(`O Exportador de Drogas está precisando de **${randomQuantia}KG** de **${randomDroga}**, para levar a Europa.\n\nClique na reação 📦 para Exportar e Vender a sua Droga.`)
+				.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo))
+				.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+
+			for (let i = 0; i < arrayCanais.length; i++) {
+				try {
+					await this.client.channels.cache.get(filtroCanais[i]).send(embed).then(async (msg) => {
+						await msg.react('📦');
 
 						await this.client.database.guilds.findOneAndUpdate({
-							_id: a._id
+							_id: msg.guild.id
 						}, {
-							$pull: {
-								vip: {
-									id: a.vip[index2].id
-								}
+							$set: {
+								'exportador.precisandoQuantia': randomQuantia,
+								'exportador.precisandoDroga': randomDroga,
+								'exportador.irEmbora': tempo,
+								'exportador.quantiaQueFalta': atualDroga
 							}
 						});
-					}, new Date(a.vip[index2].tempo).getTime() - Date.now());
-				} else {
-					a.vip[index2].tempo = null;
-					// this.client.users.cache.get(a.vip[index2].id).roles.remove('830972296260485189');
+
+						const filtro = (reaction, user) => reaction.emoji.name === '📦' && user.id !== this.client.user.id;
+						const coletor = msg.createReactionCollector(filtro, {
+							time: 600000,
+							max: 10
+						});
+
+						coletor.on('collect', async (reaction2, user2) => {
+							const userAuthor = await this.client.database.users.findOne({
+								userId: user2.id,
+								guildId: msg.guild.id
+							});
+
+							let presoTime = 0;
+
+							if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+								presoTime = 36000000;
+
+								if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+									const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+									const embedPreso = new ClientEmbed(this.client.user)
+										.setTitle('👮 | Preso')
+										.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									return msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedPreso);
+								}
+							} else if (!userAuthor.isMochila) {
+								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
+									timeout: 5000
+								}));
+							} else if (!userAuthor.mochila.find((a) => a.item === randomDroga)) {
+								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui **${randomDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
+									timeout: 5000
+								}));
+							} else {
+								const randomDrogaUser = Math.floor(Math.random() * Math.min(randomQuantia, userAuthor.mochila.find((a) => a.item === randomDroga).quantia));
+
+								atualDroga += randomDrogaUser;
+
+								await this.client.database.guilds.findOneAndUpdate({
+									_id: msg.guild.id
+								}, {
+									$set: {
+										'exportador.quantiaQueFalta': atualDroga
+									}
+								});
+
+								if (atualDroga >= randomQuantia) {
+									atualDroga = randomQuantia;
+
+									await this.client.database.guilds.findOneAndUpdate({
+										_id: msg.guild.id
+									}, {
+										$set: {
+											'exportador.precisandoQuantia': 0,
+											'exportador.precisandoDroga': 'Nenhuma Droga',
+											'exportador.irEmbora': 0,
+											'exportador.quantiaQueFalta': 0
+										}
+									});
+
+									coletor.stop();
+
+									const embedTchau = new ClientEmbed(this.client.user)
+										.setTitle('Exportando Drogas')
+										.setDescription(`O exportador de drogas encheu seu lote de drogas para levar a Europa. Ele só irá voltar daqui a ${Utils.convertMS(17280000)}!`);
+
+									return msg.channel.send(embedTchau);
+								}
+
+								let valor = 0;
+
+								if (randomDroga === 'Maconha') {
+									valor = randomDrogaUser * 30;
+								} else if (randomDroga === 'Cocaína') {
+									valor = randomDrogaUser * 50;
+								} else if (randomDroga === 'LSD') {
+									valor = randomDrogaUser * 70;
+								} else if (randomDroga === 'Metanfetamina') {
+									valor = randomDrogaUser * 90;
+								}
+
+								const embedExportada = new ClientEmbed(this.client.user)
+									.setTitle('Exportando Drogas')
+									.setDescription(`<@${reaction2.users.cache.last().id}>, você repassou **${randomDrogaUser}KG** de **${randomDroga}** para o exportador, e recebeu **R$${Utils.numberFormat(valor)},00**.`);
+
+								msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedExportada).then(async (msg1) => {
+									await msg1.react('👮');
+
+									const server = await this.client.database.guilds.findOne({
+										_id: msg1.guild.id
+									});
+
+									const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+									const coletor2 = msg1.createReactionCollector(filtro2, {
+										time: 4000
+									});
+
+									coletor2.on('collect', async (reaction4, user4) => {
+										const embedPolicia = new ClientEmbed(this.client.user)
+											.setTitle('Prisão')
+											.setDescription(`Você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
+
+										msg.channel.send(embedPolicia);
+
+										atualDroga -= randomDrogaUser;
+
+										await this.client.database.guilds.findOneAndUpdate({
+											_id: msg.guild.id
+										}, {
+											$set: {
+												'exportador.quantiaQueFalta': atualDroga
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user2.id,
+											guildId: msg1.guild.id
+										}, {
+											$set: {
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.traficoDrogas': true
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user2.id,
+											guildId: msg1.guild.id,
+											'mochila.item': randomDroga
+										}, {
+											$set: {
+												'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id
+											}, {
+												$set: {
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.traficoDrogas': false
+												}
+											});
+										}, 36000000);
+									});
+
+									coletor2.on('end', async (collected, reason) => {
+										if (reason === 'time') {
+											coletor2.stop();
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id
+											}, {
+												$set: {
+													banco: userAuthor.banco + valor
+												}
+											});
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id,
+												'mochila.item': randomDroga
+											}, {
+												$set: {
+													'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+												}
+											});
+										}
+									});
+								});
+							}
+						});
+
+						coletor.on('end', async (collected, reason) => {
+							if (reason === 'time') {
+								coletor.stop();
+								msg.delete();
+
+								await this.client.database.guilds.findOneAndUpdate({
+									_id: msg.guild.id
+								}, {
+									$set: {
+										'exportador.precisandoQuantia': 0,
+										'exportador.precisandoDroga': 'Nenhuma Droga',
+										'exportador.irEmbora': 0,
+										'exportador.quantiaQueFalta': 0
+									}
+								});
+
+								return;
+							}
+						});
+
+						setInterval(async () => {
+							tempo--;
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: msg.guild.id
+							}, {
+								$set: {
+									'exportador.irEmbora': tempo
+								}
+							});
+
+							embed.fields = [];
+							embed.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo));
+							embed.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+
+							await msg.edit(embed);
+						}, 60000);
+					});
+				} catch (error) {
+					console.log(error);
 				}
-			});
-
-			a.save();
-		});
-
-		allUsers.forEach(async e => {
-			if (new Date(e.cooldown.bitcoin).getTime() - Date.now() > 0) {
-				setTimeout(() => {
-					e.save();
-				}, new Date(e.cooldown.bitcoin).getTime() - Date.now());
-			} else {
-				const user2 = await this.client.database.users.findOne({
-					_id: e._id
-				});
-
-				let valor = user2.bitcoin + Number(user2.investimento.investido);
-
-				user2.valor = valor *= 2;
-				user2.investimento.investido = 0;
-				user2.cooldown.bitcoin = null;
-				e.save();
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.fome': e.humores.fome -= 1
-						}
-					});
-					console.log('fome salva!');
-				}, 7200000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.sede': e.humores.sede -= 1
-						}
-					});
-					console.log('sede salva!');
-				}, 3600000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.bravo': e.humores.bravo -= 1
-						}
-					});
-					console.log('bravo salvo!');
-				}, 3000000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.triste': e.humores.triste -= 1
-						}
-					});
-					console.log('triste salvo!');
-				}, 10800000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.cansado': e.humores.cansado -= 1
-						}
-					});
-					console.log('cansado salvo!');
-				}, 2400000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.solitario': e.humores.solitario -= 1
-						}
-					});
-					console.log('solitário salvo!');
-				}, 4800000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.desanimado': e.humores.desanimado -= 1
-						}
-					});
-					console.log('desanimado salvo!');
-				}, 6000000);
-			} catch (err) {
-				return;
-			}
-
-			try {
-				setInterval(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						_id: e._id
-					}, {
-						$set: {
-							'humores.estressado': e.humores.estressado -= 1
-						}
-					});
-					console.log('estressado salvo!');
-				}, 5400000);
-			} catch (err) {
-				return;
 			}
 		});
+
+		// allGuilds.forEach(async (a) => {
+		// 	a.vip.forEach((_, index2) => {
+		// 		if (new Date(a.vip[index2].tempo).getTime() - Date.now() > 0) {
+		// 			setTimeout(async () => {
+		// 				this.client.users.cache.get(a.vip[index2].id).roles.remove('830972296260485189');
+
+		// 				await this.client.database.guilds.findOneAndUpdate({
+		// 					_id: a._id
+		// 				}, {
+		// 					$pull: {
+		// 						vip: {
+		// 							id: a.vip[index2].id
+		// 						}
+		// 					}
+		// 				});
+		// 			}, new Date(a.vip[index2].tempo).getTime() - Date.now());
+		// 		} else {
+		// 			a.vip[index2].tempo = null;
+		// 			// this.client.users.cache.get(a.vip[index2].id).roles.remove('830972296260485189');
+		// 		}
+		// 	});
+
+		// 	a.save();
+		// });
 
 		setInterval(async () => {
 			const random = Math.floor(Math.random() * 91);
@@ -233,204 +348,446 @@ module.exports = class Ready {
 					.addField('🕑 | Tempo para Atualização da Bolsa', `${faltam.minutes}m ${faltam.seconds}s\n\n***Faça um Bom Investimento!***`);
 
 				this.client.channels.cache.get('893472777909178369').send(embed);
-        this.client.channels.cache.get('897285158099619880').send(embed);
+				this.client.channels.cache.get('897285158099619880').send(embed);
 			}
 		}, 1200000);
 
-		const allItens = await Shop.find({});
+		allUsers.forEach(async e => {
+			if (e.cadastrado) {
+				if (!e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) > 0) {
+					await this.client.database.users.findOneAndUpdate({
+						userId: e.userId,
+						guildId: e.guildId
+					}, {
+						$set: {
+							saldo: e.banco
+						}
+					});
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: e.userId,
+						guildId: e.guildId
+					}, {
+						$set: {
+							banco: 0
+						}
+					});
+				}
+
+				if (new Date(e.cooldown.bitcoin).getTime() - Date.now() > 0) {
+					setTimeout(() => {
+						e.save();
+					}, new Date(e.cooldown.bitcoin).getTime() - Date.now());
+				} else {
+					const user2 = await this.client.database.users.findOne({
+						userId: e.userId,
+						guildId: e.guildId
+					});
+
+					let valor = user2.bitcoin + Number(user2.investimento.investido);
+
+					user2.valor = valor *= 2;
+					user2.investimento.investido = 0;
+					user2.cooldown.bitcoin = null;
+					e.save();
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.fome': e.humores.fome - 1
+							}
+						});
+						console.log('fome salva!');
+					}, 7200000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.sede': e.humores.sede - 1
+							}
+						});
+						console.log('sede salva!');
+					}, 3600000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.bravo': e.humores.bravo - 1
+							}
+						});
+						console.log('bravo salvo!');
+					}, 3000000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.triste': e.humores.triste - 1
+							}
+						});
+						console.log('triste salvo!');
+					}, 10800000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.cansado': e.humores.cansado - 1
+							}
+						});
+						console.log('cansado salvo!');
+					}, 2400000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.solitario': e.humores.solitario - 1
+							}
+						});
+						console.log('solitário salvo!');
+					}, 4800000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.desanimado': e.humores.desanimado - 1
+							}
+						});
+						console.log('desanimado salvo!');
+					}, 6000000);
+				} catch (err) {
+					return;
+				}
+
+				try {
+					setInterval(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'humores.estressado': e.humores.estressado - 1
+							}
+						});
+						console.log('estressado salvo!');
+					}, 5400000);
+				} catch (err) {
+					return;
+				}
+			}
+		});
 
 		allItens.forEach(async (e) => {
-			setInterval(async () => {
-				const server = await this.client.database.guilds.findOne({
-					_id: e._id
-				});
+			allGuilds.forEach(async (i) => {
+				setInterval(async () => {
+					const server = await this.client.database.guilds.findOne({
+						_id: i._id
+					});
 
-				const {
-					bolsa
-				} = server;
+					const {
+						bolsa
+					} = server;
 
-				const porcentagem = bolsa.valor / 100;
+					const porcentagem = bolsa.valor / 100;
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.bebidas': e.loja.bebidas[0]
-				}, {
-					$set: {
-						'loja.bebidas.$.preco': 1500 - (porcentagem * 1500)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.bebidas': e.loja.bebidas[0]
+					}, {
+						$set: {
+							'loja.bebidas.$.preco': 1500 - (porcentagem * 1500)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.bebidas': e.loja.bebidas[1]
-				}, {
-					$set: {
-						'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.bebidas': e.loja.bebidas[1]
+					}, {
+						$set: {
+							'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.bebidas': e.loja.bebidas[2]
-				}, {
-					$set: {
-						'loja.bebidas.$.preco': 1800 - (porcentagem * 1800)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.bebidas': e.loja.bebidas[2]
+					}, {
+						$set: {
+							'loja.bebidas.$.preco': 1800 - (porcentagem * 1800)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.bebidas': e.loja.bebidas[3]
-				}, {
-					$set: {
-						'loja.bebidas.$.preco': 800 - (porcentagem * 800)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.bebidas': e.loja.bebidas[3]
+					}, {
+						$set: {
+							'loja.bebidas.$.preco': 800 - (porcentagem * 800)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.bebidas': e.loja.bebidas[4]
-				}, {
-					$set: {
-						'loja.bebidas.$.preco': 1200 - (porcentagem * 1200)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.bebidas': e.loja.bebidas[4]
+					}, {
+						$set: {
+							'loja.bebidas.$.preco': 1200 - (porcentagem * 1200)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.bebidas': e.loja.bebidas[5]
-				}, {
-					$set: {
-						'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.bebidas': e.loja.bebidas[5]
+					}, {
+						$set: {
+							'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[0]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 2000 - (porcentagem * 2000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[0]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 2000 - (porcentagem * 2000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[1]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 1500 - (porcentagem * 1500)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[1]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 1500 - (porcentagem * 1500)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[2]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 900 - (porcentagem * 900)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[2]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 900 - (porcentagem * 900)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[3]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 600 - (porcentagem * 600)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[3]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 600 - (porcentagem * 600)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[4]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 1000 - (porcentagem * 1000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[4]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 1000 - (porcentagem * 1000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[5]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 1200 - (porcentagem * 1200)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[5]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 1200 - (porcentagem * 1200)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.comidas': e.loja.comidas[6]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 500 - (porcentagem * 500)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.comidas': e.loja.comidas[6]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 500 - (porcentagem * 500)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.doces': e.loja.doces[0]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 300 - (porcentagem * 300)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.doces': e.loja.doces[0]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 300 - (porcentagem * 300)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.doces': e.loja.doces[1]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 750 - (porcentagem * 750)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.doces': e.loja.doces[1]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 750 - (porcentagem * 750)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.doces': e.loja.doces[2]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 450 - (porcentagem * 450)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.doces': e.loja.doces[2]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 450 - (porcentagem * 450)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.doces': e.loja.doces[3]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 700 - (porcentagem * 700)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.doces': e.loja.doces[3]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 700 - (porcentagem * 700)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.doces': e.loja.doces[4]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 550 - (porcentagem * 550)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.doces': e.loja.doces[4]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 550 - (porcentagem * 550)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.utilidades': e.loja.utilidades[0]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 5000 - (porcentagem * 5000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.utilidades': e.loja.utilidades[0]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 50000 - (porcentagem * 50000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
-					'loja.utilidades': e.loja.utilidades[1]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 2000 - (porcentagem * 2000)
-					}
-				});
-			}, 1200000);
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.utilidades': e.loja.utilidades[1]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 2000 - (porcentagem * 2000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.utilidades': e.loja.utilidades[2]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 5000 - (porcentagem * 5000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.utilidades': e.loja.utilidades[3]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 25000 - (porcentagem * 25000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.utilidades': e.loja.utilidades[4]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 20000 - (porcentagem * 20000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.pm': e.loja.pm[0]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 2000 - (porcentagem * 2000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.pm': e.loja.pm[1]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 55000 - (porcentagem * 55000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.pm': e.loja.pm[2]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 28000 - (porcentagem * 28000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.pm': e.loja.pm[3]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 15000 - (porcentagem * 15000)
+						}
+					});
+
+					await Shop.findOneAndUpdate({
+						_id: e._id,
+						'loja.pm': e.loja.pm[4]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 25000 - (porcentagem * 25000)
+						}
+					});
+				}, 1200000);
+			});
 		});
 	}
 

@@ -23,32 +23,40 @@ module.exports = class Inventario extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
 		author,
-		args
+		args,
+		prefix
 	}) {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
 		const user = await this.client.database.users.findOne({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		});
 
-		const itens = user.inventory.map((as) => `${as.emoji} ${as.item}`);
+		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
-		const contar = (itens2) => itens2.reduce((a, b) => ({
-			...a,
-			[b]: (a[b] || 0) + 1
-		}), {});
+		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
-		// console.log(Object.entries(contar(itens)));
-		// console.log(user.inventory.indexOf('Vara de Pesca'))
+		const itens = user.inventory.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
-		const quantidade = Object.entries(contar(itens));
-		const mds = quantidade.join('\n').toString().replace(/,/g, `: `);
-
-		const total = itens.length;
+		const total = user.inventory.length;
 
 		const embed = new ClientEmbed(author)
 			.setTitle(`**Inventário de:** ${member.user.tag}`)
@@ -56,7 +64,7 @@ module.exports = class Inventario extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setDescription(`***Total de Itens:*** \`${total}\`\n\n${mds || 'Inventário vazio.'}`);
+			.setDescription(`***Total de Itens:*** \`${total}\`\n\n${itens || 'Inventário vazio.'}`);
 
 		message.channel.send(author, embed);
 	}

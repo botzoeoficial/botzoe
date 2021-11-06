@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
@@ -24,16 +25,30 @@ module.exports = class Cooldown extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
-		// trabalhar, auxilio, treinar-pet, estudar, fe
+		// trabalhar, auxilio, treinar-pet, estudar, fe, trabalho comunitário
 		const timeout = 3600000;
 		// gf
 		const timeout2 = 7200000;
@@ -41,12 +56,14 @@ module.exports = class Cooldown extends Command {
 		const timeout3 = 18000000;
 		// pescar
 		const timeout4 = 600000;
-		// beijar, abraçar, dançar
+		// beijar, abraçar, dançar, crime
 		const timeout5 = 180000;
 		// adotar
 		const timeout6 = 9000000;
 		// salario
 		const timeout7 = 86400000;
+		// roubar veículo
+		const timeout8 = 300000;
 
 		const embed = new ClientEmbed(author);
 		// trabalhar
@@ -162,6 +179,30 @@ module.exports = class Cooldown extends Command {
 			embed.addField(`🕺💃 Dançar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
 			embed.addField(`🕺💃 Dançar`, `Pode usar!`, true);
+		}
+		// trabalho comunitário
+		if (timeout - (Date.now() - user.cooldown.trabalhoComunitario) > 0) {
+			const faltam = ms(timeout - (Date.now() - user.cooldown.trabalhoComunitario));
+
+			embed.addField(`🧹 Trabalho Comunitário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`🧹 Trabalho Comunitário`, `Pode usar!`, true);
+		}
+		// crime
+		if (timeout4 - (Date.now() - user.cooldown.crime) > 0) {
+			const faltam = ms(timeout4 - (Date.now() - user.cooldown.crime));
+
+			embed.addField(`🔫 Crime`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`🔫 Crime`, `Pode usar!`, true);
+		}
+		// roubar veículo
+		if (timeout8 - (Date.now() - user.cooldown.roubarVeiculo) > 0) {
+			const faltam = ms(timeout8 - (Date.now() - user.cooldown.roubarVeiculo));
+
+			embed.addField(`🔫🚗 Roubar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`🔫🚗 Roubar Veículo`, `Pode usar!`, true);
 		}
 
 		embed.setTitle('⏲️ | COOLDOWNS');

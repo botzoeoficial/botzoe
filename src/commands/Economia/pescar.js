@@ -26,6 +26,19 @@ module.exports = class Pescar extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -33,7 +46,8 @@ module.exports = class Pescar extends Command {
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
@@ -44,11 +58,11 @@ module.exports = class Pescar extends Command {
 			const faltam = ms(timeout - (Date.now() - user.cooldown.pescar));
 
 			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 			return message.channel.send(author, embed);
 		} else {
-			const hasItem = user.inventory.find((x) => x.item.includes('Vara de Pesca'));
+			const hasItem = !user.inventory.find((x) => x.item === 'Vara de Pesca');
 
 			if (!hasItem) {
 				return message.reply('você não possui uma **Vara de Pesca** no seu inventário!');
@@ -59,15 +73,32 @@ module.exports = class Pescar extends Command {
 
 				message.channel.send(author, embed);
 
-				const findVara = user.inventory.findIndex(({
-					item
-				}) => item === 'Vara de Pesca');
-
-				user.inventory.splice(findVara, 1);
-				user.save();
+				if (user.inventory.find((x) => x.item === 'Vara de Pesca')) {
+					if (user.inventory.find((x) => x.item === 'Vara de Pesca').quantidade <= 1) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$pull: {
+								'inventory.$.item': 'Vara de Pesca'
+							}
+						});
+					} else {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id,
+							'inventory.item': 'Vara de Pesca'
+						}, {
+							$set: {
+								'inventory.$.quantia': user.inventory.find((x) => x.item === 'Vara de Pesca').quantidade - 1
+							}
+						});
+					}
+				}
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'humores.estressado': user.humores.estressado += 50,
@@ -76,7 +107,8 @@ module.exports = class Pescar extends Command {
 				});
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'cooldown.pescar': Date.now()

@@ -30,6 +30,16 @@ module.exports = class Cadastrar extends Command {
 		this.governador = false;
 		this.delegado = false;
 		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -37,7 +47,8 @@ module.exports = class Cadastrar extends Command {
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (user.cadastrado) {
@@ -69,6 +80,8 @@ module.exports = class Cadastrar extends Command {
 					msg2.delete();
 				} else {
 					collector.stop();
+
+					msg.delete();
 					embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie seu **GÊNERO** no chat!\n\n**GÊNEROS DISPONÍVEIS:**\n\`Masculino\`\n\`Feminino\`\n`);
 					embed.addField('Nome Verdadeiro:', msg2.content, true);
 
@@ -98,12 +111,7 @@ module.exports = class Cadastrar extends Command {
 							} else {
 								collector2.stop();
 
-								if (msg4.content.toLowerCase() === 'masculino') {
-									message.member.roles.add('830972296226144286');
-								} else if (msg4.content.toLowerCase() === 'feminino') {
-									message.member.roles.add('830972296214085671');
-								}
-
+								msg3.delete();
 								embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **IDADE** no chat!`);
 								embed.addField('Gênero:', await this.capitalize(msg4.content), true);
 
@@ -133,12 +141,7 @@ module.exports = class Cadastrar extends Command {
 										} else {
 											collector3.stop();
 
-											if (msg6.content <= '17') {
-												message.member.roles.add('830972296214085667');
-											} else if (msg6.content >= '18') {
-												message.member.roles.add('830972296214085668');
-											}
-
+											msg5.delete();
 											embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **ORIENTAÇÃO SEXUAL** no chat!\n\n**ORIENTAÇÕES SEXUAIS DISPONÍVEIS:**\n\`Não Binário\`\n\`Hétero\`\n\`LGBT\`\n`);
 											embed.addField('Idade:', msg6.content, true);
 
@@ -168,14 +171,7 @@ module.exports = class Cadastrar extends Command {
 													} else {
 														collector4.stop();
 
-														if (msg8.content.toLowerCase() === 'não binário') {
-															message.member.roles.add('830972296214085664');
-														} else if (msg8.content.toLowerCase() === 'hétero') {
-															message.member.roles.add('830972296214085666');
-														} else if (msg8.content.toLowerCase() === 'lgbt') {
-															message.member.roles.add('830972296214085665');
-														}
-
+														msg7.delete();
 														embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **PLATAFORMA DE JOGO** no chat!\n\n**PLATAFORMAS DISPONÍVEIS:**\n\`Pc\`\n\`Celular\`\n\`Pc/Celular\``);
 														embed.addField('Orientação Sexual:', await this.capitalize(msg8.content), true);
 
@@ -205,15 +201,7 @@ module.exports = class Cadastrar extends Command {
 																} else {
 																	collector5.stop();
 
-																	if (msg10.content.toLowerCase() === 'pc') {
-																		message.member.roles.add('830972296214085662');
-																	} else if (msg10.content.toLowerCase() === 'celular') {
-																		message.member.roles.add('830972296197570579');
-																	} else if (msg10.content.toLowerCase() === 'pc/celular') {
-																		message.member.roles.add('830972296214085662');
-																		message.member.roles.add('830972296197570579');
-																	}
-
+																	msg9.delete();
 																	embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **REGIÃO** no chat!\n\n**REGIÕES DISPONÍVEIS:**\n\`Nordeste\`\n\`Norte\`\n\`Sudeste\`\n\`Sul\`\n\`Centro-Oeste\`\n`);
 																	embed.addField('Plataforma de Jogo:', await this.capitalize(msg10.content), true);
 
@@ -243,18 +231,7 @@ module.exports = class Cadastrar extends Command {
 																			} else {
 																				collector6.stop();
 
-																				if (msg12.content.toLowerCase() === 'nordeste') {
-																					message.member.roles.add('830972296197570571');
-																				} else if (msg12.content.toLowerCase() === 'norte') {
-																					message.member.roles.add('830972296197570570');
-																				} else if (msg12.content.toLowerCase() === 'sudeste') {
-																					message.member.roles.add('830972296176992305');
-																				} else if (msg12.content.toLowerCase() === 'sul') {
-																					message.member.roles.add('830972296176992304');
-																				} else if (msg12.content.toLowerCase() === 'centro-oeste') {
-																					message.member.roles.add('830972296176992303');
-																				}
-
+																				msg11.delete();
 																				embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie seu **ID** no chat!\n`);
 																				embed.addField('Região:', await this.capitalize(msg12.content), true);
 
@@ -284,6 +261,7 @@ module.exports = class Cadastrar extends Command {
 																						} else {
 																							collector7.stop();
 
+																							msg13.delete();
 																							embed.setDescription(`Muito bem ${author}, agora para terminarmos, eu preciso que você envie sua **DATA DE NASCIMENTO** no chat!\n`);
 																							embed.addField('ID:', msg14.content, true);
 
@@ -310,12 +288,19 @@ module.exports = class Cadastrar extends Command {
 																									} else {
 																										collector9.stop();
 
+																										msg17.delete();
 																										embed.fields = [];
 																										embed.setDescription(`***CADASTRO TERMINADO!***\n\nUse o comando \`${prefix}cadastro\` para ver suas informações!`);
 
-																										message.channel.send(author, embed);
+																										message.channel.send(author, embed).then(async (as) => {
+																											await as.delete({
+																												timeout: 6000
+																											});
+																										});
+
 																										await this.client.database.users.findOneAndUpdate({
-																											_id: author.id
+																											userId: author.id,
+																											guildId: message.guild.id
 																										}, {
 																											$set: {
 																												nick: message.member.nickname || author.username,
@@ -326,10 +311,20 @@ module.exports = class Cadastrar extends Command {
 																												orientacaoSexual: await this.capitalize(msg8.content),
 																												plataformaJogo: await this.capitalize(msg10.content),
 																												regiao: await this.capitalize(msg12.content),
-																												funcao: `<@&${message.member.roles.highest.id}>`,
+																												funcao: 'Não pertence a nenhuma Facção.',
 																												aniversario: msg18.content
 																											}
 																										});
+
+																										await msg2.delete();
+																										await msg4.delete();
+																										await msg6.delete();
+																										await msg8.delete();
+																										await msg10.delete();
+																										await msg12.delete();
+																										await msg14.delete();
+																										await msg18.delete();
+																										await message.delete();
 																									}
 																								});
 

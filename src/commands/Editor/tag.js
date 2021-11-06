@@ -22,14 +22,37 @@ module.exports = class Tag extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
-		args
+		args,
+		prefix
 	}) {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+
+		const user = await this.client.database.users.findOne({
+			userId: member.id,
+			guildId: message.guild.id
+		});
+
+		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+
+		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
 		const tag = message.mentions.roles.first() || message.guild.roles.cache.get(args[1]);
 
@@ -40,7 +63,8 @@ module.exports = class Tag extends Command {
 		member.roles.add(tag.id);
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		}, {
 			$push: {
 				eventos: tag

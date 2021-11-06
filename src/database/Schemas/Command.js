@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const {
+	Schema
+} = mongoose;
 
 const commandSchema = new Schema({
 	_id: {

@@ -26,6 +26,19 @@ module.exports = class BlackList extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -73,7 +86,7 @@ module.exports = class BlackList extends Command {
 		const embed = new ClientEmbed(author)
 			.setTitle('🚫 | BlackList');
 
-		eventosArray.forEach((eu) => embedMessage += `[${emojis[eu.position + 1]}] **Usuário:** ${eu.nick} | **ID:** ${eu.id}\n`);
+		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Usuário:** ${eu.nick} | **ID:** ${eu.id}\n`);
 		embed.setDescription(!server.blacklist.length ? 'Não há usuários cadastrados na blacklist no momento.' : `**DIGITE A POSIÇÃO DO USUÁRIO NO CHAT PARA VER INFORMAÇÕES SOBRE ELE!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {
@@ -121,7 +134,9 @@ module.exports = class BlackList extends Command {
 			sim.on('end', (collected, reason) => {
 				if (reason === 'time') {
 					msg.delete();
-					message.reply(`você demorou demais para escolher o usuário da blacklist! Use o comando novamente!`);
+					message.reply(`você demorou demais para escolher o usuário da blacklist! Use o comando novamente!`).then((a) => a.delete({
+						timeout: 6000
+					}));
 					sim.stop();
 					return;
 				}

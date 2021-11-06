@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
@@ -25,6 +26,19 @@ module.exports = class Minerar extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -32,35 +46,224 @@ module.exports = class Minerar extends Command {
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
 
-		const timeout = 18000000;
+		const userAuthor = await this.client.database.users.findOne({
+			userId: author.id,
+			guildId: message.guild.id
+		});
 
-		if (timeout - (Date.now() - user.cooldown.minerar) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.minerar));
+		let presoTime = 0;
 
-			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+		if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+			presoTime = 36000000;
 
-			return message.channel.send(author, embed);
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.prender) {
+			presoTime = 43200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de roubo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.revistar) {
+			presoTime = 21600000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por inventário irregular.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.roubarVeiculo) {
+			presoTime = 180000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um veículo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.velha) {
+			presoTime = 300000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Senhora.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.frentista) {
+			presoTime = 600000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Frentista.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.joalheria) {
+			presoTime = 900000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Joalheria.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.agiota) {
+			presoTime = 1200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Agiota.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.casaLoterica) {
+			presoTime = 1200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Casa Lotérica.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.brazino) {
+			presoTime = 2100000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Brazino777.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.facebook) {
+			presoTime = 2700000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Facebook.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.bancoCentral) {
+			presoTime = 3600000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Banco Central.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.shopping) {
+			presoTime = 7200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Shopping Center.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.banco) {
+			presoTime = 14400000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Banco.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
 		} else {
-			const embed = new ClientEmbed(author)
-				.setTitle('MINERAÇÃO')
-				.setDescription(`💻 | Você minerou \`1\` bitcoin 🪙`);
+			const timeout = 18000000;
 
-			message.channel.send(author, embed);
+			if (timeout - (Date.now() - user.cooldown.minerar) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.minerar));
 
-			await this.client.database.users.findOneAndUpdate({
-				_id: author.id
-			}, {
-				$set: {
-					bitcoin: user.bitcoin += 1,
-					'cooldown.minerar': Date.now()
-				}
-			});
+				const embed = new ClientEmbed(author)
+					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			} else {
+				const embed = new ClientEmbed(author)
+					.setTitle('MINERAÇÃO')
+					.setDescription(`💻 | Você minerou \`1\` bitcoin 🪙`);
+
+				message.channel.send(author, embed);
+
+				const authorAll = await this.client.database.users.find({
+					userId: message.author.id
+				});
+
+				authorAll.forEach(async (as) => {
+					if (as.cadastrado) {
+						as.bitcoin = as.bitcoin += 1;
+						as.save();
+					}
+				});
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.minerar': Date.now()
+					}
+				});
+			}
 		}
 	}
 

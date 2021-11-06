@@ -24,6 +24,19 @@ module.exports = class Missoes extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -57,7 +70,7 @@ module.exports = class Missoes extends Command {
 		const embed = new ClientEmbed(author)
 			.setTitle('🔰 | Missões Disponíveis:');
 
-		eventosArray.forEach((eu) => embedMessage += `[${emojis[eu.position + 1]}] **Missão:** ${eu.nome}\n`);
+		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Missão:** ${eu.nome}\n`);
 		embed.setDescription(!server.missoes.length ? 'Não há missões cadastradas no momento.' : `**DIGITE A POSIÇÃO DA MISSÃO NO CHAT PARA VER INFORMAÇÕES SOBRE ELA!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {

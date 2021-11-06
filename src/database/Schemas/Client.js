@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const {
+	Schema
+} = mongoose;
 
 const clientSchema = new Schema({
 	_id: {
@@ -10,7 +12,8 @@ const clientSchema = new Schema({
 		default: false
 	},
 	reason: {
-		type: String
+		type: String,
+		default: ''
 	}
 });
 

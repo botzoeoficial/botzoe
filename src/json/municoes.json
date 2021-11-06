@@ -1,0 +1,23 @@
+[
+    {
+        "aluminio": 45,
+        "borracha": 30,
+        "cobre": 25,
+        "municao": "Munição Metralhadora",
+        "img": "<:balaassalto:905653521846784080>"
+    },
+    {
+        "aluminio": 25,
+        "borracha": 20,
+        "cobre": 15,
+        "municao": "Munição Pistola",
+        "img": "<:bala:905653668643241985>"
+    },
+    {
+        "aluminio": 35,
+        "borracha": 35,
+        "cobre": 35,
+        "municao": "Munição KNT",
+        "img": "<:balasniper:905653583171706980>"
+    }
+]

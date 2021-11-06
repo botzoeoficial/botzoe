@@ -27,6 +27,19 @@ module.exports = class Dançar extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -35,7 +48,8 @@ module.exports = class Dançar extends Command {
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
@@ -46,7 +60,7 @@ module.exports = class Dançar extends Command {
 			const faltam = ms(timeout - (Date.now() - user.cooldown.dancar));
 
 			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 			return message.channel.send(author, embed);
 		} else {
@@ -59,12 +73,13 @@ module.exports = class Dançar extends Command {
 			if (member.user === member.user.bot) return message.reply('você não pode dançar com um bot!');
 
 			const user2 = await this.client.database.users.findOne({
-				_id: member.id
+				userId: member.id,
+				guildId: message.guild.id
 			});
 
-			if (!user2) return message.reply('não achei esse usuário no meu **banco de dados**.');
+			if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
-			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado! Mande ele usar o comando \`${prefix}cadastrar\`.`);
+			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
 			const embed = new ClientEmbed(author)
 				.setTitle('👯 | PEDIDO DE DANÇA')
@@ -94,18 +109,14 @@ module.exports = class Dançar extends Command {
 					const random = Math.floor(Math.random() * dancas.length);
 
 					const embedSim = new ClientEmbed(author)
-						.setTitle('👯 | PEDIDO ACEITO')
-						.setThumbnail(author.displayAvatarURL({
-							dynamic: true,
-							format: 'png'
-						}))
-						.setDescription(`${author} dançou com o usuário ${member}!`)
+						.setDescription(`**${author} dançou com ${member}!**`)
 						.setImage(dancas[random]);
 
 					message.channel.send(`${author} e ${member}`, embedSim);
 
 					await this.client.database.users.findOneAndUpdate({
-						_id: author.id
+						userId: author.id,
+						guildId: message.guild.id
 					}, {
 						$set: {
 							'cooldown.dancar': Date.now()
@@ -113,17 +124,18 @@ module.exports = class Dançar extends Command {
 					});
 
 					await this.client.database.users.findOneAndUpdate({
-						_id: author.id
+						userId: author.id,
+						guildId: message.guild.id
 					}, {
 						$set: {
-							'humores.estressado': user.humores.estressado += 30,
-							'humores.bravo': user.humores.bravo += 30,
-							'humores.fome': user.humores.fome -= 40,
-							'humores.sede': user.humores.sede -= 20,
-							'humores.desanimado': user.humores.desanimado += 20,
-							'humores.cansado': user.humores.cansado -= 40,
-							'humores.solitario': user.humores.solitario += 50,
-							'humores.triste': user.humores.triste += 40
+							'humores.estressado': user.humores.estressado + 30,
+							'humores.bravo': user.humores.bravo + 30,
+							'humores.fome': user.humores.fome - 40,
+							'humores.sede': user.humores.sede - 20,
+							'humores.desanimado': user.humores.desanimado + 20,
+							'humores.cansado': user.humores.cansado - 40,
+							'humores.solitario': user.humores.solitario + 50,
+							'humores.triste': user.humores.triste + 40
 						}
 					});
 				});

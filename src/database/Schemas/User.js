@@ -4,7 +4,10 @@ const {
 } = mongoose;
 
 const userSchema = new Schema({
-	_id: {
+	userId: {
+		type: String
+	},
+	guildId: {
 		type: String
 	},
 	nick: {
@@ -103,6 +106,14 @@ const userSchema = new Schema({
 		emoji: {
 			type: Number,
 			default: ''
+		},
+		id: {
+			type: String,
+			default: ''
+		},
+		quantia: {
+			type: Number,
+			default: 0
 		}
 	},
 	familia: {
@@ -181,6 +192,34 @@ const userSchema = new Schema({
 		salario: {
 			type: Number,
 			default: 0
+		},
+		apostar: {
+			type: Number,
+			default: 0
+		},
+		usarApostar: {
+			type: Number,
+			default: 0
+		},
+		crime: {
+			type: Number,
+			default: 0
+		},
+		trabalhoComunitario: {
+			type: Number,
+			default: 0
+		},
+		roubarVeiculo: {
+			type: Number,
+			default: 0
+		},
+		roubar: {
+			type: Number,
+			default: 0
+		},
+		garimpar: {
+			type: Number,
+			default: 0
 		}
 	},
 	pets: {
@@ -207,6 +246,10 @@ const userSchema = new Schema({
 		type: Number,
 		default: 0
 	},
+	usarApostar: {
+		type: Number,
+		default: 0
+	},
 	emprego: {
 		type: String,
 		default: 'Desempregado'
@@ -224,14 +267,14 @@ const userSchema = new Schema({
 	humores: {
 		type: Object,
 		default: {
-			fome: 100,
-			sede: 100,
-			bravo: 100,
-			triste: 100,
-			cansado: 100,
-			solitario: 100,
-			estressado: 100,
-			desanimado: 100
+			fome: 150,
+			sede: 150,
+			bravo: 150,
+			triste: 150,
+			cansado: 150,
+			solitario: 150,
+			estressado: 150,
+			desanimado: 150
 		}
 	},
 	estudos: {
@@ -262,6 +305,368 @@ const userSchema = new Schema({
 		geografia: {
 			type: Number,
 			default: 0
+		}
+	},
+	policia: {
+		isPolice: {
+			type: Boolean,
+			default: false
+		},
+		prender: {
+			type: Number,
+			default: 0
+		},
+		revistar: {
+			type: Number,
+			default: 0
+		},
+		isFolga: {
+			type: Boolean,
+			default: false
+		}
+	},
+	prisao: {
+		isPreso: {
+			type: Boolean,
+			default: false
+		},
+		tempo: {
+			type: Number,
+			default: 0
+		},
+		traficoDrogas: {
+			type: Boolean,
+			default: false
+		},
+		crime: {
+			type: Boolean,
+			default: false
+		},
+		prender: {
+			type: Boolean,
+			default: false
+		},
+		revistar: {
+			type: Boolean,
+			default: false
+		},
+		roubarVeiculo: {
+			type: Boolean,
+			default: false
+		},
+		velha: {
+			type: Boolean,
+			default: false
+		},
+		frentista: {
+			type: Boolean,
+			default: false
+		},
+		joalheria: {
+			type: Boolean,
+			default: false
+		},
+		agiota: {
+			type: Boolean,
+			default: false
+		},
+		casaLoterica: {
+			type: Boolean,
+			default: false
+		},
+		brazino: {
+			type: Boolean,
+			default: false
+		},
+		facebook: {
+			type: Boolean,
+			default: false
+		},
+		bancoCentral: {
+			type: Boolean,
+			default: false
+		},
+		shopping: {
+			type: Boolean,
+			default: false
+		},
+		banco: {
+			type: Boolean,
+			default: false
+		}
+	},
+	fac: {
+		isFac: {
+			type: Boolean,
+			default: false
+		},
+		createFac: {
+			type: Boolean,
+			default: false
+		},
+		nome: {
+			type: String,
+			default: ''
+		},
+		dono: {
+			type: String,
+			default: ''
+		},
+		level: {
+			type: Number,
+			default: 1
+		},
+		cargos: {
+			type: Array,
+			default: [],
+			nome: {
+				type: String,
+				default: ''
+			}
+		},
+		membros: {
+			type: Array,
+			default: []
+		},
+		money: {
+			type: Number,
+			default: 0
+		},
+		xp: {
+			type: Number,
+			default: 0
+		},
+		lastWork: {
+			type: Number,
+			default: 0
+		},
+		emprego: {
+			nome: {
+				type: String,
+				default: ''
+			},
+			numero: {
+				type: Number,
+				default: 0
+			}
+		},
+		registro: {
+			type: Array,
+			default: [],
+			tempo: {
+				type: Number,
+				default: 0
+			},
+			money: {
+				type: Number,
+				default: 0
+			},
+			xp: {
+				type: Number,
+				default: 0
+			}
+		}
+	},
+	crime: {
+		reputacao: {
+			type: Number,
+			default: 0
+		},
+		feito: {
+			type: Number,
+			default: 0
+		},
+		dinheiro: {
+			type: Number,
+			default: 0
+		}
+	},
+	isMochila: {
+		type: Boolean,
+		default: false
+	},
+	mochila: {
+		type: Array,
+		default: [],
+		item: {
+			type: String,
+			default: ''
+		},
+		emoji: {
+			type: Number,
+			default: ''
+		},
+		id: {
+			type: String,
+			default: ''
+		},
+		quantia: {
+			type: Number,
+			default: 0
+		}
+	},
+	garagem: {
+		type: Array,
+		default: [],
+		nome: {
+			type: String,
+			default: ''
+		},
+		modelo: {
+			type: String,
+			default: ''
+		},
+		valor: {
+			type: Number,
+			default: 0
+		},
+		danificado: {
+			type: Number,
+			default: 0
+		},
+		velocidade: {
+			type: Number,
+			default: 0
+		},
+		cavalos: {
+			type: Number,
+			default: 0
+		},
+		peso: {
+			type: Number,
+			default: 0
+		},
+		desmanche: {
+			type: Number,
+			default: 0
+		},
+		dono: {
+			type: String,
+			default: ''
+		},
+		img: {
+			type: String,
+			default: ''
+		},
+		mecanica: {
+			type: Boolean,
+			default: false
+		},
+		arrumado: {
+			type: Boolean,
+			default: false
+		},
+		emplacado: {
+			type: Boolean,
+			default: false
+		},
+		liberado: {
+			type: Boolean,
+			default: false
+		}
+	},
+	fabricagem: {
+		fabricandoArma: {
+			type: Boolean,
+			default: false
+		},
+		fabricandoDroga: {
+			type: Boolean,
+			default: false
+		},
+		fabricandoChaves: {
+			type: Boolean,
+			default: false
+		},
+		fabricandoMunicao: {
+			type: Boolean,
+			default: false
+		},
+		armas: {
+			tempo: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			nome: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			}
+		},
+		drogas: {
+			tempo: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			nome: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			}
+		},
+		chaves: {
+			tempo: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			nome: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			}
+		},
+		municoes: {
+			tempo: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			nome: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			}
+		}
+	},
+	armaEquipada: {
+		type: String,
+		default: 'Nenhuma arma equipada.'
+	},
+	payBank: {
+		cooldown: {
+			type: Number,
+			default: 0
+		},
+		sucess: {
+			type: Boolean,
+			default: false
 		}
 	}
 });

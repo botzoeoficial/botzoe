@@ -26,6 +26,19 @@ module.exports = class Auxilio extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -33,7 +46,8 @@ module.exports = class Auxilio extends Command {
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
@@ -44,7 +58,7 @@ module.exports = class Auxilio extends Command {
 			const faltam = ms(timeout - (Date.now() - user.cooldown.auxilio));
 
 			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 			return message.channel.send(author, embed);
 		} else {
@@ -57,7 +71,8 @@ module.exports = class Auxilio extends Command {
 			message.channel.send(author, embed);
 
 			await this.client.database.users.findOneAndUpdate({
-				_id: author.id
+				userId: author.id,
+				guildId: message.guild.id
 			}, {
 				$set: {
 					saldo: user.saldo += Number(random),

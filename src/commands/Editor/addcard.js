@@ -26,6 +26,19 @@ module.exports = class Addcard extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -59,6 +72,13 @@ module.exports = class Addcard extends Command {
 					return message.channel.send(`${author}, você cancelou o cadastro de um **card** com sucesso!`);
 				}
 
+				if (isNaN(re.content)) {
+					message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**!`).then((a) => a.delete({
+						timeout: 5000
+					}));
+					re.delete();
+				}
+
 				collector.stop();
 
 				embed.addField('🦉 Valor Zoe:', `R$${Utils.numberFormat(Number(re.content))},00`);
@@ -76,81 +96,32 @@ module.exports = class Addcard extends Command {
 							return message.channel.send(`${author}, você cancelou o cadastro de um **card** com sucesso!`);
 						}
 
+						if (isNaN(re2.content)) {
+							message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**!`).then((a) => a.delete({
+								timeout: 5000
+							}));
+							re2.delete();
+						}
+
 						collector1.stop();
 
 						embed.addField('🪙 BitCoins:', `${Utils.numberFormat(Number(re2.content))}`);
-						embed.setDescription('💸 | Qual Valor você deseja Adicionar na Alfacusa?');
+						embed.setDescription('***CÓDIGO CADASTRADO COM SUCESSO!***');
 
-						message.channel.send(author, embed).then((msg2) => {
-							const collector2 = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
-								time: 60000
-							});
+						message.channel.send(author, embed);
 
-							collector2.on('collect', async (re3) => {
-								if (re3.content.toLowerCase() === 'cancelar') {
-									collector2.stop();
-									msg2.delete();
-									return message.channel.send(`${author}, você cancelou o cadastro de um **card** com sucesso!`);
+						return await this.client.database.guilds.findOneAndUpdate({
+							_id: message.guild.id
+						}, {
+							$push: {
+								card: {
+									codigo: card,
+									valorZoe: Number(re.content),
+									valorBtc: Number(re2.content),
+									ativado: false,
+									ativadoPor: 'Ninguém.'
 								}
-
-								collector2.stop();
-
-								embed.addField('💸 Valor Alfacusa:', `R$${Utils.numberFormat(Number(re3.content))}`);
-								embed.setDescription('👩‍🦰 | Quantos sonhos da Loritta você deseja Adicionar?');
-
-								message.channel.send(author, embed).then((msg3) => {
-									const collector3 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
-										time: 60000
-									});
-
-									collector3.on('collect', async (re4) => {
-										if (re4.content.toLowerCase() === 'cancelar') {
-											collector3.stop();
-											msg3.delete();
-											return message.channel.send(`${author}, você cancelou o cadastro de um **card** com sucesso!`);
-										}
-
-										collector3.stop();
-
-										embed.addField('👩‍🦰 Sonhos da Loritta:', `${Utils.numberFormat(Number(re4.content))}`);
-										embed.setDescription('***CÓDIGO CADASTRADO COM SUCESSO!***');
-
-										message.channel.send(author, embed);
-
-										return await this.client.database.guilds.findOneAndUpdate({
-											_id: message.guild.id
-										}, {
-											$push: {
-												card: {
-													codigo: card,
-													valorZoe: Number(re.content),
-													valorAlfa: Number(re3.content),
-													valorBtc: Number(re2.content),
-													valorSonhos: Number(re4.content),
-													ativado: false,
-													ativadoPor: 'Ninguém.'
-												}
-											}
-										});
-									});
-
-									collector3.on('end', async (collected, reason) => {
-										if (reason === 'time') {
-											collector3.stop();
-											msg3.delete();
-											return message.channel.send(`${author}, você demorou demais para responder! Use o comando novamente!`);
-										}
-									});
-								});
-							});
-
-							collector2.on('end', async (collected, reason) => {
-								if (reason === 'time') {
-									collector2.stop();
-									msg2.delete();
-									return message.channel.send(`${author}, você demorou demais para responder! Use o comando novamente!`);
-								}
-							});
+							}
 						});
 					});
 

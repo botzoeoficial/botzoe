@@ -25,6 +25,19 @@ module.exports = class Eventosdiv extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -60,7 +73,7 @@ module.exports = class Eventosdiv extends Command {
 		const embed = new ClientEmbed(author)
 			.setTitle('🎉 | Eventos Disponíveis:');
 
-		eventosArray.forEach((eu) => embedMessage += `[${emojis[eu.position + 1]}] **Evento:** ${eu.nome} | **Data:** ${eu.date} | **Hora:** ${eu.hour} | **Tag:** <@&${eu.tag}>\n`);
+		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Evento:** ${eu.nome} | **Data:** ${eu.date} | **Hora:** ${eu.hour} | **Tag:** <@&${eu.tag}>\n`);
 		embed.setDescription(!server.eventos.length ? 'Não há eventos cadastrados no momento.' : `**DIGITE A POSIÇÃO DO EVENTO NO CHAT PARA ANUNCIAR ELE!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {

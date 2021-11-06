@@ -24,6 +24,19 @@ module.exports = class Transferir extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -32,7 +45,8 @@ module.exports = class Transferir extends Command {
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
@@ -40,10 +54,11 @@ module.exports = class Transferir extends Command {
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
 		const user2 = await this.client.database.users.findOne({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		});
 
-		if (!user2) return message.reply('não achei esse usuário no meu **banco de dados**.');
+		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
 		if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
@@ -51,9 +66,9 @@ module.exports = class Transferir extends Command {
 
 		if (!parseInt(btc)) return message.reply('você precisa colocar uma quantia válida.');
 
-		if (parseInt(btc) <= 0) return message.reply('a quantia a ser adicionada precisa ser maior que **0**.');
+		if (parseInt(btc) <= 0 || parseInt(btc) > 500000) return message.reply('a quantia a ser adicionada precisa ser maior que **R$0,00** e menor que **R$500.00,00**.');
 
-    if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
 
 		if (user.saldo <= 0) return message.reply('sua carteira está negativa ou está zerada, por tanto, não dá para transferir dinheiro.');
 
@@ -66,7 +81,8 @@ module.exports = class Transferir extends Command {
 		message.channel.send(author, embed);
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		}, {
 			$set: {
 				saldo: user.saldo -= Number(btc)
@@ -74,7 +90,8 @@ module.exports = class Transferir extends Command {
 		});
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		}, {
 			$set: {
 				banco: user2.banco += Number(btc)

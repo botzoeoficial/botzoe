@@ -27,6 +27,19 @@ module.exports = class Ajuda extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -73,13 +86,17 @@ module.exports = class Ajuda extends Command {
 			const HELP = new ClientEmbed(author)
 				.setAuthor(`Central de Ajuda - ${this.client.user.username}`, this.client.user.displayAvatarURL())
 				.setDescription(`${message.author.username}, menu de ajuda da **${this.client.user.tag}**.\n\nOBS: Caso queira saber mais sobre algum comando, use: **\`${prefix}ajuda <comando/aliases>\`**.`)
-				.setThumbnail(this.client.user.displayAvatarURL())
-				.addField('😎 Dono', comandos('Dono').map((comando) => `\`${comando.name}\``).join(', '))
-				.addField('⚙️ Editor', comandos('Editor').map((comando) => `\`${comando.name}\``).join(', '))
-				.addField('💸 Economia', comandos('Economia').map((comando) => `\`${comando.name}\``).join(', '))
-				.addField('🗣️ Social', comandos('Social').map((comando) => `\`${comando.name}\``).join(', '))
-				.addField('🔔 Utilidades', comandos('Utilidades').map((comando) => `\`${comando.name}\``).join(', '))
-				.addField('💎 Vip Doador', comandos('Vip').map((comando) => `\`${comando.name}\``).join(', '));
+				.addField(`👑 Dono [${comandos('Dono').size}]`, comandos('Dono').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`⚙️ Editor [${comandos('Editor').size}]`, comandos('Editor').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`💸 Economia [${comandos('Economia').size}]`, comandos('Economia').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`🗣️ Social [${comandos('Social').size}]`, comandos('Social').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`🔔 Utilidades [${comandos('Utilidades').size}]`, comandos('Utilidades').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`💎 Premium [${comandos('Vip').size}]`, comandos('Vip').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`🌆 Cidade [${comandos('Cidade').size}]`, comandos('Cidade').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`🕵️ Delegado [${comandos('Delegado').size}]`, comandos('Delegado').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`👮‍♂️ Policial [${comandos('Policial').size}]`, comandos('Policial').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`<:preso:899431985980796959> Crime [${comandos('Crime').size}]`, comandos('Crime').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`🧑‍🔧 Mecânico [${comandos('Mecanico').size}]`, comandos('Mecanico').map((comando) => `\`${comando.name}\``).join(', '));
 
 			return message.channel.send(author, HELP);
 		}

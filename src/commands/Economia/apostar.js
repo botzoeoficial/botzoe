@@ -4,6 +4,7 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const Emojis = require('../../utils/Emojis');
+const ms = require('parse-ms');
 
 module.exports = class Apostar extends Command {
 
@@ -29,6 +30,16 @@ module.exports = class Apostar extends Command {
 		this.governador = false;
 		this.delegado = false;
 		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -37,8 +48,42 @@ module.exports = class Apostar extends Command {
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
+
+		const timeoutApostar = 1200000;
+
+		if (timeoutApostar - (Date.now() - user.cooldown.usarApostar) > 0) {
+			const faltam = ms(timeoutApostar - (Date.now() - user.cooldown.usarApostar));
+
+			const embed = new ClientEmbed(author)
+				.setDescription(`🕐 | Você está muito viciado em apostas, vai acabar falindo. Respire um pouco e se quiser aposte novamente em: \`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+			return message.channel.send(author, embed);
+		} else {
+			await this.client.database.users.findOneAndUpdate({
+				userId: author.id,
+				guildId: message.guild.id
+			}, {
+				$set: {
+					usarApostar: user.usarApostar += 1
+				}
+			});
+
+			if (user.usarApostar === 4) {
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						usarApostar: 0,
+						'cooldown.usarApostar': Date.now(),
+						'cooldown.apostar': Date.now()
+					}
+				});
+			}
+		}
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
@@ -49,10 +94,11 @@ module.exports = class Apostar extends Command {
 		if (member.user === member.user.bot) return message.reply('você não pode apostar com um bot!');
 
 		const user2 = await this.client.database.users.findOne({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		});
 
-		if (!user2) return message.reply('não achei esse usuário no meu **banco de dados**.');
+		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
 		if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
@@ -66,7 +112,7 @@ module.exports = class Apostar extends Command {
 
 		if (parseInt(btc) > 100000) return message.reply('a quantia precisa ser abaixo de **R$100.000,00**');
 
-    if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
 
 		if (parseInt(btc) > user.banco) return message.reply('você não tem esse saldo todo no banco para ser apostado!');
 
@@ -90,7 +136,8 @@ module.exports = class Apostar extends Command {
 
 			sim.on('collect', async () => {
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						banco: user.banco -= Number(btc)
@@ -98,7 +145,8 @@ module.exports = class Apostar extends Command {
 				});
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: member.id
+					userId: member.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						banco: user2.banco -= Number(btc)
@@ -137,7 +185,8 @@ module.exports = class Apostar extends Command {
 							.addField('Prêmio:', `**R$${Utils.numberFormat(Number(btc * 2))},00**`);
 
 						await this.client.database.users.findOneAndUpdate({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						}, {
 							$set: {
 								banco: user.banco += Number(btc * 2)
@@ -151,7 +200,8 @@ module.exports = class Apostar extends Command {
 							.addField('Prêmio:', `**R$${Utils.numberFormat(Number(btc * 2))},00**`);
 
 						await this.client.database.users.findOneAndUpdate({
-							_id: member.id
+							userId: member.id,
+							guildId: message.guild.id
 						}, {
 							$set: {
 								banco: user2.banco += Number(btc * 2)
@@ -196,7 +246,8 @@ module.exports = class Apostar extends Command {
 							.addField('Prêmio:', `**R$${Utils.numberFormat(Number(btc * 2))},00**`);
 
 						await this.client.database.users.findOneAndUpdate({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						}, {
 							$set: {
 								banco: user.banco += Number(btc * 2)
@@ -210,7 +261,8 @@ module.exports = class Apostar extends Command {
 							.addField('Prêmio:', `**R$${Utils.numberFormat(Number(btc * 2))},00**`);
 
 						await this.client.database.users.findOneAndUpdate({
-							_id: member.id
+							userId: member.id,
+							guildId: message.guild.id
 						}, {
 							$set: {
 								banco: user2.banco += Number(btc * 2)

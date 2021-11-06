@@ -26,6 +26,19 @@ module.exports = class Loja extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -42,13 +55,15 @@ module.exports = class Loja extends Command {
 			.addField('🥂 | Bebidas:', `Clique em \`🥂\``)
 			.addField('🍗 | Comidas:', `Clique em \`🍗\``)
 			.addField('🧁 | Doces:', `Clique em \`🧁\``)
-			.addField('🛠️ | Utilidades:', `Clique em \`🛠️\``);
+			.addField('🛠️ | Utilidades:', `Clique em \`🛠️\``)
+			.addField('👮 | Polícia:', `Clique em \`👮\``);
 
 		message.channel.send(author, embed).then(async (msg) => {
 			await msg.react('🥂');
 			await msg.react('🍗');
 			await msg.react('🧁');
 			await msg.react('🛠️');
+			await msg.react('👮');
 
 			const bebidas = msg.createReactionCollector((r, u) => r.emoji.name === '🥂' && u.id === author.id, {
 				max: 1
@@ -63,6 +78,10 @@ module.exports = class Loja extends Command {
 			});
 
 			const utilidades = msg.createReactionCollector((r, u) => r.emoji.name === '🛠️' && u.id === author.id, {
+				max: 1
+			});
+
+			const policia = msg.createReactionCollector((r, u) => r.emoji.name === '👮' && u.id === author.id, {
 				max: 1
 			});
 
@@ -83,18 +102,18 @@ module.exports = class Loja extends Command {
 				});
 
 				msg.edit(author, embed).then(async (as) => {
-					await as.react('🥤');
-					await as.react('🧃');
+					await as.react('897849546409906228');
+					await as.react('897849547294916638');
 					await as.react('891034945085120572');
-					await as.react('☕');
+					await as.react('897849547244593162');
 					await as.react('891035343262990366');
-					await as.react('🍻');
+					await as.react('897849547085217822');
 
-					const agua = as.createReactionCollector((r, u) => r.emoji.name === '🥤' && u.id === author.id, {
+					const agua = as.createReactionCollector((r, u) => r.emoji.id === '897849546409906228' && u.id === author.id, {
 						time: 120000
 					});
 
-					const suco = as.createReactionCollector((r, u) => r.emoji.name === '🧃' && u.id === author.id, {
+					const suco = as.createReactionCollector((r, u) => r.emoji.id === '897849547294916638' && u.id === author.id, {
 						time: 120000
 					});
 
@@ -102,7 +121,7 @@ module.exports = class Loja extends Command {
 						time: 120000
 					});
 
-					const cafe = as.createReactionCollector((r, u) => r.emoji.name === '☕' && u.id === author.id, {
+					const cafe = as.createReactionCollector((r, u) => r.emoji.id === '897849547244593162' && u.id === author.id, {
 						time: 120000
 					});
 
@@ -110,13 +129,14 @@ module.exports = class Loja extends Command {
 						time: 120000
 					});
 
-					const cerveja = as.createReactionCollector((r, u) => r.emoji.name === '🍻' && u.id === author.id, {
+					const cerveja = as.createReactionCollector((r, u) => r.emoji.id === '897849547085217822' && u.id === author.id, {
 						time: 120000
 					});
 
 					agua.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja2.bebidas[0].preco) {
@@ -126,25 +146,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja2.bebidas[0].item,
-										emoji: loja2.bebidas[0].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja2.bebidas[0].preco
+									bank: server.bank + loja2.bebidas[0].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja2.bebidas[0].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja2.bebidas[0].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[0].item).quantia + 1,
+										saldo: user.saldo -= loja2.bebidas[0].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja2.bebidas[0].item,
+											emoji: loja2.bebidas[0].emoji,
+											id: loja2.bebidas[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja2.bebidas[0].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					suco.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja2.bebidas[1].preco) {
@@ -154,25 +205,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja2.bebidas[1].item,
-										emoji: loja2.bebidas[1].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja2.bebidas[1].preco
+									bank: server.bank + loja2.bebidas[1].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja2.bebidas[1].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja2.bebidas[1].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[1].item).quantia + 1,
+										saldo: user.saldo -= loja2.bebidas[1].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja2.bebidas[1].item,
+											emoji: loja2.bebidas[1].emoji,
+											id: loja2.bebidas[1].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja2.bebidas[1].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					refrigerante.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja2.bebidas[2].preco) {
@@ -182,25 +264,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja2.bebidas[2].item,
-										emoji: loja2.bebidas[2].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja2.bebidas[2].preco
+									bank: server.bank + loja2.bebidas[2].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja2.bebidas[2].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja2.bebidas[2].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[2].item).quantia + 1,
+										saldo: user.saldo -= loja2.bebidas[2].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja2.bebidas[2].item,
+											emoji: loja2.bebidas[2].emoji,
+											id: loja2.bebidas[2].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja2.bebidas[2].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					cafe.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja2.bebidas[3].preco) {
@@ -210,25 +323,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja2.bebidas[3].item,
-										emoji: loja2.bebidas[3].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja2.bebidas[3].preco
+									bank: server.bank + loja2.bebidas[3].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja2.bebidas[3].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja2.bebidas[3].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[3].item).quantia + 1,
+										saldo: user.saldo -= loja2.bebidas[3].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja2.bebidas[3].item,
+											emoji: loja2.bebidas[3].emoji,
+											id: loja2.bebidas[3].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja2.bebidas[3].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					energetico.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja2.bebidas[4].preco) {
@@ -238,26 +382,59 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja2.bebidas[4].item,
-										emoji: loja2.bebidas[4].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja2.bebidas[4].preco
+									bank: server.bank + loja2.bebidas[4].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja2.bebidas[4].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja2.bebidas[4].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[4].item).quantia + 1,
+										saldo: user.saldo -= loja2.bebidas[4].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja2.bebidas[4].item,
+											emoji: loja2.bebidas[4].emoji,
+											id: loja2.bebidas[4].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja2.bebidas[4].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					cerveja.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						if (user.saldo < loja2.bebidas[5].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -266,25 +443,55 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja2.bebidas[5].item,
-										emoji: loja2.bebidas[5].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja2.bebidas[5].preco
+									bank: server.bank + loja2.bebidas[5].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja2.bebidas[5].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja2.bebidas[5].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[5].item).quantia + 1,
+										saldo: user.saldo -= loja2.bebidas[5].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja2.bebidas[5].item,
+											emoji: loja2.bebidas[5].emoji,
+											id: loja2.bebidas[5].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja2.bebidas[5].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					cerveja.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍻').remove();
+							as.reactions.cache.get('897849547085217822').remove();
 						}
 					});
 
@@ -296,7 +503,7 @@ module.exports = class Loja extends Command {
 
 					cafe.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('☕').remove();
+							as.reactions.cache.get('897849547244593162').remove();
 						}
 					});
 
@@ -308,13 +515,13 @@ module.exports = class Loja extends Command {
 
 					suco.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🧃').remove();
+							as.reactions.cache.get('897849547294916638').remove();
 						}
 					});
 
 					agua.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🥤').remove();
+							as.reactions.cache.get('897849546409906228').remove();
 						}
 					});
 				});
@@ -337,45 +544,46 @@ module.exports = class Loja extends Command {
 				});
 
 				msg.edit(author, embed).then(async (as) => {
-					await as.react('🍔');
-					await as.react('🍕');
-					await as.react('🍟');
-					await as.react('🥪');
-					await as.react('🥩');
-					await as.react('🌮');
-					await as.react('🍜');
+					await as.react('897849546695147551');
+					await as.react('897849547089399848');
+					await as.react('897849547957612574');
+					await as.react('897849547143913472');
+					await as.react('897849547538186300');
+					await as.react('897849547206840410');
+					await as.react('897849546783223829');
 
-					const hamburguer = as.createReactionCollector((r, u) => r.emoji.name === '🍔' && u.id === author.id, {
+					const hamburguer = as.createReactionCollector((r, u) => r.emoji.id === '897849546695147551' && u.id === author.id, {
 						time: 120000
 					});
 
-					const pizza = as.createReactionCollector((r, u) => r.emoji.name === '🍕' && u.id === author.id, {
+					const pizza = as.createReactionCollector((r, u) => r.emoji.id === '897849547089399848' && u.id === author.id, {
 						time: 120000
 					});
 
-					const batata = as.createReactionCollector((r, u) => r.emoji.name === '🍟' && u.id === author.id, {
+					const batata = as.createReactionCollector((r, u) => r.emoji.id === '897849547957612574' && u.id === author.id, {
 						time: 120000
 					});
 
-					const misto = as.createReactionCollector((r, u) => r.emoji.name === '🥪' && u.id === author.id, {
+					const misto = as.createReactionCollector((r, u) => r.emoji.id === '897849547143913472' && u.id === author.id, {
 						time: 120000
 					});
 
-					const carne = as.createReactionCollector((r, u) => r.emoji.name === '🥩' && u.id === author.id, {
+					const carne = as.createReactionCollector((r, u) => r.emoji.id === '897849547538186300' && u.id === author.id, {
 						time: 120000
 					});
 
-					const taco = as.createReactionCollector((r, u) => r.emoji.name === '🌮' && u.id === author.id, {
+					const taco = as.createReactionCollector((r, u) => r.emoji.id === '897849547206840410' && u.id === author.id, {
 						time: 120000
 					});
 
-					const lamen = as.createReactionCollector((r, u) => r.emoji.name === '🍜' && u.id === author.id, {
+					const lamen = as.createReactionCollector((r, u) => r.emoji.id === '897849546783223829' && u.id === author.id, {
 						time: 120000
 					});
 
 					hamburguer.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja3.comidas[0].preco) {
@@ -385,25 +593,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[0].item,
-										emoji: loja3.comidas[0].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[0].preco
+									bank: server.bank + loja3.comidas[0].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[0].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[0].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[0].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[0].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[0].item,
+											emoji: loja3.comidas[0].emoji,
+											id: loja3.comidas[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[0].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					pizza.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja3.comidas[1].preco) {
@@ -413,25 +652,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[1].item,
-										emoji: loja3.comidas[1].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[1].preco
+									bank: server.bank + loja3.comidas[1].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[1].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[1].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[1].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[1].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[1].item,
+											emoji: loja3.comidas[1].emoji,
+											id: loja3.comidas[1].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[1].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					batata.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja3.comidas[2].preco) {
@@ -441,25 +711,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[2].item,
-										emoji: loja3.comidas[2].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[2].preco
+									bank: server.bank + loja3.comidas[2].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[2].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[2].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[2].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[2].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[2].item,
+											emoji: loja3.comidas[2].emoji,
+											id: loja3.comidas[2].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[2].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					misto.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja3.comidas[3].preco) {
@@ -469,26 +770,59 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[3].item,
-										emoji: loja3.comidas[3].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[3].preco
+									bank: server.bank + loja3.comidas[3].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[3].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[3].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[3].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[3].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[3].item,
+											emoji: loja3.comidas[3].emoji,
+											id: loja3.comidas[3].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[3].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					carne.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						if (user.saldo < loja3.comidas[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -497,25 +831,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[4].item,
-										emoji: loja3.comidas[4].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[4].preco
+									bank: server.bank + loja3.comidas[4].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[4].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[4].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[4].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[4].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[4].item,
+											emoji: loja3.comidas[4].emoji,
+											id: loja3.comidas[4].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[4].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					taco.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja3.comidas[5].preco) {
@@ -525,25 +890,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[5].item,
-										emoji: loja3.comidas[5].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[5].preco
+									bank: server.bank + loja3.comidas[5].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[5].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[5].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[5].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[5].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[5].item,
+											emoji: loja3.comidas[5].emoji,
+											id: loja3.comidas[5].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[5].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					lamen.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja3.comidas[6].preco) {
@@ -553,61 +949,91 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja3.comidas[6].item,
-										emoji: loja3.comidas[6].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja3.comidas[6].preco
+									bank: server.bank + loja3.comidas[6].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja3.comidas[6].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja3.comidas[6].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[6].item).quantia + 1,
+										saldo: user.saldo -= loja3.comidas[6].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja3.comidas[6].item,
+											emoji: loja3.comidas[6].emoji,
+											id: loja3.comidas[6].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja3.comidas[6].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					lamen.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍜').remove();
+							as.reactions.cache.get('897849546783223829').remove();
 						}
 					});
 
 					taco.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🌮').remove();
+							as.reactions.cache.get('897849547206840410').remove();
 						}
 					});
 
 					carne.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🥩').remove();
+							as.reactions.cache.get('897849547538186300').remove();
 						}
 					});
 
 					misto.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🥪').remove();
+							as.reactions.cache.get('897849547143913472').remove();
 						}
 					});
 
 					batata.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍟').remove();
+							as.reactions.cache.get('897849547957612574').remove();
 						}
 					});
 
 					pizza.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍕').remove();
+							as.reactions.cache.get('897849547089399848').remove();
 						}
 					});
 
 					hamburguer.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍔').remove();
+							as.reactions.cache.get('897849546695147551').remove();
 						}
 					});
 				});
@@ -630,35 +1056,36 @@ module.exports = class Loja extends Command {
 				});
 
 				msg.edit(author, embed).then(async (as) => {
-					await as.react('🍩');
-					await as.react('🍫');
-					await as.react('🍿');
-					await as.react('🍰');
-					await as.react('🍪');
+					await as.react('897849546992930867');
+					await as.react('897849546804174848');
+					await as.react('897849547215212584');
+					await as.react('897849546913247292');
+					await as.react('897849546720305175');
 
-					const rosquinha = as.createReactionCollector((r, u) => r.emoji.name === '🍩' && u.id === author.id, {
+					const rosquinha = as.createReactionCollector((r, u) => r.emoji.id === '897849546992930867' && u.id === author.id, {
 						time: 120000
 					});
 
-					const chocolate = as.createReactionCollector((r, u) => r.emoji.name === '🍫' && u.id === author.id, {
+					const chocolate = as.createReactionCollector((r, u) => r.emoji.id === '897849546804174848' && u.id === author.id, {
 						time: 120000
 					});
 
-					const pipoca = as.createReactionCollector((r, u) => r.emoji.name === '🍿' && u.id === author.id, {
+					const pipoca = as.createReactionCollector((r, u) => r.emoji.id === '897849547215212584' && u.id === author.id, {
 						time: 120000
 					});
 
-					const bolo = as.createReactionCollector((r, u) => r.emoji.name === '🍰' && u.id === author.id, {
+					const bolo = as.createReactionCollector((r, u) => r.emoji.id === '897849546913247292' && u.id === author.id, {
 						time: 120000
 					});
 
-					const cookie = as.createReactionCollector((r, u) => r.emoji.name === '🍪' && u.id === author.id, {
+					const cookie = as.createReactionCollector((r, u) => r.emoji.id === '897849546720305175' && u.id === author.id, {
 						time: 120000
 					});
 
 					rosquinha.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja4.doces[0].preco) {
@@ -668,25 +1095,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja4.doces[0].item,
-										emoji: loja4.doces[0].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja4.doces[0].preco
+									bank: server.bank + loja4.doces[0].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja4.doces[0].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja4.doces[0].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[0].item).quantia + 1,
+										saldo: user.saldo -= loja4.doces[0].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja4.doces[0].item,
+											emoji: loja4.doces[0].emoji,
+											id: loja4.doces[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja4.doces[0].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					chocolate.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja4.doces[1].preco) {
@@ -696,25 +1154,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja4.doces[1].item,
-										emoji: loja4.doces[1].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja4.doces[1].preco
+									bank: server.bank + loja4.doces[1].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja4.doces[1].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja4.doces[1].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[1].item).quantia + 1,
+										saldo: user.saldo -= loja4.doces[1].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja4.doces[1].item,
+											emoji: loja4.doces[1].emoji,
+											id: loja4.doces[1].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja4.doces[1].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					pipoca.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja4.doces[2].preco) {
@@ -724,25 +1213,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja4.doces[2].item,
-										emoji: loja4.doces[2].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja4.doces[2].preco
+									bank: server.bank + loja4.doces[2].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja4.doces[2].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja4.doces[2].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[2].item).quantia + 1,
+										saldo: user.saldo -= loja4.doces[2].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja4.doces[2].item,
+											emoji: loja4.doces[2].emoji,
+											id: loja4.doces[2].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja4.doces[2].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					bolo.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja4.doces[3].preco) {
@@ -752,25 +1272,56 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja4.doces[3].item,
-										emoji: loja4.doces[3].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja4.doces[3].preco
+									bank: server.bank + loja4.doces[3].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja4.doces[3].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja4.doces[3].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[3].item).quantia + 1,
+										saldo: user.saldo -= loja4.doces[3].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja4.doces[3].item,
+											emoji: loja4.doces[3].emoji,
+											id: loja4.doces[3].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja4.doces[3].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					cookie.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						if (user.saldo < loja4.doces[4].preco) {
@@ -780,49 +1331,79 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
-							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
 							}, {
-								$push: {
-									inventory: {
-										item: loja4.doces[4].item,
-										emoji: loja4.doces[4].emoji
-									}
-								},
 								$set: {
-									saldo: user.saldo -= loja4.doces[4].preco
+									bank: server.bank + loja4.doces[4].preco
 								}
 							});
+
+							if (user.inventory.find((a) => a.item === loja4.doces[4].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'inventory.item': loja4.doces[4].item
+								}, {
+									$set: {
+										'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[4].item).quantia + 1,
+										saldo: user.saldo -= loja4.doces[4].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										inventory: {
+											item: loja4.doces[4].item,
+											emoji: loja4.doces[4].emoji,
+											id: loja4.doces[4].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja4.doces[4].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
 					cookie.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍪').remove();
+							as.reactions.cache.get('897849546720305175').remove();
 						}
 					});
 
 					bolo.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍰').remove();
+							as.reactions.cache.get('897849546913247292').remove();
 						}
 					});
 
 					pipoca.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍿').remove();
+							as.reactions.cache.get('897849547215212584').remove();
 						}
 					});
 
 					chocolate.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍫').remove();
+							as.reactions.cache.get('897849546804174848').remove();
 						}
 					});
 
 					rosquinha.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('🍩').remove();
+							as.reactions.cache.get('897849546992930867').remove();
 						}
 					});
 				});
@@ -845,10 +1426,13 @@ module.exports = class Loja extends Command {
 				});
 
 				msg.edit(author, embed).then(async (as) => {
-					await as.react('💊');
+					await as.react('897849546862919740');
 					await as.react('891297733774819328');
+					await as.react('898324362279669851');
+					await as.react('899007409006215188');
+					await as.react('899766443757928489');
 
-					const remedio = as.createReactionCollector((r, u) => r.emoji.name === '💊' && u.id === author.id, {
+					const remedio = as.createReactionCollector((r, u) => r.emoji.id === '897849546862919740' && u.id === author.id, {
 						time: 120000
 					});
 
@@ -856,21 +1440,131 @@ module.exports = class Loja extends Command {
 						time: 120000
 					});
 
+					const mascara = as.createReactionCollector((r, u) => r.emoji.id === '898324362279669851' && u.id === author.id, {
+						time: 120000
+					});
+
+					const mochila = as.createReactionCollector((r, u) => r.emoji.id === '899007409006215188' && u.id === author.id, {
+						time: 120000
+					});
+
+					const porte = as.createReactionCollector((r, u) => r.emoji.id === '899766443757928489' && u.id === author.id, {
+						time: 120000
+					});
+
+					mochila.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (user.isMochila) return message.reply('você já possui uma **Mochila**!');
+
+						if (user.saldo < loja5.utilidades[3].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||').then((b) => b.delete({
+								timeout: 20000
+							}));
+						} else {
+							message.reply(`você comprou o item \`Mochila\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja5.utilidades[3].preco
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$set: {
+									saldo: user.saldo -= loja5.utilidades[3].preco,
+									isMochila: true
+								}
+							});
+						}
+					});
+
+					porte.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item!');
+
+						if (user.mochila.find((a) => a.item === loja5.utilidades[4].item)) {
+							if (user.mochila.find((a) => a.item === loja5.utilidades[4].item).quantia === 1) {
+								return message.reply(`você já tem o máximo de **Porte de Armas** na mochila!`).then((b) => b.delete({
+									timeout: 20000
+								}));
+							}
+						} else if (user.saldo < loja5.utilidades[4].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||').then((b) => b.delete({
+								timeout: 20000
+							}));
+						} else {
+							message.reply(`você comprou o item \`Porte de Armas\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja5.utilidades[4].preco
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$push: {
+									mochila: {
+										item: loja5.utilidades[4].item,
+										emoji: loja5.utilidades[4].emoji,
+										id: loja5.utilidades[4].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
+									}
+								},
+								$set: {
+									saldo: user.saldo -= loja5.utilidades[4].preco
+								}
+							});
+						}
+					});
+
 					remedio.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
 
 						const itens = user.inventory;
 
-						const quantidadeNoInventarioDe = (i) => itens.filter(({
-							item
-						}) => item === i).length;
-
-						if (quantidadeNoInventarioDe('Remédio') === 1) {
-							return message.reply(`você já tem o máximo de **Remédio** no inventário!`).then((b) => b.delete({
-								timeout: 20000
-							}));
+						if (itens.find((a) => a.item === loja5.utilidades[0].item)) {
+							if (itens.find((a) => a.item === loja5.utilidades[0].item).quantia === 1) {
+								return message.reply(`você já tem o máximo de **Remédio** no inventário!`).then((b) => b.delete({
+									timeout: 20000
+								}));
+							}
 						} else if (user.saldo < loja5.utilidades[0].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -878,13 +1572,28 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja5.utilidades[0].preco
+								}
+							});
+
 							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+								userId: author.id,
+								guildId: message.guild.id
 							}, {
 								$push: {
 									inventory: {
 										item: loja5.utilidades[0].item,
-										emoji: loja5.utilidades[0].emoji
+										emoji: loja5.utilidades[0].emoji,
+										id: loja5.utilidades[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
 									}
 								},
 								$set: {
@@ -896,19 +1605,20 @@ module.exports = class Loja extends Command {
 
 					vara.on('collect', async () => {
 						const user = await this.client.database.users.findOne({
-							_id: author.id
+							userId: author.id,
+							guildId: message.guild.id
 						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						const itens = user.inventory;
 
-						const quantidadeNoInventarioDe = (i) => itens.filter(({
-							item
-						}) => item === i).length;
-
-						if (quantidadeNoInventarioDe('Vara de Pesca') === 5) {
-							return message.reply(`você já tem o máximo de **Varas de Pesca** no inventário!`).then((b) => b.delete({
-								timeout: 20000
-							}));
+						if (itens.find((a) => a.item === loja5.utilidades[1].item)) {
+							if (itens.find((a) => a.item === loja5.utilidades[1].item).quantia === 5) {
+								return message.reply(`você já tem o máximo de **Varas de Pesca** no inventário!`).then((b) => b.delete({
+									timeout: 20000
+								}));
+							}
 						} else if (user.saldo < loja5.utilidades[1].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -916,19 +1626,97 @@ module.exports = class Loja extends Command {
 								timeout: 20000
 							}));
 
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja5.utilidades[1].preco
+								}
+							});
+
 							await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+								userId: author.id,
+								guildId: message.guild.id
 							}, {
 								$push: {
 									inventory: {
 										item: loja5.utilidades[1].item,
-										emoji: loja5.utilidades[1].emoji
+										emoji: loja5.utilidades[1].emoji,
+										id: loja5.utilidades[1].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
 									}
 								},
 								$set: {
 									saldo: user.saldo -= loja5.utilidades[1].preco
 								}
 							});
+						}
+					});
+
+					mascara.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
+
+						if (user.saldo < loja5.utilidades[2].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou o item \`Máscara\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja5.utilidades[2].preco
+								}
+							});
+
+							if (user.mochila.find((a) => a.item === loja5.utilidades[2].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': loja5.utilidades[2].item
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[2].item).quantia + 1,
+										saldo: user.saldo -= loja5.utilidades[2].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										mochila: {
+											item: loja5.utilidades[2].item,
+											emoji: loja5.utilidades[2].emoji,
+											id: loja5.utilidades[2].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja5.utilidades[2].preco
+									}
+								});
+
+								user.save();
+							}
 						}
 					});
 
@@ -940,7 +1728,390 @@ module.exports = class Loja extends Command {
 
 					remedio.on('end', async (collected, reason) => {
 						if (reason === 'time') {
-							as.reactions.cache.get('💊').remove();
+							as.reactions.cache.get('897849546862919740').remove();
+						}
+					});
+
+					mascara.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('898324362279669851').remove();
+						}
+					});
+
+					mochila.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('899007409006215188').remove();
+						}
+					});
+
+					porte.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('899766443757928489').remove();
+						}
+					});
+				});
+			});
+
+			policia.on('collect', async () => {
+				msg.reactions.removeAll();
+
+				const loja6 = shop.loja;
+
+				embed.fields = [];
+
+				embed
+					.setTitle(`LOJINHA DA ${this.client.user.username}`)
+					.setDescription('Veja os itens da Polícia que tenho disponíveis na minha lojinha:')
+					.setThumbnail(this.client.user.displayAvatarURL());
+
+				loja6.pm.forEach((est) => {
+					embed.addField(`${est.emoji} | ${est.item}:ㅤㅤPreço: **R$${Utils.numberFormat(est.preco)},00**`, `Descrição: ${est.desc}`);
+				});
+
+				msg.edit(author, embed).then(async (as) => {
+					await as.react('898326104413188157');
+					await as.react('901117948180168724');
+					await as.react('901117282003075072');
+					await as.react('905653668643241985');
+					await as.react('905653521846784080');
+
+					const algemas = as.createReactionCollector((r, u) => r.emoji.id === '898326104413188157' && u.id === author.id, {
+						time: 120000
+					});
+
+					const mp5 = as.createReactionCollector((r, u) => r.emoji.id === '901117948180168724' && u.id === author.id, {
+						time: 120000
+					});
+
+					const g18 = as.createReactionCollector((r, u) => r.emoji.id === '901117282003075072' && u.id === author.id, {
+						time: 120000
+					});
+
+					const municaoPistola = as.createReactionCollector((r, u) => r.emoji.id === '905653668643241985' && u.id === author.id, {
+						time: 120000
+					});
+
+					const municaoMetralhadora = as.createReactionCollector((r, u) => r.emoji.id === '905653521846784080' && u.id === author.id, {
+						time: 120000
+					});
+
+					algemas.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+
+						const itens = user.mochila;
+
+						if (itens.find((a) => a.item === loja6.pm[0].item)) {
+							if (itens.find((a) => a.item === loja6.pm[0].item).quantia === 1) {
+								return message.reply(`você já tem o máximo de **Algemas** na sua mochila!`).then((b) => b.delete({
+									timeout: 20000
+								}));
+							}
+						} else if (user.saldo < loja6.pm[0].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou o item \`Algemas\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja6.pm[0].preco
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$push: {
+									mochila: {
+										item: loja6.pm[0].item,
+										emoji: loja6.pm[0].emoji,
+										id: loja6.pm[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
+									}
+								},
+								$set: {
+									saldo: user.saldo -= loja6.pm[0].preco
+								}
+							});
+						}
+					});
+
+					mp5.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+
+						const itens = user.mochila;
+
+						if (itens.find((a) => a.item === loja6.pm[1].item)) {
+							if (itens.find((a) => a.item === loja6.pm[1].item).quantia === 1) {
+								return message.reply(`você já tem o máximo de **MP5** na mochila!`).then((b) => b.delete({
+									timeout: 20000
+								}));
+							}
+						} else if (user.saldo < loja6.pm[1].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou uma \`MP5\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja6.pm[1].preco
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$push: {
+									mochila: {
+										item: loja6.pm[1].item,
+										emoji: loja6.pm[1].emoji,
+										id: loja6.pm[1].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
+									}
+								},
+								$set: {
+									saldo: user.saldo -= loja6.pm[1].preco
+								}
+							});
+						}
+					});
+
+					g18.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+
+						const itens = user.mochila;
+
+						if (itens.find((a) => a.item === loja6.pm[2].item)) {
+							if (itens.find((a) => a.item === loja6.pm[2].item).quantia === 1) {
+								return message.reply(`você já tem o máximo de **G18** no inventário!`).then((b) => b.delete({
+									timeout: 20000
+								}));
+							}
+						} else if (user.saldo < loja6.pm[2].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou a arma \`G18\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja6.pm[2].preco
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$push: {
+									mochila: {
+										item: loja6.pm[2].item,
+										emoji: loja6.pm[2].emoji,
+										id: loja6.pm[2].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
+									}
+								},
+								$set: {
+									saldo: user.saldo -= loja6.pm[2].preco
+								}
+							});
+						}
+					});
+
+					municaoPistola.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+
+						if (user.saldo < loja6.pm[3].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou \`Munição Pistola\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja6.pm[3].preco
+								}
+							});
+
+							if (user.mochila.find((a) => a.item === loja6.pm[3].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': loja6.pm[3].item
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[3].item).quantia + (1 * 5),
+										saldo: user.saldo -= loja6.pm[3].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										mochila: {
+											item: loja6.pm[3].item,
+											emoji: loja6.pm[3].emoji,
+											id: loja6.pm[3].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1 * 5
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja6.pm[3].preco
+									}
+								});
+							}
+						}
+					});
+
+					municaoMetralhadora.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+
+						if (user.saldo < loja6.pm[4].preco) {
+							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou \`Munição Metralhadora\` com sucesso!`).then((b) => b.delete({
+								timeout: 20000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja6.pm[4].preco
+								}
+							});
+
+							if (user.mochila.find((a) => a.item === loja6.pm[4].item)) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': loja6.pm[4].item
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[4].item).quantia + (1 * 5),
+										saldo: user.saldo -= loja6.pm[4].preco
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$push: {
+										mochila: {
+											item: loja6.pm[4].item,
+											emoji: loja6.pm[4].emoji,
+											id: loja6.pm[4].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+											quantia: 1 * 5
+										}
+									},
+									$set: {
+										saldo: user.saldo -= loja6.pm[4].preco
+									}
+								});
+							}
+						}
+					});
+
+					algemas.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('898326104413188157').remove();
+						}
+					});
+
+					mp5.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('901117948180168724').remove();
+						}
+					});
+
+					g18.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('901117282003075072').remove();
+						}
+					});
+
+					municaoPistola.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('905653668643241985').remove();
+						}
+					});
+
+					municaoMetralhadora.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('905653521846784080').remove();
 						}
 					});
 				});

@@ -24,13 +24,31 @@ module.exports = class Salario extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
+		});
+
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
 		});
 
 		const timeout = 86400000;
@@ -39,94 +57,140 @@ module.exports = class Salario extends Command {
 			const faltam = ms(timeout - (Date.now() - user.cooldown.salario));
 
 			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 			return message.channel.send(author, embed);
 		} else {
 			const embed = new ClientEmbed(author)
 				.setTitle('🏦 Salário');
 
-			if (message.member.roles.highest.id === '830972296272543796') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$20.000,00\`\n🪙 \`5\` Bitcoins`);
+			if (server.cidade.governador === author.id) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$13.000,00\`\n🪙 \`6\` Bitcoins`);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'cooldown.salario': Date.now(),
-						saldo: user.saldo += 20000,
+						saldo: user.saldo += 13000,
+						bitcoin: user.bitcoin += 6
+					}
+				});
+			} else if (server.cidade.delegado === author.id) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$9.000,00\`\n🪙 \`5\` Bitcoins`);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 9000,
 						bitcoin: user.bitcoin += 5
 					}
 				});
-			} else if (message.member.roles.highest.id === '830972296272543794') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$15.000,00\`\n🪙 \`4\` Bitcoins`);
+			} else if (server.cidade.policiais.find((a) => a.id === author.id)) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$7.500,00\`\n🪙 \`3\` Bitcoins`);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'cooldown.salario': Date.now(),
-						saldo: user.saldo += 15000,
-						bitcoin: user.bitcoin += 4
-					}
-				});
-			} else if (message.member.roles.highest.id === '830972296272543795') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$10.000,00\`\n🪙 \`3\` Bitcoins`);
-
-				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
-				}, {
-					$set: {
-						'cooldown.salario': Date.now(),
-						saldo: user.saldo += 10000,
+						saldo: user.saldo += 7500,
 						bitcoin: user.bitcoin += 3
 					}
 				});
-			} else if (message.member.roles.highest.id === '830972296260485198') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$8.000,00\`\n🪙 \`2\` Bitcoins`);
+			} else if (server.cidade.carcereiro.find((a) => a.id === author.id)) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$3.500,00\`\n🪙 \`2\` Bitcoins`);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 3500,
+						bitcoin: user.bitcoin += 2
+					}
+				});
+			} else if (server.cidade.diretorHP === author.id) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$8.000,00\`\n🪙 \`5\` Bitcoins`);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'cooldown.salario': Date.now(),
 						saldo: user.saldo += 8000,
-						bitcoin: user.bitcoin += 2
+						bitcoin: user.bitcoin += 5
 					}
 				});
-			} else if (message.member.roles.highest.id === '830972296260485191') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$7.000,00\`\n🪙 \`1\` Bitcoins`);
+			} else if (server.cidade.medicos.find((a) => a.id === author.id)) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$10.500,00\`\n🪙 \`4\` Bitcoins`);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'cooldown.salario': Date.now(),
-						saldo: user.saldo += 7000,
-						bitcoin: user.bitcoin += 1
+						saldo: user.saldo += 10500,
+						bitcoin: user.bitcoin += 4
 					}
 				});
-			} else if (message.member.roles.highest.id === '830972296260485190') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$6.000,00\`\n🪙 \`1\` Bitcoins`);
+			} else if (server.cidade.mecanico.find((a) => a.id === author.id)) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$5.000,00\`\n🪙 \`3\` Bitcoins`);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
-				}, {
-					$set: {
-						'cooldown.salario': Date.now(),
-						saldo: user.saldo += 6000,
-						bitcoin: user.bitcoin += 1
-					}
-				});
-			} else if (message.member.roles.highest.id === '831007436990971905') {
-				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$5.000,00\`\n🪙 \`1\` Bitcoins`);
-
-				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'cooldown.salario': Date.now(),
 						saldo: user.saldo += 5000,
+						bitcoin: user.bitcoin += 3
+					}
+				});
+			} else if (user.fac.createFac) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$2.000,00\`\n🪙 \`3\` Bitcoins`);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 2000,
+						bitcoin: user.bitcoin += 3
+					}
+				});
+			} else if (!user.fac.createFac && user.fac.isFac) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$1.000,00\`\n🪙 \`2\` Bitcoins`);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 1000,
+						bitcoin: user.bitcoin += 2
+					}
+				});
+			} else {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$500,00\`\n🪙 \`1\` Bitcoins`);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 500,
 						bitcoin: user.bitcoin += 1
 					}
 				});

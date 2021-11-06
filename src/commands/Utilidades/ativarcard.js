@@ -25,6 +25,19 @@ module.exports = class Ativarcard extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -32,11 +45,12 @@ module.exports = class Ativarcard extends Command {
 		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
+			userId: message.guild.id
 		});
 
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (!server.card.length) return message.reply('não há cards cadastrados no momento.');
@@ -56,9 +70,7 @@ module.exports = class Ativarcard extends Command {
 			const cardsArray = server.card.map((value, index) => ({
 				codigo: value.codigo,
 				valorZoe: value.valorZoe,
-				valorAlfa: value.valorAlfa,
 				valorBtc: value.valorBtc,
-				valorSonhos: value.valorSonhos,
 				ativado: value.ativado,
 				ativadoPor: value.ativadoPor,
 				position: index
@@ -70,12 +82,13 @@ module.exports = class Ativarcard extends Command {
 			if (findSelectedCard.ativado) return message.reply(`esse card já foi usado pelo usuário: \`${await this.client.users.fetch(findSelectedCard.ativadoPor).then(xa => xa.tag)}\``);
 
 			embed.setTitle('🎉 PARABÉNS');
-			embed.setDescription(`💳 | Você adicionou:\n\n💵 R$${Utils.numberFormat(findSelectedCard.valorZoe)},00 - Com sucesso a sua conta Zoe\n\n🪙 ${findSelectedCard.valorBtc} bitcoin - Com sucesso a sua conta Zoe\n\n💸 R$${Utils.numberFormat(findSelectedCard.valorAlfa)},00 Apê da Alfacusa - Marque o <@&830972296272543794> para receber.\n\n👩‍🦰 ${Utils.numberFormat(findSelectedCard.valorSonhos)} Sonhos - Marque <@&830972296272543796> para receber.`);
+			embed.setDescription(`💳 | Você adicionou:\n\n💵 R$${Utils.numberFormat(findSelectedCard.valorZoe)},00 - Com sucesso a sua conta Zoe\n\n🪙 ${findSelectedCard.valorBtc} bitcoin - Com sucesso a sua conta Zoe.`);
 
 			message.channel.send(author, embed);
 
 			await this.client.database.users.findOneAndUpdate({
-				_id: author.id
+				userId: author.id,
+				guildId: message.guild.id
 			}, {
 				$set: {
 					saldo: user.saldo += findSelectedCard.valorZoe,
@@ -84,7 +97,7 @@ module.exports = class Ativarcard extends Command {
 			});
 
 			await this.client.database.guilds.findOneAndUpdate({
-				_id: message.guild.id,
+				userId: message.guild.id,
 				'card.codigo': findSelectedCard.codigo
 			}, {
 				$set: {

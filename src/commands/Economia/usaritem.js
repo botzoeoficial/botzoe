@@ -27,6 +27,18 @@ module.exports = class Usaritem extends Command {
 
 		this.vip = false;
 		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -35,7 +47,8 @@ module.exports = class Usaritem extends Command {
 		args
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		const shop = await this.client.database.shop.findOne({
@@ -73,13 +86,14 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findWater, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.sede': user.humores.sede += 50,
-						'humores.cansado': user.humores.cansado += 30,
-						'humores.bravo': user.humores.bravo += 20,
-						'humores.solitario': user.humores.solitario += 0
+						'humores.sede': user.humores.sede + 50,
+						'humores.cansado': user.humores.cansado + 30,
+						'humores.bravo': user.humores.bravo + 20,
+						'humores.solitario': user.humores.solitario + 0
 					}
 				});
 
@@ -98,13 +112,14 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findSuco, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.sede': user.humores.sede += 40,
-						'humores.cansado': user.humores.cansado += 30,
-						'humores.bravo': user.humores.bravo += 10,
-						'humores.solitario': user.humores.solitario += 0
+						'humores.sede': user.humores.sede + 40,
+						'humores.cansado': user.humores.cansado + 30,
+						'humores.bravo': user.humores.bravo + 10,
+						'humores.solitario': user.humores.solitario + 0
 					}
 				});
 
@@ -123,13 +138,14 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findRefrigerante, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.sede': user.humores.sede += 30,
-						'humores.cansado': user.humores.cansado += 20,
-						'humores.bravo': user.humores.bravo += 0,
-						'humores.solitario': user.humores.solitario += 10
+						'humores.sede': user.humores.sede + 30,
+						'humores.cansado': user.humores.cansado + 20,
+						'humores.bravo': user.humores.bravo + 0,
+						'humores.solitario': user.humores.solitario + 10
 					}
 				});
 
@@ -148,13 +164,14 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findCafe, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.sede': user.humores.sede += 0,
-						'humores.cansado': user.humores.cansado += 60,
-						'humores.bravo': user.humores.bravo -= 20,
-						'humores.solitario': user.humores.solitario += 30
+						'humores.sede': user.humores.sede + 0,
+						'humores.cansado': user.humores.cansado + 60,
+						'humores.bravo': user.humores.bravo - 20,
+						'humores.solitario': user.humores.solitario + 30
 					}
 				});
 
@@ -173,13 +190,14 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findEnergetico, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.sede': user.humores.sede += 50,
-						'humores.cansado': user.humores.cansado += 30,
-						'humores.bravo': user.humores.bravo += 0,
-						'humores.solitario': user.humores.solitario += 0
+						'humores.sede': user.humores.sede + 50,
+						'humores.cansado': user.humores.cansado + 30,
+						'humores.bravo': user.humores.bravo + 0,
+						'humores.solitario': user.humores.solitario + 0
 					}
 				});
 
@@ -198,13 +216,14 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findCerveja, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.sede': user.humores.sede += 50,
-						'humores.cansado': user.humores.cansado -= 20,
-						'humores.bravo': user.humores.bravo -= 10,
-						'humores.solitario': user.humores.solitario += 50
+						'humores.sede': user.humores.sede + 50,
+						'humores.cansado': user.humores.cansado - 20,
+						'humores.bravo': user.humores.bravo - 10,
+						'humores.solitario': user.humores.solitario + 50
 					}
 				});
 
@@ -223,12 +242,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findSanduiche, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 90,
-						'humores.cansado': user.humores.cansado -= 10,
-						'humores.solitario': user.humores.solitario += 20
+						'humores.fome': user.humores.fome + 90,
+						'humores.cansado': user.humores.cansado - 10,
+						'humores.solitario': user.humores.solitario + 20
 					}
 				});
 
@@ -247,12 +267,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findPizza, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 80,
-						'humores.cansado': user.humores.cansado -= 20,
-						'humores.solitario': user.humores.solitario += 60
+						'humores.fome': user.humores.fome + 80,
+						'humores.cansado': user.humores.cansado - 20,
+						'humores.solitario': user.humores.solitario + 60
 					}
 				});
 
@@ -271,12 +292,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findBatata, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 50,
-						'humores.cansado': user.humores.cansado += 30,
-						'humores.solitario': user.humores.solitario += 20
+						'humores.fome': user.humores.fome + 50,
+						'humores.cansado': user.humores.cansado + 30,
+						'humores.solitario': user.humores.solitario + 20
 					}
 				});
 
@@ -295,12 +317,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findMisto, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 30,
-						'humores.cansado': user.humores.cansado -= 10,
-						'humores.solitario': user.humores.solitario -= 20
+						'humores.fome': user.humores.fome + 30,
+						'humores.cansado': user.humores.cansado - 10,
+						'humores.solitario': user.humores.solitario - 20
 					}
 				});
 
@@ -319,12 +342,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findCarne, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 50,
-						'humores.cansado': user.humores.cansado += 40,
-						'humores.solitario': user.humores.solitario += 20
+						'humores.fome': user.humores.fome + 50,
+						'humores.cansado': user.humores.cansado + 40,
+						'humores.solitario': user.humores.solitario + 20
 					}
 				});
 
@@ -343,12 +367,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findTaco, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 60,
-						'humores.cansado': user.humores.cansado -= 20,
-						'humores.solitario': user.humores.solitario += 40
+						'humores.fome': user.humores.fome + 60,
+						'humores.cansado': user.humores.cansado - 20,
+						'humores.solitario': user.humores.solitario + 40
 					}
 				});
 
@@ -367,12 +392,13 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findMiojo, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 40,
-						'humores.cansado': user.humores.cansado -= 10,
-						'humores.solitario': user.humores.solitario -= 30
+						'humores.fome': user.humores.fome + 40,
+						'humores.cansado': user.humores.cansado - 10,
+						'humores.solitario': user.humores.solitario - 30
 					}
 				});
 
@@ -391,14 +417,15 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findRosquinha, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 10,
-						'humores.triste': user.humores.triste += 20,
-						'humores.desanimado': user.humores.desanimado += 30,
-						'humores.solitario': user.humores.solitario += 30,
-						'humores.estressado': user.humores.estressado -= 20
+						'humores.fome': user.humores.fome + 10,
+						'humores.triste': user.humores.triste + 20,
+						'humores.desanimado': user.humores.desanimado + 30,
+						'humores.solitario': user.humores.solitario + 30,
+						'humores.estressado': user.humores.estressado - 20
 					}
 				});
 
@@ -417,14 +444,15 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findChocolate, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome -= 30,
-						'humores.triste': user.humores.triste += 40,
-						'humores.desanimado': user.humores.desanimado += 40,
-						'humores.solitario': user.humores.solitario += 60,
-						'humores.estressado': user.humores.estressado += 40
+						'humores.fome': user.humores.fome - 30,
+						'humores.triste': user.humores.triste + 40,
+						'humores.desanimado': user.humores.desanimado + 40,
+						'humores.solitario': user.humores.solitario + 60,
+						'humores.estressado': user.humores.estressado + 40
 					}
 				});
 
@@ -443,14 +471,15 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findPipoca, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome -= 30,
-						'humores.triste': user.humores.triste += 40,
-						'humores.desanimado': user.humores.desanimado += 40,
-						'humores.solitario': user.humores.solitario += 60,
-						'humores.estressado': user.humores.estressado += 40
+						'humores.fome': user.humores.fome - 30,
+						'humores.triste': user.humores.triste + 40,
+						'humores.desanimado': user.humores.desanimado + 40,
+						'humores.solitario': user.humores.solitario + 60,
+						'humores.estressado': user.humores.estressado + 40
 					}
 				});
 
@@ -469,14 +498,15 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findBolo, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 30,
-						'humores.triste': user.humores.triste += 30,
-						'humores.desanimado': user.humores.desanimado += 20,
-						'humores.solitario': user.humores.solitario += 20,
-						'humores.estressado': user.humores.estressado += 20
+						'humores.fome': user.humores.fome + 30,
+						'humores.triste': user.humores.triste + 30,
+						'humores.desanimado': user.humores.desanimado + 20,
+						'humores.solitario': user.humores.solitario + 20,
+						'humores.estressado': user.humores.estressado + 20
 					}
 				});
 
@@ -495,14 +525,15 @@ module.exports = class Usaritem extends Command {
 				user.inventory.splice(findCookie, 1);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
-						'humores.fome': user.humores.fome += 10,
-						'humores.triste': user.humores.triste += 20,
-						'humores.desanimado': user.humores.desanimado += 10,
-						'humores.solitario': user.humores.solitario += 10,
-						'humores.estressado': user.humores.estressado -= 10
+						'humores.fome': user.humores.fome + 10,
+						'humores.triste': user.humores.triste + 20,
+						'humores.desanimado': user.humores.desanimado + 10,
+						'humores.solitario': user.humores.solitario + 10,
+						'humores.estressado': user.humores.estressado - 10
 					}
 				});
 

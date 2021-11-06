@@ -25,18 +25,33 @@ module.exports = class Casar extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
 		args,
-		author
+		author,
+		prefix
 	}) {
 		const user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		if (!user) return message.reply(`você deve mencionar com quem deseja casar.`);
 
 		const doc = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (user.id === author.id) return message.reply(`você não pode casar com si mesmo.`);
@@ -44,10 +59,13 @@ module.exports = class Casar extends Command {
 		if (doc.marry.has) return message.reply(`você já está casado.`);
 
 		const target = await this.client.database.users.findOne({
-			_id: user.id
+			userId: user.id,
+			guildId: message.guild.id
 		});
 
-		if (!target) return message.reply('não achei esse usuário no meu **banco de dados**.');
+		if (!target) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+
+		if (!target.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
 		if (target.marry.has) return message.reply(`o(a) membro(a) já está casado com o(a) **\`${await this.client.users.fetch(target.marry.user).then((x) => x.tag)}\`**.`);
 
@@ -81,7 +99,8 @@ module.exports = class Casar extends Command {
 				message.reply(`${user} aceitou seu pedido de casamento, parabéns.`);
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: author.id
+					userId: author.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'marry.user': user.id,
@@ -90,7 +109,8 @@ module.exports = class Casar extends Command {
 				});
 
 				await this.client.database.users.findOneAndUpdate({
-					_id: user.id
+					userId: user.id,
+					guildId: message.guild.id
 				}, {
 					$set: {
 						'marry.user': author.id,

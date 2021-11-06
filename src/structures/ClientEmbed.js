@@ -7,7 +7,7 @@ module.exports = class ClientEmbed extends MessageEmbed {
 		super(options);
 
 		this.setTimestamp();
-		this.setColor('#C27C0E');
+		this.setColor(process.env.EMBED);
 		this.setFooter(
 			`Comando executado por: ${author.tag}`,
 			author.displayAvatarURL({

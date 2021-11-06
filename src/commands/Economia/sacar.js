@@ -24,6 +24,19 @@ module.exports = class Sacar extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -32,7 +45,8 @@ module.exports = class Sacar extends Command {
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Cadastre-se usando o comando: \`${prefix}cadastrar\`.`);
@@ -47,7 +61,7 @@ module.exports = class Sacar extends Command {
 
 		if (parseInt(btc) <= 0) return message.reply('a quantia a ser removida precisa ser maior que **0**.');
 
-    if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
 
 		if (user.banco <= 0) return message.reply('você não tem dinheiro para sacar do banco.');
 
@@ -58,7 +72,8 @@ module.exports = class Sacar extends Command {
 		message.channel.send(author, embed);
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		}, {
 			$set: {
 				saldo: user.saldo += Number(btc),

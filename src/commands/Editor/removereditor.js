@@ -23,6 +23,19 @@ module.exports = class Removereditor extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -34,20 +47,20 @@ module.exports = class Removereditor extends Command {
 
 		if (!server.editor.length) return message.reply('não há Editores nesse servidor.');
 
-		const nome = args.slice(0).join(' ');
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!nome) return message.reply('você precisa colocar o ID do usuário que é Editor.');
+		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
-		if (!server.editor.find((f) => f.id === nome)) {
-			return message.reply('não existe um usuário com esse ID que seja Editor desse servidor.');
-		}
+		if (member.user.bot) return message.reply(`um bot nunca irá ser Editor do servidor.`);
+
+		if (!server.editor.find((f) => f.id === member.id)) return message.reply('esse usuário não é Editor do servidor.');
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
 		}, {
 			$pull: {
 				editor: {
-					id: nome
+					id: member.id
 				}
 			}
 		});

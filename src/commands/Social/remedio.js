@@ -24,13 +24,27 @@ module.exports = class Remedio extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (Object.values(user.humores).filter(humor => humor > 0).length >= 5) return message.reply('você não está doente!');
@@ -53,17 +67,18 @@ module.exports = class Remedio extends Command {
 			user.inventory.splice(findRemedio, 1);
 
 			await this.client.database.users.findOneAndUpdate({
-				_id: author.id
+				userId: author.id,
+				guildId: message.guild.id
 			}, {
 				$set: {
-					'humores.fome': 150,
-					'humores.sede': 150,
-					'humores.bravo': 150,
-					'humores.triste': 150,
-					'humores.cansado': 150,
-					'humores.solitario': 150,
-					'humores.estressado': 150,
-					'humores.desanimado': 150
+					'humores.fome': user.humores.fome = 150,
+					'humores.sede': user.humores.sede = 150,
+					'humores.bravo': user.humores.bravo = 150,
+					'humores.triste': user.humores.triste = 150,
+					'humores.cansado': user.humores.cansado = 150,
+					'humores.solitario': user.humores.solitario = 150,
+					'humores.estressado': user.humores.estressado = 150,
+					'humores.desanimado': user.humores.desanimado = 150
 				}
 			});
 

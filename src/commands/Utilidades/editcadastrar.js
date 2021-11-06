@@ -24,6 +24,19 @@ module.exports = class Editcadastrar extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -31,7 +44,8 @@ module.exports = class Editcadastrar extends Command {
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (!user.cadastrado) return message.reply(`você não está cadastrado ainda nesse servidor. Use o comando \`${prefix}cadastrar\`.`);
@@ -66,7 +80,8 @@ module.exports = class Editcadastrar extends Command {
 							message.channel.send(`${author}, seu nome no cadastro foi alterado para: \`${msg2.content}\``);
 
 							return await this.client.database.users.findOneAndUpdate({
-								_id: author.id
+								userId: author.id,
+								guildId: message.guild.id
 							}, {
 								$set: {
 									nomeReal: msg2.content
@@ -96,7 +111,8 @@ module.exports = class Editcadastrar extends Command {
 								message.channel.send(`${author}, sua idade no cadastro foi alterado para: \`${msg2.content}\``);
 
 								return await this.client.database.users.findOneAndUpdate({
-									_id: author.id
+									userId: author.id,
+									guildId: message.guild.id
 								}, {
 									$set: {
 										idade: Number(msg2.content)
@@ -132,7 +148,8 @@ module.exports = class Editcadastrar extends Command {
 								message.channel.send(`${author}, seu gênero no cadastro foi alterado para: \`${msg2.content}\``);
 
 								return await this.client.database.users.findOneAndUpdate({
-									_id: author.id
+									userId: author.id,
+									guildId: message.guild.id
 								}, {
 									$set: {
 										genero: await this.capitalize(msg2.content)

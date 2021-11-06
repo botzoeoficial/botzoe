@@ -1,8 +1,14 @@
 /* eslint-disable no-process-env */
-const { Client, Collection, Intents } = require('discord.js');
+const {
+	Client,
+	Collection,
+	Intents
+} = require('discord.js');
 const klaw = require('klaw');
 const path = require('path');
-const { promisify } = require('util');
+const {
+	promisify
+} = require('util');
 const readdir = promisify(require('fs').readdir);
 
 class BotTutorial extends Client {

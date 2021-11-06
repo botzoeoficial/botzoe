@@ -26,6 +26,19 @@ module.exports = class Addbanco extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -122,6 +135,11 @@ module.exports = class Addbanco extends Command {
 
 													if (!parseInt(ce4.content)) {
 														message.channel.send(`${author}, o valor do saldo do usuário não pode ser letras! Por favor, envie o valor novamente.`).then(ba => ba.delete({
+															timeout: 5000
+														}));
+														ce4.delete();
+													} else if (isNaN(ce4.content)) {
+														message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**!`).then((a) => a.delete({
 															timeout: 5000
 														}));
 														ce4.delete();

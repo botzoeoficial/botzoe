@@ -24,6 +24,19 @@ module.exports = class Card extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -41,7 +54,7 @@ module.exports = class Card extends Command {
 			inutilizados: server.card.filter((card) => card.ativado)
 		};
 
-		const cardMessage = (type) => filters[type].map((card, index) => `\`${index + 1})\` **${card.codigo}** | 💵 R$${Utils.numberFormat(card.valorZoe)},00 🪙 ${card.valorBtc} bitcoin 💸 R$${Utils.numberFormat(card.valorAlfa)},00 👩‍🦰 ${Utils.numberFormat(card.valorSonhos)} sonhos ${card.ativadoPor !== 'Ninguém.' ? `<@${card.ativadoPor}>` : ''}`);
+		const cardMessage = (type) => filters[type].map((card, index) => `\`${index + 1})\` **${card.codigo}** | 💵 R$${Utils.numberFormat(card.valorZoe)},00 🪙 ${card.valorBtc} bitcoin ${card.ativadoPor !== 'Ninguém.' ? `<@${card.ativadoPor}>` : ''}`);
 
 		if (!args[0]) {
 			embed.setTitle('💳 Lista de Cards Disponíveis');

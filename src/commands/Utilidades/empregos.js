@@ -25,13 +25,27 @@ module.exports = class Empregos extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		const empregos = require('../../json/empregos.json');
@@ -98,7 +112,8 @@ module.exports = class Empregos extends Command {
 					message.channel.send(author, embed2);
 
 					await this.client.database.users.findOneAndUpdate({
-						_id: author.id
+						userId: author.id,
+						guildId: message.guild.id
 					}, {
 						$set: {
 							emprego: findSelectedEmprego.trabalho
@@ -111,7 +126,9 @@ module.exports = class Empregos extends Command {
 				if (reason === 'time') {
 					msg.delete();
 					collector.stop();
-					return message.reply('você demorou demais para escolher o emprego! Use o comando novamente!');
+					return message.reply('você demorou demais para escolher o emprego! Use o comando novamente!').then((a) => a.delete({
+						timeout: 6000
+					}));
 				}
 			});
 		});

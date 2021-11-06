@@ -24,6 +24,19 @@ module.exports = class Depall extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -31,7 +44,8 @@ module.exports = class Depall extends Command {
 		author
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Cadastre-se usando o comando: \`${prefix}cadastrar\`.`);
@@ -45,7 +59,8 @@ module.exports = class Depall extends Command {
 		message.channel.send(author, embed);
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		}, {
 			$set: {
 				banco: user.banco += user.saldo,

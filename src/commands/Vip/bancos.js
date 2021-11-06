@@ -30,6 +30,19 @@ module.exports = class Bancos extends Command {
 		this.adm = true;
 
 		this.vip = true;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -111,7 +124,7 @@ module.exports = class Bancos extends Command {
 
 					let embedMessage = '';
 
-					embedMessage += `${usersData[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `[${emojis[i]}] **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
+					embedMessage += `${usersData[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `${emojis[i]} **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
 
 					embed.setDescription(`**USUÁRIOS DA DATA: ${ce.content}**\n\n${embedMessage}`);
 

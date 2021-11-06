@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
 const Command = require('../../structures/Command');
@@ -25,6 +26,19 @@ module.exports = class Fe extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -32,75 +46,284 @@ module.exports = class Fe extends Command {
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
 		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
 
-		const user2 = await this.client.database.users.findOne({
-			_id: user.marry.user
+		const userAuthor = await this.client.database.users.findOne({
+			userId: author.id,
+			guildId: message.guild.id
 		});
 
-		if (!user.marry.has) return message.reply(`você não está casado! Use o comando \`${prefix}casar\`.`);
+		let presoTime = 0;
 
-		if (user.familia.length <= 0) return message.reply(`você não tem filhos ainda! Use o comando \`${prefix}gf\`.`);
+		if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+			presoTime = 36000000;
 
-		const timeout = 3600000;
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-		if (timeout - (Date.now() - user.cooldown.fe) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.fe));
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.prender) {
+			presoTime = 43200000;
 
-			return message.channel.send(author, embed);
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de roubo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.revistar) {
+			presoTime = 21600000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por inventário irregular.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.roubarVeiculo) {
+			presoTime = 180000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um veículo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.velha) {
+			presoTime = 300000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Senhora.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.frentista) {
+			presoTime = 600000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Frentista.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.joalheria) {
+			presoTime = 900000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Joalheria.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.agiota) {
+			presoTime = 1200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Agiota.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.casaLoterica) {
+			presoTime = 1200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Casa Lotérica.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.brazino) {
+			presoTime = 2100000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Brazino777.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.facebook) {
+			presoTime = 2700000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Facebook.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.bancoCentral) {
+			presoTime = 3600000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Banco Central.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.shopping) {
+			presoTime = 7200000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Shopping Center.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.banco) {
+			presoTime = 14400000;
+
+			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Banco.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
 		} else {
-			const randomFilhos = Math.floor(Math.random() * user.familia.length);
+			const user2 = await this.client.database.users.findOne({
+				userId: user.marry.user,
+				guildId: message.guild.id
+			});
 
-			if (user.familia[randomFilhos].idade >= 18) {
-				const random = Math.floor(Math.random() * 100);
+			if (!user.marry.has) return message.reply(`você não está casado! Use o comando \`${prefix}casar\`.`);
 
-				if (random <= 30) {
-					const mortes = [
-						`**${user.familia[randomFilhos].nome}** teve um ataque cardíaco correndo uma Maratona, e morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`,
-						`**${user.familia[randomFilhos].nome}** não olhou para os dois lados ao atravessar um sinal e foi atropelada, ele(a) morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`,
-						`**${user.familia[randomFilhos].nome}** pegou Covid-19, foi internado mas não resistiu aos sintomas, ele(a) morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`,
-						`**${user.familia[randomFilhos].nome}** foi vítima de uma bala perdida no RJ e morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`
-					];
+			if (user.familia.length <= 0) return message.reply(`você não tem filhos ainda! Use o comando \`${prefix}gf\`.`);
 
-					const resposta = mortes[Math.floor(Math.random() * mortes.length)];
+			const timeout = 3600000;
 
-					const embed = new ClientEmbed(author)
-						.setTitle('EVENTO FAMÍLIA!')
-						.setDescription(`${author}, ${resposta}`);
+			if (timeout - (Date.now() - user.cooldown.fe) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.fe));
 
-					message.channel.send(author, embed);
+				const embed = new ClientEmbed(author)
+					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					await this.client.database.users.findOneAndUpdate({
-						_id: author.id
-					}, {
-						$pull: {
-							familia: {
-								nome: user.familia[randomFilhos].nome
+				return message.channel.send(author, embed);
+			} else {
+				const randomFilhos = Math.floor(Math.random() * user.familia.length);
+
+				if (user.familia[randomFilhos].idade >= 18) {
+					const random = Math.floor(Math.random() * 100);
+
+					if (random <= 30) {
+						const mortes = [
+							`**${user.familia[randomFilhos].nome}** teve um ataque cardíaco correndo uma Maratona, e morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`,
+							`**${user.familia[randomFilhos].nome}** não olhou para os dois lados ao atravessar um sinal e foi atropelada, ele(a) morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`,
+							`**${user.familia[randomFilhos].nome}** pegou Covid-19, foi internado mas não resistiu aos sintomas, ele(a) morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`,
+							`**${user.familia[randomFilhos].nome}** foi vítima de uma bala perdida no RJ e morreu com **${user.familia[randomFilhos].idade}** anos de idade. ⚰️ Meus sentimentos!`
+						];
+
+						const resposta = mortes[Math.floor(Math.random() * mortes.length)];
+
+						const embed = new ClientEmbed(author)
+							.setTitle('EVENTO FAMÍLIA!')
+							.setDescription(`${author}, ${resposta}`);
+
+						message.channel.send(author, embed);
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$pull: {
+								familia: {
+									nome: user.familia[randomFilhos].nome
+								}
+							},
+							$set: {
+								'cooldown.fe': Date.now()
 							}
-						},
-						$set: {
-							'cooldown.fe': Date.now()
-						}
-					});
+						});
 
-					await this.client.database.users.findOneAndUpdate({
-						_id: user.marry.user
-					}, {
-						$pull: {
-							familia: {
-								nome: user2.familia[randomFilhos].nome
+						await this.client.database.users.findOneAndUpdate({
+							userId: user.marry.user,
+							guildId: message.guild.id
+						}, {
+							$pull: {
+								familia: {
+									nome: user2.familia[randomFilhos].nome
+								}
 							}
-						}
-					});
-				} else if (random >= 31) {
+						});
+					} else if (random >= 31) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id,
+							'familia.nome': user.familia[randomFilhos].nome
+						}, {
+							$set: {
+								'familia.$.idade': user.familia[randomFilhos].idade += 1,
+								'cooldown.fe': Date.now()
+							}
+						});
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: user.marry.user,
+							guildId: message.guild.id,
+							'familia.nome': user2.familia[randomFilhos].nome
+						}, {
+							$set: {
+								'familia.$.idade': user2.familia[randomFilhos].idade += 1
+							}
+						});
+
+						const embed = new ClientEmbed(author)
+							.setTitle('EVENTO FAMÍLIA!')
+							.setDescription(`${author}, **${user.familia[randomFilhos].nome}** completou **${user.familia[randomFilhos].idade}** anos de idade! 🎉`);
+
+						message.channel.send(author, embed);
+					}
+				} else if (user.familia[randomFilhos].idade <= 17) {
 					await this.client.database.users.findOneAndUpdate({
-						_id: author.id,
+						userId: author.id,
+						guildId: message.guild.id,
 						'familia.nome': user.familia[randomFilhos].nome
 					}, {
 						$set: {
@@ -110,7 +333,8 @@ module.exports = class Fe extends Command {
 					});
 
 					await this.client.database.users.findOneAndUpdate({
-						_id: user.marry.user,
+						userId: user.marry.user,
+						guildId: message.guild.id,
 						'familia.nome': user2.familia[randomFilhos].nome
 					}, {
 						$set: {
@@ -124,31 +348,6 @@ module.exports = class Fe extends Command {
 
 					message.channel.send(author, embed);
 				}
-			} else if (user.familia[randomFilhos].idade <= 17) {
-				await this.client.database.users.findOneAndUpdate({
-					_id: author.id,
-					'familia.nome': user.familia[randomFilhos].nome
-				}, {
-					$set: {
-						'familia.$.idade': user.familia[randomFilhos].idade += 1,
-						'cooldown.fe': Date.now()
-					}
-				});
-
-				await this.client.database.users.findOneAndUpdate({
-					_id: user.marry.user,
-					'familia.nome': user2.familia[randomFilhos].nome
-				}, {
-					$set: {
-						'familia.$.idade': user2.familia[randomFilhos].idade += 1
-					}
-				});
-
-				const embed = new ClientEmbed(author)
-					.setTitle('EVENTO FAMÍLIA!')
-					.setDescription(`${author}, **${user.familia[randomFilhos].nome}** completou **${user.familia[randomFilhos].idade}** anos de idade! 🎉`);
-
-				message.channel.send(author, embed);
 			}
 		}
 	}

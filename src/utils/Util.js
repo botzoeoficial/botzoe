@@ -1,6 +1,7 @@
 const abbrev = require('./plugins/abbrev.js');
 const formatNumber = require('./plugins/numberFormat');
 const getRandomNumber = require('./plugins/randomNumber');
+const convertMs = require('./plugins/convertMS');
 
 module.exports = class Util {
 
@@ -14,6 +15,10 @@ module.exports = class Util {
 
 	static randomNumber(min, max) {
 		return getRandomNumber(min, max);
+	}
+
+	static convertMS(time) {
+		return convertMs(time);
 	}
 
 };

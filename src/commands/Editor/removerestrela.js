@@ -22,6 +22,19 @@ module.exports = class Removerestrela extends Command {
 		this.adm = true;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -33,17 +46,19 @@ module.exports = class Removerestrela extends Command {
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
 		const user = await this.client.database.users.findOne({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no meu **banco de dados**.');
+		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
 		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
 		if (!user.estrelas.length) return message.reply('esse usuário não possui nenhuma estrela para ser retirada.');
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: member.id
+			userId: member.id,
+			guildId: message.guild.id
 		}, {
 			$pull: {
 				estrelas: '⭐'

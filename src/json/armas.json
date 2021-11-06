@@ -1,0 +1,58 @@
+[
+        {
+                "aluminio": 40,
+                "arma": "Ak-47",
+                "borracha": 30,
+                "ferro": 25,
+                "img": "<:AK47:901118225520136243>"
+        },
+        {
+                "aluminio": 35,
+                "arma": "UMP",
+                "borracha": 20,
+                "ferro": 20,
+                "img": "<:UMP:901117871764144200>"
+        },
+        {
+                "aluminio": 30,
+                "arma": "MP5",
+                "borracha": 15,
+                "ferro": 20,
+                "img": "<:Mp5:901117948180168724>"
+        },
+        {
+                "aluminio": 25,
+                "arma": "ACR",
+                "borracha": 25,
+                "ferro": 25,
+                "img": "<:Acr:901118143735402536>"
+        },
+        {
+                "aluminio": 30,
+                "arma": "KNT-308",
+                "borracha": 35,
+                "ferro": 25,
+                "img": "<:KNT308:901118040245149736>"
+        },
+        {
+                "aluminio": 25,
+                "arma": "Desert Eagle",
+                "borracha": 12,
+                "ferro": 5,
+                "img": "<:deserteagle:901117192110739516>"
+        },
+        {
+                "aluminio": 20,
+                "arma": "Revolver 38",
+                "borracha": 10,
+                "ferro": 7,
+                "img": "<:Revolver38:901117447065702501>"
+        },
+        {
+                "aluminio": 20,
+                "arma": "G18",
+                "borracha": 15,
+                "ferro": 10,
+                "img": "<:G18:901117282003075072>"
+        }
+]

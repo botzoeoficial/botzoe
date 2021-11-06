@@ -1,0 +1,30 @@
+[
+    {
+        "aluminio": 40,
+        "borracha": 30,
+        "droga": "Maconha",
+        "img": "<:maconha:898326104866177084>",
+        "plastico": 35
+    },
+    {
+        "aluminio": 35,
+        "borracha": 20,
+        "droga": "Cocaína",
+        "img": "<:Cocaina:901118422774071326>",
+        "plastico": 40
+    },
+    {
+        "aluminio": 45,
+        "borracha": 15,
+        "droga": "LSD",
+        "img": "<:Lsddroga:901118376951304262>",
+        "plastico": 30
+    },
+    {
+        "aluminio": 30,
+        "borracha": 30,
+        "droga": "Metanfetamina",
+        "img": "<:Metanfetamina:901118279530217552>",
+        "plastico": 25
+    }
+]

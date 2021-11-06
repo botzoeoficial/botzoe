@@ -1,0 +1,686 @@
+{
+    "carros": [
+        {
+            "comuns": [
+                {
+                    "ano": "1981",
+                    "cavalo": "81",
+                    "img": "https://www.auto-data.net/images/f103/Nissan-Stanza-Hatchback-T11.jpg",
+                    "marca": "nissan",
+                    "nome": "Stanza",
+                    "valor": "24365",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "163"
+                },
+                {
+                    "ano": "1964",
+                    "cavalo": "104",
+                    "img": "https://live.staticflickr.com/340/30930050694_6f56aa2c6d_b.jpg",
+                    "marca": "triumph",
+                    "nome": "Dove GTR4",
+                    "valor": "41357",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "164"
+                },
+                {
+                    "ano": "2011",
+                    "cavalo": "58",
+                    "img": "https://i.ebayimg.com/images/g/mDcAAOSwxYBfLFkB/s-l800.jpg",
+                    "marca": "hyundai",
+                    "nome": "Atos",
+                    "valor": "15200",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "142"
+                },
+                {
+                    "ano": "1976",
+                    "cavalo": "200",
+                    "img": "https://img.favcars.com/chrysler/valiant/chrysler_valiant_1976_images_2.jpg",
+                    "marca": "chrysler",
+                    "nome": "Valiant",
+                    "valor": "16780",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "175"
+                },
+                {
+                    "ano": "2007",
+                    "cavalo": "164",
+                    "img": "https://auto-database.com/image/cars-mitsubishi-pajero-io-2007-141848.jp",
+                    "marca": "mitsubishi",
+                    "nome": "Pajero",
+                    "valor": "32899",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "180"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "116",
+                    "img": "https://1.bp.blogspot.com/-g6XM_EZ4H00/XduyOi3R5HI/AAAAAAAAZLM/2Bq-aGh9NZcBUeDr2oQYbX1lzeRuEYUwwCLcBGAsYHQ/s1600/Novo-Honda-City-2021%2B%25283%2529.jpg",
+                    "marca": "Honda",
+                    "nome": "City",
+                    "valor": "81545",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "180"
+                },
+                {
+                    "ano": "2022",
+                    "cavalo": "117",
+                    "img": "https://www.agoramotor.com.br/wp-content/uploads/2021/07/VW-Virtus-2022-capa.jpg",
+                    "marca": "VW",
+                    "nome": "Virtus 1.6",
+                    "valor": "83120",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "194"
+                },
+                {
+                    "ano": "2022",
+                    "cavalo": "128",
+                    "img": "https://cdn.salaodocarro.com.br/_upload/galleries/2017/12/20/volkswagen-polo-highline-200-tsi-5a3a7f41c82d9_album.jpg",
+                    "marca": "VW",
+                    "nome": "Polo Highline 1.0 Tsi",
+                    "valor": "102120",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "192"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "105",
+                    "img": "https://cdn.motor1.com/images/mgl/b78E3/s1/vw-lanca-up-tsi-turbo-com-precos-a-partir-de-r-43490-veja-tabela.webp",
+                    "marca": "VW",
+                    "nome": "Up 1.0 Tsi",
+                    "valor": "48445",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "184"
+                },
+                {
+                    "ano": "2010",
+                    "cavalo": "208",
+                    "img": "https://auto-database.com/image/peugeot-407-sw-2010-pics-107650.jpg",
+                    "marca": "peugeot",
+                    "nome": "407",
+                    "valor": "31201",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "209"
+                },
+                {
+                    "ano": "2019",
+                    "cavalo": "256",
+                    "img": "https://www.autoo.com.br/fotos/2018/11/960_720/honda_accord_2019_1_28112018_11316_960_720.jpg",
+                    "marca": "Honda",
+                    "nome": "Accord Touring 2.0 turbo",
+                    "valor": "121354",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "203"
+                },
+                {
+                    "ano": "1985",
+                    "cavalo": "85",
+                    "img": "https://i.ytimg.com/vi/u_NUsaChsQ0/hqdefault.jpg",
+                    "marca": "Fiat",
+                    "nome": "Uno",
+                    "valor": "3600",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "140"
+                },
+                {
+                    "ano": "1983",
+                    "cavalo": "Quantia",
+                    "img": "Imagem",
+                    "marca": "peugeot",
+                    "nome": "205",
+                    "valor": "Valor",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "velocidade"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "104",
+                    "img": "https://s2.glbimg.com/1eY_nbwraPk9IIQ4jr592T8nszQ=/0x0:620x350/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_cf9d035bf26b4646b105bd958f32089d/internal_photos/bs/2020/i/D/aLYP2rTMep9Uy0UddOVQ/2016-03-07-volkswagen-voyage-05.jpg",
+                    "marca": "VW",
+                    "nome": "Voyage Highline 1.6",
+                    "valor": "48641",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "192"
+                },
+                {
+                    "ano": "2007",
+                    "cavalo": "215",
+                    "img": "http://txautonet.com/wp-content/uploads/parser/BMW-3-series-325i-2007-4.jpg",
+                    "marca": "bmw",
+                    "nome": "325",
+                    "valor": "48500",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "242"
+                },
+                {
+                    "ano": "2011",
+                    "cavalo": "116",
+                    "img": "https://combustivel.app/imgs/t650/consumo-fit-ex-1-5-at-5.jpg",
+                    "marca": "Honda",
+                    "nome": "Fit Ex",
+                    "valor": "38575",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "175"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "Quantia",
+                    "img": "https://combustivel.app/imgs/t650/consumo-fox-highline-1-6-16v-1.jpg",
+                    "marca": "VW",
+                    "nome": "Fox Highline 1.6 16v",
+                    "valor": "49299",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "189"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "104",
+                    "img": "https://combustivel.app/imgs/t650/consumo-gol-connect-1-6.jpg",
+                    "marca": "VW",
+                    "nome": "Gol Connect 1.6",
+                    "valor": "46525",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "188"
+                },
+                {
+                    "ano": "1999",
+                    "cavalo": "180",
+                    "img": "http://img.autoabc.lv/opel-omega/opel-omega_1999_Sedans_1512151337_5.jpg",
+                    "marca": "opel",
+                    "nome": "Omega",
+                    "valor": "21500",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "228"
+                },
+                {
+                    "ano": "2002",
+                    "cavalo": "138",
+                    "img": "https://auto-database.com/image/pictures-of-citroen-xsara-n1-2002-261038.jpg",
+                    "marca": "citroen",
+                    "nome": "Xsara",
+                    "valor": "12540",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "203"
+                },
+                {
+                    "ano": "1992",
+                    "cavalo": "111",
+                    "img": "https://lookatthecar.org/wp-content/uploads/parser/Ford-Corsair-1990-4.jpg",
+                    "marca": "ford",
+                    "nome": "Corsair",
+                    "valor": "10641",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "175"
+                },
+                {
+                    "ano": "1994",
+                    "cavalo": "150",
+                    "img": "https://i.pinimg.com/originals/f0/37/89/f037894f4669c4b95073127758bab1ce.jpg",
+                    "marca": "Honda",
+                    "nome": "Accord Coupe EX 2.2",
+                    "valor": "9226",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "195"
+                },
+                {
+                    "ano": "1980",
+                    "cavalo": "83",
+                    "img": "https://motortudo.com/wp-content/uploads/2021/01/Ford-Corcel-LDO-1.6-1980-Carros-antigos-21.jpg",
+                    "marca": "Ford",
+                    "nome": "Corcel II",
+                    "valor": "9850",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "175"
+                },
+                {
+                    "ano": "2007",
+                    "cavalo": "101",
+                    "img": "https://combustivel.app/imgs/t650/consumo-golf-generation-1-6.jpg",
+                    "marca": "volkswagen",
+                    "nome": "Golf Flash",
+                    "valor": "12365",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "188"
+                },
+                {
+                    "ano": "1963",
+                    "cavalo": "425",
+                    "img": "https://www.carpixel.net/w/c3fb1ff2011e7c06f57b734b9452aeee/maserati-tipo-151-3-002-car-wallpaper-60437.jpg",
+                    "marca": "maserati",
+                    "nome": "151",
+                    "valor": "136842",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "261"
+                },
+                {
+                    "ano": "1982",
+                    "cavalo": "47",
+                    "img": "https://www.litoralcar.com.br/foto-resize/g/878303/264/fiat-147--1.0-1982-10355942.jpeg",
+                    "marca": "Fiat",
+                    "nome": "147",
+                    "valor": "6100",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "110"
+                },
+                {
+                    "ano": "ano",
+                    "cavalo": "200",
+                    "img": "https://lh3.googleusercontent.com/proxy/BhW9MC2pxBjanIldAhMWnyEgS09x34ANYd_KS_9QI1kJdVpFvjLDtAwQcDe2yBLaEHBRVhb5-fh9i2xMFhjwbbwm-6ijURvL5Wv_Cujc7ia2EGI0mJd4KOjmoAW4yl8Z3cLWBwxaC9jf4D2gIQsWSoQ",
+                    "marca": "Honda",
+                    "nome": "Legend 3.5 V6",
+                    "valor": "12685",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "215"
+                },
+                {
+                    "ano": "2000",
+                    "cavalo": "59",
+                    "img": "https://auto-database.com/image/plymouth-neon-2000-wallpaper-104239.jpg",
+                    "marca": "plymouth",
+                    "nome": "Neon",
+                    "valor": "Valor",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "195"
+                },
+                {
+                    "ano": "1999",
+                    "cavalo": "89",
+                    "img": "https://s1.cdn.autoevolution.com/images/gallery/LANCIALybraSedan-274_2.jpg",
+                    "marca": "Lancia",
+                    "nome": "Lybra",
+                    "valor": "20000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "199"
+                },
+                {
+                    "ano": "2011",
+                    "cavalo": "Quantia",
+                    "img": "https://m.media-amazon.com/images/I/71b3SrIl5uL._UY560_.jpg",
+                    "marca": "toyota",
+                    "nome": "RAV4",
+                    "valor": "50045",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "190"
+                },
+                {
+                    "ano": "2012",
+                    "cavalo": "204",
+                    "img": "http://s1.cdn.autoevolution.com/images/gallery/CITROEN-C5-Sedan-5733_31.jpg",
+                    "marca": "citroen",
+                    "nome": "C5",
+                    "valor": "51990",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "velocidade"
+                },
+                {
+                    "ano": "2012",
+                    "cavalo": "360",
+                    "img": "https://cdn.dealrimages.com/3T%2FQB%2F32%2FLQHUTA3S9BVAGM.jpg?h=1200",
+                    "marca": "ford",
+                    "nome": "F-150",
+                    "valor": "158120",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "280"
+                },
+                {
+                    "ano": "2011",
+                    "cavalo": "261",
+                    "img": "http://machinespider.com/wp-content/uploads/2011/07/nissan-frontier-2011.jpg",
+                    "marca": "nissan",
+                    "nome": "Frontier",
+                    "valor": "Valor",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "velocidade"
+                }
+            ],
+            "epicos": [
+                {
+                    "ano": "2007",
+                    "cavalo": "420",
+                    "img": "http://images.thecarconnection.com/lrg/2007_jaguar_xkr_100022624_l.jpg",
+                    "marca": "jaguar",
+                    "nome": "XKR",
+                    "valor": "349621",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "250"
+                },
+                {
+                    "ano": "2005",
+                    "cavalo": "59",
+                    "img": "https://i.ebayimg.com/00/s/NzU0WDEwMjQ=/z/av4AAOSw8zNcQLOf/$_86.JPG",
+                    "marca": "seat",
+                    "nome": "Arosa",
+                    "valor": "126214",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "151"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "717",
+                    "img": "https://cdn.globalcarsbrands.com/wp-content/uploads/2017/02/2017-Dodge-Charger-SRT-Hellcat-Overview.jpg",
+                    "marca": "Dodge",
+                    "nome": "Charger SRT Hellcat 6.2 V8",
+                    "valor": "495000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "328"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "717",
+                    "img": "https://periodismodelmotor.com/wp-content/uploads/2017/01/prueba-dodge-challenger-srt-hellcat-1280x720.jpg",
+                    "marca": "Dodge",
+                    "nome": "Challenger SRT Hellcat 6.2 V8",
+                    "valor": "495000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "326"
+                },
+                {
+                    "ano": "2022",
+                    "cavalo": "200",
+                    "img": "https://carroarretado.com.br/wp-content/uploads/2019/05/jaguar-i-pace-ev400-awd-s-77-05b40338093b0630.jpg",
+                    "marca": "Jaguar",
+                    "nome": "I-Pace EV400 SE",
+                    "valor": "619950",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "200"
+                },
+                {
+                    "ano": "2016",
+                    "cavalo": "560",
+                    "img": "https://motorshow.com.br/wp-content/uploads/sites/2/2017/08/170577-ferrari-portofino-e1503502311986.jpg",
+                    "marca": "Ferrari",
+                    "nome": "California T",
+                    "valor": "890310",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "310"
+                },
+                {
+                    "ano": "2020",
+                    "cavalo": "250",
+                    "img": "https://cdn.motor1.com/images/mgl/yrmYl/s1/land-rover-range-rover-evoque-l.jpg",
+                    "marca": "Range Rover",
+                    "nome": "Evoque",
+                    "valor": "386950",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "230"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "300",
+                    "img": "https://heycar.com.br/images/2020/Novembro/Jaguar_F_Type.jpg",
+                    "marca": "Jaguar",
+                    "nome": "F-Type Coupé R-Dynamic 2.0",
+                    "valor": "510223",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "250"
+                }
+            ],
+            "epicos2": [
+                {
+                    "ano": "1951",
+                    "cavalo": "148",
+                    "img": "https://bestcarmagz.net/sites/default/files/9343446mercedes-benz-300b-2.jpg",
+                    "marca": "mercedes-benz",
+                    "nome": "300S",
+                    "valor": "495000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "342"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "340",
+                    "img": "https://www.comprecar.com.br/storage/news/featured/f54ad8e7-5531-4fc1-8240-9b3f7537cc9f.jpeg",
+                    "marca": "Audi",
+                    "nome": "Q8 Performance",
+                    "valor": "599199",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "250"
+                },
+                {
+                    "ano": "1983",
+                    "cavalo": "59",
+                    "img": "http://lookatthecar.org/wp-content/uploads/2015/11/Peugeot-205-1983-1.jpg",
+                    "marca": "peugeot",
+                    "nome": "205",
+                    "valor": "Valor",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "210"
+                },
+                {
+                    "ano": "1955",
+                    "cavalo": "78",
+                    "img": "http://www.supercars.net/blog/wp-content/uploads/2016/03/3849851.jpg",
+                    "marca": "abarth",
+                    "nome": "207",
+                    "valor": "350348",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "230"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "340",
+                    "img": "https://www.comprecar.com.br/storage/news/featured/cF4WYIGSC_6guYm.jpg",
+                    "marca": "Range Rover",
+                    "nome": "Velar",
+                    "valor": "585950",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "240"
+                },
+                {
+                    "ano": "2019",
+                    "cavalo": "740",
+                    "img": "https://www.automaistv.com.br/wp-content/uploads/2019/03/lamborghini_huracan_evo_spyder_35-990x660.jpg",
+                    "marca": "Lamborghini",
+                    "nome": "Aventador",
+                    "valor": "1200000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "350"
+                }
+            ],
+            "lendario": [
+                {
+                    "ano": "2011",
+                    "cavalo": "1200",
+                    "img": "https://www.razaoautomovel.com/wp-content/uploads/2014/04/2014-Bugatti-Veyron-Grand-Sport-Vitesse-Legend-Black-Bess-Static-2-1280x800.jpg",
+                    "marca": "Bugatti",
+                    "nome": "Veyron Super Sport",
+                    "valor": "4900241",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "431"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "620",
+                    "img": "https://cdn.autopapo.com.br/box/uploads/2021/04/30152018/ferrari_roma-2-1800x1200.jpg",
+                    "marca": "Ferrari",
+                    "nome": "Roma 3.9 V8",
+                    "valor": "3300000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "320"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "1034",
+                    "img": "https://cdn.folhape.com.br/upload/dn_arquivo/2021/06/tesla-model-s-2_1.png",
+                    "marca": "Tesla",
+                    "nome": "Model S Plaid",
+                    "valor": "1299900",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "322"
+                },
+                {
+                    "ano": "2019",
+                    "cavalo": "1500",
+                    "img": "https://heycar.com.br/images/2019/Marco/Divo.jpg",
+                    "marca": "Bugatti",
+                    "nome": "Divo 8.0 W16",
+                    "valor": "3780000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "380"
+                },
+                {
+                    "ano": "2021",
+                    "cavalo": "780",
+                    "img": "http://acelerandoporai.com.br/wp-content/uploads/2020/06/15_ferrari-sf90strd-1.jpg",
+                    "marca": "Ferrari",
+                    "nome": "SF90 Stradale",
+                    "valor": "4300000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "340"
+                },
+                {
+                    "ano": "2020",
+                    "cavalo": "640",
+                    "img": "https://www.bentleygoldcoast.com/galleria_images/7817/7817_p4_l.jpg",
+                    "marca": "Lamborghini",
+                    "nome": "Huracan EVO LP 640-4",
+                    "valor": "2976118",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "325"
+                }
+            ],
+            "raros": [
+                {
+                    "ano": "2010",
+                    "cavalo": "215",
+                    "img": "https://www.bmw-vergelijker.nl/wp-content/uploads/2020/09/1280x960-6534.jpg",
+                    "marca": "bmw",
+                    "nome": "125",
+                    "valor": "123800",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "243"
+                },
+                {
+                    "ano": "2005",
+                    "cavalo": "210",
+                    "img": "https://www.iihs.org/api/ratings/model-year-images/1990",
+                    "marca": "volvo",
+                    "nome": "XC90",
+                    "valor": "101000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "210"
+                },
+                {
+                    "ano": "2012",
+                    "cavalo": "262",
+                    "img": "https://s1.cdn.autoevolution.com/images/gallery/FORD-Flex-4946_6.jpg",
+                    "marca": "Ford",
+                    "nome": "Flex",
+                    "valor": "111620",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "185"
+                },
+                {
+                    "ano": "2012",
+                    "cavalo": "304",
+                    "img": "http://carster.info/images/car_catalog/bmw/2012-bmw-x5-diesel_8.jpg",
+                    "marca": "bmw",
+                    "nome": "X5",
+                    "valor": "175652",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "235"
+                },
+                {
+                    "ano": "2018",
+                    "cavalo": "280",
+                    "img": "https://lh3.googleusercontent.com/proxy/cxeDAlq4idADpevo92Ql4B5v5zxUErjK1DJlKJAHJPhY0QOVSyZkB5ALjqsb9rrKyhjWM6xiX2Nt-Rp_zeRUV7gxWhQTNA_cW4L1a_R081AZrHzxksAj0Ta4GK0",
+                    "marca": "Dodge",
+                    "nome": "Journey R/T Blacktop 3.6 V6",
+                    "valor": "127557",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "208"
+                },
+                {
+                    "ano": "2017",
+                    "cavalo": "220",
+                    "img": "https://combustivel.app/imgs/t650/consumo-passat-highline-2-0-tsi-dsg-2.jpg",
+                    "marca": "VW",
+                    "nome": "Passat Highline 2.0 TSi",
+                    "valor": "135154",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "246"
+                },
+                {
+                    "ano": "2015",
+                    "cavalo": "294",
+                    "img": "https://s1.1zoom.me/big0/459/Dodge_durangoFront_Red_447470.jpg",
+                    "marca": "Dodge",
+                    "nome": "Durango Limited 3.6 V6",
+                    "valor": "166005",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "215"
+                },
+                {
+                    "ano": "2018",
+                    "cavalo": "128",
+                    "img": "https://cdn.motor1.com/images/mgl/2br1E/s1/volkswagen-golf-2018-fotos-oficiais.jpg",
+                    "marca": "VW",
+                    "nome": "Golf Comfortline 1.6",
+                    "valor": "114900",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "192"
+                },
+                {
+                    "ano": "2013",
+                    "cavalo": "217",
+                    "img": "https://combustivel.app/imgs/t650/consumo-evoque-coupe-pure-tech-2-0-si4.jpg",
+                    "marca": "Range Rover",
+                    "nome": "Evoque",
+                    "valor": "113480",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "240"
+                },
+                {
+                    "ano": "2005",
+                    "cavalo": "379",
+                    "img": "https://www.supercars.net/blog/wp-content/uploads/2016/04/577683.jpg",
+                    "marca": "Aston Martin",
+                    "nome": "V8 Vantage",
+                    "valor": "189320",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "290"
+                },
+                {
+                    "ano": "2007",
+                    "cavalo": "552",
+                    "img": "https://allthecars.files.wordpress.com/2019/03/bentley-continental-gt-v8-01.jpg",
+                    "marca": "bentley",
+                    "nome": "Continental GT",
+                    "valor": "122364",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "314"
+                },
+                {
+                    "ano": "2006",
+                    "cavalo": "161",
+                    "img": "https://cdn.dealrimages.com/VA%2FFO%2F0C%2FMG1TDHP3FINTOP.jpg?h=1000",
+                    "marca": "mercedes-benz",
+                    "nome": "SLK",
+                    "valor": "104286",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "250"
+                },
+                {
+                    "ano": "2013",
+                    "cavalo": "158",
+                    "img": "https://www.vroomgirls.com/wp-content/uploads/2012/04/Dart-G013_03.jpg",
+                    "marca": "dodge",
+                    "nome": "DART",
+                    "valor": "80000",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "177"
+                },
+                {
+                    "ano": "2001",
+                    "cavalo": "106",
+                    "img": "https://images-na.ssl-images-amazon.com/images/I/61QaWKWVYYL.jpg",
+                    "marca": "subaru",
+                    "nome": "Outback",
+                    "valor": "94698",
+                    "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
+                    "velocidade": "224"
+                }
+            ]
+        }
+    ]
+}

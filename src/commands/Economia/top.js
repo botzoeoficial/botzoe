@@ -25,6 +25,19 @@ module.exports = class Top extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -57,7 +70,8 @@ module.exports = class Top extends Command {
 		};
 
 		const users = (await User.find({})).map(u => ({
-			id: u._id,
+			id: u.userId,
+			server: u.guildId,
 			money: u.banco + u.saldo
 		})).sort((a, b) => b.money - a.money).filter(u => u.money).slice(0, 20);
 

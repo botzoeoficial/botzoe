@@ -22,6 +22,19 @@ module.exports = class Sobremim extends Command {
 		this.adm = false;
 
 		this.vip = false;
+		this.governador = false;
+		this.delegado = false;
+		this.diretorHP = false;
+		this.donoFavela = false;
+		this.donoArmas = false;
+		this.donoDrogas = false;
+		this.donoDesmanche = false;
+		this.donoLavagem = false;
+
+		this.ajudanteArma = false;
+		this.ajudanteDroga = false;
+		this.ajudanteDesmanche = false;
+		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,
@@ -36,7 +49,8 @@ module.exports = class Sobremim extends Command {
 		if (mensagem.length > 1024) return message.reply('a mensagem do SOBREMIM só pode ter no máximo **1024** letras.');
 
 		await this.client.database.users.findOneAndUpdate({
-			_id: author.id
+			userId: author.id,
+			guildId: message.guild.id
 		}, {
 			$set: {
 				sobremim: mensagem
