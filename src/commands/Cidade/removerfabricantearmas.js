@@ -2,18 +2,18 @@
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
-module.exports = class Removereditor extends Command {
+module.exports = class Removerfabricantearmas extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'removereditor';
-		this.category = 'Editor';
-		this.description = 'Remova Editores do seu servidor!';
-		this.usage = 'removereditor <usuário>';
-		this.aliases = ['removeeditor', 'remove-editor'];
+		this.name = 'removerfabricantearmas';
+		this.category = 'Cidade';
+		this.description = 'Remova o Fabricante das Armas do seu servidor!';
+		this.usage = 'removerfabricantearmas <usuário>';
+		this.aliases = ['remover-fabricantearmas', 'remover-fabricante-armas'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -26,7 +26,7 @@ module.exports = class Removereditor extends Command {
 		this.governador = false;
 		this.delegado = false;
 		this.diretorHP = false;
-		this.donoFavela = false;
+		this.donoFavela = true;
 		this.donoArmas = false;
 		this.donoDrogas = false;
 		this.donoDesmanche = false;
@@ -39,31 +39,31 @@ module.exports = class Removereditor extends Command {
 		message,
 		args
 	}) {
-		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
-		});
-
-		if (!server.editor.length) return message.reply('não há Editores nesse servidor.');
-
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
-		if (member.user.bot) return message.reply(`um bot nunca irá ser Editor do servidor.`);
+		if (member.user.bot) return message.reply(`um bot não nunca irá ser Fabricante das Armas.`);
 
-		if (!server.editor.find((f) => f.id === member.id)) return message.reply('esse usuário não é Editor do servidor.');
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (!server.cidade.donoFabricadeArmas.length) return message.reply('esse servidor não possui Fabricante de Armas ainda.');
+
+		if (!server.cidade.donoFabricadeArmas.map((a) => a.id).includes(member.id)) return message.reply('esse usuário não é o Fabricante das Armas desse servidor.');
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
 		}, {
 			$pull: {
-				editor: {
+				'cidade.donoFabricadeArmas': {
 					id: member.id
 				}
 			}
 		});
 
-		message.reply('usuário removido com sucesso.');
+		message.reply('usuário removido do cargo Fabricante das Armas com sucesso.');
 	}
 
 };

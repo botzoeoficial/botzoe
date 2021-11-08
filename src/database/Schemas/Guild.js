@@ -9,7 +9,7 @@ const guildSchema = new Schema({
 	},
 	prefix: {
 		type: String,
-		default: '//'
+		default: '++'
 	},
 	editor: {
 		type: Array,
@@ -218,12 +218,20 @@ const guildSchema = new Schema({
 			default: ''
 		},
 		donoFabricadeArmas: {
-			type: String,
-			default: ''
+			type: Array,
+			default: [],
+			id: {
+				type: String,
+				default: ''
+			}
 		},
 		donoFabricadeDrogas: {
-			type: String,
-			default: ''
+			type: Array,
+			default: [],
+			id: {
+				type: String,
+				default: ''
+			}
 		},
 		donoDesmanche: {
 			type: String,
@@ -232,22 +240,6 @@ const guildSchema = new Schema({
 		donoLavagem: {
 			type: String,
 			default: ''
-		},
-		ajudanteArmas: {
-			type: Array,
-			default: [],
-			id: {
-				type: String,
-				default: ''
-			}
-		},
-		ajudanteDrogas: {
-			type: Array,
-			default: [],
-			id: {
-				type: String,
-				default: ''
-			}
 		},
 		ajudanteDesmanche: {
 			type: Array,

@@ -1,18 +1,19 @@
+/* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
-module.exports = class Removerajudantedesmanche extends Command {
+module.exports = class Removerfabricantedrogas extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'removerajudantedesmanche';
+		this.name = 'removerfabricantedrogas';
 		this.category = 'Cidade';
-		this.description = 'Remova um Ajudante do Desmanche!';
-		this.usage = 'removerajudantedesmanche <usuário>';
-		this.aliases = ['remover-ajudantedesmanche', 'remover-ajudante-desmanche'];
+		this.description = 'Remova o Fabricante das Drogas do seu servidor!';
+		this.usage = 'removerfabricantedrogas <usuário>';
+		this.aliases = ['remover-fabricantedrogas', 'remover-fabricante-drogas'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -28,7 +29,7 @@ module.exports = class Removerajudantedesmanche extends Command {
 		this.donoFavela = true;
 		this.donoArmas = false;
 		this.donoDrogas = false;
-		this.donoDesmanche = true;
+		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
 		this.ajudanteDesmanche = false;
@@ -42,27 +43,27 @@ module.exports = class Removerajudantedesmanche extends Command {
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
-		if (member.user.bot) return message.reply(`um bot nunca irá ser Ajudante do Desmanche.`);
+		if (member.user.bot) return message.reply(`um bot não nunca irá ser Fabricante das Drogas.`);
 
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.ajudanteDesmanche.length) return message.reply('este servidor não possui Ajudantes para o Desmanche.');
+		if (!server.cidade.donoFabricadeDrogas.length) return message.reply('esse servidor não possui Fabricante de Drogas ainda.');
 
-		if (!server.cidade.ajudanteDesmanche.map(a => a.id).includes(member.id)) return message.reply('esse usuário não é Ajudante do Desmanche do servidor.');
+		if (!server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(member.id)) return message.reply('esse usuário não é o Fabricante das Drogas desse servidor.');
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
 		}, {
 			$pull: {
-				'cidade.ajudanteDesmanche': {
+				'cidade.donoFabricadeDrogas': {
 					id: member.id
 				}
 			}
 		});
 
-		message.reply(`o usuário ${member} não é mais Ajudante do Desmanche desse servidor agora.`);
+		message.reply('usuário removido do cargo Fabricante das Drogas com sucesso.');
 	}
 
 };

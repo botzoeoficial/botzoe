@@ -37,8 +37,6 @@ module.exports = class Cadastro extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -72,7 +70,7 @@ module.exports = class Cadastro extends Command {
 				.addField('🌎 Região:', user.regiao, true)
 				.addField('🏦 Saldo:', `R$${Utils.numberFormat(user.saldo + user.banco)},00`, true)
 				.addField('🪙 BitCoins:', `${Utils.numberFormat(user.bitcoin)}`, true)
-				.addField('💵 Empréstimos Alfacusa:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
+				.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 				.addField('⚧ Orientação Sexual:', user.orientacaoSexual, true)
 				.addField('📈 Level:', user.level, true)
 				.addField('💼 Função na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : user.fac.emprego.nome, true)
@@ -104,7 +102,7 @@ module.exports = class Cadastro extends Command {
 				.addField('🌎 Região:', user.regiao, true)
 				.addField('🏦 Saldo:', `R$${Utils.numberFormat(user.saldo + user.banco)},00`, true)
 				.addField('🪙 BitCoins:', `${user.bitcoin}`, true)
-				.addField('💵 Empréstimos Alfacusa:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
+				.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 				.addField('⚧ Orientação Sexual:', user.orientacaoSexual, true)
 				.addField('📈 Level:', user.level, true)
 				.addField('💼 Função na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : user.fac.emprego.nome, true)

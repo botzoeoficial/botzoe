@@ -32,8 +32,6 @@ module.exports = class Removerpolicial extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -81,8 +79,8 @@ module.exports = class Removerpolicial extends Command {
 		}, {
 			$set: {
 				'policia.isPolice': false,
-				'policia.prender': 0,
-				'policia.revistar': 0
+				'policia.revistar': 0,
+				'policia.prender': 0
 			}
 		});
 

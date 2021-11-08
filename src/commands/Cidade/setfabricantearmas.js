@@ -1,18 +1,18 @@
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
-module.exports = class Removerajudantedesmanche extends Command {
+module.exports = class Setfabricantearmas extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'removerajudantedesmanche';
+		this.name = 'setfabricantearmas';
 		this.category = 'Cidade';
-		this.description = 'Remova um Ajudante do Desmanche!';
-		this.usage = 'removerajudantedesmanche <usuário>';
-		this.aliases = ['remover-ajudantedesmanche', 'remover-ajudante-desmanche'];
+		this.description = 'Seta quem vai comandar a Fábrica de Armas!';
+		this.usage = 'setfabricantearmas <usuário>';
+		this.aliases = ['set-fabricantearmas', 'set-fabricante-armas'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -28,7 +28,7 @@ module.exports = class Removerajudantedesmanche extends Command {
 		this.donoFavela = true;
 		this.donoArmas = false;
 		this.donoDrogas = false;
-		this.donoDesmanche = true;
+		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
 		this.ajudanteDesmanche = false;
@@ -42,27 +42,27 @@ module.exports = class Removerajudantedesmanche extends Command {
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
-		if (member.user.bot) return message.reply(`um bot nunca irá ser Ajudante do Desmanche.`);
+		if (member.user.bot) return message.reply(`você não pode dar a função de Fabricante das Armas para um bot.`);
 
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.ajudanteDesmanche.length) return message.reply('este servidor não possui Ajudantes para o Desmanche.');
+		if (server.cidade.donoFabricadeArmas.length === 3) return message.reply('esse servidor já possui muitos Fabricantes de Armas.');
 
-		if (!server.cidade.ajudanteDesmanche.map(a => a.id).includes(member.id)) return message.reply('esse usuário não é Ajudante do Desmanche do servidor.');
+		if (server.cidade.donoFabricadeArmas.map((a) => a.id).includes(member.id)) return message.reply('esse usuário já é Fabricante das Armas desse servidor.');
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
 		}, {
-			$pull: {
-				'cidade.ajudanteDesmanche': {
+			$push: {
+				'cidade.donoFabricadeArmas': {
 					id: member.id
 				}
 			}
 		});
 
-		message.reply(`o usuário ${member} não é mais Ajudante do Desmanche desse servidor agora.`);
+		message.reply(`o usuário ${member} virou o Fabricante das Armas desse servidor agora.`);
 	}
 
 };

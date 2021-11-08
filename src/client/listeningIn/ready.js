@@ -36,269 +36,6 @@ module.exports = class Ready {
 		const allGuilds = await Guild.find({});
 		const allItens = await Shop.find({});
 
-		const hasDocGuild = await Guild.find({
-			'exportador.canal': {
-				$exists: true
-			}
-		});
-
-		const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
-		if (!arrayCanais) return;
-
-		const filtroCanais = arrayCanais.filter((item) => item !== 0);
-		if (!filtroCanais) return;
-
-		cron.schedule('48 */4 * * *', async () => {
-			const randomQuantia = Utils.randomNumber(50, 100);
-			const mapDroga = ['Maconha', 'Cocaína', 'LSD', 'Metanfetamina'];
-			const randomDroga = mapDroga[Math.floor(Math.random() * mapDroga.length)];
-			let tempo = 600000;
-			let atualDroga = 0;
-
-			const embed = new ClientEmbed(this.client.user)
-				.setTitle('Exportando Drogas')
-				.setDescription(`O Exportador de Drogas está precisando de **${randomQuantia}KG** de **${randomDroga}**, para levar a Europa.\n\nClique na reação 📦 para Exportar e Vender a sua Droga.`)
-				.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo))
-				.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
-
-			for (let i = 0; i < arrayCanais.length; i++) {
-				try {
-					await this.client.channels.cache.get(filtroCanais[i]).send(embed).then(async (msg) => {
-						await msg.react('📦');
-
-						await this.client.database.guilds.findOneAndUpdate({
-							_id: msg.guild.id
-						}, {
-							$set: {
-								'exportador.precisandoQuantia': randomQuantia,
-								'exportador.precisandoDroga': randomDroga,
-								'exportador.irEmbora': tempo,
-								'exportador.quantiaQueFalta': atualDroga
-							}
-						});
-
-						const filtro = (reaction, user) => reaction.emoji.name === '📦' && user.id !== this.client.user.id;
-						const coletor = msg.createReactionCollector(filtro, {
-							time: 600000,
-							max: 10
-						});
-
-						coletor.on('collect', async (reaction2, user2) => {
-							const userAuthor = await this.client.database.users.findOne({
-								userId: user2.id,
-								guildId: msg.guild.id
-							});
-
-							let presoTime = 0;
-
-							if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
-								presoTime = 36000000;
-
-								if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-									const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
-
-									const embedPreso = new ClientEmbed(this.client.user)
-										.setTitle('👮 | Preso')
-										.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-									return msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedPreso);
-								}
-							} else if (!userAuthor.isMochila) {
-								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
-									timeout: 5000
-								}));
-							} else if (!userAuthor.mochila.find((a) => a.item === randomDroga)) {
-								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui **${randomDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
-									timeout: 5000
-								}));
-							} else {
-								const randomDrogaUser = Math.floor(Math.random() * Math.min(randomQuantia, userAuthor.mochila.find((a) => a.item === randomDroga).quantia));
-
-								atualDroga += randomDrogaUser;
-
-								await this.client.database.guilds.findOneAndUpdate({
-									_id: msg.guild.id
-								}, {
-									$set: {
-										'exportador.quantiaQueFalta': atualDroga
-									}
-								});
-
-								if (atualDroga >= randomQuantia) {
-									atualDroga = randomQuantia;
-
-									await this.client.database.guilds.findOneAndUpdate({
-										_id: msg.guild.id
-									}, {
-										$set: {
-											'exportador.precisandoQuantia': 0,
-											'exportador.precisandoDroga': 'Nenhuma Droga',
-											'exportador.irEmbora': 0,
-											'exportador.quantiaQueFalta': 0
-										}
-									});
-
-									coletor.stop();
-
-									const embedTchau = new ClientEmbed(this.client.user)
-										.setTitle('Exportando Drogas')
-										.setDescription(`O exportador de drogas encheu seu lote de drogas para levar a Europa. Ele só irá voltar daqui a ${Utils.convertMS(17280000)}!`);
-
-									return msg.channel.send(embedTchau);
-								}
-
-								let valor = 0;
-
-								if (randomDroga === 'Maconha') {
-									valor = randomDrogaUser * 30;
-								} else if (randomDroga === 'Cocaína') {
-									valor = randomDrogaUser * 50;
-								} else if (randomDroga === 'LSD') {
-									valor = randomDrogaUser * 70;
-								} else if (randomDroga === 'Metanfetamina') {
-									valor = randomDrogaUser * 90;
-								}
-
-								const embedExportada = new ClientEmbed(this.client.user)
-									.setTitle('Exportando Drogas')
-									.setDescription(`<@${reaction2.users.cache.last().id}>, você repassou **${randomDrogaUser}KG** de **${randomDroga}** para o exportador, e recebeu **R$${Utils.numberFormat(valor)},00**.`);
-
-								msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedExportada).then(async (msg1) => {
-									await msg1.react('👮');
-
-									const server = await this.client.database.guilds.findOne({
-										_id: msg1.guild.id
-									});
-
-									const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-									const coletor2 = msg1.createReactionCollector(filtro2, {
-										time: 4000
-									});
-
-									coletor2.on('collect', async (reaction4, user4) => {
-										const embedPolicia = new ClientEmbed(this.client.user)
-											.setTitle('Prisão')
-											.setDescription(`Você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
-
-										msg.channel.send(embedPolicia);
-
-										atualDroga -= randomDrogaUser;
-
-										await this.client.database.guilds.findOneAndUpdate({
-											_id: msg.guild.id
-										}, {
-											$set: {
-												'exportador.quantiaQueFalta': atualDroga
-											}
-										});
-
-										await this.client.database.users.findOneAndUpdate({
-											userId: user2.id,
-											guildId: msg1.guild.id
-										}, {
-											$set: {
-												'prisao.isPreso': true,
-												'prisao.tempo': Date.now(),
-												'prisao.traficoDrogas': true
-											}
-										});
-
-										await this.client.database.users.findOneAndUpdate({
-											userId: user2.id,
-											guildId: msg1.guild.id,
-											'mochila.item': randomDroga
-										}, {
-											$set: {
-												'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
-											}
-										});
-
-										setTimeout(async () => {
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg1.guild.id
-											}, {
-												$set: {
-													'prisao.isPreso': false,
-													'prisao.tempo': 0,
-													'prisao.traficoDrogas': false
-												}
-											});
-										}, 36000000);
-									});
-
-									coletor2.on('end', async (collected, reason) => {
-										if (reason === 'time') {
-											coletor2.stop();
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg1.guild.id
-											}, {
-												$set: {
-													banco: userAuthor.banco + valor
-												}
-											});
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg1.guild.id,
-												'mochila.item': randomDroga
-											}, {
-												$set: {
-													'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
-												}
-											});
-										}
-									});
-								});
-							}
-						});
-
-						coletor.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								coletor.stop();
-								msg.delete();
-
-								await this.client.database.guilds.findOneAndUpdate({
-									_id: msg.guild.id
-								}, {
-									$set: {
-										'exportador.precisandoQuantia': 0,
-										'exportador.precisandoDroga': 'Nenhuma Droga',
-										'exportador.irEmbora': 0,
-										'exportador.quantiaQueFalta': 0
-									}
-								});
-
-								return;
-							}
-						});
-
-						setInterval(async () => {
-							tempo--;
-
-							await this.client.database.guilds.findOneAndUpdate({
-								_id: msg.guild.id
-							}, {
-								$set: {
-									'exportador.irEmbora': tempo
-								}
-							});
-
-							embed.fields = [];
-							embed.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo));
-							embed.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
-
-							await msg.edit(embed);
-						}, 60000);
-					});
-				} catch (error) {
-					console.log(error);
-				}
-			}
-		});
-
 		// allGuilds.forEach(async (a) => {
 		// 	a.vip.forEach((_, index2) => {
 		// 		if (new Date(a.vip[index2].tempo).getTime() - Date.now() > 0) {
@@ -324,11 +61,11 @@ module.exports = class Ready {
 		// 	a.save();
 		// });
 
-		setInterval(async () => {
+		cron.schedule('*/20 * * * *', async () => {
 			const random = Math.floor(Math.random() * 91);
 
 			const server = await this.client.database.guilds.findOne({
-				_id: '830972296176992296'
+				_id: '885645282614861854'
 			});
 
 			server.bolsa.valor = random;
@@ -347,10 +84,9 @@ module.exports = class Ready {
 					.setColor('#1cfc03')
 					.addField('🕑 | Tempo para Atualização da Bolsa', `${faltam.minutes}m ${faltam.seconds}s\n\n***Faça um Bom Investimento!***`);
 
-				this.client.channels.cache.get('893472777909178369').send(embed);
 				this.client.channels.cache.get('897285158099619880').send(embed);
 			}
-		}, 1200000);
+		});
 
 		allUsers.forEach(async e => {
 			if (e.cadastrado) {
@@ -402,7 +138,6 @@ module.exports = class Ready {
 								'humores.fome': e.humores.fome - 1
 							}
 						});
-						console.log('fome salva!');
 					}, 7200000);
 				} catch (err) {
 					return;
@@ -418,7 +153,6 @@ module.exports = class Ready {
 								'humores.sede': e.humores.sede - 1
 							}
 						});
-						console.log('sede salva!');
 					}, 3600000);
 				} catch (err) {
 					return;
@@ -434,7 +168,6 @@ module.exports = class Ready {
 								'humores.bravo': e.humores.bravo - 1
 							}
 						});
-						console.log('bravo salvo!');
 					}, 3000000);
 				} catch (err) {
 					return;
@@ -450,7 +183,6 @@ module.exports = class Ready {
 								'humores.triste': e.humores.triste - 1
 							}
 						});
-						console.log('triste salvo!');
 					}, 10800000);
 				} catch (err) {
 					return;
@@ -466,7 +198,6 @@ module.exports = class Ready {
 								'humores.cansado': e.humores.cansado - 1
 							}
 						});
-						console.log('cansado salvo!');
 					}, 2400000);
 				} catch (err) {
 					return;
@@ -482,7 +213,6 @@ module.exports = class Ready {
 								'humores.solitario': e.humores.solitario - 1
 							}
 						});
-						console.log('solitário salvo!');
 					}, 4800000);
 				} catch (err) {
 					return;
@@ -498,7 +228,6 @@ module.exports = class Ready {
 								'humores.desanimado': e.humores.desanimado - 1
 							}
 						});
-						console.log('desanimado salvo!');
 					}, 6000000);
 				} catch (err) {
 					return;
@@ -514,7 +243,6 @@ module.exports = class Ready {
 								'humores.estressado': e.humores.estressado - 1
 							}
 						});
-						console.log('estressado salvo!');
 					}, 5400000);
 				} catch (err) {
 					return;
@@ -788,6 +516,267 @@ module.exports = class Ready {
 					});
 				}, 1200000);
 			});
+		});
+
+		const hasDocGuild = await Guild.find({ 'exportador.canal': { $exists: true }});
+		if (!hasDocGuild) return;
+
+		const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
+		if (!arrayCanais) return;
+
+		const filtroCanais = arrayCanais.filter((item) => item !== 0);
+		if (!filtroCanais) return;
+
+		cron.schedule('48 */4 * * *', async () => {
+			const randomQuantia = Utils.randomNumber(50, 100);
+			const mapDroga = ['Maconha', 'Cocaína', 'LSD', 'Metanfetamina'];
+			const randomDroga = mapDroga[Math.floor(Math.random() * mapDroga.length)];
+			let tempo = 600000;
+			let atualDroga = 0;
+
+			const embed = new ClientEmbed(this.client.user)
+				.setTitle('Exportando Drogas')
+				.setDescription(`O Exportador de Drogas está precisando de **${randomQuantia}KG** de **${randomDroga}**, para levar a Europa.\n\nClique na reação 📦 para Exportar e Vender a sua Droga.`)
+				.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo))
+				.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+
+			for (let i = 0; i < arrayCanais.length; i++) {
+				try {
+					await this.client.channels.cache.get(filtroCanais[i]).send(embed).then(async (msg) => {
+						await msg.react('📦');
+
+						await this.client.database.guilds.findOneAndUpdate({
+							_id: msg.guild.id
+						}, {
+							$set: {
+								'exportador.precisandoQuantia': randomQuantia,
+								'exportador.precisandoDroga': randomDroga,
+								'exportador.irEmbora': tempo,
+								'exportador.quantiaQueFalta': atualDroga
+							}
+						});
+
+						const filtro = (reaction, user) => reaction.emoji.name === '📦' && user.id !== this.client.user.id;
+						const coletor = msg.createReactionCollector(filtro, {
+							time: 600000,
+							max: 10
+						});
+
+						coletor.on('collect', async (reaction2, user2) => {
+							const userAuthor = await this.client.database.users.findOne({
+								userId: user2.id,
+								guildId: msg.guild.id
+							});
+
+							let presoTime = 0;
+
+							if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+								presoTime = 36000000;
+
+								if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+									const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+									const embedPreso = new ClientEmbed(this.client.user)
+										.setTitle('👮 | Preso')
+										.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									return msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedPreso);
+								}
+							} else if (!userAuthor.isMochila) {
+								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
+									timeout: 5000
+								}));
+							} else if (!userAuthor.mochila.find((a) => a.item === randomDroga)) {
+								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui **${randomDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
+									timeout: 5000
+								}));
+							} else {
+								const randomDrogaUser = Math.floor(Math.random() * Math.min(randomQuantia, userAuthor.mochila.find((a) => a.item === randomDroga).quantia));
+
+								atualDroga += randomDrogaUser;
+
+								await this.client.database.guilds.findOneAndUpdate({
+									_id: msg.guild.id
+								}, {
+									$set: {
+										'exportador.quantiaQueFalta': atualDroga
+									}
+								});
+
+								if (atualDroga >= randomQuantia) {
+									atualDroga = randomQuantia;
+
+									await this.client.database.guilds.findOneAndUpdate({
+										_id: msg.guild.id
+									}, {
+										$set: {
+											'exportador.precisandoQuantia': 0,
+											'exportador.precisandoDroga': 'Nenhuma Droga',
+											'exportador.irEmbora': 0,
+											'exportador.quantiaQueFalta': 0
+										}
+									});
+
+									coletor.stop();
+
+									const embedTchau = new ClientEmbed(this.client.user)
+										.setTitle('Exportando Drogas')
+										.setDescription(`O exportador de drogas encheu seu lote de drogas para levar a Europa. Ele só irá voltar daqui a ${Utils.convertMS(17280000)}!`);
+
+									return msg.channel.send(embedTchau);
+								}
+
+								let valor = 0;
+
+								if (randomDroga === 'Maconha') {
+									valor = randomDrogaUser * 30;
+								} else if (randomDroga === 'Cocaína') {
+									valor = randomDrogaUser * 50;
+								} else if (randomDroga === 'LSD') {
+									valor = randomDrogaUser * 70;
+								} else if (randomDroga === 'Metanfetamina') {
+									valor = randomDrogaUser * 90;
+								}
+
+								const embedExportada = new ClientEmbed(this.client.user)
+									.setTitle('Exportando Drogas')
+									.setDescription(`<@${reaction2.users.cache.last().id}>, você repassou **${randomDrogaUser}KG** de **${randomDroga}** para o exportador, e recebeu **R$${Utils.numberFormat(valor)},00**.`);
+
+								msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedExportada).then(async (msg1) => {
+									await msg1.react('👮');
+
+									const server = await this.client.database.guilds.findOne({
+										_id: msg1.guild.id
+									});
+
+									const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+									const coletor2 = msg1.createReactionCollector(filtro2, {
+										time: 4000
+									});
+
+									coletor2.on('collect', async (reaction4, user4) => {
+										const embedPolicia = new ClientEmbed(this.client.user)
+											.setTitle('Prisão')
+											.setDescription(`Você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
+
+										msg.channel.send(embedPolicia);
+
+										atualDroga -= randomDrogaUser;
+
+										await this.client.database.guilds.findOneAndUpdate({
+											_id: msg.guild.id
+										}, {
+											$set: {
+												'exportador.quantiaQueFalta': atualDroga
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user2.id,
+											guildId: msg1.guild.id
+										}, {
+											$set: {
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.traficoDrogas': true
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user2.id,
+											guildId: msg1.guild.id,
+											'mochila.item': randomDroga
+										}, {
+											$set: {
+												'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id
+											}, {
+												$set: {
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.traficoDrogas': false
+												}
+											});
+										}, 36000000);
+									});
+
+									coletor2.on('end', async (collected, reason) => {
+										if (reason === 'time') {
+											coletor2.stop();
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id
+											}, {
+												$set: {
+													banco: userAuthor.banco + valor
+												}
+											});
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id,
+												'mochila.item': randomDroga
+											}, {
+												$set: {
+													'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+												}
+											});
+										}
+									});
+								});
+							}
+						});
+
+						coletor.on('end', async (collected, reason) => {
+							if (reason === 'time') {
+								coletor.stop();
+								msg.delete();
+
+								await this.client.database.guilds.findOneAndUpdate({
+									_id: msg.guild.id
+								}, {
+									$set: {
+										'exportador.precisandoQuantia': 0,
+										'exportador.precisandoDroga': 'Nenhuma Droga',
+										'exportador.irEmbora': 0,
+										'exportador.quantiaQueFalta': 0
+									}
+								});
+
+								return;
+							}
+						});
+
+						setInterval(async () => {
+							tempo--;
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: msg.guild.id
+							}, {
+								$set: {
+									'exportador.irEmbora': tempo
+								}
+							});
+
+							embed.fields = [];
+							embed.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo));
+							embed.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+
+							await msg.edit(embed);
+						}, 60000);
+					});
+				} catch (error) {
+					console.log(error);
+					return;
+				}
+			}
 		});
 	}
 

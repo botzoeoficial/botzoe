@@ -35,8 +35,6 @@ module.exports = class Fabricando extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -59,7 +57,7 @@ module.exports = class Fabricando extends Command {
 		const embed = new ClientEmbed(author)
 			.setTitle('⏱️ | Fabricação em Andamento...');
 
-		if (server.cidade.donoFavela === author.id || server.cidade.donoFabricadeArmas === author.id || server.cidade.ajudanteArmas.map((a) => a.id).includes(author.id)) {
+		if (server.cidade.donoFavela === author.id || server.cidade.donoFabricadeArmas.map((a) => a.id).includes(author.id)) {
 			if (user.fabricagem.armas.nome === 'Ak-47') {
 				if (user.fabricagem.armas.quantia >= 1 && user.fabricagem.armas.quantia <= 5) {
 					timeout = 10000800 * user.fabricagem.armas.quantia;
@@ -337,7 +335,7 @@ module.exports = class Fabricando extends Command {
 			}
 
 			message.channel.send(author, embed);
-		} else if (server.cidade.donoFavela === author.id || server.cidade.donoFabricadeDrogas || server.cidade.ajudanteDrogas.map((a) => a.id).includes(author.id)) {
+		} else if (server.cidade.donoFavela === author.id || server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(author.id)) {
 			if (user.fabricagem.drogas.nome === 'Maconha') {
 				if (user.fabricagem.drogas.quantia >= 1 && user.fabricagem.drogas.quantia <= 5) {
 					timeout = 43200000 * user.fabricagem.drogas.quantia;

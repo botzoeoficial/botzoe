@@ -36,8 +36,6 @@ module.exports = class Ajuda extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -93,7 +91,7 @@ module.exports = class Ajuda extends Command {
 				.addField(`🔔 Utilidades [${comandos('Utilidades').size}]`, comandos('Utilidades').map((comando) => `\`${comando.name}\``).join(', '))
 				.addField(`💎 Premium [${comandos('Vip').size}]`, comandos('Vip').map((comando) => `\`${comando.name}\``).join(', '))
 				.addField(`🌆 Cidade [${comandos('Cidade').size}]`, comandos('Cidade').map((comando) => `\`${comando.name}\``).join(', '))
-				.addField(`🕵️ Delegado [${comandos('Delegado').size}]`, comandos('Delegado').map((comando) => `\`${comando.name}\``).join(', '))
+				.addField(`👨‍✈ Delegado [${comandos('Delegado').size}]`, comandos('Delegado').map((comando) => `\`${comando.name}\``).join(', '))
 				.addField(`👮‍♂️ Policial [${comandos('Policial').size}]`, comandos('Policial').map((comando) => `\`${comando.name}\``).join(', '))
 				.addField(`<:preso:899431985980796959> Crime [${comandos('Crime').size}]`, comandos('Crime').map((comando) => `\`${comando.name}\``).join(', '))
 				.addField(`🧑‍🔧 Mecânico [${comandos('Mecanico').size}]`, comandos('Mecanico').map((comando) => `\`${comando.name}\``).join(', '));

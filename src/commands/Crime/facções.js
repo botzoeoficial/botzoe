@@ -37,8 +37,6 @@ module.exports = class Facções extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}

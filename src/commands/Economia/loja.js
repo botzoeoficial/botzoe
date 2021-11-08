@@ -35,8 +35,6 @@ module.exports = class Loja extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -1500,6 +1498,8 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.level < 2) return message.reply('você precisa ser level **2** para comprar um Porte de Armas!');
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 

@@ -36,8 +36,6 @@ module.exports = class Perfil extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -67,7 +65,7 @@ module.exports = class Perfil extends Command {
 			.addField('👤 Nick:', user.nick, true)
 			.addField('🏦 Saldo:', `R$${Utils.numberFormat(user.saldo + user.banco)},00`, true)
 			.addField('🪙 BitCoins:', `${Utils.numberFormat(user.bitcoin)}`, true)
-			.addField('💵 Empréstimos Alfacusa:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
+			.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 			.addField('📈 Level:', user.level, true)
 			.addField('💍 Casado(a) com:', user.marry.has ? await this.client.users.fetch(user.marry.user).then((x) => x) : user.marry.user, true)
 			.addField('💼 Função na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : user.fac.emprego.nome, true)

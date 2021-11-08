@@ -31,8 +31,6 @@ module.exports = class Setajudantelavagem extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = true;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}

@@ -39,7 +39,6 @@ module.exports = class Fabricardroga extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
 		this.ajudanteDroga = true;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;

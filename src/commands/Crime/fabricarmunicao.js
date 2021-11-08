@@ -39,8 +39,6 @@ module.exports = class Fabricarmunicao extends Command {
 		this.donoDesmanche = true;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = true;
 		this.ajudanteLavagem = false;
 	}

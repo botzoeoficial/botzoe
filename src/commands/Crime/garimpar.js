@@ -36,8 +36,6 @@ module.exports = class Garimpar extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -72,7 +70,7 @@ module.exports = class Garimpar extends Command {
 				if (randomItens[0] === 'Ferro' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -167,7 +165,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nPlástico: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -262,7 +260,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nCobre: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -357,7 +355,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nPrata: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -452,7 +450,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -547,7 +545,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -642,7 +640,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -737,7 +735,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -832,7 +830,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nFerro: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -927,7 +925,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1022,7 +1020,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nCobre: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1117,7 +1115,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nPrata: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1212,7 +1210,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nFerro: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1307,7 +1305,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1402,7 +1400,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nPlástico: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1497,7 +1495,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nPrata: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1592,7 +1590,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nFerro: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1687,7 +1685,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1782,7 +1780,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nPlástico: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1877,7 +1875,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nAlumínio: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nCobre: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -1974,7 +1972,7 @@ module.exports = class Garimpar extends Command {
 				if (randomItens[0] === 'Ferro' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2069,7 +2067,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nPlástico: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2164,7 +2162,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nCobre: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2259,7 +2257,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nPrata: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2354,7 +2352,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nFerro: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2449,7 +2447,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2544,7 +2542,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2639,7 +2637,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2734,7 +2732,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nFerro: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2829,7 +2827,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -2924,7 +2922,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nCobre: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3019,7 +3017,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPlástico: \`${randomQuantia2}\`\n\nPrata: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3114,7 +3112,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nFerro: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3209,7 +3207,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3304,7 +3302,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nPlástico: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3399,7 +3397,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Prata') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nCobre: \`${randomQuantia2}\`\n\nPrata: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3494,7 +3492,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Ferro') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nFerro: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3589,7 +3587,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Caulim') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nCaulim: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3684,7 +3682,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Plástico') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nPlástico: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 
@@ -3779,7 +3777,7 @@ module.exports = class Garimpar extends Command {
 				} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Cobre') {
 					const embed = new ClientEmbed(author)
 						.setTitle('Garimpo')
-						.setDescription(`Você garimpou:\n\nBorracha: \`${randomQuantia}\`\n\nPrata: \`${randomQuantia2}\`\n\nCobre: \`${randomQuantia3}\``);
+						.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
 
 					message.channel.send(author, embed);
 

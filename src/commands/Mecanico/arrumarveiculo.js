@@ -34,8 +34,6 @@ module.exports = class Arrumarveiculo extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -136,7 +134,8 @@ module.exports = class Arrumarveiculo extends Command {
 							$set: {
 								'garagem.$.arrumado': true,
 								'garagem.$.liberado': false,
-								'garagem.$.emplacado': false
+								'garagem.$.emplacado': false,
+								'garagem.$.danificado': 0
 							}
 						});
 

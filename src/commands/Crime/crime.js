@@ -39,8 +39,6 @@ module.exports = class Crime extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -60,14 +58,14 @@ module.exports = class Crime extends Command {
 			let presoTime = 0;
 			const timeout = 600000;
 
-			if (timeout - (Date.now() - userAuthor.cooldown.roubarVeiculo) > 0) {
-				const faltam = ms(timeout - (Date.now() - userAuthor.cooldown.roubarVeiculo));
+			if (timeout - (Date.now() - userAuthor.cooldown.crime) > 0) {
+				const faltam = ms(timeout - (Date.now() - userAuthor.cooldown.crime));
 
 				const embed = new ClientEmbed(author)
 					.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 				return message.channel.send(author, embed);
-			} if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
 				presoTime = 36000000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
@@ -1105,29 +1103,21 @@ module.exports = class Crime extends Command {
 				});
 			}
 		} else if (args[0].toLowerCase() === 'estatisticas') {
-			const COINS = await require('mongoose')
-				.connection.collection('users')
-				.find({
-					guildId: message.guild.id
-				}, {
-					'crime.feito': {
-						$gt: 0
-					}
-				})
-				.toArray();
+			const COINS = await this.client.database.users.find({
+				guildId: message.guild.id
+			}, {
+				'crime.feito': {
+					$gt: 0
+				}
+			}).toArray();
 
-			const coins = Object.entries(COINS)
-				.map(([, x]) => x.userId)
-				.sort((x, f) => x.crime.feito - f.crime.feito);
+			const coins = Object.entries(COINS).map(([, x]) => x.userId).sort((x, f) => x.crime.feito - f.crime.feito);
 
 			const members = [];
 
 			await this.PUSH(coins, members, message.guild.id);
 
-			const crimesMap = members
-				.map((x) => x)
-				.sort((x, f) => f.crimes - x.crimes)
-				.slice(0, 10);
+			const crimesMap = members.map((x) => x).sort((x, f) => f.crimes - x.crimes).slice(0, 10);
 
 			const TOP = new ClientEmbed(author)
 				.setTitle('Crime Estatísticas')

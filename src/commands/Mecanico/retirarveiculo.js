@@ -34,8 +34,6 @@ module.exports = class Retirarveiculo extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -47,8 +45,6 @@ module.exports = class Retirarveiculo extends Command {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
-
-		if (!server.cidade.mecanico.map((a) => a.id).includes(author.id)) return message.reply('você precisa ser um **Mecânico** na cidade para retirar algum veículo da **Oficina**!');
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
@@ -112,6 +108,11 @@ module.exports = class Retirarveiculo extends Command {
 							timeout: 5000
 						}));
 						ce.delete();
+					} else if (findSelectedEvento.dono !== author.id) {
+						ce.delete();
+						message.reply(`esse veículo não é seu. Escolha outro veículo por favor!`).then(ba => ba.delete({
+							timeout: 5000
+						}));
 					} else if (!findSelectedEvento.liberado) {
 						sim.stop();
 						ce.delete();
@@ -124,7 +125,7 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 
 						embed
-							.setDescription(`**✅ | Você retirou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível na garagem do dono.`);
+							.setDescription(`**✅ | Você retirou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível na sua garagem.`);
 
 						msg.edit(author, embed);
 

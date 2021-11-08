@@ -40,8 +40,6 @@ module.exports = class Roubarveículo extends Command {
 		this.donoDesmanche = false;
 		this.donoLavagem = false;
 
-		this.ajudanteArma = false;
-		this.ajudanteDroga = false;
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
 	}
@@ -66,7 +64,7 @@ module.exports = class Roubarveículo extends Command {
 				.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 			return message.channel.send(author, embed);
-		} if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
