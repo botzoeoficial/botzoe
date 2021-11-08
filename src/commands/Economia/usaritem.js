@@ -82,7 +82,18 @@ module.exports = class Usaritem extends Command {
 					}
 				});
 
-				if (findWater.quantia > 1) {
+				if (findWater.quantia <= 1) {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$pull: {
+							inventory: {
+								item: ope
+							}
+						}
+					});
+				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
 						guildId: message.guild.id,
@@ -90,15 +101,6 @@ module.exports = class Usaritem extends Command {
 					}, {
 						$set: {
 							'inventory.$.quantia': findWater.quantia - 1
-						}
-					});
-				} else {
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$pull: {
-							'inventory.$.item': ope
 						}
 					});
 				}
@@ -142,7 +144,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -186,7 +190,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -230,7 +236,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -274,7 +282,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -318,7 +328,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -361,7 +373,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -404,7 +418,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -447,7 +463,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -490,7 +508,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -533,7 +553,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -576,7 +598,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -619,7 +643,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -664,7 +690,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -709,7 +737,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -741,7 +771,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -786,7 +818,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
@@ -844,7 +878,9 @@ module.exports = class Usaritem extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'inventory.$.item': ope
+							inventory: {
+								item: ope
+							}
 						}
 					});
 				}
