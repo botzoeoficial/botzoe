@@ -172,16 +172,16 @@ module.exports = class {
 					}
 				}
 
-				if (cmd.editor && cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
-					if ((!server.editor.map(a => a.id).includes(message.author.id) || !message.member.hasPermission('ADMINISTRATOR')) || server.cidade.donoFavela === message.author.id || server.cidade.donoFabricadeArmas.map((a) => a.id).includes(message.author.id)) {
-						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Dono da Favela\` ou ser \`Fabricante das Armas\` do servidor para usar esse comando!`);
+				if (!cmd.editor && !cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
+					if (server.cidade.donoFavela !== message.author.id || !server.cidade.donoFabricadeArmas.map((a) => a.id).includes(message.author.id)) {
+						message.reply(`você precisa ser \`Dono da Favela\` ou ser \`Fabricante das Armas\` do servidor para usar esse comando!`);
 						return;
 					}
 				}
 
-				if (cmd.editor && cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && !cmd.donoArmas && cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
-					if ((!server.editor.map(a => a.id).includes(message.author.id) || !message.member.hasPermission('ADMINISTRATOR')) || server.cidade.donoFavela === message.author.id || server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(message.author.id)) {
-						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Dono da Favela\` ou ser \`Fabricante das Drogas\` do servidor para usar esse comando!`);
+				if (!cmd.editor && !cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && !cmd.donoArmas && cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
+					if (server.cidade.donoFavela !== message.author.id || !server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(message.author.id)) {
+						message.reply(`você precisa ser \`Dono da Favela\` ou ser \`Fabricante das Drogas\` do servidor para usar esse comando!`);
 						return;
 					}
 				}

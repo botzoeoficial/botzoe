@@ -260,7 +260,7 @@ module.exports = class Cadastrar extends Command {
 																							collector7.stop();
 
 																							msg13.delete();
-																							embed.setDescription(`Muito bem ${author}, agora para terminarmos, eu preciso que você envie sua **DATA DE NASCIMENTO** no chat!\n`);
+																							embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **DATA DE NASCIMENTO** no chat!\n`);
 																							embed.addField('ID:', msg14.content, true);
 
 																							message.channel.send(author, embed).then(async (msg17) => {
@@ -287,42 +287,69 @@ module.exports = class Cadastrar extends Command {
 																										collector9.stop();
 
 																										msg17.delete();
-																										embed.fields = [];
-																										embed.setDescription(`***CADASTRO TERMINADO!***\n\nUse o comando \`${prefix}cadastro\` para ver suas informações!`);
+																										embed.setDescription(`Muito bem ${author}, agora para terminarmos, preciso que você envie no chat seu nome de **RP** (NickName)!\n`);
+																										embed.addField('Data de Nascimento:', msg18.content, true);
+																										embed.addField('\u2800', '\u2800', true);
 
-																										message.channel.send(author, embed).then(async (as) => {
-																											await as.delete({
-																												timeout: 6000
+																										message.channel.send(author, embed).then(async (msg19) => {
+																											const filter10 = (m) => m.author.id === author.id;
+																											const collector10 = msg19.channel.createMessageCollector(filter10, {
+																												time: 60000
+																											});
+
+																											collector10.on('collect', async (msg20) => {
+																												if (msg20.content.toLowerCase() === 'cancelar') {
+																													collector10.stop();
+																													msg19.delete();
+																													return message.channel.send(`${author}, você cancelou o seu **cadastro** com sucesso!`);
+																												} else {
+																													msg20.delete();
+																													collector10.stop();
+
+																													if (message.guild.id === '885645282614861854') {
+																														message.member.setNickname(msg20);
+																													}
+
+																													embed.fields = [];
+																													embed.setDescription(`***CADASTRO TERMINADO!***\n\nUse o comando \`${prefix}cadastro\` para ver suas informações!`);
+
+																													message.channel.send(author, embed).then(async (as) => {
+																														await as.delete({
+																															timeout: 6000
+																														});
+																													});
+
+																													await this.client.database.users.findOneAndUpdate({
+																														userId: author.id,
+																														guildId: message.guild.id
+																													}, {
+																														$set: {
+																															nick: message.member.nickname || author.username,
+																															cadastrado: true,
+																															idade: Number(msg6.content),
+																															genero: await this.capitalize(msg4.content),
+																															nomeReal: msg2.content,
+																															orientacaoSexual: await this.capitalize(msg8.content),
+																															plataformaJogo: await this.capitalize(msg10.content),
+																															regiao: await this.capitalize(msg12.content),
+																															funcao: 'Não pertence a nenhuma Facção.',
+																															aniversario: msg18.content
+																														}
+																													});
+
+																													await msg2.delete();
+																													await msg4.delete();
+																													await msg6.delete();
+																													await msg8.delete();
+																													await msg10.delete();
+																													await msg12.delete();
+																													await msg14.delete();
+																													await msg18.delete();
+																													await msg20.delete();
+																													await message.delete();
+																												}
 																											});
 																										});
-
-																										await this.client.database.users.findOneAndUpdate({
-																											userId: author.id,
-																											guildId: message.guild.id
-																										}, {
-																											$set: {
-																												nick: message.member.nickname || author.username,
-																												cadastrado: true,
-																												idade: Number(msg6.content),
-																												genero: await this.capitalize(msg4.content),
-																												nomeReal: msg2.content,
-																												orientacaoSexual: await this.capitalize(msg8.content),
-																												plataformaJogo: await this.capitalize(msg10.content),
-																												regiao: await this.capitalize(msg12.content),
-																												funcao: 'Não pertence a nenhuma Facção.',
-																												aniversario: msg18.content
-																											}
-																										});
-
-																										await msg2.delete();
-																										await msg4.delete();
-																										await msg6.delete();
-																										await msg8.delete();
-																										await msg10.delete();
-																										await msg12.delete();
-																										await msg14.delete();
-																										await msg18.delete();
-																										await message.delete();
 																									}
 																								});
 

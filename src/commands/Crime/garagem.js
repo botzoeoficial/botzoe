@@ -127,7 +127,7 @@ module.exports = class Garagem extends Command {
 					embed
 						.setDescription(`**Você selecionou o Carro:** \`${findSelectedEvento.nome}\``)
 						.addField('Modelo:', findSelectedEvento.modelo, true)
-						.addField('Valor:', `R$${Utils.numberFormat(findSelectedEvento.valor)},00`, true)
+						.addField('Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento.valor))},00`, true)
 						.addField('Danificado:', `${findSelectedEvento.danificado}%`, true)
 						.addField('Velocidade:', `${findSelectedEvento.velocidade} KM/h`, true)
 						.addField('Cavalos de Força:', `${findSelectedEvento.cavalos} HP`, true)
@@ -226,12 +226,12 @@ module.exports = class Garagem extends Command {
 										embed2
 											.setDescription(`**Você selecionou o Carro:** \`${findSelectedEvento.nome}\``)
 											.addField('Modelo:', findSelectedEvento.modelo, true)
-											.addField('Valor:', `R$${Utils.numberFormat(findSelectedEvento.valor)},00`, true)
+											.addField('Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento.valor))},00`, true)
 											.addField('Danificado:', `${findSelectedEvento.danificado}%`, true)
 											.addField('Velocidade:', `${findSelectedEvento.velocidade} KM/h`, true)
 											.addField('Cavalos de Força:', `${findSelectedEvento.cavalos} HP`, true)
 											.addField('Peso:', `${findSelectedEvento.peso} KG`, true)
-											.addField('Valor para Desmanche:', `R$${Utils.numberFormat(findSelectedEvento.desmanche)},00`, true)
+											.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(findSelectedEvento.desmanche))},00`, true)
 											.addField('Emplacado:', `**\`${!findSelectedEvento.emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
 											.addField('\u2800', '\u2800', true)
 											.addField('Oficina:', `**\`${!findSelectedEvento.mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)

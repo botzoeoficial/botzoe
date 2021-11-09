@@ -60,7 +60,7 @@ module.exports = class Pescar extends Command {
 
 			return message.channel.send(author, embed);
 		} else {
-			const hasItem = !user.inventory.find((xs) => xs.item === 'Vara de Pesca');
+			const hasItem = user.inventory.find((xs) => xs.item === 'Vara de Pesca');
 
 			if (!hasItem) {
 				return message.reply('você não possui uma **Vara de Pesca** no seu inventário!');
@@ -90,25 +90,29 @@ module.exports = class Pescar extends Command {
 					}
 				});
 
-				if (user.inventory.find((x) => x.item === 'Vara de Pesca').quantidade <= 1) {
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$pull: {
-							'inventory.$.item': 'Vara de Pesca'
-						}
-					});
-				} else {
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id,
-						'inventory.item': 'Vara de Pesca'
-					}, {
-						$set: {
-							'inventory.$.quantia': user.inventory.find((x) => x.item === 'Vara de Pesca').quantidade - 1
-						}
-					});
+				if (user.inventory.find((x) => x.item === 'Vara de Pesca')) {
+					if (user.inventory.find((x) => x.item === 'Vara de Pesca').quantidade <= 1) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$pull: {
+								inventory: {
+									item: 'Vara de Pesca'
+								}
+							}
+						});
+					} else {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id,
+							'inventory.item': 'Vara de Pesca'
+						}, {
+							$set: {
+								'inventory.$.quantia': user.inventory.find((x) => x.item === 'Vara de Pesca').quantidade - 1
+							}
+						});
+					}
 				}
 			}
 		}

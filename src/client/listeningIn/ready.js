@@ -518,13 +518,17 @@ module.exports = class Ready {
 			});
 		});
 
-		const hasDocGuild = await Guild.find({ 'exportador.canal': { $exists: true }});
+		const hasDocGuild = await Guild.find({
+			'exportador.canal': {
+				$exists: true
+			}
+		});
 		if (!hasDocGuild) return;
 
 		const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
 		if (!arrayCanais) return;
 
-		const filtroCanais = arrayCanais.filter((item) => item !== 0);
+		const filtroCanais = arrayCanais.filter((item) => item.length !== 0);
 		if (!filtroCanais) return;
 
 		cron.schedule('48 */4 * * *', async () => {

@@ -124,13 +124,13 @@
                 },
                 {
                     "ano": "1983",
-                    "cavalo": "Quantia",
-                    "img": "Imagem",
+                    "cavalo": "623",
+                    "img": "https://quatrorodas.abril.com.br/wp-content/uploads/2016/11/56993fb60e21630a3e0ecae0peugeot-205-gti.jpeg",
                     "marca": "peugeot",
                     "nome": "205",
-                    "valor": "Valor",
+                    "valor": "7956",
                     "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
-                    "velocidade": "velocidade"
+                    "velocidade": "210"
                 },
                 {
                     "ano": "2017",
@@ -164,7 +164,7 @@
                 },
                 {
                     "ano": "2017",
-                    "cavalo": "Quantia",
+                    "cavalo": "634",
                     "img": "https://combustivel.app/imgs/t650/consumo-fox-highline-1-6-16v-1.jpg",
                     "marca": "VW",
                     "nome": "Fox Highline 1.6 16v",
@@ -278,7 +278,7 @@
                     "img": "https://auto-database.com/image/plymouth-neon-2000-wallpaper-104239.jpg",
                     "marca": "plymouth",
                     "nome": "Neon",
-                    "valor": "Valor",
+                    "valor": "18210",
                     "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
                     "velocidade": "195"
                 },
@@ -294,7 +294,7 @@
                 },
                 {
                     "ano": "2011",
-                    "cavalo": "Quantia",
+                    "cavalo": "534",
                     "img": "https://m.media-amazon.com/images/I/71b3SrIl5uL._UY560_.jpg",
                     "marca": "toyota",
                     "nome": "RAV4",
@@ -310,7 +310,7 @@
                     "nome": "C5",
                     "valor": "51990",
                     "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
-                    "velocidade": "velocidade"
+                    "velocidade": "200"
                 },
                 {
                     "ano": "2012",
@@ -328,9 +328,9 @@
                     "img": "http://machinespider.com/wp-content/uploads/2011/07/nissan-frontier-2011.jpg",
                     "marca": "nissan",
                     "nome": "Frontier",
-                    "valor": "Valor",
+                    "valor": "245600",
                     "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
-                    "velocidade": "velocidade"
+                    "velocidade": "110"
                 }
             ],
             "epicos": [
@@ -442,7 +442,7 @@
                     "img": "http://lookatthecar.org/wp-content/uploads/2015/11/Peugeot-205-1983-1.jpg",
                     "marca": "peugeot",
                     "nome": "205",
-                    "valor": "Valor",
+                    "valor": "4360",
                     "valor_desmanche": "Valor de Desmanche do Carro (seria os 30%)2",
                     "velocidade": "210"
                 },

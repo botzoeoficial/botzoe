@@ -124,10 +124,10 @@ module.exports = class Abraçar extends Command {
 
 					if (randomNumber < 50) {
 						random = Math.floor(Math.random() * abracos.length);
-						embed.setImage(abracos[random]);
+						embedSim.setImage(abracos[random]);
 					} else if (randomNumber >= 50) {
 						random = Math.floor(Math.random() * body.results.length);
-						embed.setImage(body.results[random].url);
+						embedSim.setImage(body.results[random].url);
 					}
 
 					message.channel.send(`${author} e ${member}`, embedSim);

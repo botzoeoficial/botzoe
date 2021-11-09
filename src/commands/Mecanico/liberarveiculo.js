@@ -113,7 +113,6 @@ module.exports = class Liberarveiculo extends Command {
 					} else if (!findSelectedEvento.emplacado) {
 						sim.stop();
 						ce.delete();
-						msg.delete();
 						return message.reply(`esse veículo não está emplacado ainda. Use o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -132,9 +131,7 @@ module.exports = class Liberarveiculo extends Command {
 							'garagem.nome': findSelectedEvento.nome
 						}, {
 							$set: {
-								'garagem.$.arrumado': true,
-								'garagem.$.liberado': true,
-								'garagem.$.emplacado': true
+								'garagem.$.liberado': true
 							}
 						});
 
@@ -143,9 +140,7 @@ module.exports = class Liberarveiculo extends Command {
 							'mecanica.nome': findSelectedEvento.nome
 						}, {
 							$set: {
-								'mecanica.$.arrumado': true,
-								'mecanica.$.liberado': true,
-								'mecanica.$.emplacado': true
+								'mecanica.$.liberado': true
 							}
 						});
 					}

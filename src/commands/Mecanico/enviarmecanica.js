@@ -15,7 +15,7 @@ module.exports = class Enviarmecanica extends Command {
 		this.category = 'Mecanico';
 		this.description = 'Envie sue carro para a mecânica!';
 		this.usage = 'enviarmecanica';
-		this.aliases = ['enviar-mecanica', 'enviarmecânica'];
+		this.aliases = ['enviar-mecanica', 'enviarmecânica', 'enviaroficina'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -116,7 +116,7 @@ module.exports = class Enviarmecanica extends Command {
 							timeout: 5000
 						}));
 						ce.delete();
-					} else if (findSelectedEvento.mecanica) {
+					} else if (findSelectedEvento.dono === author.id && findSelectedEvento.mecanica) {
 						message.reply(`esse seu carro já está na **Mecânica**. Digite outro número de um carro ou use o comando \`${prefix}mecanica\` para ver carro na **Mecânica**!`).then(ba => ba.delete({
 							timeout: 7000
 						}));

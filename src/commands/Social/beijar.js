@@ -127,13 +127,13 @@ module.exports = class Beijar extends Command {
 						.setDescription(`**${author} beijou ${member}!**`);
 
 					if ((author.id === '463421520686088192' && member.id === '897148854951104612') || (author.id === '897148854951104612' && member.id === '463421520686088192')) {
-						embed.setImage(randomBeijoEspecial);
+						embedSim.setImage(randomBeijoEspecial);
 					} else if (randomNumber < 50) {
 						random = Math.floor(Math.random() * beijos.length);
-						embed.setImage(beijos[random]);
+						embedSim.setImage(beijos[random]);
 					} else if (randomNumber >= 50) {
 						random = Math.floor(Math.random() * body.results.length);
-						embed.setImage(body.results[random].url);
+						embedSim.setImage(body.results[random].url);
 					}
 
 					message.channel.send(`${author} e ${member}`, embedSim);

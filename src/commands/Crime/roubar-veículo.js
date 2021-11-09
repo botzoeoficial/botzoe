@@ -21,7 +21,7 @@ module.exports = class Roubarveículo extends Command {
 		this.category = 'Crime';
 		this.description = 'Roube um veículo aleatório!';
 		this.usage = 'roubar-veículo';
-		this.aliases = ['roubar-veículo', 'roubarveiculo', 'roubar-veículo'];
+		this.aliases = ['roubar-veículo', 'roubarveiculo', 'roubar-veículo', 'roubarcarro'];
 
 		this.enabled = true;
 		this.guildOnly = true;
