@@ -77,6 +77,18 @@ module.exports = class Crime extends Command {
 
 					return message.channel.send(author, embed);
 				}
+			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.crime) {
+				presoTime = 600000;
+
+				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+					const embed = new ClientEmbed(author)
+						.setTitle('👮 | Preso')
+						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+					return message.channel.send(author, embed);
+				}
 			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.prender) {
 				presoTime = 43200000;
 

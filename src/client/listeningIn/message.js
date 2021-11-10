@@ -1,8 +1,7 @@
-/* eslint-disable max-len */
-/* eslint-disable complexity */
-/* eslint-disable no-process-env */
-/* eslint-disable new-cap */
 /* eslint-disable id-length */
+/* eslint-disable max-len */
+/* eslint-disable new-cap */
+/* eslint-disable complexity */
 const GetMention = (id) => new RegExp(`^<@!?${id}>( |)$`);
 const c = require('colors');
 const moment = require('moment');
@@ -125,7 +124,7 @@ module.exports = class {
 					return;
 				}
 
-				if (cmd.owner && !process.env.OWNER_ID.includes(message.author.id)) {
+				if (cmd.owner && !['463421520686088192', '707677540583735338', '804677047959027714'].includes(message.author.id)) {
 					message.reply('este comando é apenas para pessoas **ESPECIAIS**!');
 					return;
 				}

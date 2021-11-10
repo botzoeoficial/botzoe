@@ -53,6 +53,8 @@ module.exports = class Cadastrar extends Command {
 			return message.reply(`você já está cadastrado no servidor **${message.guild.name}**! Use o comando \`${prefix}cadastro\` para ver suas informações.`);
 		}
 
+		await message.delete();
+
 		const embed = new ClientEmbed(author)
 			.setTitle('📋 | CADASTRO')
 			.setDescription(`Olá ${author}, estou aqui para fazer seu **cadastro**!\n\nPrimeiramente, preciso que você envie seu **NOME VERDADEIRO** no chat!`)
@@ -287,7 +289,7 @@ module.exports = class Cadastrar extends Command {
 																										collector9.stop();
 
 																										msg17.delete();
-																										embed.setDescription(`Muito bem ${author}, agora para terminarmos, preciso que você envie no chat seu nome de **RP** (NickName)!\n`);
+																										embed.setDescription(`Muito bem ${author}, agora para terminarmos, preciso que você envie no chat seu nome de **RP** (Roleplay), o nome do seu Personagem no Jogo (NickName)!\n`);
 																										embed.addField('Data de Nascimento:', msg18.content, true);
 																										embed.addField('\u2800', '\u2800', true);
 
@@ -346,7 +348,6 @@ module.exports = class Cadastrar extends Command {
 																													await msg14.delete();
 																													await msg18.delete();
 																													await msg20.delete();
-																													await message.delete();
 																												}
 																											});
 																										});

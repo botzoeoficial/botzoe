@@ -51,6 +51,7 @@ module.exports = class Garagem extends Command {
 			nome: value.nome,
 			modelo: value.modelo,
 			valor: value.valor,
+			ano: value.ano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -127,12 +128,12 @@ module.exports = class Garagem extends Command {
 					embed
 						.setDescription(`**Você selecionou o Carro:** \`${findSelectedEvento.nome}\``)
 						.addField('Modelo:', findSelectedEvento.modelo, true)
+						.addField('Ano:', Number(findSelectedEvento.ano), true)
 						.addField('Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento.valor))},00`, true)
-						.addField('Danificado:', `${findSelectedEvento.danificado}%`, true)
 						.addField('Velocidade:', `${findSelectedEvento.velocidade} KM/h`, true)
 						.addField('Cavalos de Força:', `${findSelectedEvento.cavalos} HP`, true)
-						.addField('Peso:', `${findSelectedEvento.peso} KG`, true)
-						.addField('Valor para Desmanche:', `R$${Utils.numberFormat(findSelectedEvento.desmanche)},00`, true)
+						.addField('Danificado:', `${findSelectedEvento.danificado}%`, true)
+						.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(findSelectedEvento.desmanche))},00`, true)
 						.addField('Emplacado:', `**\`${!findSelectedEvento.emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
 						.addField('\u2800', '\u2800', true)
 						.addField('Oficina:', `**\`${!findSelectedEvento.mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)
@@ -158,6 +159,7 @@ module.exports = class Garagem extends Command {
 								nome: value.nome,
 								modelo: value.modelo,
 								valor: value.valor,
+								ano: value.ano,
 								danificado: value.danificado,
 								velocidade: value.velocidade,
 								cavalos: value.cavalos,
@@ -224,20 +226,20 @@ module.exports = class Garagem extends Command {
 										ce3.delete();
 
 										embed2
-											.setDescription(`**Você selecionou o Carro:** \`${findSelectedEvento.nome}\``)
-											.addField('Modelo:', findSelectedEvento.modelo, true)
-											.addField('Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento.valor))},00`, true)
-											.addField('Danificado:', `${findSelectedEvento.danificado}%`, true)
-											.addField('Velocidade:', `${findSelectedEvento.velocidade} KM/h`, true)
-											.addField('Cavalos de Força:', `${findSelectedEvento.cavalos} HP`, true)
-											.addField('Peso:', `${findSelectedEvento.peso} KG`, true)
-											.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(findSelectedEvento.desmanche))},00`, true)
-											.addField('Emplacado:', `**\`${!findSelectedEvento.emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
+											.setDescription(`**Você selecionou o Carro:** \`${findSelectedEvento2.nome}\``)
+											.addField('Modelo:', findSelectedEvento2.modelo, true)
+											.addField('Ano:', Number(findSelectedEvento2.ano), true)
+											.addField('Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento2.valor))},00`, true)
+											.addField('Velocidade:', `${findSelectedEvento2.velocidade} KM/h`, true)
+											.addField('Cavalos de Força:', `${findSelectedEvento2.cavalos} HP`, true)
+											.addField('Danificado:', `${findSelectedEvento2.danificado}%`, true)
+											.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(findSelectedEvento2.desmanche))},00`, true)
+											.addField('Emplacado:', `**\`${!findSelectedEvento2.emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
 											.addField('\u2800', '\u2800', true)
-											.addField('Oficina:', `**\`${!findSelectedEvento.mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)
-											.addField('Arrumado na Oficina:', `**\`${!findSelectedEvento.arrumado ? 'Não está arrumado.' : 'Está arrumado.'}\`**`, true)
-											.addField('Liberado da Oficina:', `**\`${!findSelectedEvento.liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
-											.setImage(findSelectedEvento.img);
+											.addField('Oficina:', `**\`${!findSelectedEvento2.mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)
+											.addField('Arrumado na Oficina:', `**\`${!findSelectedEvento2.arrumado ? 'Não está arrumado.' : 'Está arrumado.'}\`**`, true)
+											.addField('Liberado da Oficina:', `**\`${!findSelectedEvento2.liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
+											.setImage(findSelectedEvento2.img);
 
 										msg.edit(author, embed2);
 									}

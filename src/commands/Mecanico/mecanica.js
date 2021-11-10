@@ -46,7 +46,17 @@ module.exports = class Mecanica extends Command {
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
+			modelo: value.modelo,
+			valor: value.valor,
+			ano: value.ano,
+			danificado: value.danificado,
+			velocidade: value.velocidade,
+			cavalos: value.cavalos,
+			peso: value.peso,
+			desmanche: value.desmanche,
 			dono: value.dono,
+			img: value.img,
+			mecanica: value.mecanica,
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,

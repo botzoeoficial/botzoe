@@ -323,6 +323,14 @@ const userSchema = new Schema({
 		isFolga: {
 			type: Boolean,
 			default: false
+		},
+		prenderRoubar: {
+			type: Number,
+			default: 0
+		},
+		prenderExportador: {
+			type: Number,
+			default: 0
 		}
 	},
 	prisao: {
@@ -517,6 +525,10 @@ const userSchema = new Schema({
 			default: ''
 		},
 		valor: {
+			type: Number,
+			default: 0
+		},
+		ano: {
 			type: Number,
 			default: 0
 		},

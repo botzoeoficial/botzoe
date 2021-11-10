@@ -1,5 +1,6 @@
-/* eslint-disable no-process-env */
-const { MessageEmbed } = require('discord.js');
+const {
+	MessageEmbed
+} = require('discord.js');
 
 module.exports = class ClientEmbed extends MessageEmbed {
 
@@ -7,7 +8,7 @@ module.exports = class ClientEmbed extends MessageEmbed {
 		super(options);
 
 		this.setTimestamp();
-		this.setColor(process.env.EMBED);
+		this.setColor('#C27C0E');
 		this.setFooter(
 			`Comando executado por: ${author.tag}`,
 			author.displayAvatarURL({

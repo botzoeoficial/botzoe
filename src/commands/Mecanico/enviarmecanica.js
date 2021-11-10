@@ -54,6 +54,7 @@ module.exports = class Enviarmecanica extends Command {
 			nome: value.nome,
 			modelo: value.modelo,
 			valor: value.valor,
+			ano: value.ano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -63,6 +64,8 @@ module.exports = class Enviarmecanica extends Command {
 			img: value.img,
 			mecanica: value.mecanica,
 			arrumado: value.arrumado,
+			emplacado: value.emplacado,
+			liberado: value.liberado,
 			position: index
 		}));
 
@@ -116,7 +119,7 @@ module.exports = class Enviarmecanica extends Command {
 							timeout: 5000
 						}));
 						ce.delete();
-					} else if (findSelectedEvento.dono === author.id && findSelectedEvento.mecanica) {
+					} else if (findSelectedEvento.dono === author.id) {
 						message.reply(`esse seu carro já está na **Mecânica**. Digite outro número de um carro ou use o comando \`${prefix}mecanica\` para ver carro na **Mecânica**!`).then(ba => ba.delete({
 							timeout: 7000
 						}));
@@ -131,14 +134,12 @@ module.exports = class Enviarmecanica extends Command {
 
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
-							guildId: message.guild.id,
-							'garagem.nome': findSelectedEvento.nome
+							guildId: message.guild.id
 						}, {
-							$set: {
-								'garagem.$.mecanica': true,
-								'garagem.$.arrumado': false,
-								'garagem.$.emplacado': false,
-								'garagem.$.liberado': false
+							$pull: {
+								garagem: {
+									nome: findSelectedEvento.nome
+								}
 							}
 						});
 
@@ -149,6 +150,15 @@ module.exports = class Enviarmecanica extends Command {
 								mecanica: {
 									nome: findSelectedEvento.nome,
 									dono: author.id,
+									modelo: findSelectedEvento.modelo,
+									valor: findSelectedEvento.valor,
+									ano: findSelectedEvento.ano,
+									danificado: findSelectedEvento.danificado,
+									velocidade: findSelectedEvento.velocidade,
+									cavalos: findSelectedEvento.cavalos,
+									peso: findSelectedEvento.peso,
+									desmanche: findSelectedEvento.desmanche,
+									img: findSelectedEvento.img,
 									arrumado: false,
 									emplacado: false,
 									liberado: false
@@ -163,7 +173,7 @@ module.exports = class Enviarmecanica extends Command {
 				if (reason === 'time') {
 					sim.stop();
 					msg.delete();
-					return message.reply('você demorou demais para escolher que deseja enviar para a **Mecânica**. Use o comando novamente!');
+					return message.reply('você demorou demais para escolher o carro que deseja enviar para a **Mecânica**. Use o comando novamente!');
 				}
 			});
 		});

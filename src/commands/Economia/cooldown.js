@@ -51,7 +51,7 @@ module.exports = class Cooldown extends Command {
 		// gf
 		const timeout2 = 7200000;
 		// minerar
-		const timeout3 = 18000000;
+		const timeout3 = 43200000;
 		// pescar
 		const timeout4 = 600000;
 		// beijar, abraçar, dançar, crime
@@ -62,6 +62,39 @@ module.exports = class Cooldown extends Command {
 		const timeout7 = 86400000;
 		// roubar veículo
 		const timeout8 = 300000;
+		// garimpar
+		const timeout9 = 1200000;
+		// prisao
+		let timeout10 = 0;
+		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+			timeout10 = 36000000;
+		} else if (user.prisao.isPreso && user.prisao.prender) {
+			timeout10 = 43200000;
+		} else if (user.prisao.isPreso && user.prisao.revistar) {
+			timeout10 = 21600000;
+		} else if (user.prisao.isPreso && user.prisao.roubarVeiculo) {
+			timeout10 = 180000;
+		} else if (user.prisao.isPreso && user.prisao.velha) {
+			timeout10 = 300000;
+		} else if (user.prisao.isPreso && user.prisao.frentista) {
+			timeout10 = 600000;
+		} else if (user.prisao.isPreso && user.prisao.joalheria) {
+			timeout10 = 900000;
+		} else if (user.prisao.isPreso && user.prisao.agiota) {
+			timeout10 = 1200000;
+		} else if (user.prisao.isPreso && user.prisao.casaLoterica) {
+			timeout10 = 1200000;
+		} else if (user.prisao.isPreso && user.prisao.brazino) {
+			timeout10 = 2100000;
+		} else if (user.prisao.isPreso && user.prisao.facebook) {
+			timeout10 = 2700000;
+		} else if (user.prisao.isPreso && user.prisao.bancoCentral) {
+			timeout10 = 3600000;
+		} else if (user.prisao.isPreso && user.prisao.shopping) {
+			timeout10 = 7200000;
+		} else if (user.prisao.isPreso && user.prisao.banco) {
+			timeout10 = 14400000;
+		}
 
 		const embed = new ClientEmbed(author);
 		// trabalhar
@@ -178,13 +211,13 @@ module.exports = class Cooldown extends Command {
 		} else {
 			embed.addField(`🕺💃 Dançar`, `Pode usar!`, true);
 		}
-		// trabalho comunitário
-		if (timeout - (Date.now() - user.cooldown.trabalhoComunitario) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.trabalhoComunitario));
+		// garimpar
+		if (timeout9 - (Date.now() - user.cooldown.garimpar) > 0) {
+			const faltam = ms(timeout9 - (Date.now() - user.cooldown.garimpar));
 
-			embed.addField(`🧹 Trabalho Comunitário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`⚒️ Garimpar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🧹 Trabalho Comunitário`, `Pode usar!`, true);
+			embed.addField(`⚒️ Garimpar`, `Pode usar!`, true);
 		}
 		// crime
 		if (timeout4 - (Date.now() - user.cooldown.crime) > 0) {
@@ -201,6 +234,24 @@ module.exports = class Cooldown extends Command {
 			embed.addField(`🔫🚗 Roubar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
 			embed.addField(`🔫🚗 Roubar Veículo`, `Pode usar!`, true);
+		}
+		// trabalho comunitário
+		if (timeout - (Date.now() - user.cooldown.trabalhoComunitario) > 0) {
+			const faltam = ms(timeout - (Date.now() - user.cooldown.trabalhoComunitario));
+
+			embed.addField(`🧹 Trabalho Comunitário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`🧹 Trabalho Comunitário`, `Pode usar!`, true);
+		}
+		// prisao
+		if (timeout10 - (Date.now() - user.prisao.tempo) > 0) {
+			const faltam = ms(timeout10 - (Date.now() - user.prisao.tempo));
+
+			embed.addField(`⏰ Tempo de Prisão`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField('\u2800', '\u2800', true);
+		} else {
+			embed.addField(`⏰ Tempo de Prisão`, `Livre!`, true);
+			embed.addField('\u2800', '\u2800', true);
 		}
 
 		embed.setTitle('⏲️ | COOLDOWNS');

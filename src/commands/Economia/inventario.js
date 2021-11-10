@@ -1,6 +1,9 @@
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
+const {
+	filledBar
+} = require('string-progressbar');
 
 module.exports = class Inventario extends Command {
 
@@ -54,7 +57,7 @@ module.exports = class Inventario extends Command {
 
 		const itens = user.inventory.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
-		const total = user.inventory.length;
+		const total = !user.inventory.length ? 0 : user.inventory.map((a) => a.quantia).reduce((a, b) => a + b);
 
 		const embed = new ClientEmbed(author)
 			.setTitle(`**Inventário de:** ${member.user.tag}`)
@@ -62,7 +65,7 @@ module.exports = class Inventario extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setDescription(`***Total de Itens:*** \`${total}\`\n\n${itens || 'Inventário vazio.'}`);
+			.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(150, total, 10)[0]}** (${total / 150 * 100}%)\n\n${itens || 'Inventário vazio.'}`);
 
 		message.channel.send(author, embed);
 	}

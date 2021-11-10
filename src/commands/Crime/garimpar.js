@@ -58,6 +58,30 @@ module.exports = class Garimpar extends Command {
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 			return message.channel.send(author, embed);
+		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+			presoTime = 36000000;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (user.prisao.isPreso && user.prisao.crime) {
+			presoTime = 600000;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
 		} else if (user.prisao.isPreso && user.prisao.prender) {
 			presoTime = 43200000;
 

@@ -94,6 +94,9 @@ module.exports = class Casar extends Command {
 			});
 
 			sim.on('collect', async () => {
+				sim.stop();
+				msg.delete();
+
 				message.reply(`${user} aceitou seu pedido de casamento, parabéns.`);
 
 				await this.client.database.users.findOneAndUpdate({

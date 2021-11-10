@@ -7,7 +7,9 @@ module.exports = class {
 	}
 
 	async run(member) {
-		const { guild } = member;
+		const {
+			guild
+		} = member;
 
 		const user = await User.findOne({
 			userId: member.id,

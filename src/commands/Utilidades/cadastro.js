@@ -46,7 +46,7 @@ module.exports = class Cadastro extends Command {
 		prefix,
 		author
 	}) {
-		if (process.env.OWNER_ID.includes(message.author.id)) {
+		if (['463421520686088192', '707677540583735338', '804677047959027714'].includes(message.author.id)) {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
 			const user = await this.client.database.users.findOne({

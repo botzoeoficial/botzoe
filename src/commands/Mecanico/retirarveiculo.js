@@ -48,7 +48,16 @@ module.exports = class Retirarveiculo extends Command {
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
+			modelo: value.modelo,
+			valor: value.valor,
+			ano: value.ano,
+			danificado: value.danificado,
+			velocidade: value.velocidade,
+			cavalos: value.cavalos,
+			peso: value.peso,
+			desmanche: value.desmanche,
 			dono: value.dono,
+			img: value.img,
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,
@@ -116,8 +125,7 @@ module.exports = class Retirarveiculo extends Command {
 					} else if (!findSelectedEvento.liberado) {
 						sim.stop();
 						ce.delete();
-						msg.delete();
-						return message.reply(`esse veículo não está liberado ainda. Use o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
+						message.reply(`esse veículo não está liberado ainda. Use o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
 					} else {
@@ -131,14 +139,26 @@ module.exports = class Retirarveiculo extends Command {
 
 						await this.client.database.users.findOneAndUpdate({
 							userId: findSelectedEvento.dono,
-							guildId: message.guild.id,
-							'garagem.nome': findSelectedEvento.nome
+							guildId: message.guild.id
 						}, {
-							$set: {
-								'garagem.$.mecanica': false,
-								'garagem.$.arrumado': true,
-								'garagem.$.liberado': true,
-								'garagem.$.emplacado': true
+							$push: {
+								garagem: {
+									nome: findSelectedEvento.nome,
+									dono: findSelectedEvento.dono,
+									modelo: findSelectedEvento.modelo,
+									valor: findSelectedEvento.valor,
+									ano: findSelectedEvento.ano,
+									danificado: findSelectedEvento.danificado,
+									velocidade: findSelectedEvento.velocidade,
+									cavalos: findSelectedEvento.cavalos,
+									peso: findSelectedEvento.peso,
+									desmanche: findSelectedEvento.desmanche,
+									img: findSelectedEvento.img,
+									mecanica: false,
+									arrumado: true,
+									emplacado: true,
+									liberado: true
+								}
 							}
 						});
 

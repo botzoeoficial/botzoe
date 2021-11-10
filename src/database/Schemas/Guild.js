@@ -333,6 +333,42 @@ const guildSchema = new Schema({
 			type: String,
 			default: ''
 		},
+		modelo: {
+			type: String,
+			default: ''
+		},
+		valor: {
+			type: Number,
+			default: 0
+		},
+		ano: {
+			type: Number,
+			default: 0
+		},
+		danificado: {
+			type: Number,
+			default: 0
+		},
+		velocidade: {
+			type: Number,
+			default: 0
+		},
+		cavalos: {
+			type: Number,
+			default: 0
+		},
+		peso: {
+			type: Number,
+			default: 0
+		},
+		desmanche: {
+			type: Number,
+			default: 0
+		},
+		img: {
+			type: String,
+			default: ''
+		},
 		arrumado: {
 			type: Boolean,
 			default: false

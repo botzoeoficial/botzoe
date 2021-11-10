@@ -76,6 +76,18 @@ module.exports = class Roubarveículo extends Command {
 
 				return message.channel.send(author, embed);
 			}
+		} else if (user.prisao.isPreso && user.prisao.crime) {
+			presoTime = 600000;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
 		} else if (user.prisao.isPreso && user.prisao.prender) {
 			presoTime = 43200000;
 
@@ -350,6 +362,7 @@ module.exports = class Roubarveículo extends Command {
 									nome: carrosArray.carros[0].comuns[carrosComum].nome,
 									modelo: carrosArray.carros[0].comuns[carrosComum].marca,
 									valor: Number(carrosArray.carros[0].comuns[carrosComum].valor),
+									ano: Number(carrosArray.carros[0].comuns[carrosComum].ano),
 									danificado: Number(randomDano),
 									velocidade: Number(carrosArray.carros[0].comuns[carrosComum].velocidade),
 									cavalos: Number(carrosArray.carros[0].comuns[carrosComum].cavalo),
@@ -402,6 +415,7 @@ module.exports = class Roubarveículo extends Command {
 									nome: carrosArray.carros[0].raros[carrosRaros].nome,
 									modelo: carrosArray.carros[0].raros[carrosRaros].marca,
 									valor: Number(carrosArray.carros[0].raros[carrosRaros].valor),
+									ano: Number(carrosArray.carros[0].raros[carrosRaros].ano),
 									danificado: Number(randomDano),
 									velocidade: Number(carrosArray.carros[0].raros[carrosRaros].velocidade),
 									cavalos: Number(carrosArray.carros[0].raros[carrosRaros].cavalo),
@@ -454,6 +468,7 @@ module.exports = class Roubarveículo extends Command {
 									nome: carrosArray.carros[0].epicos[carrosEpicos].nome,
 									modelo: carrosArray.carros[0].epicos[carrosEpicos].marca,
 									valor: Number(carrosArray.carros[0].epicos[carrosEpicos].valor),
+									ano: Number(carrosArray.carros[0].epicos[carrosEpicos].ano),
 									danificado: Number(randomDano),
 									velocidade: Number(carrosArray.carros[0].epicos[carrosEpicos].velocidade),
 									cavalos: Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo),
@@ -506,6 +521,7 @@ module.exports = class Roubarveículo extends Command {
 									nome: carrosArray.carros[0].epicos2[carrosEpicos2].nome,
 									modelo: carrosArray.carros[0].epicos2[carrosEpicos2].marca,
 									valor: Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor),
+									ano: Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano),
 									danificado: Number(randomDano),
 									velocidade: Number(carrosArray.carros[0].epicos2[carrosEpicos2].velocidade),
 									cavalos: Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo),
@@ -558,6 +574,7 @@ module.exports = class Roubarveículo extends Command {
 									nome: carrosArray.carros[0].lendario[carrosLendarios].nome,
 									modelo: carrosArray.carros[0].lendario[carrosLendarios].marca,
 									valor: Number(carrosArray.carros[0].lendario[carrosLendarios].valor),
+									ano: Number(carrosArray.carros[0].lendario[carrosLendarios].ano),
 									danificado: Number(randomDano),
 									velocidade: Number(carrosArray.carros[0].lendario[carrosLendarios].velocidade),
 									cavalos: Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo),

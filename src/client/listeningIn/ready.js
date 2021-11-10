@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
-/* eslint-disable no-return-assign */
 /* eslint-disable id-length */
 const Guild = require('../../database/Schemas/Guild'),
 	User = require('../../database/Schemas/User'),
@@ -659,55 +658,71 @@ module.exports = class Ready {
 									});
 
 									coletor2.on('collect', async (reaction4, user4) => {
-										const embedPolicia = new ClientEmbed(this.client.user)
-											.setTitle('Prisão')
-											.setDescription(`Você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
-
-										msg.channel.send(embedPolicia);
-
-										atualDroga -= randomDrogaUser;
-
-										await this.client.database.guilds.findOneAndUpdate({
-											_id: msg.guild.id
-										}, {
-											$set: {
-												'exportador.quantiaQueFalta': atualDroga
-											}
+										const userPolicia = await this.client.database.users.findOne({
+											userId: user4.id,
+											guildId: msg.guild.id
 										});
 
-										await this.client.database.users.findOneAndUpdate({
-											userId: user2.id,
-											guildId: msg1.guild.id
-										}, {
-											$set: {
-												'prisao.isPreso': true,
-												'prisao.tempo': Date.now(),
-												'prisao.traficoDrogas': true
-											}
-										});
+										const timeoutRoubar = 300000;
 
-										await this.client.database.users.findOneAndUpdate({
-											userId: user2.id,
-											guildId: msg1.guild.id,
-											'mochila.item': randomDroga
-										}, {
-											$set: {
-												'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
-											}
-										});
+										if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador) > 0) {
+											const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador));
 
-										setTimeout(async () => {
+											const embedRoubar = new ClientEmbed(this.client.user)
+												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+											msg.channel.send(`<@${user4.id}>`, embedRoubar);
+										} else {
+											const embedPolicia = new ClientEmbed(this.client.user)
+												.setTitle('Prisão')
+												.setDescription(`Você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
+
+											msg.channel.send(embedPolicia);
+
+											atualDroga -= randomDrogaUser;
+
+											await this.client.database.guilds.findOneAndUpdate({
+												_id: msg.guild.id
+											}, {
+												$set: {
+													'exportador.quantiaQueFalta': atualDroga
+												}
+											});
+
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
 												guildId: msg1.guild.id
 											}, {
 												$set: {
-													'prisao.isPreso': false,
-													'prisao.tempo': 0,
-													'prisao.traficoDrogas': false
+													'prisao.isPreso': true,
+													'prisao.tempo': Date.now(),
+													'prisao.traficoDrogas': true
 												}
 											});
-										}, 36000000);
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: user2.id,
+												guildId: msg1.guild.id,
+												'mochila.item': randomDroga
+											}, {
+												$set: {
+													'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+												}
+											});
+
+											setTimeout(async () => {
+												await this.client.database.users.findOneAndUpdate({
+													userId: user2.id,
+													guildId: msg1.guild.id
+												}, {
+													$set: {
+														'prisao.isPreso': false,
+														'prisao.tempo': 0,
+														'prisao.traficoDrogas': false
+													}
+												});
+											}, 36000000);
+										}
 									});
 
 									coletor2.on('end', async (collected, reason) => {

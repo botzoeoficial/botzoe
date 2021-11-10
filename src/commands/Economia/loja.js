@@ -137,6 +137,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja2.bebidas[0].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -195,6 +201,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja2.bebidas[1].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -255,6 +267,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja2.bebidas[2].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -313,6 +331,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja2.bebidas[3].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -373,6 +397,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja2.bebidas[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -432,7 +462,11 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja2.bebidas[5].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -584,6 +618,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja3.comidas[0].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -642,6 +682,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja3.comidas[1].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -702,6 +748,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja3.comidas[2].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -760,6 +812,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja3.comidas[3].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -820,7 +878,11 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja3.comidas[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -881,6 +943,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja3.comidas[5].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -939,6 +1007,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja3.comidas[6].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -1086,6 +1160,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja4.doces[0].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -1144,6 +1224,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja4.doces[1].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -1204,6 +1290,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja4.doces[2].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -1263,6 +1355,12 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (user.saldo < loja4.doces[3].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -1321,6 +1419,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.saldo < loja4.doces[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -1559,6 +1663,12 @@ module.exports = class Loja extends Command {
 
 						const itens = user.inventory;
 
+						if (itens.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
+
 						if (itens.find((a) => a.item === loja5.utilidades[0].item)) {
 							if (itens.find((a) => a.item === loja5.utilidades[0].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **Remédio** no inventário!`).then((b) => b.delete({
@@ -1608,6 +1718,12 @@ module.exports = class Loja extends Command {
 							userId: author.id,
 							guildId: message.guild.id
 						});
+
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+								timeout: 5000
+							}));
+						}
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 

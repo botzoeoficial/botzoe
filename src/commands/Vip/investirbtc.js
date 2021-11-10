@@ -52,18 +52,13 @@ module.exports = class Investirbtc extends Command {
 			guildId: message.guild.id
 		});
 
-		const userAuthor = await this.client.database.users.findOne({
-			userId: author.id,
-			guildId: message.guild.id
-		});
-
 		let presoTime = 0;
 
-		if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -71,11 +66,23 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.prender) {
+		} else if (user.prisao.isPreso && user.prisao.crime) {
+			presoTime = 600000;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				const embed = new ClientEmbed(author)
+					.setTitle('👮 | Preso')
+					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			}
+		} else if (user.prisao.isPreso && user.prisao.prender) {
 			presoTime = 43200000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -83,11 +90,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.revistar) {
+		} else if (user.prisao.isPreso && user.prisao.revistar) {
 			presoTime = 21600000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -95,11 +102,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.roubarVeiculo) {
+		} else if (user.prisao.isPreso && user.prisao.roubarVeiculo) {
 			presoTime = 180000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -107,11 +114,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.velha) {
+		} else if (user.prisao.isPreso && user.prisao.velha) {
 			presoTime = 300000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -119,11 +126,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.frentista) {
+		} else if (user.prisao.isPreso && user.prisao.frentista) {
 			presoTime = 600000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -131,11 +138,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.joalheria) {
+		} else if (user.prisao.isPreso && user.prisao.joalheria) {
 			presoTime = 900000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -143,11 +150,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.agiota) {
+		} else if (user.prisao.isPreso && user.prisao.agiota) {
 			presoTime = 1200000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -155,11 +162,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.casaLoterica) {
+		} else if (user.prisao.isPreso && user.prisao.casaLoterica) {
 			presoTime = 1200000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -167,11 +174,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.brazino) {
+		} else if (user.prisao.isPreso && user.prisao.brazino) {
 			presoTime = 2100000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -179,11 +186,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.facebook) {
+		} else if (user.prisao.isPreso && user.prisao.facebook) {
 			presoTime = 2700000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -191,11 +198,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.bancoCentral) {
+		} else if (user.prisao.isPreso && user.prisao.bancoCentral) {
 			presoTime = 3600000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -203,11 +210,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.shopping) {
+		} else if (user.prisao.isPreso && user.prisao.shopping) {
 			presoTime = 7200000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')
@@ -215,11 +222,11 @@ module.exports = class Investirbtc extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else if (userAuthor.prisao.isPreso && userAuthor.prisao.banco) {
+		} else if (user.prisao.isPreso && user.prisao.banco) {
 			presoTime = 14400000;
 
-			if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-				const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
 				const embed = new ClientEmbed(author)
 					.setTitle('👮 | Preso')

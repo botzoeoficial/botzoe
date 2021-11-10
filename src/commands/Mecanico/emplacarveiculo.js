@@ -50,8 +50,17 @@ module.exports = class Emplacarveiculo extends Command {
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
+			modelo: value.modelo,
+			valor: value.valor,
+			ano: value.ano,
+			danificado: value.danificado,
+			velocidade: value.velocidade,
+			cavalos: value.cavalos,
+			peso: value.peso,
+			desmanche: value.desmanche,
 			dono: value.dono,
-			arrumado: false,
+			img: value.img,
+			arrumado: true,
 			emplacado: false,
 			liberado: false,
 			position: index
@@ -113,7 +122,7 @@ module.exports = class Emplacarveiculo extends Command {
 					} else if (findSelectedEvento.arrumado && findSelectedEvento.emplacado && !findSelectedEvento.liberado) {
 						sim.stop();
 						ce.delete();
-						return message.reply(`esse carro já está emplacado. Você precisa liberar ele agora usando o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
+						message.reply(`esse carro já está emplacado. Você precisa liberar ele agora usando o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
 					} else {
@@ -124,16 +133,6 @@ module.exports = class Emplacarveiculo extends Command {
 							.setDescription(`**✅ | Você emplacou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível para liberação, acerte o valor e libere o veículo.`);
 
 						msg.edit(author, embed);
-
-						await this.client.database.users.findOneAndUpdate({
-							userId: findSelectedEvento.dono,
-							guildId: message.guild.id,
-							'garagem.nome': findSelectedEvento.nome
-						}, {
-							$set: {
-								'garagem.$.emplacado': true
-							}
-						});
 
 						await this.client.database.guilds.findOneAndUpdate({
 							_id: message.guild.id,
