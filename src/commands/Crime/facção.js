@@ -82,8 +82,8 @@ module.exports = class Facção extends Command {
 				return message.reply(`você já é dono de uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`);
 			} else if (user.fac.isFac) {
 				return message.reply(`você já está em uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`);
-			} else if (user.crime.reputacao < 4) {
-				return message.reply('você não possui **Reputação** suficiente no mundo do **crime** para poder criar uma Facção!');
+			} else if (user.level < 3) {
+				return message.reply('você precisa ser level **3** para poder criar uma Facção!');
 			} else {
 				message.reply('qual nome você deseja dar a sua **Facção**? OBS: Digite no chat o nome dela!').then(async (msg) => {
 					const filter = (m) => m.author.id === author.id;
@@ -196,18 +196,6 @@ module.exports = class Facção extends Command {
 					const embed = new ClientEmbed(author)
 						.setTitle('👮 | Preso')
 						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-					return message.channel.send(author, embed);
-				}
-			} else if (user.prisao.isPreso && user.prisao.crime) {
-				presoTime = 600000;
-
-				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
-
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 					return message.channel.send(author, embed);
 				}
@@ -367,8 +355,6 @@ module.exports = class Facção extends Command {
 
 					return message.channel.send(author, embed);
 				}
-			} else if (!user.fac.isFac) {
-				return message.reply(`você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`);
 			} else {
 				const fd = user?.fac;
 
@@ -471,14 +457,6 @@ module.exports = class Facção extends Command {
 				return message.reply(`você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`);
 			} else if (!user.fac.createFac) {
 				return message.reply('você precisa ser Dono de uma Facção para convidar alguém!');
-			} else if (user.fac.level === 1 && user.fac.level < 5 && user.fac.membros.length === 15) {
-				return message.reply('sua Facção precisa de mais level para poder entrar mais pessoas!');
-			} else if (user.fac.level === 5 && user.fac.level < 8 && user.fac.membros.length === 17) {
-				return message.reply('sua Facção precisa de mais level para poder entrar mais pessoas!');
-			} else if (user.fac.level === 8 && user.fac.level < 10 && user.fac.membros.length === 20) {
-				return message.reply('sua Facção precisa de mais level para poder entrar mais pessoas!');
-			} else if (user.fac.level === 10 && user.fac.membros.length === 25) {
-				return message.reply('sua Facção precisa de mais level para poder entrar mais pessoas!');
 			} else {
 				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
 

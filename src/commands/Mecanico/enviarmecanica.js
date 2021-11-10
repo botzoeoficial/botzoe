@@ -119,11 +119,6 @@ module.exports = class Enviarmecanica extends Command {
 							timeout: 5000
 						}));
 						ce.delete();
-					} else if (findSelectedEvento.dono === author.id) {
-						message.reply(`esse seu carro já está na **Mecânica**. Digite outro número de um carro ou use o comando \`${prefix}mecanica\` para ver carro na **Mecânica**!`).then(ba => ba.delete({
-							timeout: 7000
-						}));
-						ce.delete();
 					} else {
 						sim.stop();
 						ce.delete();

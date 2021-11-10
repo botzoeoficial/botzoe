@@ -68,6 +68,8 @@ module.exports = class Cooldown extends Command {
 		let timeout10 = 0;
 		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			timeout10 = 36000000;
+		} else if (user.prisao.isPreso && user.prisao.crime) {
+			timeout10 = 600000;
 		} else if (user.prisao.isPreso && user.prisao.prender) {
 			timeout10 = 43200000;
 		} else if (user.prisao.isPreso && user.prisao.revistar) {

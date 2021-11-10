@@ -56,10 +56,8 @@ module.exports = class Setajudantelavagem extends Command {
 			_id: message.guild.id
 		}, {
 			$push: {
-				cidade: {
-					ajudanteLavagem: {
-						id: member.id
-					}
+				'cidade.ajudanteLavagem': {
+					id: member.id
 				}
 			}
 		});

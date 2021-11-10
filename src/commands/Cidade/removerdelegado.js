@@ -55,9 +55,7 @@ module.exports = class Removerdelegado extends Command {
 			_id: message.guild.id
 		}, {
 			$set: {
-				cidade: {
-					delegado: ''
-				}
+				'cidade.delegado': ''
 			}
 		});
 

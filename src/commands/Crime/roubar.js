@@ -280,7 +280,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -302,6 +303,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -380,7 +390,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -402,6 +413,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -480,7 +500,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -502,6 +523,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -580,7 +610,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -602,6 +633,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -680,7 +720,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -702,6 +743,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -780,7 +830,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -802,6 +853,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -880,7 +940,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -902,6 +963,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -980,7 +1050,8 @@ module.exports = class Roubar extends Command {
 						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
 						const sim = msg.createReactionCollector(filter, {
-							time: 4000
+							time: 4000,
+							max: 1
 						});
 
 						sim.on('collect', async (reaction, user3) => {
@@ -1002,6 +1073,15 @@ module.exports = class Roubar extends Command {
 								sim.stop();
 
 								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: user3.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'policia.prenderRoubar': Date.now()
+									}
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,

@@ -55,9 +55,7 @@ module.exports = class Removerdiretorhp extends Command {
 			_id: message.guild.id
 		}, {
 			$set: {
-				cidade: {
-					diretorHP: ''
-				}
+				'cidade.diretorHP': ''
 			}
 		});
 

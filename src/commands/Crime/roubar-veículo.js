@@ -342,7 +342,7 @@ module.exports = class Roubarveículo extends Command {
 							.addField('Danificado:', `${randomDano}%`, true)
 							.addField('Velocidade:', `${Number(carrosArray.carros[0].comuns[carrosComum].velocidade)} KM/h`, true)
 							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].comuns[carrosComum].cavalo)} HP`, true)
-							.addField('Peso:', `${Number(car.weightKilograms)} KG`, true)
+							.addField('Ano:', `${Number(carrosArray.carros[0].comuns[carrosComum].ano)} KG`, true)
 							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].comuns[carrosComum].valor))},00`, true)
 							.setImage(carrosArray.carros[0].comuns[carrosComum].img);
 
@@ -395,7 +395,7 @@ module.exports = class Roubarveículo extends Command {
 							.addField('Danificado:', `${randomDano}%`, true)
 							.addField('Velocidade:', `${Number(carrosArray.carros[0].raros[carrosRaros].velocidade)} KM/h`, true)
 							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].raros[carrosRaros].cavalo)} HP`, true)
-							.addField('Peso:', `${Number(car.weightKilograms)} KG`, true)
+							.addField('Ano:', `${Number(carrosArray.carros[0].raros[carrosRaros].ano)} KG`, true)
 							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].raros[carrosRaros].valor))},00`, true)
 							.setImage(carrosArray.carros[0].raros[carrosRaros].img);
 
@@ -448,7 +448,7 @@ module.exports = class Roubarveículo extends Command {
 							.addField('Danificado:', `${randomDano}%`, true)
 							.addField('Velocidade:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].velocidade)} KM/h`, true)
 							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo)} HP`, true)
-							.addField('Peso:', `${Number(car.weightKilograms)} KG`, true)
+							.addField('Ano:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].ano)} KG`, true)
 							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos[carrosEpicos].valor))},00`, true)
 							.setImage(carrosArray.carros[0].epicos[carrosEpicos].img);
 
@@ -501,7 +501,7 @@ module.exports = class Roubarveículo extends Command {
 							.addField('Danificado:', `${randomDano}%`, true)
 							.addField('Velocidade:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].velocidade)} KM/h`, true)
 							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo)} HP`, true)
-							.addField('Peso:', `${Number(car.weightKilograms)} KG`, true)
+							.addField('Ano:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano)} KG`, true)
 							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor))},00`, true)
 							.setImage(carrosArray.carros[0].epicos2[carrosEpicos2].img);
 
@@ -554,7 +554,7 @@ module.exports = class Roubarveículo extends Command {
 							.addField('Danificado:', `${randomDano}%`, true)
 							.addField('Velocidade:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].velocidade)} KM/h`, true)
 							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo)} HP`, true)
-							.addField('Peso:', `${Number(car.weightKilograms)} KG`, true)
+							.addField('Ano:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].ano)} KG`, true)
 							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].lendario[carrosLendarios].valor))},00`, true)
 							.setImage(carrosArray.carros[0].lendario[carrosLendarios].img);
 

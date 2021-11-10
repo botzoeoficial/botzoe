@@ -65,7 +65,7 @@ module.exports = class Inventario extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(150, total, 10)[0]}** (${total / 150 * 100}%)\n\n${itens || 'Inventário vazio.'}`);
+			.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(200, total, 10)[0]}** (${Math.round(total / 200 * 100)}%)\n\n${itens || 'Inventário vazio.'}`);
 
 		message.channel.send(author, embed);
 	}

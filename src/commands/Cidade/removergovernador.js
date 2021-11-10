@@ -55,9 +55,7 @@ module.exports = class Removergovernador extends Command {
 			_id: message.guild.id
 		}, {
 			$set: {
-				cidade: {
-					governador: ''
-				}
+				'cidade.governador': ''
 			}
 		});
 

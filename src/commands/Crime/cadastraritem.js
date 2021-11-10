@@ -281,7 +281,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
-																			sim2.stop();
+																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -604,7 +604,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
-																			sim2.stop();
+																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -912,7 +912,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
-																			sim2.stop();
+																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -1214,7 +1214,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
-																			sim2.stop();
+																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -1534,7 +1534,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
-																			sim2.stop();
+																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -1836,7 +1836,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
-																			sim2.stop();
+																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);

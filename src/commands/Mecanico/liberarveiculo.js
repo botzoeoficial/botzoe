@@ -50,6 +50,7 @@ module.exports = class Liberarveiculo extends Command {
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
+			dono: value.dono,
 			modelo: value.modelo,
 			valor: value.valor,
 			ano: value.ano,
@@ -58,11 +59,10 @@ module.exports = class Liberarveiculo extends Command {
 			cavalos: value.cavalos,
 			peso: value.peso,
 			desmanche: value.desmanche,
-			dono: value.dono,
 			img: value.img,
-			arrumado: true,
-			emplacado: true,
-			liberado: false,
+			arrumado: value.arrumado,
+			emplacado: value.emplacado,
+			liberado: value.liberado,
 			position: index
 		}));
 
@@ -119,7 +119,13 @@ module.exports = class Liberarveiculo extends Command {
 							timeout: 5000
 						}));
 						ce.delete();
-					} else if (findSelectedEvento.arrumado && !findSelectedEvento.emplacado) {
+					} else if (!findSelectedEvento.arrumado) {
+						sim.stop();
+						ce.delete();
+						message.reply(`esse veículo não está arrumado ainda. Use o comando \`${prefix}arrumarveiculo\`!`).then(ba => ba.delete({
+							timeout: 5000
+						}));
+					} else if (!findSelectedEvento.emplacado) {
 						sim.stop();
 						ce.delete();
 						message.reply(`esse veículo não está emplacado ainda. Use o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({

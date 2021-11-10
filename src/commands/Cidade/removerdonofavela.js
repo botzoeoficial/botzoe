@@ -55,9 +55,7 @@ module.exports = class Removerdonofavela extends Command {
 			_id: message.guild.id
 		}, {
 			$set: {
-				cidade: {
-					donoFavela: ''
-				}
+				'cidade.donoFavela': ''
 			}
 		});
 

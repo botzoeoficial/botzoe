@@ -1,3 +1,4 @@
+/* eslint-disable handle-callback-err */
 /* eslint-disable id-length */
 /* eslint-disable new-cap */
 /* eslint-disable no-return-assign */
@@ -8,6 +9,7 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
+const User = require('../../database/Schemas/User');
 
 module.exports = class Crime extends Command {
 
@@ -402,7 +404,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 5) * 2,
+										'crime.reputacao': user.crime.reputacao + (5 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -479,7 +481,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 10) * 2,
+										'crime.reputacao': user.crime.reputacao + (10 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -556,7 +558,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 20) * 2,
+										'crime.reputacao': user.crime.reputacao + (20 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -633,7 +635,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 30) * 2,
+										'crime.reputacao': user.crime.reputacao + (30 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -710,7 +712,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 40) * 2,
+										'crime.reputacao': user.crime.reputacao + (40 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -787,7 +789,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 50) * 2,
+										'crime.reputacao': user.crime.reputacao + (50 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -864,7 +866,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 60) * 2,
+										'crime.reputacao': user.crime.reputacao + (60 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -941,7 +943,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 70) * 2,
+										'crime.reputacao': user.crime.reputacao + (70 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -1018,7 +1020,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 80) * 2,
+										'crime.reputacao': user.crime.reputacao + (80 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -1095,7 +1097,7 @@ module.exports = class Crime extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										'crime.reputacao': (user.crime.reputacao + 90) * 2,
+										'crime.reputacao': user.crime.reputacao + (90 * 2),
 										'crime.feito': user.crime.feito + 1,
 										saldo: user.saldo + randomValor,
 										'cooldown.crime': Date.now()
@@ -1115,40 +1117,23 @@ module.exports = class Crime extends Command {
 				});
 			}
 		} else if (args[0].toLowerCase() === 'estatisticas') {
-			const COINS = await this.client.database.users.find({
-				guildId: message.guild.id
-			}, {
-				'crime.feito': {
-					$gt: 0
-				}
-			}).toArray();
+			User.findOne({
+				userId: author.id
+			}, async () => {
+				await require('mongoose').connection.collection('users').find({
+					'crime.feito': {
+						$gt: 0
+					}
+				}).toArray((err, res) => {
+					if (err) throw err;
+					const Exp = res.map((x) => x.crime).sort((x, f) => f.feito - x.feito);
 
-			const coins = Object.entries(COINS).map(([, x]) => x.userId).sort((x, f) => x.crime.feito - f.crime.feito);
+					const EMBED = new ClientEmbed(author)
+						.setTitle('Crime Estatísticas')
+						.setDescription(Exp.map((x, f) => `\`${f + 1}º\`) **${x.user}** - **${x.feito}**`).slice(0, 10).join('\n\n'));
 
-			const members = [];
-
-			await this.PUSH(coins, members, message.guild.id);
-
-			const crimesMap = members.map((x) => x).sort((x, f) => f.crimes - x.crimes).slice(0, 10);
-
-			const TOP = new ClientEmbed(author)
-				.setTitle('Crime Estatísticas')
-				.setDescription(crimesMap.map((x, f) => `\`${f + 1}º\`) **${x.user}** - **${x.crimes}**`).join('\n\n'));
-
-			message.channel.send(author, TOP);
-		}
-	}
-
-	async PUSH(coins, members, guild) {
-		for (const member of coins) {
-			const doc = await this.client.database.users.findOne({
-				userId: member,
-				guildId: guild
-			});
-
-			members.push({
-				user: await this.client.users.fetch(member).then((user) => user),
-				crimes: doc.crime.feito
+					message.channel.send(author, EMBED);
+				});
 			});
 		}
 	}

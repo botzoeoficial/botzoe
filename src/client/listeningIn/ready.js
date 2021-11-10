@@ -649,12 +649,13 @@ module.exports = class Ready {
 									await msg1.react('👮');
 
 									const server = await this.client.database.guilds.findOne({
-										_id: msg1.guild.id
+										_id: msg.guild.id
 									});
 
 									const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 									const coletor2 = msg1.createReactionCollector(filtro2, {
-										time: 4000
+										time: 4000,
+										max: 1
 									});
 
 									coletor2.on('collect', async (reaction4, user4) => {
@@ -681,6 +682,15 @@ module.exports = class Ready {
 
 											atualDroga -= randomDrogaUser;
 
+											await this.client.database.users.findOneAndUpdate({
+												userId: user4.id,
+												guildId: msg.guild.id
+											}, {
+												$set: {
+													'policia.prenderExportador': Date.now()
+												}
+											});
+
 											await this.client.database.guilds.findOneAndUpdate({
 												_id: msg.guild.id
 											}, {
@@ -691,7 +701,7 @@ module.exports = class Ready {
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
-												guildId: msg1.guild.id
+												guildId: msg.guild.id
 											}, {
 												$set: {
 													'prisao.isPreso': true,
@@ -702,7 +712,7 @@ module.exports = class Ready {
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
-												guildId: msg1.guild.id,
+												guildId: msg.guild.id,
 												'mochila.item': randomDroga
 											}, {
 												$set: {
@@ -713,7 +723,7 @@ module.exports = class Ready {
 											setTimeout(async () => {
 												await this.client.database.users.findOneAndUpdate({
 													userId: user2.id,
-													guildId: msg1.guild.id
+													guildId: msg.guild.id
 												}, {
 													$set: {
 														'prisao.isPreso': false,
@@ -731,7 +741,7 @@ module.exports = class Ready {
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
-												guildId: msg1.guild.id
+												guildId: msg.guild.id
 											}, {
 												$set: {
 													banco: userAuthor.banco + valor
@@ -740,7 +750,7 @@ module.exports = class Ready {
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
-												guildId: msg1.guild.id,
+												guildId: msg.guild.id,
 												'mochila.item': randomDroga
 											}, {
 												$set: {
@@ -756,7 +766,6 @@ module.exports = class Ready {
 						coletor.on('end', async (collected, reason) => {
 							if (reason === 'time') {
 								coletor.stop();
-								msg.delete();
 
 								await this.client.database.guilds.findOneAndUpdate({
 									_id: msg.guild.id

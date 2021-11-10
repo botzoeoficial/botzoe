@@ -54,9 +54,7 @@ module.exports = class Addgovernador extends Command {
 			_id: message.guild.id
 		}, {
 			$set: {
-				cidade: {
-					governador: member.id
-				}
+				'cidade.governador': member.id
 			}
 		});
 

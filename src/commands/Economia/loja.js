@@ -137,7 +137,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -202,7 +202,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -267,7 +267,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -332,7 +332,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -397,7 +397,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -462,7 +462,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -618,7 +618,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -683,7 +683,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -748,7 +748,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -813,7 +813,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -878,7 +878,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -943,7 +943,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1008,7 +1008,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1160,7 +1160,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1225,7 +1225,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1290,7 +1290,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1355,7 +1355,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1420,7 +1420,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1663,7 +1663,7 @@ module.exports = class Loja extends Command {
 
 						const itens = user.inventory;
 
-						if (itens.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (itens.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));
@@ -1719,7 +1719,7 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
-						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 150) {
+						if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
 							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
 								timeout: 5000
 							}));

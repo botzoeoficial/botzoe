@@ -61,9 +61,7 @@ module.exports = class Setdonofavela extends Command {
 			_id: message.guild.id
 		}, {
 			$set: {
-				cidade: {
-					donoFavela: member.id
-				}
+				'cidade.donoFavela': member.id
 			}
 		});
 
