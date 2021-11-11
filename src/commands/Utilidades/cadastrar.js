@@ -347,6 +347,7 @@ module.exports = class Cadastrar extends Command {
 																													await msg12.delete();
 																													await msg14.delete();
 																													await msg18.delete();
+																													await msg19.delete();
 																													await msg20.delete();
 																												}
 																											});

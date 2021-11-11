@@ -26,8 +26,8 @@ module.exports = class Fabricararma extends Command {
 		this.guildOnly = true;
 
 		this.owner = false;
-		this.editor = false;
-		this.adm = false;
+		this.editor = true;
+		this.adm = true;
 
 		this.vip = false;
 		this.governador = false;
@@ -259,7 +259,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -369,7 +371,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -479,7 +483,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -589,7 +595,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -701,7 +709,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -811,7 +821,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -921,7 +933,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1031,7 +1045,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1143,7 +1159,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1253,7 +1271,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1363,7 +1383,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1473,7 +1495,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1585,7 +1609,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1695,7 +1721,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1805,7 +1833,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1915,7 +1945,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2027,7 +2059,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2137,7 +2171,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2247,7 +2283,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2357,7 +2395,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2469,7 +2509,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2579,7 +2621,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2689,7 +2733,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2799,7 +2845,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -2911,7 +2959,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3021,7 +3071,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3131,7 +3183,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3241,7 +3295,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3353,7 +3409,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3463,7 +3521,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3573,7 +3633,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3683,7 +3745,9 @@ module.exports = class Fabricararma extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -3771,6 +3835,14 @@ module.exports = class Fabricararma extends Command {
 							});
 						});
 					}
+				}
+			});
+
+			sim.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					sim.stop();
+					msg.delete();
+					return message.reply('você demorou demais para responder. Use o comando novamente!');
 				}
 			});
 		});

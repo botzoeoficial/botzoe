@@ -360,6 +360,7 @@ module.exports = class Adotar extends Command {
 
 						sim.on('end', async () => {
 							sim.stop();
+							return;
 						});
 					});
 				} else if (randomCategoria > 50 && randomCategoria <= 85) {
@@ -445,6 +446,7 @@ module.exports = class Adotar extends Command {
 
 						sim.on('end', async () => {
 							sim.stop();
+							return;
 						});
 					});
 				} else if (randomCategoria > 85) {
@@ -530,6 +532,7 @@ module.exports = class Adotar extends Command {
 
 						sim.on('end', async () => {
 							sim.stop();
+							return;
 						});
 					});
 				}
@@ -614,6 +617,7 @@ module.exports = class Adotar extends Command {
 
 					sim.on('end', async () => {
 						sim.stop();
+						return;
 					});
 				});
 			}

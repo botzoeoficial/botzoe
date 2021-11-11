@@ -162,6 +162,7 @@ module.exports = class Eventosdiv extends Command {
 													await member.roles.add('880884384884981790');
 												});
 											});
+
 											message.channel.send(`${author}, evento enviado no canal ${canal} com sucesso.`);
 										}, 5000);
 									});

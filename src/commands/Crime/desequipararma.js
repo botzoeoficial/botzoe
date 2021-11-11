@@ -62,7 +62,10 @@ module.exports = class Desequipararma extends Command {
 
 			const filter = (reaction, user3) => itensFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
 
-			const sim = msg.createReactionCollector(filter);
+			const sim = msg.createReactionCollector(filter, {
+				time: 60000,
+				max: 1
+			});
 
 			const objeto = {
 				'901118225520136243': 'Ak-47',

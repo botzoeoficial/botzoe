@@ -94,7 +94,9 @@ module.exports = class Revistar extends Command {
 
 				const filter = (reaction, user3) => user2.mochila.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
 
-				const sim = msg.createReactionCollector(filter);
+				const sim = msg.createReactionCollector(filter, {
+					time: 120000
+				});
 
 				const objeto = {
 					'898324362279669851': 'Máscara',
@@ -182,6 +184,7 @@ module.exports = class Revistar extends Command {
 					if (reason === 'time') {
 						sim.stop();
 						msg.delete();
+						return;
 					}
 				});
 			});

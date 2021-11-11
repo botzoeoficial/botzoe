@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 /* eslint-disable no-process-env */
@@ -73,7 +74,7 @@ module.exports = class Cadastro extends Command {
 				.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 				.addField('⚧ Orientação Sexual:', user.orientacaoSexual, true)
 				.addField('📈 Level:', user.level, true)
-				.addField('💼 Função na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : user.fac.emprego.nome, true)
+				.addField('💼 Função na FAC:', !user.fac.isFac && !user.fac.createFac ? 'Não é Dono ou não pertence a nenhuma Facção.' : user.fac.createFac ? 'Dono de Facção' : user.fac.isFac && !user.fac.createFac ? user.fac.emprego.nome : 'Sem Função na Facção', true)
 				.addField('🕰️ Tempo na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : `${moment(user.fac.tempo).format('ll')} [${moment().diff(user.fac.tempo, 'days')} dias atrás.]`)
 				.addField('💍 Casado(a) com:', user.marry.has ? await this.client.users.fetch(user.marry.user).then((x) => x.tag) : user.marry.user)
 				.addField('⭐ Estrelas:', !user.estrelas.length ? 'Nenhuma Estrela.' : user.estrelas.join(' '))
@@ -105,7 +106,7 @@ module.exports = class Cadastro extends Command {
 				.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 				.addField('⚧ Orientação Sexual:', user.orientacaoSexual, true)
 				.addField('📈 Level:', user.level, true)
-				.addField('💼 Função na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : user.fac.emprego.nome, true)
+				.addField('💼 Função na FAC:', !user.fac.isFac && !user.fac.createFac ? 'Não é Dono ou não pertence a nenhuma Facção.' : user.fac.createFac ? 'Dono de Facção' : user.fac.isFac && !user.fac.createFac ? user.fac.emprego.nome : 'Sem Função na Facção', true)
 				.addField('🕰️ Tempo na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : `${moment(user.fac.tempo).format('ll')} [${moment().diff(user.fac.tempo, 'days')} dias atrás.]`)
 				.addField('💍 Casado(a) com:', user.marry.has ? await this.client.users.fetch(user.marry.user).then((x) => x.tag) : user.marry.user)
 				.addField('⭐ Estrelas:', !user.estrelas.length ? 'Nenhuma Estrela.' : user.estrelas.join(' '))

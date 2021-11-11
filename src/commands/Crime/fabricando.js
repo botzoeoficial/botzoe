@@ -48,16 +48,12 @@ module.exports = class Fabricando extends Command {
 			guildId: message.guild.id
 		});
 
-		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
-		});
-
 		let timeout;
 
 		const embed = new ClientEmbed(author)
 			.setTitle('⏱️ | Fabricação em Andamento...');
 
-		if (server.cidade.donoFavela === author.id || server.cidade.donoFabricadeArmas.map((a) => a.id).includes(author.id)) {
+		if (user.fabricagem.fabricandoArma) {
 			if (user.fabricagem.armas.nome === 'Ak-47') {
 				if (user.fabricagem.armas.quantia >= 1 && user.fabricagem.armas.quantia <= 5) {
 					timeout = 10000800 * user.fabricagem.armas.quantia;
@@ -335,7 +331,7 @@ module.exports = class Fabricando extends Command {
 			}
 
 			message.channel.send(author, embed);
-		} else if (server.cidade.donoFavela === author.id || server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(author.id)) {
+		} else if (user.fabricagem.fabricandoDroga) {
 			if (user.fabricagem.drogas.nome === 'Maconha') {
 				if (user.fabricagem.drogas.quantia >= 1 && user.fabricagem.drogas.quantia <= 5) {
 					timeout = 43200000 * user.fabricagem.drogas.quantia;
@@ -477,7 +473,7 @@ module.exports = class Fabricando extends Command {
 			}
 
 			message.channel.send(author, embed);
-		} else if (server.cidade.donoFavela === author.id || server.cidade.carcereiro.map(a => a.id).includes(author.id)) {
+		} else if (user.fabricagem.fabricandoChaves) {
 			if (user.fabricagem.chaves.nome === 'Chave Micha') {
 				if (user.fabricagem.chaves.quantia >= 1 && user.fabricagem.chaves.quantia <= 5) {
 					timeout = 28800000 * user.fabricagem.chaves.quantia;
@@ -517,7 +513,7 @@ module.exports = class Fabricando extends Command {
 			}
 
 			message.channel.send(author, embed);
-		} else if (server.cidade.donoFavela === author.id || server.cidade.donoDesmanche === author.id || server.cidade.ajudanteDesmanche.map((a) => a.id).includes(author.id)) {
+		} else if (user.fabricagem.fabricandoMunicao) {
 			if (user.fabricagem.municoes.nome === 'Munição Metralhadora') {
 				if (user.fabricagem.municoes.quantia >= 1 && user.fabricagem.municoes.quantia <= 5) {
 					timeout = 28800000 * user.fabricagem.municoes.quantia;

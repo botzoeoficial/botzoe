@@ -104,6 +104,9 @@ module.exports = class Beijar extends Command {
 				});
 
 				sim.on('collect', async () => {
+					sim.stop();
+					não.stop();
+
 					const apikey = 'LUU697F9Y5BI';
 					const lmt = 50;
 
@@ -165,6 +168,9 @@ module.exports = class Beijar extends Command {
 				});
 
 				não.on('collect', async () => {
+					sim.stop();
+					não.stop();
+
 					msg.delete();
 
 					return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de beijo!`);
@@ -172,6 +178,9 @@ module.exports = class Beijar extends Command {
 
 				sim.on('end', async (collected, reason) => {
 					if (reason === 'time') {
+						sim.stop();
+						não.stop();
+
 						msg.delete();
 
 						return message.channel.send(`${author}, o(a) usuário(a) ${member} demorou demais para responder seu pedido! Use o comando novamente!`);

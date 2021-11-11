@@ -16,7 +16,7 @@ module.exports = class Trabalhocomunitario extends Command {
 		this.category = 'Social';
 		this.description = 'Diminua 15 minutos do tempo da sua prisão!';
 		this.usage = 'trabalhocomunitário';
-		this.aliases = ['trabalho-comunitário'];
+		this.aliases = ['trabalho-comunitário', 'trabalhocomunitario'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -50,9 +50,9 @@ module.exports = class Trabalhocomunitario extends Command {
 
 		if (!user.prisao.isPreso) return message.reply('você não está preso!');
 
-		if (user.prisao.crime && user.prisao.isPreso && !user.prisao.prender && !user.prisao.roubarVeiculo) return message.reply(`você foi preso pelo comando \`${prefix}crime\`, então você não pode usar esse comando!`);
+		if (user.prisao.crime && user.prisao.isPreso) return message.reply(`você foi preso pelo comando \`${prefix}crime\`, então você não pode usar esse comando!`);
 
-		if (user.prisao.isPreso && !user.prisao.crime && user.prisao.roubarVeiculo && !user.prisao.prender) return message.reply(`você foi preso pelo comando \`${prefix}roubar-veículo\`, então você não pode usar esse comando!`);
+		if (user.prisao.isPreso && user.prisao.roubarVeiculo) return message.reply(`você foi preso pelo comando \`${prefix}roubar-veículo\`, então você não pode usar esse comando!`);
 
 		const timeout = 3600000;
 

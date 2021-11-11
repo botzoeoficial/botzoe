@@ -26,8 +26,8 @@ module.exports = class Fabricarmunicao extends Command {
 		this.guildOnly = true;
 
 		this.owner = false;
-		this.editor = false;
-		this.adm = false;
+		this.editor = true;
+		this.adm = true;
 
 		this.vip = false;
 		this.governador = false;
@@ -206,7 +206,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 28800000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -259,7 +259,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -316,7 +318,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 25200000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -369,7 +371,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -426,7 +430,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 19800000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -479,7 +483,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -536,7 +542,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 14400000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -589,7 +595,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -648,7 +656,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 18000000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -701,7 +709,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -758,7 +768,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 14400000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -811,7 +821,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -868,7 +880,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 12600000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -921,7 +933,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -978,7 +992,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 7200000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -1031,7 +1045,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1090,7 +1106,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 36000000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -1143,7 +1159,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1200,7 +1218,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 28800000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -1253,7 +1271,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1310,7 +1330,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 18000000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -1363,7 +1383,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1420,7 +1442,7 @@ module.exports = class Fabricarmunicao extends Command {
 														time = 14400000 * Number(ce2.content);
 
 														embed
-															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municoes}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+															.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.municao}**\nQuantia: \`x${ce2.content}\` (**${Number(ce2.content * 5)} Projéteis**)\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
 
 														await this.client.database.users.findOneAndUpdate({
 															userId: author.id,
@@ -1473,7 +1495,9 @@ module.exports = class Fabricarmunicao extends Command {
 															message.channel.send(author, embedConfirm).then(async (confirm) => {
 																await confirm.react('✅');
 
-																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id);
+																const confirmar = confirm.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
+																	max: 1
+																});
 
 																confirmar.on('collect', async () => {
 																	if (!user3.isMochila) {
@@ -1561,6 +1585,14 @@ module.exports = class Fabricarmunicao extends Command {
 							});
 						});
 					}
+				}
+			});
+
+			sim.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					sim.stop();
+					msg.delete();
+					return message.reply('você demorou demais para responder. Use o comando novamente!');
 				}
 			});
 		});

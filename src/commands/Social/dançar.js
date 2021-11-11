@@ -102,6 +102,9 @@ module.exports = class Dançar extends Command {
 				});
 
 				sim.on('collect', async () => {
+					sim.stop();
+					não.stop();
+
 					const dancas = require('../../json/dancar.json');
 
 					const random = Math.floor(Math.random() * dancas.length);
@@ -139,6 +142,8 @@ module.exports = class Dançar extends Command {
 				});
 
 				não.on('collect', async () => {
+					sim.stop();
+					não.stop();
 					msg.delete();
 
 					return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de dança!`);
@@ -146,6 +151,8 @@ module.exports = class Dançar extends Command {
 
 				sim.on('end', async (collected, reason) => {
 					if (reason === 'time') {
+						sim.stop();
+						não.stop();
 						msg.delete();
 
 						return message.channel.send(`${author}, o(a) usuário(a) ${member} demorou demais para responder seu pedido! Use o comando novamente!`);

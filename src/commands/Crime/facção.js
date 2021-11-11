@@ -62,7 +62,7 @@ module.exports = class Facção extends Command {
 				.setTitle('🎭 | Sistema de Facção')
 				.addField('❔ Como utilizar?', `\`${prefix}facção\` \`<subcomando>\``)
 				.addField('🔖 Exemplos:', [
-					`\`${prefix}facção\` **criar** - Cria uma Facção. (Apenas Level 4 no **crime**)`,
+					`\`${prefix}facção\` **criar** - Cria uma Facção. (Apenas Level 3)`,
 					`\`${prefix}facção\` **cargo <criar/deletar> <nome do cargo>** - Cria ou deleta um cargo da sua facção.`,
 					`\`${prefix}facção\` **adicionar <usuário>** - Adiciona um membro a sua Facção.`,
 					`\`${prefix}facção\` **demitir <usuário>** - Demite um membro da sua Facção.`,
@@ -196,6 +196,18 @@ module.exports = class Facção extends Command {
 					const embed = new ClientEmbed(author)
 						.setTitle('👮 | Preso')
 						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+					return message.channel.send(author, embed);
+				}
+			} else if (user.prisao.isPreso && user.prisao.crime) {
+				presoTime = 600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					const embed = new ClientEmbed(author)
+						.setTitle('👮 | Preso')
+						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 					return message.channel.send(author, embed);
 				}
@@ -453,9 +465,7 @@ module.exports = class Facção extends Command {
 				}
 			}
 		} else if (args[0].toLowerCase() === 'convidar') {
-			if (!user.fac.isFac) {
-				return message.reply(`você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`);
-			} else if (!user.fac.createFac) {
+			if (!user.fac.createFac) {
 				return message.reply('você precisa ser Dono de uma Facção para convidar alguém!');
 			} else {
 				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
@@ -551,9 +561,7 @@ module.exports = class Facção extends Command {
 				});
 			}
 		} else if (args[0].toLowerCase() === 'demitir') {
-			if (!user.fac.isFac) {
-				return message.reply(`você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`);
-			} else if (!user.fac.createFac) {
+			if (!user.fac.createFac) {
 				return message.reply('você precisa ser Dono de uma Facção para demitir alguém!');
 			} else {
 				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();

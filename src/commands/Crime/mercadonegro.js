@@ -160,7 +160,9 @@ module.exports = class Mercadonegro extends Command {
 									guildId: message.guild.id
 								});
 
-								if (user.banco < findSelectedEvento.preco) {
+								if (!user.isMochila) {
+									return message.reply('você não tem uma **Mochila**. Vá até Loja > Utilidades e Compre uma!');
+								} else if (user.banco < findSelectedEvento.preco) {
 									message.reply('você não tem esse saldo todo no **banco** para comprar este produto!').then((ba) => ba.delete({
 										timeout: 5000
 									}));
@@ -273,6 +275,14 @@ module.exports = class Mercadonegro extends Command {
 							});
 						});
 					}
+				}
+			});
+
+			sim.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					sim.stop();
+					msg.delete();
+					return message.reply('você demorou demais para responder. Use o comando novamente!');
 				}
 			});
 		});

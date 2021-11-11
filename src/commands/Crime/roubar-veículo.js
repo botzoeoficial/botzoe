@@ -55,16 +55,8 @@ module.exports = class Roubarveículo extends Command {
 		if (user.policia.isPolice) return message.reply('você não pode usar esse comando pois você é Policial do servidor!');
 
 		let presoTime = 0;
-		const timeout = 300000;
 
-		if (timeout - (Date.now() - user.cooldown.roubarVeiculo) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.roubarVeiculo));
-
-			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-			return message.channel.send(author, embed);
-		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -245,351 +237,362 @@ module.exports = class Roubarveículo extends Command {
 				return message.channel.send(author, embed);
 			}
 		} else {
-			const randomChance = Math.floor(Math.random() * 101);
+			const timeout = 300000;
 
-			if (randomChance >= 0 && randomChance < 51) {
-				const randomFrases = [
-					'não deu certo, tinha muita polícia passando na rua e você decidiu não roubar o veículo.',
-					'durante a fuga você lembrou que não tinha dinheiro para pagar o pedágio, deixou o carro ali e saiu correndo.',
-					'sua chave Micha quebrou tentando abrir o veículo, você desistiu e foi embora.',
-					'você estava tentando quebrar o vidro de um carro, mas só depois percebeu que ele era Blindado, você disfarçou e foi embora.',
-					'você viu um carro legal, só que estava tão nervoso que não conseguiu roubá-lo!'
-				];
+			if (timeout - (Date.now() - user.cooldown.roubarVeiculo) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.roubarVeiculo));
 
 				const embed = new ClientEmbed(author)
-					.setTitle('Tentativa de Roubo!')
-					.setDescription(`${author}, ${randomFrases[Math.floor(Math.random() * randomFrases.length)]}`);
+					.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				message.channel.send(author, embed);
+				return message.channel.send(author, embed);
+			} else {
+				const randomChance = Math.floor(Math.random() * 101);
 
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'cooldown.roubarVeiculo': Date.now()
-					}
-				});
+				if (randomChance >= 0 && randomChance < 51) {
+					const randomFrases = [
+						'não deu certo, tinha muita polícia passando na rua e você decidiu não roubar o veículo.',
+						'durante a fuga você lembrou que não tinha dinheiro para pagar o pedágio, deixou o carro ali e saiu correndo.',
+						'sua chave Micha quebrou tentando abrir o veículo, você desistiu e foi embora.',
+						'você estava tentando quebrar o vidro de um carro, mas só depois percebeu que ele era Blindado, você disfarçou e foi embora.',
+						'você viu um carro legal, só que estava tão nervoso que não conseguiu roubá-lo!'
+					];
 
-				setTimeout(async () => {
+					const embed = new ClientEmbed(author)
+						.setTitle('Tentativa de Roubo!')
+						.setDescription(`${author}, ${randomFrases[Math.floor(Math.random() * randomFrases.length)]}`);
+
+					message.channel.send(author, embed);
+
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
 						guildId: message.guild.id
 					}, {
 						$set: {
-							'cooldown.roubarVeiculo': 0
+							'cooldown.roubarVeiculo': Date.now()
 						}
 					});
-				}, 300000);
-			} else if (randomChance > 50 && randomChance < 91) {
-				const randomFrases = [
-					'você ficou sem gasolina e não tinha dinheiro para abastecer, a polícia chegou e te prendeu.',
-					'você não sabia dirigir o carro automático e ficou perdido na troca das marchas, a polícia chegou e te prendeu.',
-					'na fuga você foi parado em uma blitz, gaguejou e foi descoberto, você foi preso.',
-					'quando você tentou roubar o carro, foi notado por um policial, ele imediatamente te prendeu.'
-				];
 
-				const embed = new ClientEmbed(author)
-					.setTitle('Você foi Preso!')
-					.setDescription(`${author}, ${randomFrases[Math.floor(Math.random() * randomFrases.length)]}`);
+					setTimeout(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								'cooldown.roubarVeiculo': 0
+							}
+						});
+					}, 300000);
+				} else if (randomChance > 50 && randomChance < 91) {
+					const randomFrases = [
+						'você ficou sem gasolina e não tinha dinheiro para abastecer, a polícia chegou e te prendeu.',
+						'você não sabia dirigir o carro automático e ficou perdido na troca das marchas, a polícia chegou e te prendeu.',
+						'na fuga você foi parado em uma blitz, gaguejou e foi descoberto, você foi preso.',
+						'quando você tentou roubar o carro, foi notado por um policial, ele imediatamente te prendeu.'
+					];
 
-				message.channel.send(author, embed);
+					const embed = new ClientEmbed(author)
+						.setTitle('Você foi Preso!')
+						.setDescription(`${author}, ${randomFrases[Math.floor(Math.random() * randomFrases.length)]}`);
 
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'cooldown.roubarVeiculo': Date.now(),
-						'prisao.isPreso': true,
-						'prisao.tempo': Date.now(),
-						'prisao.roubarVeiculo': true
-					}
-				});
+					message.channel.send(author, embed);
 
-				setTimeout(async () => {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
 						guildId: message.guild.id
 					}, {
 						$set: {
-							'cooldown.roubarVeiculo': 0,
-							'prisao.isPreso': false,
-							'prisao.tempo': 0,
-							'prisao.roubarVeiculo': false
+							'cooldown.roubarVeiculo': Date.now(),
+							'prisao.isPreso': true,
+							'prisao.tempo': Date.now(),
+							'prisao.roubarVeiculo': true
 						}
 					});
-				}, 180000);
-			} else if (randomChance > 90) {
-				const carrosArray = require('../../json/veiculos.json');
 
-				const randomCategoria = Math.floor(Math.random() * 101);
-
-				if (randomCategoria >= 0 && randomCategoria <= 70) {
-					// comuns
-
-					const carrosComum = Math.floor(Math.random() * carrosArray.carros[0].comuns.length);
-					const randomDano = Math.floor(Math.random() * 91);
-					const random = Math.floor(Math.random() * 59001);
-					const porcentagem = 30 / 100;
-
-					carQuery.getModelDetail(random).then(async car => {
-						const embed = new ClientEmbed(author)
-							.setTitle('Veículo Roubado')
-							.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].comuns[carrosComum].nome}\``)
-							.addField('Modelo:', carrosArray.carros[0].comuns[carrosComum].marca, true)
-							.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].comuns[carrosComum].valor))},00`, true)
-							.addField('Danificado:', `${randomDano}%`, true)
-							.addField('Velocidade:', `${Number(carrosArray.carros[0].comuns[carrosComum].velocidade)} KM/h`, true)
-							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].comuns[carrosComum].cavalo)} HP`, true)
-							.addField('Ano:', `${Number(carrosArray.carros[0].comuns[carrosComum].ano)} KG`, true)
-							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].comuns[carrosComum].valor))},00`, true)
-							.setImage(carrosArray.carros[0].comuns[carrosComum].img);
-
-						message.channel.send(author, embed);
-
+					setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
 						}, {
 							$set: {
-								'cooldown.roubarVeiculo': Date.now(),
-								'crime.reputacao': user.crime.reputacao + 1,
-								'crime.feito': user.crime.feito + 1
-							},
-							$push: {
-								garagem: {
-									nome: carrosArray.carros[0].comuns[carrosComum].nome,
-									modelo: carrosArray.carros[0].comuns[carrosComum].marca,
-									valor: Number(carrosArray.carros[0].comuns[carrosComum].valor),
-									ano: Number(carrosArray.carros[0].comuns[carrosComum].ano),
-									danificado: Number(randomDano),
-									velocidade: Number(carrosArray.carros[0].comuns[carrosComum].velocidade),
-									cavalos: Number(carrosArray.carros[0].comuns[carrosComum].cavalo),
-									peso: Number(car.weightKilograms),
-									desmanche: porcentagem * Number(carrosArray.carros[0].comuns[carrosComum].valor),
-									img: carrosArray.carros[0].comuns[carrosComum].img,
-									dono: author.id,
-									mecanica: false,
-									arrumado: false,
-									emplacado: false,
-									liberado: false
-								}
+								'cooldown.roubarVeiculo': 0,
+								'prisao.isPreso': false,
+								'prisao.tempo': 0,
+								'prisao.roubarVeiculo': false
 							}
 						});
-					});
-				} else if (randomCategoria > 70 && randomCategoria <= 88) {
-					// raros
+					}, 180000);
+				} else if (randomChance > 90) {
+					const carrosArray = require('../../json/veiculos.json');
 
-					const carrosRaros = Math.floor(Math.random() * carrosArray.carros[0].raros.length);
-					const randomDano = Math.floor(Math.random() * 91);
-					const random = Math.floor(Math.random() * 59001);
-					const porcentagem = 30 / 100;
+					const randomCategoria = Math.floor(Math.random() * 101);
 
-					carQuery.getModelDetail(random).then(async car => {
-						const embed = new ClientEmbed(author)
-							.setTitle('Veículo Roubado')
-							.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].raros[carrosRaros].nome}\``)
-							.addField('Modelo:', carrosArray.carros[0].raros[carrosRaros].marca, true)
-							.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].raros[carrosRaros].valor))},00`, true)
-							.addField('Danificado:', `${randomDano}%`, true)
-							.addField('Velocidade:', `${Number(carrosArray.carros[0].raros[carrosRaros].velocidade)} KM/h`, true)
-							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].raros[carrosRaros].cavalo)} HP`, true)
-							.addField('Ano:', `${Number(carrosArray.carros[0].raros[carrosRaros].ano)} KG`, true)
-							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].raros[carrosRaros].valor))},00`, true)
-							.setImage(carrosArray.carros[0].raros[carrosRaros].img);
+					if (randomCategoria >= 0 && randomCategoria <= 70) {
+						// comuns
 
-						message.channel.send(author, embed);
+						const carrosComum = Math.floor(Math.random() * carrosArray.carros[0].comuns.length);
+						const randomDano = Math.floor(Math.random() * 91);
+						const random = Math.floor(Math.random() * 59001);
+						const porcentagem = 30 / 100;
 
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'cooldown.roubarVeiculo': Date.now(),
-								'crime.reputacao': user.crime.reputacao + 1,
-								'crime.feito': user.crime.feito + 1
-							},
-							$push: {
-								garagem: {
-									nome: carrosArray.carros[0].raros[carrosRaros].nome,
-									modelo: carrosArray.carros[0].raros[carrosRaros].marca,
-									valor: Number(carrosArray.carros[0].raros[carrosRaros].valor),
-									ano: Number(carrosArray.carros[0].raros[carrosRaros].ano),
-									danificado: Number(randomDano),
-									velocidade: Number(carrosArray.carros[0].raros[carrosRaros].velocidade),
-									cavalos: Number(carrosArray.carros[0].raros[carrosRaros].cavalo),
-									peso: Number(car.weightKilograms),
-									desmanche: porcentagem * Number(carrosArray.carros[0].raros[carrosRaros].valor),
-									img: carrosArray.carros[0].raros[carrosRaros].img,
-									dono: author.id,
-									mecanica: false,
-									arrumado: false,
-									emplacado: false,
-									liberado: false
+						carQuery.getModelDetail(random).then(async car => {
+							const embed = new ClientEmbed(author)
+								.setTitle('Veículo Roubado')
+								.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].comuns[carrosComum].nome}\``)
+								.addField('Modelo:', carrosArray.carros[0].comuns[carrosComum].marca, true)
+								.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].comuns[carrosComum].valor))},00`, true)
+								.addField('Danificado:', `${randomDano}%`, true)
+								.addField('Velocidade:', `${Number(carrosArray.carros[0].comuns[carrosComum].velocidade)} KM/h`, true)
+								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].comuns[carrosComum].cavalo)} HP`, true)
+								.addField('Ano:', `${Number(carrosArray.carros[0].comuns[carrosComum].ano)}`, true)
+								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].comuns[carrosComum].valor))},00`, true)
+								.setImage(carrosArray.carros[0].comuns[carrosComum].img);
+
+							message.channel.send(author, embed);
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$set: {
+									'cooldown.roubarVeiculo': Date.now(),
+									'crime.reputacao': user.crime.reputacao + 1,
+									'crime.feito': user.crime.feito + 1
+								},
+								$push: {
+									garagem: {
+										nome: carrosArray.carros[0].comuns[carrosComum].nome,
+										modelo: carrosArray.carros[0].comuns[carrosComum].marca,
+										valor: Number(carrosArray.carros[0].comuns[carrosComum].valor),
+										ano: Number(carrosArray.carros[0].comuns[carrosComum].ano),
+										danificado: Number(randomDano),
+										velocidade: Number(carrosArray.carros[0].comuns[carrosComum].velocidade),
+										cavalos: Number(carrosArray.carros[0].comuns[carrosComum].cavalo),
+										peso: Number(car.weightKilograms),
+										desmanche: porcentagem * Number(carrosArray.carros[0].comuns[carrosComum].valor),
+										img: carrosArray.carros[0].comuns[carrosComum].img,
+										dono: author.id,
+										mecanica: false,
+										arrumado: false,
+										emplacado: false,
+										liberado: false
+									}
 								}
-							}
+							});
 						});
-					});
-				} else if (randomCategoria > 88 && randomCategoria <= 97) {
-					// epicos
+					} else if (randomCategoria > 70 && randomCategoria <= 88) {
+						// raros
 
-					const carrosEpicos = Math.floor(Math.random() * carrosArray.carros[0].epicos.length);
-					const randomDano = Math.floor(Math.random() * 91);
-					const random = Math.floor(Math.random() * 59001);
-					const porcentagem = 30 / 100;
+						const carrosRaros = Math.floor(Math.random() * carrosArray.carros[0].raros.length);
+						const randomDano = Math.floor(Math.random() * 91);
+						const random = Math.floor(Math.random() * 59001);
+						const porcentagem = 30 / 100;
 
-					carQuery.getModelDetail(random).then(async car => {
-						const embed = new ClientEmbed(author)
-							.setTitle('Veículo Roubado')
-							.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].epicos[carrosEpicos].nome}\``)
-							.addField('Modelo:', carrosArray.carros[0].epicos[carrosEpicos].marca, true)
-							.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].epicos[carrosEpicos].valor))},00`, true)
-							.addField('Danificado:', `${randomDano}%`, true)
-							.addField('Velocidade:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].velocidade)} KM/h`, true)
-							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo)} HP`, true)
-							.addField('Ano:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].ano)} KG`, true)
-							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos[carrosEpicos].valor))},00`, true)
-							.setImage(carrosArray.carros[0].epicos[carrosEpicos].img);
+						carQuery.getModelDetail(random).then(async car => {
+							const embed = new ClientEmbed(author)
+								.setTitle('Veículo Roubado')
+								.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].raros[carrosRaros].nome}\``)
+								.addField('Modelo:', carrosArray.carros[0].raros[carrosRaros].marca, true)
+								.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].raros[carrosRaros].valor))},00`, true)
+								.addField('Danificado:', `${randomDano}%`, true)
+								.addField('Velocidade:', `${Number(carrosArray.carros[0].raros[carrosRaros].velocidade)} KM/h`, true)
+								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].raros[carrosRaros].cavalo)} HP`, true)
+								.addField('Ano:', `${Number(carrosArray.carros[0].raros[carrosRaros].ano)}`, true)
+								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].raros[carrosRaros].valor))},00`, true)
+								.setImage(carrosArray.carros[0].raros[carrosRaros].img);
 
-						message.channel.send(author, embed);
+							message.channel.send(author, embed);
 
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'cooldown.roubarVeiculo': Date.now(),
-								'crime.reputacao': user.crime.reputacao + 1,
-								'crime.feito': user.crime.feito + 1
-							},
-							$push: {
-								garagem: {
-									nome: carrosArray.carros[0].epicos[carrosEpicos].nome,
-									modelo: carrosArray.carros[0].epicos[carrosEpicos].marca,
-									valor: Number(carrosArray.carros[0].epicos[carrosEpicos].valor),
-									ano: Number(carrosArray.carros[0].epicos[carrosEpicos].ano),
-									danificado: Number(randomDano),
-									velocidade: Number(carrosArray.carros[0].epicos[carrosEpicos].velocidade),
-									cavalos: Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo),
-									peso: Number(car.weightKilograms),
-									desmanche: porcentagem * Number(carrosArray.carros[0].epicos[carrosEpicos].valor),
-									img: carrosArray.carros[0].epicos[carrosEpicos].img,
-									dono: author.id,
-									mecanica: false,
-									arrumado: false,
-									emplacado: false,
-									liberado: false
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$set: {
+									'cooldown.roubarVeiculo': Date.now(),
+									'crime.reputacao': user.crime.reputacao + 1,
+									'crime.feito': user.crime.feito + 1
+								},
+								$push: {
+									garagem: {
+										nome: carrosArray.carros[0].raros[carrosRaros].nome,
+										modelo: carrosArray.carros[0].raros[carrosRaros].marca,
+										valor: Number(carrosArray.carros[0].raros[carrosRaros].valor),
+										ano: Number(carrosArray.carros[0].raros[carrosRaros].ano),
+										danificado: Number(randomDano),
+										velocidade: Number(carrosArray.carros[0].raros[carrosRaros].velocidade),
+										cavalos: Number(carrosArray.carros[0].raros[carrosRaros].cavalo),
+										peso: Number(car.weightKilograms),
+										desmanche: porcentagem * Number(carrosArray.carros[0].raros[carrosRaros].valor),
+										img: carrosArray.carros[0].raros[carrosRaros].img,
+										dono: author.id,
+										mecanica: false,
+										arrumado: false,
+										emplacado: false,
+										liberado: false
+									}
 								}
-							}
+							});
 						});
-					});
-				} else if (randomCategoria > 97 && randomCategoria <= 99) {
-					// epicos 2
+					} else if (randomCategoria > 88 && randomCategoria <= 97) {
+						// epicos
 
-					const carrosEpicos2 = Math.floor(Math.random() * carrosArray.carros[0].epicos2.length);
-					const randomDano = Math.floor(Math.random() * 91);
-					const random = Math.floor(Math.random() * 59001);
-					const porcentagem = 30 / 100;
+						const carrosEpicos = Math.floor(Math.random() * carrosArray.carros[0].epicos.length);
+						const randomDano = Math.floor(Math.random() * 91);
+						const random = Math.floor(Math.random() * 59001);
+						const porcentagem = 30 / 100;
 
-					carQuery.getModelDetail(random).then(async car => {
-						const embed = new ClientEmbed(author)
-							.setTitle('Veículo Roubado')
-							.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].epicos2[carrosEpicos2].nome}\``)
-							.addField('Modelo:', carrosArray.carros[0].epicos2[carrosEpicos2].marca, true)
-							.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor))},00`, true)
-							.addField('Danificado:', `${randomDano}%`, true)
-							.addField('Velocidade:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].velocidade)} KM/h`, true)
-							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo)} HP`, true)
-							.addField('Ano:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano)} KG`, true)
-							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor))},00`, true)
-							.setImage(carrosArray.carros[0].epicos2[carrosEpicos2].img);
+						carQuery.getModelDetail(random).then(async car => {
+							const embed = new ClientEmbed(author)
+								.setTitle('Veículo Roubado')
+								.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].epicos[carrosEpicos].nome}\``)
+								.addField('Modelo:', carrosArray.carros[0].epicos[carrosEpicos].marca, true)
+								.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].epicos[carrosEpicos].valor))},00`, true)
+								.addField('Danificado:', `${randomDano}%`, true)
+								.addField('Velocidade:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].velocidade)} KM/h`, true)
+								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo)} HP`, true)
+								.addField('Ano:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].ano)}`, true)
+								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos[carrosEpicos].valor))},00`, true)
+								.setImage(carrosArray.carros[0].epicos[carrosEpicos].img);
 
-						message.channel.send(author, embed);
+							message.channel.send(author, embed);
 
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'cooldown.roubarVeiculo': Date.now(),
-								'crime.reputacao': user.crime.reputacao + 1,
-								'crime.feito': user.crime.feito + 1
-							},
-							$push: {
-								garagem: {
-									nome: carrosArray.carros[0].epicos2[carrosEpicos2].nome,
-									modelo: carrosArray.carros[0].epicos2[carrosEpicos2].marca,
-									valor: Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor),
-									ano: Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano),
-									danificado: Number(randomDano),
-									velocidade: Number(carrosArray.carros[0].epicos2[carrosEpicos2].velocidade),
-									cavalos: Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo),
-									peso: Number(car.weightKilograms),
-									desmanche: porcentagem * Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor),
-									img: carrosArray.carros[0].epicos2[carrosEpicos2].img,
-									dono: author.id,
-									mecanica: false,
-									arrumado: false,
-									emplacado: false,
-									liberado: false
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$set: {
+									'cooldown.roubarVeiculo': Date.now(),
+									'crime.reputacao': user.crime.reputacao + 1,
+									'crime.feito': user.crime.feito + 1
+								},
+								$push: {
+									garagem: {
+										nome: carrosArray.carros[0].epicos[carrosEpicos].nome,
+										modelo: carrosArray.carros[0].epicos[carrosEpicos].marca,
+										valor: Number(carrosArray.carros[0].epicos[carrosEpicos].valor),
+										ano: Number(carrosArray.carros[0].epicos[carrosEpicos].ano),
+										danificado: Number(randomDano),
+										velocidade: Number(carrosArray.carros[0].epicos[carrosEpicos].velocidade),
+										cavalos: Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo),
+										peso: Number(car.weightKilograms),
+										desmanche: porcentagem * Number(carrosArray.carros[0].epicos[carrosEpicos].valor),
+										img: carrosArray.carros[0].epicos[carrosEpicos].img,
+										dono: author.id,
+										mecanica: false,
+										arrumado: false,
+										emplacado: false,
+										liberado: false
+									}
 								}
-							}
+							});
 						});
-					});
-				} else if (randomCategoria > 99) {
-					// lendario
+					} else if (randomCategoria > 97 && randomCategoria <= 99) {
+						// epicos 2
 
-					const carrosLendarios = Math.floor(Math.random() * carrosArray.carros[0].lendario.length);
-					const randomDano = Math.floor(Math.random() * 91);
-					const random = Math.floor(Math.random() * 59001);
-					const porcentagem = 30 / 100;
+						const carrosEpicos2 = Math.floor(Math.random() * carrosArray.carros[0].epicos2.length);
+						const randomDano = Math.floor(Math.random() * 91);
+						const random = Math.floor(Math.random() * 59001);
+						const porcentagem = 30 / 100;
 
-					carQuery.getModelDetail(random).then(async car => {
-						const embed = new ClientEmbed(author)
-							.setTitle('Veículo Roubado')
-							.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].lendario[carrosLendarios].nome}\``)
-							.addField('Modelo:', carrosArray.carros[0].lendario[carrosLendarios].marca, true)
-							.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].lendario[carrosLendarios].valor))},00`, true)
-							.addField('Danificado:', `${randomDano}%`, true)
-							.addField('Velocidade:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].velocidade)} KM/h`, true)
-							.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo)} HP`, true)
-							.addField('Ano:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].ano)} KG`, true)
-							.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].lendario[carrosLendarios].valor))},00`, true)
-							.setImage(carrosArray.carros[0].lendario[carrosLendarios].img);
+						carQuery.getModelDetail(random).then(async car => {
+							const embed = new ClientEmbed(author)
+								.setTitle('Veículo Roubado')
+								.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].epicos2[carrosEpicos2].nome}\``)
+								.addField('Modelo:', carrosArray.carros[0].epicos2[carrosEpicos2].marca, true)
+								.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor))},00`, true)
+								.addField('Danificado:', `${randomDano}%`, true)
+								.addField('Velocidade:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].velocidade)} KM/h`, true)
+								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo)} HP`, true)
+								.addField('Ano:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano)}`, true)
+								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor))},00`, true)
+								.setImage(carrosArray.carros[0].epicos2[carrosEpicos2].img);
 
-						message.channel.send(author, embed);
+							message.channel.send(author, embed);
 
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'cooldown.roubarVeiculo': Date.now(),
-								'crime.reputacao': user.crime.reputacao + 1,
-								'crime.feito': user.crime.feito + 1
-							},
-							$push: {
-								garagem: {
-									nome: carrosArray.carros[0].lendario[carrosLendarios].nome,
-									modelo: carrosArray.carros[0].lendario[carrosLendarios].marca,
-									valor: Number(carrosArray.carros[0].lendario[carrosLendarios].valor),
-									ano: Number(carrosArray.carros[0].lendario[carrosLendarios].ano),
-									danificado: Number(randomDano),
-									velocidade: Number(carrosArray.carros[0].lendario[carrosLendarios].velocidade),
-									cavalos: Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo),
-									peso: Number(car.weightKilograms),
-									desmanche: porcentagem * Number(carrosArray.carros[0].lendario[carrosLendarios].valor),
-									img: carrosArray.carros[0].lendario[carrosLendarios].img,
-									dono: author.id,
-									mecanica: false,
-									arrumado: false,
-									emplacado: false,
-									liberado: false
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$set: {
+									'cooldown.roubarVeiculo': Date.now(),
+									'crime.reputacao': user.crime.reputacao + 1,
+									'crime.feito': user.crime.feito + 1
+								},
+								$push: {
+									garagem: {
+										nome: carrosArray.carros[0].epicos2[carrosEpicos2].nome,
+										modelo: carrosArray.carros[0].epicos2[carrosEpicos2].marca,
+										valor: Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor),
+										ano: Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano),
+										danificado: Number(randomDano),
+										velocidade: Number(carrosArray.carros[0].epicos2[carrosEpicos2].velocidade),
+										cavalos: Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo),
+										peso: Number(car.weightKilograms),
+										desmanche: porcentagem * Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor),
+										img: carrosArray.carros[0].epicos2[carrosEpicos2].img,
+										dono: author.id,
+										mecanica: false,
+										arrumado: false,
+										emplacado: false,
+										liberado: false
+									}
 								}
-							}
+							});
 						});
-					});
+					} else if (randomCategoria > 99) {
+						// lendario
+
+						const carrosLendarios = Math.floor(Math.random() * carrosArray.carros[0].lendario.length);
+						const randomDano = Math.floor(Math.random() * 91);
+						const random = Math.floor(Math.random() * 59001);
+						const porcentagem = 30 / 100;
+
+						carQuery.getModelDetail(random).then(async car => {
+							const embed = new ClientEmbed(author)
+								.setTitle('Veículo Roubado')
+								.setDescription(`✅ Você Roubou um: \`${carrosArray.carros[0].lendario[carrosLendarios].nome}\``)
+								.addField('Modelo:', carrosArray.carros[0].lendario[carrosLendarios].marca, true)
+								.addField('Valor:', `R$${Utils.numberFormat(Number(carrosArray.carros[0].lendario[carrosLendarios].valor))},00`, true)
+								.addField('Danificado:', `${randomDano}%`, true)
+								.addField('Velocidade:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].velocidade)} KM/h`, true)
+								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo)} HP`, true)
+								.addField('Ano:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].ano)}`, true)
+								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].lendario[carrosLendarios].valor))},00`, true)
+								.setImage(carrosArray.carros[0].lendario[carrosLendarios].img);
+
+							message.channel.send(author, embed);
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$set: {
+									'cooldown.roubarVeiculo': Date.now(),
+									'crime.reputacao': user.crime.reputacao + 1,
+									'crime.feito': user.crime.feito + 1
+								},
+								$push: {
+									garagem: {
+										nome: carrosArray.carros[0].lendario[carrosLendarios].nome,
+										modelo: carrosArray.carros[0].lendario[carrosLendarios].marca,
+										valor: Number(carrosArray.carros[0].lendario[carrosLendarios].valor),
+										ano: Number(carrosArray.carros[0].lendario[carrosLendarios].ano),
+										danificado: Number(randomDano),
+										velocidade: Number(carrosArray.carros[0].lendario[carrosLendarios].velocidade),
+										cavalos: Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo),
+										peso: Number(car.weightKilograms),
+										desmanche: porcentagem * Number(carrosArray.carros[0].lendario[carrosLendarios].valor),
+										img: carrosArray.carros[0].lendario[carrosLendarios].img,
+										dono: author.id,
+										mecanica: false,
+										arrumado: false,
+										emplacado: false,
+										liberado: false
+									}
+								}
+							});
+						});
+					}
 				}
 			}
 		}

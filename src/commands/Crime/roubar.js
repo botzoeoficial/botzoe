@@ -55,16 +55,8 @@ module.exports = class Roubar extends Command {
 		if (user.armaEquipada === 'Nenhuma arma equipada.') return message.reply('você precisa equipar uma arma antes de roubar alguém!');
 
 		let presoTime = 0;
-		const timeout = 1800000;
 
-		if (timeout - (Date.now() - user.cooldown.roubar) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.roubar));
-
-			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-			return message.channel.send(author, embed);
-		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -244,7 +236,7 @@ module.exports = class Roubar extends Command {
 
 				return message.channel.send(author, embed);
 			}
-		} else {
+		} else if (user.mochila.find((a) => a.item === 'Máscara')) {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
@@ -264,884 +256,2250 @@ module.exports = class Roubar extends Command {
 				.setTitle('🔫 | Roubo');
 
 			if (user.armaEquipada === 'Ak-47') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 76) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 76) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Metralhadora'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Metralhadora'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 76) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 76) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'UMP') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 61) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 61) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Metralhadora'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Metralhadora'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 61) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 61) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'MP5') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 51) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 51) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Metralhadora'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Metralhadora'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 51) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 51) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'ACR') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 86) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 86) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Metralhadora'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Metralhadora'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 86) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 86) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'KNT-308') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição KNT')) {
+					return message.reply('antes de roubar, você precisa ter **Munição KNT** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 26) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 26) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição KNT').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição KNT'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição KNT'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 26) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 26) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'Desert Eagle') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 31) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 31) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Pistola').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Pistola'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Pistola'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 31) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 31) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'Revolver 38') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 21) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 21) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Pistola').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Pistola'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Pistola'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 21) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
-									}
-								});
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
-									}
-								});
-
-								return;
-							}
-						});
-					});
-				} else if (random >= 21) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
-
-					return message.channel.send(author, embed);
+						return message.channel.send(author, embed);
+					}
 				}
 			} else if (user.armaEquipada === 'G18') {
-				const random = Math.floor(Math.random() * 101);
-				const dindin = Math.floor(Math.random() * user2.saldo);
+				if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
+					return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
+				} else {
+					const random = Math.floor(Math.random() * 101);
+					const dindin = Math.floor(Math.random() * user2.saldo);
 
-				if (random >= 0 && random < 11) {
-					embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+					if (random >= 0 && random < 11) {
+						embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
-					message.channel.send(author, embed).then(async (msg) => {
-						await msg.react('👮‍♂️');
+						message.channel.send(author, embed).then(async (msg) => {
+							await msg.react('👮‍♂️');
 
-						const server = await this.client.database.guilds.findOne({
-							_id: message.guild.id
-						});
-
-						const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-
-						const sim = msg.createReactionCollector(filter, {
-							time: 4000,
-							max: 1
-						});
-
-						sim.on('collect', async (reaction, user3) => {
-							const userPolicia = await this.client.database.users.findOne({
-								userId: user3.id,
-								guildId: message.guild.id
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
 							});
 
-							const timeoutRoubar = 5400000;
+							const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
 
-							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
-								const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+							const sim = msg.createReactionCollector(filter, {
+								time: 4000,
+								max: 1
+							});
 
-								const embedRoubar = new ClientEmbed(author)
-									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-								message.channel.send(author, embedRoubar);
-							} else {
-								sim.stop();
-
-								message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: user3.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'policia.prenderRoubar': Date.now()
-									}
-								});
-
+							if (user.mochila.find((a) => a.item === 'Munição Pistola').quantia <= 1) {
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										'prisao.isPreso': true,
-										'prisao.tempo': Date.now(),
-										'prisao.prender': true
+									$pull: {
+										mochila: {
+											item: 'Munição Pistola'
+										}
 									}
 								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Munição Pistola'
+								}, {
+									$set: {
+										'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia - 1
+									}
+								});
+							}
 
-								setTimeout(async () => {
+							sim.on('collect', async (reaction, user3) => {
+								const userPolicia = await this.client.database.users.findOne({
+									userId: user3.id,
+									guildId: message.guild.id
+								});
+
+								const timeoutRoubar = 5400000;
+
+								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+									const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+									const embedRoubar = new ClientEmbed(author)
+										.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+									message.channel.send(author, embedRoubar);
+								} else {
+									sim.stop();
+
+									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: user3.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'policia.prenderRoubar': Date.now()
+										}
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': 0,
-											'prisao.isPreso': false,
-											'prisao.tempo': 0,
-											'prisao.prender': false
+											'cooldown.roubar': Date.now(),
+											'prisao.isPreso': true,
+											'prisao.tempo': Date.now(),
+											'prisao.prender': true
 										}
 									});
-								}, 43200000);
-							}
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': 0,
+												'prisao.isPreso': false,
+												'prisao.tempo': 0,
+												'prisao.prender': false
+											}
+										});
+									}, 43200000);
+								}
+							});
+
+							sim.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									sim.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											'cooldown.roubar': Date.now(),
+											saldo: user.saldo + Number(dindin)
+										}
+									});
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: member.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											saldo: user2.saldo - Number(dindin)
+										}
+									});
+
+									return;
+								}
+							});
 						});
+					} else if (random >= 11) {
+						embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
 
-						sim.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								sim.stop();
+						return message.channel.send(author, embed);
+					}
+				}
+			}
 
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'cooldown.roubar': Date.now(),
-										banco: user.banco + Number(dindin)
+			if (user.mochila.find((a) => a.item === 'Máscara').quantia <= 1) {
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$pull: {
+						mochila: {
+							item: 'Máscara'
+						}
+					}
+				});
+			} else {
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id,
+					'mochila.item': 'Máscara'
+				}, {
+					$set: {
+						'mochila.$.quantia': user.mochila.find((a) => a.item === 'Máscara').quantia - 1
+					}
+				});
+			}
+		} else {
+			const timeout = 1800000;
+
+			if (timeout - (Date.now() - user.cooldown.roubar) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.roubar));
+
+				const embed = new ClientEmbed(author)
+					.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			} else {
+				const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+				if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+
+				const user2 = await this.client.database.users.findOne({
+					userId: member.id,
+					guildId: message.guild.id
+				});
+
+				if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+
+				if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+
+				if (user2.saldo < 100) return message.reply(`esse usuário não possui nem **R$100,00** de dinheiro na carteira. Vá roubar outro!`);
+
+				const embed = new ClientEmbed(author)
+					.setTitle('🔫 | Roubo');
+
+				if (user.armaEquipada === 'Ak-47') {
+					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 76) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Metralhadora'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Metralhadora'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
 									}
 								});
 
-								await this.client.database.users.findOneAndUpdate({
-									userId: member.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										saldo: user2.saldo - Number(dindin)
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 76) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'UMP') {
+					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 61) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Metralhadora'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Metralhadora'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
 									}
 								});
 
-								return;
-							}
-						});
-					});
-				} else if (random >= 11) {
-					embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
 
-					return message.channel.send(author, embed);
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 61) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'MP5') {
+					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 51) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Metralhadora'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Metralhadora'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
+									}
+								});
+
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 51) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'ACR') {
+					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 86) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Metralhadora'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Metralhadora'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
+									}
+								});
+
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 86) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'KNT-308') {
+					if (!user.mochila.find((a) => a.item === 'Munição KNT')) {
+						return message.reply('antes de roubar, você precisa ter **Munição KNT** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 26) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição KNT').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição KNT'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição KNT'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
+									}
+								});
+
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 26) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'Desert Eagle') {
+					if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 31) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Pistola').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Pistola'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Pistola'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
+									}
+								});
+
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 31) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'Revolver 38') {
+					if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 21) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Pistola').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Pistola'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Pistola'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
+									}
+								});
+
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 21) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
+				} else if (user.armaEquipada === 'G18') {
+					if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
+						return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
+					} else {
+						const random = Math.floor(Math.random() * 101);
+						const dindin = Math.floor(Math.random() * user2.saldo);
+
+						if (random >= 0 && random < 11) {
+							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
+
+							message.channel.send(author, embed).then(async (msg) => {
+								await msg.react('👮‍♂️');
+
+								const server = await this.client.database.guilds.findOne({
+									_id: message.guild.id
+								});
+
+								const filter = (reaction, user3) => reaction.emoji.name === '👮‍♂️' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+
+								const sim = msg.createReactionCollector(filter, {
+									time: 4000,
+									max: 1
+								});
+
+								if (user.mochila.find((a) => a.item === 'Munição Pistola').quantia <= 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Munição Pistola'
+											}
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Munição Pistola'
+									}, {
+										$set: {
+											'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia - 1
+										}
+									});
+								}
+
+								sim.on('collect', async (reaction, user3) => {
+									const userPolicia = await this.client.database.users.findOne({
+										userId: user3.id,
+										guildId: message.guild.id
+									});
+
+									const timeoutRoubar = 5400000;
+
+									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
+										const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar));
+
+										const embedRoubar = new ClientEmbed(author)
+											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										message.channel.send(author, embedRoubar);
+									} else {
+										sim.stop();
+
+										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: user3.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'policia.prenderRoubar': Date.now()
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												'prisao.isPreso': true,
+												'prisao.tempo': Date.now(),
+												'prisao.prender': true
+											}
+										});
+
+										setTimeout(async () => {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$set: {
+													'cooldown.roubar': 0,
+													'prisao.isPreso': false,
+													'prisao.tempo': 0,
+													'prisao.prender': false
+												}
+											});
+										}, 43200000);
+									}
+								});
+
+								sim.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										sim.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.roubar': Date.now(),
+												saldo: user.saldo + Number(dindin)
+											}
+										});
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: member.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												saldo: user2.saldo - Number(dindin)
+											}
+										});
+
+										return;
+									}
+								});
+							});
+						} else if (random >= 11) {
+							embed.setDescription(`❌ | O roubo falhou, você ficou nervoso e acabou saindo correndo antes de levar o dinheiro de ${member}.`);
+
+							return message.channel.send(author, embed);
+						}
+					}
 				}
 			}
 		}

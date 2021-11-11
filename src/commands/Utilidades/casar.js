@@ -1,8 +1,10 @@
+/* eslint-disable camelcase */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Emojis = require('../../utils/Emojis');
+const fetch = require('node-fetch');
 
 module.exports = class Casar extends Command {
 
@@ -72,10 +74,6 @@ module.exports = class Casar extends Command {
 
 		const embed = new ClientEmbed(author)
 			.setTitle('❤️ | Casamento')
-			.setThumbnail(author.displayAvatarURL({
-				dynamic: true,
-				format: 'png'
-			}))
 			.setImage(casamentos[random])
 			.setDescription(`${user}, você deseja se casar com o(a) ${author}?`);
 
@@ -97,7 +95,23 @@ module.exports = class Casar extends Command {
 				sim.stop();
 				msg.delete();
 
-				message.reply(`${user} aceitou seu pedido de casamento, parabéns.`);
+				const apikey = 'LUU697F9Y5BI';
+				const lmt = 50;
+
+				const search_term = 'married anime';
+
+				const search_url = `https://g.tenor.com/v1/search?q=${search_term}&key=${apikey}&limit=${lmt}&contentfilter=off`;
+
+				const body = await fetch(search_url).then((res) => res.json());
+
+				const randomCasamento = Math.floor(Math.random() * body.results.length);
+
+				const embedFim = new ClientEmbed(author)
+					.setTitle('❤️ | Casamento')
+					.setImage(body.results[randomCasamento].url)
+					.setDescription(`${user}, você deseja se casar com o(a) ${author}?`);
+
+				message.channel.send(`${author} 💕 ${user}`, embedFim);
 
 				await this.client.database.users.findOneAndUpdate({
 					userId: author.id,

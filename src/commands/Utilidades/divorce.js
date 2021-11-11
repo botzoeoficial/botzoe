@@ -105,6 +105,14 @@ module.exports = class Divorce extends Command {
 
 				return message.reply('pelo visto você desistiu de se divorciar! ||É uma pena, você iria ser feliz **solteiro(a)**!||');
 			});
+
+			sim.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					sim.stop();
+					não.stop();
+					return message.reply('você demorou demais para se divorciar. Use o comando novamente!');
+				}
+			});
 		});
 	}
 

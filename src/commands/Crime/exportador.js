@@ -59,7 +59,8 @@ module.exports = class Exportador extends Command {
 
 			const filtro = (reaction, user) => reaction.emoji.name === '📦' && user.id === author.id;
 			const coletor = msg.createReactionCollector(filtro, {
-				time: 600000
+				time: 600000,
+				max: 1
 			});
 
 			coletor.on('collect', async () => {
@@ -254,6 +255,13 @@ module.exports = class Exportador extends Command {
 							}
 						});
 					});
+				}
+			});
+
+			coletor.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					coletor.stop();
+					return message.reply('você demorou demais para enviar suas drogas. Use o comando novamente!');
 				}
 			});
 		});

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 /* eslint-disable id-length */
 const Command = require('../../structures/Command');
@@ -68,7 +69,7 @@ module.exports = class Perfil extends Command {
 			.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 			.addField('📈 Level:', user.level, true)
 			.addField('💍 Casado(a) com:', user.marry.has ? await this.client.users.fetch(user.marry.user).then((x) => x) : user.marry.user, true)
-			.addField('💼 Função na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : user.fac.emprego.nome, true)
+			.addField('💼 Função na FAC:', !user.fac.isFac && !user.fac.createFac ? 'Não é Dono ou não pertence a nenhuma Facção.' : user.fac.createFac ? 'Dono de Facção' : user.fac.isFac && !user.fac.createFac ? user.fac.emprego.nome : 'Sem Função na Facção', true)
 			.addField('\u2800', '\u2800', true)
 			.addField('🧑‍💼 Emprego:', user.emprego, true)
 			.addField('🕰️ Tempo na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : `${moment(user.fac.tempo).format('ll')} [${moment().diff(user.fac.tempo, 'days')} dias atrás.]`)
