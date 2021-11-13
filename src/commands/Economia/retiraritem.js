@@ -15,7 +15,7 @@ module.exports = class Retiraritem extends Command {
 		this.category = 'Economia';
 		this.description = 'Retire um item do seu inventário ou da sua Mochila!';
 		this.usage = 'retiraritem';
-		this.aliases = ['retirar-item'];
+		this.aliases = ['retirar-item', 'descartaritem', 'descartar', 'dropar', 'droparitem'];
 
 		this.enabled = true;
 		this.guildOnly = true;

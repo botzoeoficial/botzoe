@@ -53,7 +53,7 @@ module.exports = class Investimentobtc extends Command {
 			const faltam = ms(new Date(user.cooldown.bitcoin).getTime() - Date.now());
 
 			const embed = new ClientEmbed(author)
-				.setTitle('🪙 BITCOIN')
+				.setTitle('<:btc:908786996535787551> BITCOIN')
 				.setDescription(`📈 | Seu investimento de **${user.investimento.investido}** BitCoins, ainda está em andamento.\nRestam: \`${faltam.days}\` dias, \`${faltam.hours}\` horas, \`${faltam.minutes}\` minutos e \`${faltam.seconds}\` segundos.\n\n**Você receberá:** \`${user.investimento.dobro}\` bitcoins.`);
 
 			return message.channel.send(author, embed);

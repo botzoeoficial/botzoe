@@ -80,7 +80,7 @@ module.exports = class Ativarcard extends Command {
 			if (findSelectedCard.ativado) return message.reply(`esse card já foi usado pelo usuário: \`${await this.client.users.fetch(findSelectedCard.ativadoPor).then(xa => xa.tag)}\``);
 
 			embed.setTitle('🎉 PARABÉNS');
-			embed.setDescription(`💳 | Você adicionou:\n\n💵 R$${Utils.numberFormat(findSelectedCard.valorZoe)},00 - Com sucesso a sua conta Zoe\n\n🪙 ${findSelectedCard.valorBtc} bitcoin - Com sucesso a sua conta Zoe.`);
+			embed.setDescription(`💳 | Você adicionou:\n\n💵 R$${Utils.numberFormat(findSelectedCard.valorZoe)},00 - Com sucesso a sua conta Zoe\n\n<:btc:908786996535787551> ${findSelectedCard.valorBtc} bitcoin - Com sucesso a sua conta Zoe.`);
 
 			message.channel.send(author, embed);
 

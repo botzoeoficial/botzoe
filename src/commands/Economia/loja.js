@@ -50,11 +50,12 @@ module.exports = class Loja extends Command {
 			.setTitle(`LOJINHA DA ${this.client.user.username}`)
 			.setDescription('Clique na reação de acordo com as categorias da loja abaixo:')
 			.setThumbnail(this.client.user.displayAvatarURL())
-			.addField('🥂 | Bebidas:', `Clique em \`🥂\``)
-			.addField('🍗 | Comidas:', `Clique em \`🍗\``)
-			.addField('🧁 | Doces:', `Clique em \`🧁\``)
-			.addField('🛠️ | Utilidades:', `Clique em \`🛠️\``)
-			.addField('👮 | Polícia:', `Clique em \`👮\``);
+			.addField('🥂 | Bebidas:', `Clique em 🥂`, true)
+			.addField('🍗 | Comidas:', `Clique em 🍗`, true)
+			.addField('🧁 | Doces:', `Clique em 🧁`, true)
+			.addField('🛠️ | Utilidades:', `Clique em 🛠️`, true)
+			.addField('👮 | Polícia:', `Clique em 👮`, true)
+			.addField('<:btc:908786996535787551> | BitCoin:', `Clique em <:btc:908786996535787551>`, true);
 
 		message.channel.send(author, embed).then(async (msg) => {
 			await msg.react('🥂');
@@ -62,6 +63,7 @@ module.exports = class Loja extends Command {
 			await msg.react('🧁');
 			await msg.react('🛠️');
 			await msg.react('👮');
+			await msg.react('908786996535787551');
 
 			const bebidas = msg.createReactionCollector((r, u) => r.emoji.name === '🥂' && u.id === author.id, {
 				max: 1
@@ -80,6 +82,10 @@ module.exports = class Loja extends Command {
 			});
 
 			const policia = msg.createReactionCollector((r, u) => r.emoji.name === '👮' && u.id === author.id, {
+				max: 1
+			});
+
+			const bitcoin = msg.createReactionCollector((r, u) => r.emoji.id === '908786996535787551' && u.id === author.id, {
 				max: 1
 			});
 
@@ -138,10 +144,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -149,7 +163,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Água\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -205,10 +219,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -216,7 +238,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Suco\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -272,10 +294,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -283,7 +313,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Refrigerante\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -339,10 +369,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -350,7 +388,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Café\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -406,10 +444,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -417,7 +463,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Energético\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -473,10 +519,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -484,7 +538,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Cerveja\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -631,10 +685,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -642,7 +704,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Sanduíche\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -698,10 +760,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -709,7 +779,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Pizza\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -765,10 +835,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -776,7 +854,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Batata\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -832,10 +910,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -843,7 +929,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Misto Quente\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -899,10 +985,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -910,7 +1004,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Carne\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -966,10 +1060,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -977,7 +1079,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Taco\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1033,10 +1135,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1044,7 +1154,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Lamén\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1187,10 +1297,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1198,7 +1316,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Rosquinha\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1254,10 +1372,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1265,7 +1391,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Chocolate\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1321,10 +1447,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1332,7 +1466,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Pipoca\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1388,10 +1522,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1399,7 +1541,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Bolo\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1455,10 +1597,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1466,7 +1616,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Cookie\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1602,11 +1752,11 @@ module.exports = class Loja extends Command {
 
 						if (user.saldo < loja5.utilidades[3].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||').then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 						} else {
 							message.reply(`você comprou o item \`Mochila\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1648,16 +1798,16 @@ module.exports = class Loja extends Command {
 						if (user.mochila.find((a) => a.item === loja5.utilidades[4].item)) {
 							if (user.mochila.find((a) => a.item === loja5.utilidades[4].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **Porte de Armas** na mochila!`).then((b) => b.delete({
-									timeout: 20000
+									timeout: 7000
 								}));
 							}
 						} else if (user.saldo < loja5.utilidades[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||').then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 						} else {
 							message.reply(`você comprou o item \`Porte de Armas\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1699,23 +1849,33 @@ module.exports = class Loja extends Command {
 
 						const itens = user.inventory;
 
-						if (itens.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-							return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-								timeout: 5000
-							}));
+						if (user.inventory.length > 0) {
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							}
 						}
 
 						if (itens.find((a) => a.item === loja5.utilidades[0].item)) {
 							if (itens.find((a) => a.item === loja5.utilidades[0].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **Remédio** no inventário!`).then((b) => b.delete({
-									timeout: 20000
+									timeout: 7000
 								}));
 							}
 						} else if (user.saldo < loja5.utilidades[0].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Remédio\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1756,10 +1916,18 @@ module.exports = class Loja extends Command {
 						});
 
 						if (user.inventory.length > 0) {
-							if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
-								return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-									timeout: 5000
-								}));
+							if (user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 400) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
+							} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+								if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+									return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+										timeout: 5000
+									}));
+								}
 							}
 						}
 
@@ -1770,14 +1938,14 @@ module.exports = class Loja extends Command {
 						if (itens.find((a) => a.item === loja5.utilidades[1].item)) {
 							if (itens.find((a) => a.item === loja5.utilidades[1].item).quantia === 5) {
 								return message.reply(`você já tem o máximo de **Varas de Pesca** no inventário!`).then((b) => b.delete({
-									timeout: 20000
+									timeout: 7000
 								}));
 							}
 						} else if (user.saldo < loja5.utilidades[1].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Vara de Pesca\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1825,7 +1993,7 @@ module.exports = class Loja extends Command {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Máscara\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -1957,21 +2125,25 @@ module.exports = class Loja extends Command {
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
-						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						const itens = user.mochila;
 
 						if (itens.find((a) => a.item === loja6.pm[0].item)) {
 							if (itens.find((a) => a.item === loja6.pm[0].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **Algemas** na sua mochila!`).then((b) => b.delete({
-									timeout: 20000
+									timeout: 7000
 								}));
 							}
 						} else if (user.saldo < loja6.pm[0].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou o item \`Algemas\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -2013,21 +2185,25 @@ module.exports = class Loja extends Command {
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
-						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						const itens = user.mochila;
 
 						if (itens.find((a) => a.item === loja6.pm[1].item)) {
 							if (itens.find((a) => a.item === loja6.pm[1].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **MP5** na mochila!`).then((b) => b.delete({
-									timeout: 20000
+									timeout: 7000
 								}));
 							}
 						} else if (user.saldo < loja6.pm[1].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou uma \`MP5\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -2069,21 +2245,25 @@ module.exports = class Loja extends Command {
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
-						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						const itens = user.mochila;
 
 						if (itens.find((a) => a.item === loja6.pm[2].item)) {
 							if (itens.find((a) => a.item === loja6.pm[2].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **G18** no inventário!`).then((b) => b.delete({
-									timeout: 20000
+									timeout: 7000
 								}));
 							}
 						} else if (user.saldo < loja6.pm[2].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou a arma \`G18\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -2125,13 +2305,17 @@ module.exports = class Loja extends Command {
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
-						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						if (user.saldo < loja6.pm[3].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou \`Munição Pistola\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -2186,13 +2370,17 @@ module.exports = class Loja extends Command {
 
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
-						if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para comprar este item!');
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						if (user.saldo < loja6.pm[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
 							message.reply(`você comprou \`Munição Metralhadora\` com sucesso!`).then((b) => b.delete({
-								timeout: 20000
+								timeout: 7000
 							}));
 
 							const server = await this.client.database.guilds.findOne({
@@ -2266,6 +2454,91 @@ module.exports = class Loja extends Command {
 					municaoMetralhadora.on('end', async (collected, reason) => {
 						if (reason === 'time') {
 							as.reactions.cache.get('905653521846784080').remove();
+						}
+					});
+				});
+			});
+
+			bitcoin.on('collect', async () => {
+				msg.reactions.removeAll();
+
+				const loja7 = shop.loja;
+
+				embed.fields = [];
+
+				embed
+					.setTitle(`LOJINHA DA ${this.client.user.username}`)
+					.setDescription('Veja os itens de BitCoins que tenho disponíveis na minha lojinha:')
+					.setThumbnail(this.client.user.displayAvatarURL());
+
+				loja7.bitcoin.forEach((est) => {
+					embed.addField(`${est.emoji} | ${est.item}:ㅤㅤPreço: **R$${Utils.numberFormat(est.preco)},00**`, `Descrição: ${est.desc}`);
+				});
+
+				msg.edit(author, embed).then(async (as) => {
+					await as.react('908780753884696706');
+
+					const bolso = as.createReactionCollector((r, u) => r.emoji.id === '908780753884696706' && u.id === author.id, {
+						time: 120000
+					});
+
+					bolso.on('collect', async () => {
+						const user = await this.client.database.users.findOne({
+							userId: author.id,
+							guildId: message.guild.id
+						});
+
+						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
+
+						const itens = user.inventory;
+
+						if (itens.find((a) => a.item === loja7.bitcoin[0].item)) {
+							if (itens.find((a) => a.item === loja7.bitcoin[0].item).quantia === 1) {
+								return message.reply(`você já tem o máximo de **Bolso** no seu inventário!`).then((b) => b.delete({
+									timeout: 7000
+								}));
+							}
+						} else if (user.bitcoin < loja7.bitcoin[0].preco) {
+							return message.reply('você não tem BitCoin suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
+						} else {
+							message.reply(`você comprou o item \`Bolso\` com sucesso!`).then((b) => b.delete({
+								timeout: 7000
+							}));
+
+							const server = await this.client.database.guilds.findOne({
+								_id: message.guild.id
+							});
+
+							await this.client.database.guilds.findOneAndUpdate({
+								_id: message.guild.id
+							}, {
+								$set: {
+									bank: server.bank + loja7.bitcoin[0].preco
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$push: {
+									inventory: {
+										item: loja7.bitcoin[0].item,
+										emoji: loja7.bitcoin[0].emoji,
+										id: loja7.bitcoin[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										quantia: 1
+									}
+								},
+								$set: {
+									bitcoin: user.bitcoin -= loja7.bitcoin[0].preco
+								}
+							});
+						}
+					});
+
+					bolso.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							as.reactions.cache.get('908780753884696706').remove();
 						}
 					});
 				});

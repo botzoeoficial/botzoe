@@ -45,7 +45,7 @@ module.exports = class Favela extends Command {
 		});
 
 		const embed = new ClientEmbed(author)
-			.setTitle('Favela da Cidade!')
+			.setTitle('<:favela:908842688802091078> | Favela da Cidade!')
 			.setDescription(`Aqui você verá o **Dono da Favela**, **Fabricantes das Armas** e muito mais!`)
 			.addField('Dono da Favela:', server.cidade.donoFavela === '' ? `Essa cidade não possui um **Dono da Favela** ainda! Use o comando \`${prefix}setdonofavela\`.` : `<@${server.cidade.donoFavela}>`)
 			.addField('Fabricante das Armas:', !server.cidade.donoFabricadeArmas.length ? `Essa cidade não possui **Fabricantes das Armas** ainda! Use o comando \`${prefix}setfabricantearmas\`.` : server.cidade.donoFabricadeArmas.map((a) => `<@${a.id}>`).join('\n'))

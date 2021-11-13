@@ -33,13 +33,6 @@ module.exports = class Setdonofavela extends Command {
 
 		this.ajudanteDesmanche = false;
 		this.ajudanteLavagem = false;
-		this.donoArmas = false;
-		this.donoDrogas = false;
-		this.donoDesmanche = false;
-		this.donoLavagem = false;
-
-		this.ajudanteDesmanche = false;
-		this.ajudanteLavagem = false;
 	}
 	async run({
 		message,

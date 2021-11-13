@@ -14,7 +14,7 @@ module.exports = class Remedio extends Command {
 		this.category = 'Economia';
 		this.description = 'Cure-se para usar alguns comandos!';
 		this.usage = 'remédio';
-		this.aliases = ['remedio'];
+		this.aliases = ['remedio', 'tomar-remedio'];
 
 		this.enabled = true;
 		this.guildOnly = true;

@@ -52,7 +52,7 @@ module.exports = class Card extends Command {
 			inutilizados: server.card.filter((card) => card.ativado)
 		};
 
-		const cardMessage = (type) => filters[type].map((card, index) => `\`${index + 1})\` **${card.codigo}** | 💵 R$${Utils.numberFormat(card.valorZoe)},00 🪙 ${card.valorBtc} bitcoin ${card.ativadoPor !== 'Ninguém.' ? `<@${card.ativadoPor}>` : ''}`);
+		const cardMessage = (type) => filters[type].map((card, index) => `\`${index + 1})\` **${card.codigo}** | 💵 R$${Utils.numberFormat(card.valorZoe)},00 <:btc:908786996535787551> ${card.valorBtc} bitcoin ${card.ativadoPor !== 'Ninguém.' ? `<@${card.ativadoPor}>` : ''}`);
 
 		if (!args[0]) {
 			embed.setTitle('💳 Lista de Cards Disponíveis');

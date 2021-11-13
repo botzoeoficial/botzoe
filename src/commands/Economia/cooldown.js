@@ -68,33 +68,31 @@ module.exports = class Cooldown extends Command {
 		let timeout10 = 0;
 		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			timeout10 = 36000000;
-		} else if (user.prisao.isPreso && user.prisao.crime) {
-			timeout10 = 600000;
 		} else if (user.prisao.isPreso && user.prisao.prender) {
 			timeout10 = 43200000;
 		} else if (user.prisao.isPreso && user.prisao.revistar) {
 			timeout10 = 21600000;
 		} else if (user.prisao.isPreso && user.prisao.roubarVeiculo) {
 			timeout10 = 180000;
-		} else if (user.prisao.isPreso && user.prisao.velha) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.velha) {
 			timeout10 = 300000;
-		} else if (user.prisao.isPreso && user.prisao.frentista) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.frentista) {
 			timeout10 = 600000;
-		} else if (user.prisao.isPreso && user.prisao.joalheria) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.joalheria) {
 			timeout10 = 900000;
-		} else if (user.prisao.isPreso && user.prisao.agiota) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.agiota) {
 			timeout10 = 1200000;
-		} else if (user.prisao.isPreso && user.prisao.casaLoterica) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.casaLoterica) {
 			timeout10 = 1200000;
-		} else if (user.prisao.isPreso && user.prisao.brazino) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.brazino) {
 			timeout10 = 2100000;
-		} else if (user.prisao.isPreso && user.prisao.facebook) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.facebook) {
 			timeout10 = 2700000;
-		} else if (user.prisao.isPreso && user.prisao.bancoCentral) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.bancoCentral) {
 			timeout10 = 3600000;
-		} else if (user.prisao.isPreso && user.prisao.shopping) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.shopping) {
 			timeout10 = 7200000;
-		} else if (user.prisao.isPreso && user.prisao.banco) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.banco) {
 			timeout10 = 14400000;
 		}
 

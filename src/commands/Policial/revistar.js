@@ -47,7 +47,11 @@ module.exports = class Revistar extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.policia.isPolice) return message.reply('você não é Policial do servidor para usar esse comando!');
+		const server2 = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para usar esse comando!');
 
 		if (user.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode esse comando ainda!');
 

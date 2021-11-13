@@ -80,7 +80,7 @@ module.exports = class Addcard extends Command {
 				collector.stop();
 
 				embed.addField('🦉 Valor Zoe:', `R$${Utils.numberFormat(Number(re.content))},00`);
-				embed.setDescription('🪙 | Quantos BitCoins Você deseja Adicionar?');
+				embed.setDescription('<:btc:908786996535787551> | Quantos BitCoins Você deseja Adicionar?');
 
 				message.channel.send(author, embed).then((msg1) => {
 					const collector1 = msg1.channel.createMessageCollector((m) => m.author.id === author.id, {
@@ -103,7 +103,7 @@ module.exports = class Addcard extends Command {
 
 						collector1.stop();
 
-						embed.addField('🪙 BitCoins:', `${Utils.numberFormat(Number(re2.content))}`);
+						embed.addField('<:btc:908786996535787551> BitCoins:', `${Utils.numberFormat(Number(re2.content))}`);
 						embed.setDescription('***CÓDIGO CADASTRADO COM SUCESSO!***');
 
 						message.channel.send(author, embed);

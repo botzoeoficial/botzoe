@@ -52,27 +52,30 @@ module.exports = class Treinarpet extends Command {
 
 		if (!user.pets.length) return message.reply(`você não tem pets ainda! Use o comando \`${prefix}adotar\`.`);
 
-		const timeout = 3600000;
 		let presoTime = 0;
 
-		if (timeout - (Date.now() - user.cooldown.treinarPet) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.treinarPet));
+		const embedPreso = new ClientEmbed(author)
+			.setTitle('👮 | Preso');
 
-			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-			return message.channel.send(author, embed);
-		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
+			}
+		} else if (user.prisao.isPreso && user.prisao.crime) {
+			presoTime = 600000;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.prender) {
 			presoTime = 43200000;
@@ -80,11 +83,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de roubo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.revistar) {
 			presoTime = 21600000;
@@ -92,11 +93,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por inventário irregular.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.roubarVeiculo) {
 			presoTime = 180000;
@@ -104,11 +103,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um veículo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.velha) {
 			presoTime = 300000;
@@ -116,11 +113,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Senhora.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.frentista) {
 			presoTime = 600000;
@@ -128,11 +123,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Frentista.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.joalheria) {
 			presoTime = 900000;
@@ -140,11 +133,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Joalheria.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.agiota) {
 			presoTime = 1200000;
@@ -152,11 +143,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Agiota.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.casaLoterica) {
 			presoTime = 1200000;
@@ -164,11 +153,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Casa Lotérica.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.brazino) {
 			presoTime = 2100000;
@@ -176,11 +163,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Brazino777.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.facebook) {
 			presoTime = 2700000;
@@ -188,11 +173,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Facebook.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.bancoCentral) {
 			presoTime = 3600000;
@@ -200,11 +183,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Banco Central.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.shopping) {
 			presoTime = 7200000;
@@ -212,11 +193,9 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Shopping Center.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else if (user.prisao.isPreso && user.prisao.banco) {
 			presoTime = 14400000;
@@ -224,71 +203,80 @@ module.exports = class Treinarpet extends Command {
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				const embed = new ClientEmbed(author)
-					.setTitle('👮 | Preso')
-					.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Banco.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.channel.send(author, embedPreso);
 			}
 		} else {
-			const randomPet = Math.floor(Math.random() * user.pets.length);
+			const timeout = 3600000;
 
-			const randomNumber = Math.floor(Math.random() * 100);
+			if (timeout - (Date.now() - user.cooldown.treinarPet) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.treinarPet));
 
-			if (randomNumber >= 0 && randomNumber <= 6) {
 				const embed = new ClientEmbed(author)
-					.setTitle('TREINO DO PET!')
-					.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** morreu!`);
+					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				message.channel.send(author, embed);
+				return message.channel.send(author, embed);
+			} else {
+				const randomPet = Math.floor(Math.random() * user.pets.length);
 
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$pull: {
-						pets: {
-							nome: user.pets[randomPet].nome
+				const randomNumber = Math.floor(Math.random() * 100);
+
+				if (randomNumber >= 0 && randomNumber <= 6) {
+					const embed = new ClientEmbed(author)
+						.setTitle('TREINO DO PET!')
+						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** morreu!`);
+
+					message.channel.send(author, embed);
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$pull: {
+							pets: {
+								nome: user.pets[randomPet].nome
+							}
+						},
+						$set: {
+							'cooldown.treinarPet': Date.now()
 						}
-					},
-					$set: {
-						'cooldown.treinarPet': Date.now()
-					}
-				});
-			} else if (randomNumber > 6 && randomNumber <= 60) {
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id,
-					'pets.forca': user.pets[randomPet].forca
-				}, {
-					$set: {
-						'pets.$.forca': user.pets[randomPet].forca += 1,
-						'cooldown.treinarPet': Date.now()
-					}
-				});
+					});
+				} else if (randomNumber > 6 && randomNumber <= 60) {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id,
+						'pets.forca': user.pets[randomPet].forca
+					}, {
+						$set: {
+							'pets.$.forca': user.pets[randomPet].forca += 1,
+							'cooldown.treinarPet': Date.now()
+						}
+					});
 
-				const embed = new ClientEmbed(author)
-					.setTitle('TREINO DO PET!')
-					.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua força!\n\nForça Atual: **${user.pets[randomPet].forca}**`);
+					const embed = new ClientEmbed(author)
+						.setTitle('TREINO DO PET!')
+						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua força!\n\nForça Atual: **${user.pets[randomPet].forca}**`);
 
-				message.channel.send(author, embed);
-			} else if (randomNumber > 60) {
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id,
-					'pets.idade': user.pets[randomPet].idade
-				}, {
-					$set: {
-						'pets.$.idade': user.pets[randomPet].idade += 1,
-						'cooldown.treinarPet': Date.now()
-					}
-				});
+					message.channel.send(author, embed);
+				} else if (randomNumber > 60) {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id,
+						'pets.idade': user.pets[randomPet].idade
+					}, {
+						$set: {
+							'pets.$.idade': user.pets[randomPet].idade += 1,
+							'cooldown.treinarPet': Date.now()
+						}
+					});
 
-				const embed = new ClientEmbed(author)
-					.setTitle('TREINO DO PET!')
-					.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua idade!\n\nIdade Atual: **${user.pets[randomPet].idade}**`);
+					const embed = new ClientEmbed(author)
+						.setTitle('TREINO DO PET!')
+						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua idade!\n\nIdade Atual: **${user.pets[randomPet].idade}**`);
 
-				message.channel.send(author, embed);
+					message.channel.send(author, embed);
+				}
 			}
 		}
 	}

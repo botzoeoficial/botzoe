@@ -46,7 +46,7 @@ module.exports = class Arrumarveiculo extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.mecanico.map((a) => a.id).includes(author.id)) return message.reply('você precisa ser um **Mecânico** na cidade para arrumar algum veículo!');
+		if (!server.cidade.mecanico.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Mecânico** na cidade para emplacar algum veículo!');
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
@@ -139,7 +139,8 @@ module.exports = class Arrumarveiculo extends Command {
 							'mecanica.nome': findSelectedEvento.nome
 						}, {
 							$set: {
-								'mecanica.$.arrumado': true
+								'mecanica.$.arrumado': true,
+								'mecanica.$.danificado': 0
 							}
 						});
 					}

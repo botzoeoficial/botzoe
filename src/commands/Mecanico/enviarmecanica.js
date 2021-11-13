@@ -123,7 +123,7 @@ module.exports = class Enviarmecanica extends Command {
 						sim.stop();
 						ce.delete();
 
-						embed.setDescription(`✅ | Você enviou seu veículo **${findSelectedEvento.nome}** com suceso para a Mecânica!`);
+						embed.setDescription(`✅ | Você enviou seu veículo **${findSelectedEvento.nome}** com sucesso para a Mecânica!`);
 
 						msg.edit(author, embed);
 

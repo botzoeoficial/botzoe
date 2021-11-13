@@ -744,7 +744,7 @@ module.exports = class Ready {
 												guildId: msg.guild.id
 											}, {
 												$set: {
-													banco: userAuthor.banco + valor
+													saldo: userAuthor.saldo + valor
 												}
 											});
 

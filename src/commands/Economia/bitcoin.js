@@ -59,7 +59,7 @@ module.exports = class Bitcoin extends Command {
 				format: 'png'
 			}))
 			.setTitle(`Bitcoins do(a) ${member.user.tag}`)
-			.addField('🪙 Bitcoins:', `ㅤㅤ${Utils.numberFormat(user.bitcoin)}`);
+			.addField('<:btc:908786996535787551> Bitcoins:', `ㅤㅤ${Utils.numberFormat(user.bitcoin)}`);
 
 		message.channel.send(author, embed);
 	}

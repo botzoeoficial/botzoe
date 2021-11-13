@@ -54,10 +54,19 @@ module.exports = class Crime extends Command {
 			guildId: message.guild.id
 		});
 
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
 		if (userAuthor.policia.isPolice) return message.reply('você não pode usar esse comando pois você é Policial do servidor!');
+
+		if (server.cidade.delegado === author.id) return message.reply('você não pode usar esse comando pois você é Delegado do servidor!');
 
 		if (!args[0]) {
 			let presoTime = 0;
+
+			const embedPreso = new ClientEmbed(author)
+				.setTitle('👮 | Preso');
 
 			if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
 				presoTime = 36000000;
@@ -65,23 +74,9 @@ module.exports = class Crime extends Command {
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
-				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.crime) {
-				presoTime = 600000;
-
-				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
-
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de crime.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
 			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.prender) {
 				presoTime = 43200000;
@@ -89,11 +84,9 @@ module.exports = class Crime extends Command {
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de roubo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
 			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.revistar) {
 				presoTime = 21600000;
@@ -101,11 +94,9 @@ module.exports = class Crime extends Command {
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por inventário irregular.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
 			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.roubarVeiculo) {
 				presoTime = 180000;
@@ -113,131 +104,109 @@ module.exports = class Crime extends Command {
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um veículo.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.velha) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.velha) {
 				presoTime = 300000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Senhora.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.frentista) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.frentista) {
 				presoTime = 600000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Frentista.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.joalheria) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.joalheria) {
 				presoTime = 900000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Joalheria.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.agiota) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.agiota) {
 				presoTime = 1200000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Agiota.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.casaLoterica) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.casaLoterica) {
 				presoTime = 1200000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar uma Casa Lotérica.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.brazino) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.brazino) {
 				presoTime = 2100000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Brazino777.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.facebook) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.facebook) {
 				presoTime = 2700000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Facebook.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.bancoCentral) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.bancoCentral) {
 				presoTime = 3600000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar hackear o Banco Central.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.shopping) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.shopping) {
 				presoTime = 7200000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Shopping Center.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
-			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.banco) {
+			} else if (userAuthor.prisao.crime && userAuthor.prisao.isPreso && userAuthor.prisao.banco) {
 				presoTime = 14400000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
-					const embed = new ClientEmbed(author)
-						.setTitle('👮 | Preso')
-						.setDescription(`<:algema:898326104413188157> | Você está preso por tentar roubar um Banco.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.channel.send(author, embedPreso);
 				}
 			} else {
 				const timeout = 600000;
@@ -380,11 +349,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.velha': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 300000);
@@ -412,6 +391,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 1) {
 								sim.stop();
@@ -457,11 +447,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.frentista': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 600000);
@@ -489,6 +489,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 2) {
 								sim.stop();
@@ -534,11 +545,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.joalheria': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 900000);
@@ -566,6 +587,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 3) {
 								sim.stop();
@@ -611,11 +643,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.agiota': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 1200000);
@@ -643,6 +685,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 4) {
 								sim.stop();
@@ -688,11 +741,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.casaLoterica': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 1200000);
@@ -720,6 +783,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 5) {
 								sim.stop();
@@ -765,11 +839,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.brazino': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 2100000);
@@ -797,6 +881,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 6) {
 								sim.stop();
@@ -842,11 +937,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.facebook': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 2700000);
@@ -874,6 +979,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 7) {
 								sim.stop();
@@ -919,11 +1035,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.bancoCentral': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 3600000);
@@ -951,6 +1077,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 8) {
 								sim.stop();
@@ -996,11 +1133,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.shopping': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 7200000);
@@ -1028,6 +1175,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 9) {
 								sim.stop();
@@ -1073,11 +1231,21 @@ module.exports = class Crime extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
 												'prisao.isPreso': false,
 												'prisao.tempo': 0,
 												'prisao.banco': false,
-												'prisao.crime': false,
-												'cooldown.crime': 0
+												'prisao.crime': false
 											}
 										});
 									}, 14400000);
@@ -1105,6 +1273,17 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
+
+									setTimeout(async () => {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												'cooldown.crime': 0
+											}
+										});
+									}, 600000);
 								}
 							}
 						});

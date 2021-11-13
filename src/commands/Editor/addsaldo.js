@@ -12,7 +12,7 @@ module.exports = class Addsaldo extends Command {
 		this.category = 'Editor';
 		this.description = 'Adicione dinheiro na conta de um usuário!';
 		this.usage = 'add-saldo <usuário> <saldo>';
-		this.aliases = ['add-saldo'];
+		this.aliases = ['add-saldo', 'addgrana', 'add-grana'];
 
 		this.enabled = true;
 		this.guildOnly = true;
