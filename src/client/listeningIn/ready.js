@@ -31,6 +31,12 @@ module.exports = class Ready {
 			type: 'WATCHING'
 		});
 
+		const channelServers = await this.client.channels.cache.get('885645282673590298');
+		const channelUsers = await this.client.channels.cache.get('910156012353363998');
+
+		channelServers.setName(`Servidores: ${this.client.guilds.cache.size}`);
+		channelUsers.setName(`Usuários: ${this.client.users.cache.size}`);
+
 		const allUsers = await User.find({});
 		const allGuilds = await Guild.find({});
 		const allItens = await Shop.find({});
@@ -664,6 +670,8 @@ module.exports = class Ready {
 											guildId: msg.guild.id
 										});
 
+										if (userPolicia.policia.isFolga) return msg.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 										const timeoutRoubar = 300000;
 
 										if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador) > 0) {
@@ -676,9 +684,9 @@ module.exports = class Ready {
 										} else {
 											const embedPolicia = new ClientEmbed(this.client.user)
 												.setTitle('Prisão')
-												.setDescription(`Você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
+												.setDescription(`<@${user2.id}>, você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
 
-											msg.channel.send(embedPolicia);
+											msg.channel.send(`<@${user2.id}>`, embedPolicia);
 
 											atualDroga -= randomDrogaUser;
 
@@ -801,7 +809,6 @@ module.exports = class Ready {
 						}, 60000);
 					});
 				} catch (error) {
-					console.log(error);
 					return;
 				}
 			}

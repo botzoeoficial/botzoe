@@ -56,7 +56,17 @@ module.exports = class Estudar extends Command {
 		const embedPreso = new ClientEmbed(author)
 			.setTitle('👮 | Preso');
 
-		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.prenderCmd) {
+			presoTime = user.prisao.prenderMili;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embedPreso);
+			}
+		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {

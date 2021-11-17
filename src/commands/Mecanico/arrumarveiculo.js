@@ -66,36 +66,12 @@ module.exports = class Arrumarveiculo extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣',
-			10: '1️⃣0️⃣',
-			11: '1️⃣1️⃣',
-			12: '1️⃣2️⃣',
-			13: '1️⃣3️⃣',
-			14: '1️⃣4️⃣',
-			15: '1️⃣5️⃣',
-			16: '1️⃣6️⃣',
-			17: '1️⃣7️⃣',
-			18: '1️⃣8️⃣',
-			19: '1️⃣9️⃣',
-			20: '2️⃣0️⃣'
-		};
-
 		let embedMessage = '';
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🧑‍🔧 | Arrumar Veículo');
 
-		mecanicaArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
+		mecanicaArray.forEach((eu) => embedMessage += `${eu.position + 1} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 		embed.setDescription(!server.mecanica.length ? 'Não há carros na **Oficina** no momento.' : `**Qual veículo você deseja arrumar?**\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
 
 		message.channel.send(author, embed).then((msg) => {
@@ -119,31 +95,33 @@ module.exports = class Arrumarveiculo extends Command {
 							timeout: 5000
 						}));
 						ce.delete();
-					} else if (findSelectedEvento.arrumado && !findSelectedEvento.emplacado) {
+					}
+
+					if (findSelectedEvento.arrumado) {
 						sim.stop();
 						ce.delete();
-						message.reply(`esse carro já está arrumado. Você precisa emplacar ele agora usando o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
+						msg.delete();
+						return message.reply(`esse carro já está arrumado. Você precisa emplacar ele agora usando o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
-					} else {
-						sim.stop();
-						ce.delete();
-
-						embed
-							.setDescription(`**✅ | Você arrumou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível para emplacamento.`);
-
-						msg.edit(author, embed);
-
-						await this.client.database.guilds.findOneAndUpdate({
-							_id: message.guild.id,
-							'mecanica.nome': findSelectedEvento.nome
-						}, {
-							$set: {
-								'mecanica.$.arrumado': true,
-								'mecanica.$.danificado': 0
-							}
-						});
 					}
+
+					sim.stop();
+					ce.delete();
+
+					embed.setDescription(`**✅ | Você arrumou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível para emplacamento.`);
+
+					msg.edit(author, embed);
+
+					return await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id,
+						'mecanica.nome': findSelectedEvento.nome
+					}, {
+						$set: {
+							'mecanica.$.arrumado': true,
+							'mecanica.$.danificado': 0
+						}
+					});
 				}
 			});
 

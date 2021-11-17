@@ -82,11 +82,13 @@ module.exports = class Desequipararma extends Command {
 				const itemEmoji = objeto[collected._emoji.id];
 
 				if (user.armaEquipada !== itemEmoji) {
-					message.reply('você não está com essa arma equipada. Por favor, escolha outra!').then((ba) => ba.delete({
+					msg.delete();
+					return message.reply('você não está com essa arma equipada. Por favor, escolha outra!').then((ba) => ba.delete({
 						timeout: 6000
 					}));
 				} else {
 					sim.stop();
+					msg.delete();
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,

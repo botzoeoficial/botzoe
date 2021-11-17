@@ -65,7 +65,17 @@ module.exports = class Roubar extends Command {
 		const embedPreso = new ClientEmbed(author)
 			.setTitle('👮 | Preso');
 
-		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.prenderCmd) {
+			presoTime = user.prisao.prenderMili;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embedPreso);
+			}
+		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -205,7 +215,9 @@ module.exports = class Roubar extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.mochila.find((a) => a.item === 'Máscara')) {
+		}
+
+		if (user.mochila.find((a) => a.item === 'Máscara')) {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
@@ -277,6 +289,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -289,7 +303,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -414,6 +432,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -426,7 +446,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -551,6 +575,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -563,7 +589,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -688,6 +718,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -700,7 +732,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -825,6 +861,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -837,7 +875,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -962,6 +1004,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -974,7 +1018,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -1099,6 +1147,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1111,7 +1161,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -1236,6 +1290,8 @@ module.exports = class Roubar extends Command {
 									guildId: message.guild.id
 								});
 
+								if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 								const timeoutRoubar = 5400000;
 
 								if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1248,7 +1304,11 @@ module.exports = class Roubar extends Command {
 								} else {
 									sim.stop();
 
-									message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+									const embedPrisao = new ClientEmbed(author)
+										.setTitle('👮 | Preso')
+										.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+									message.channel.send(author, embedPrisao);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: user3.id,
@@ -1426,6 +1486,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1438,7 +1500,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -1563,6 +1629,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1575,7 +1643,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -1700,6 +1772,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1712,7 +1786,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -1837,6 +1915,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1849,7 +1929,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -1974,6 +2058,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -1986,7 +2072,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -2111,6 +2201,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -2123,7 +2215,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -2248,6 +2344,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -2260,7 +2358,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,
@@ -2385,6 +2487,8 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									});
 
+									if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 									const timeoutRoubar = 5400000;
 
 									if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderRoubar) > 0) {
@@ -2397,7 +2501,11 @@ module.exports = class Roubar extends Command {
 									} else {
 										sim.stop();
 
-										message.channel.send(`🚓 | Você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+										const embedPrisao = new ClientEmbed(author)
+											.setTitle('👮 | Preso')
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+
+										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
 											userId: user3.id,

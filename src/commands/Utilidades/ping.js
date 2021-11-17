@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 
@@ -41,15 +42,13 @@ module.exports = class Ping extends Command {
 		const pingEmbed = new ClientEmbed(author)
 			.setAuthor('🏓 | Pingando...');
 
-		message.channel.send(author, pingEmbed).then((resultMessage) => {
-			const ping = resultMessage.createdTimestamp - message.createdTimestamp;
+		const msg = await message.channel.send(author, pingEmbed);
 
-			const ping2 = new ClientEmbed(author)
-				.setTitle('🏓 | Pong!')
-				.setDescription(`**📡 | Shard:** \`${message.guild.shardID}\`\n**⏱️ | Latência do BOT:** \`${ping}ms\`\n**⚡ | Latência da API:** \`${this.client.ws.ping}ms\``);
+		const ping2 = new ClientEmbed(author)
+			.setTitle('🏓 | Pong!')
+			.setDescription(`**📡 | Shard:** \`${message.guild.shardID}\`\n**⏱️ | Latência do BOT:** \`${msg.createdTimestamp - message.createdTimestamp}ms\`\n**⚡ | Latência da API:** \`${Math.round(this.client.ws.ping)}ms\``);
 
-			resultMessage.edit(author, ping2);
-		});
+		return msg.edit(author, ping2);
 	}
 
 };

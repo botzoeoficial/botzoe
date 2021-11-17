@@ -55,7 +55,7 @@ module.exports = class Banco extends Command {
 			.setThumbnail('https://media.discordapp.net/attachments/887089600726720512/905147390204444692/195488.png')
 			.addField('Valor Atual:', `R$${Utils.numberFormat(server.bank)},00`);
 
-		const timeout = 300000;
+		const timeout = 518400000;
 
 		if (timeout - (Date.now() - user.payBank.cooldown) > 0) {
 			const faltam = ms(timeout - (Date.now() - user.payBank.cooldown));

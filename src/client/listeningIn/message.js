@@ -43,10 +43,18 @@ module.exports = class {
 			}
 
 			if (!user) {
-				await await this.client.database.users.create({
-					userId: message.author.id,
-					guildId: message.guild.id
-				});
+				if (message.author.id === '463421520686088192' || message.author.id === '707677540583735338' || message.author.id === '804677047959027714') {
+					await await this.client.database.users.create({
+						userId: message.author.id,
+						guildId: message.guild.id,
+						cadastrado: true
+					});
+				} else {
+					await await this.client.database.users.create({
+						userId: message.author.id,
+						guildId: message.guild.id
+					});
+				}
 			}
 
 			if (!client) {
@@ -109,6 +117,11 @@ module.exports = class {
 			});
 
 			if (comando) {
+				if (client.usersBan.find((a) => a === message.author.id)) {
+					message.reply('você está banido de usar minhas funções **GLOBALMENTE**!');
+					return;
+				}
+
 				if (server.canal.map(a => a.id).includes(message.channel.id) && cmd.name !== 'channelcmd') {
 					message.reply('os meus comandos estão **DESATIVADOS** nesse canal!');
 					return;
@@ -161,7 +174,7 @@ module.exports = class {
 
 				if (!cmd.owner && cmd.editor && cmd.adm && !cmd.vip && cmd.governador && !cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
 					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && server.cidade.governador !== message.author.id) {
-						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Governador\` do servidor para usar esse comando!`);
+						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Prefeito\` do servidor para usar esse comando!`);
 						return;
 					}
 				}
@@ -175,7 +188,7 @@ module.exports = class {
 
 				if (!cmd.owner && cmd.editor && cmd.adm && !cmd.vip && cmd.governador && cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
 					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && server.cidade.delegado !== message.author.id && server.cidade.governador !== message.author.id) {
-						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Delegado\` ou ser \`Governador\` do servidor para usar esse comando!`);
+						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Delegado\` ou ser \`Prefeito\` do servidor para usar esse comando!`);
 						return;
 					}
 				}
@@ -189,7 +202,7 @@ module.exports = class {
 
 				if (!cmd.owner && cmd.editor && cmd.adm && !cmd.vip && cmd.governador && !cmd.delegado && cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
 					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && server.cidade.diretorHP !== message.author.id && server.cidade.governador !== message.author.id) {
-						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Diretor do Hospital\` ou ser \`Governador\` do servidor para usar esse comando!`);
+						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Diretor do Hospital\` ou ser \`Prefeito\` do servidor para usar esse comando!`);
 						return;
 					}
 				}

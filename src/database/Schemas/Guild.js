@@ -197,6 +197,50 @@ const guildSchema = new Schema({
 				default: ''
 			}
 		},
+		impeachment: {
+			existe: {
+				type: Boolean,
+				default: false
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			message: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			},
+			channel: {
+				type: String,
+				default: ''
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			}
+		},
+		eleicao: {
+			existe: {
+				type: Boolean,
+				default: false
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			message: {
+				type: String,
+				default: ''
+			},
+			channel: {
+				type: String,
+				default: ''
+			}
+		},
 		alterarBolsa: {
 			type: Number,
 			default: 0
@@ -264,6 +308,10 @@ const guildSchema = new Schema({
 				type: String,
 				default: ''
 			}
+		},
+		tempoGovernador: {
+			type: Number,
+			default: 0
 		}
 	},
 	faccoes: {

@@ -51,9 +51,9 @@ module.exports = class Revistar extends Command {
 			_id: message.guild.id
 		});
 
-		if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para usar esse comando!');
+		if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para usar esse comando!');
 
-		if (user.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode esse comando ainda!');
+		if (user.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode revistar ninguém ainda!');
 
 		if (!user.mochila.find((a) => a.item === 'Algemas') && user.armaEquipada !== 'MP5' && user.armaEquipada !== 'G18') {
 			return message.reply('você precisa ter 1 **Algema** na mochila e uma **MP5** ou **G18** equipada para revistar alguém!');

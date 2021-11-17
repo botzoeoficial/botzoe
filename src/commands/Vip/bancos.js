@@ -61,25 +61,6 @@ module.exports = class Bancos extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣',
-			10: '1️⃣0️⃣',
-			11: '1️⃣1️⃣',
-			12: '1️⃣2️⃣',
-			13: '1️⃣3️⃣',
-			14: '1️⃣4️⃣',
-			15: '1️⃣5️⃣'
-		};
-
 		let embedMessage2 = '';
 
 		const embed = new ClientEmbed(author)
@@ -122,7 +103,7 @@ module.exports = class Bancos extends Command {
 
 					let embedMessage = '';
 
-					embedMessage += `${usersData[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `${emojis[i]} **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
+					embedMessage += `${usersData[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `${i} **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
 
 					embed.setDescription(`**USUÁRIOS DA DATA: ${ce.content}**\n\n${embedMessage}`);
 
@@ -183,7 +164,7 @@ module.exports = class Bancos extends Command {
 
 										let embedMessage3 = '';
 
-										embedMessage3 += `${usersData2[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `[${emojis[i]}] **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
+										embedMessage3 += `${usersData2[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `[${i}] **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
 
 										embed.fields = [];
 										embed.setDescription(`**USUÁRIOS DA DATA: ${ce.content}**\n\n${embedMessage3}`);

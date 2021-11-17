@@ -78,6 +78,7 @@ module.exports = class Equipararma extends Command {
 
 			sim.on('collect', async (reaction) => {
 				sim.stop();
+				msg.delete();
 
 				const itemEmoji = objeto[reaction.emoji.id];
 

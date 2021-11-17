@@ -57,8 +57,8 @@ module.exports = class Treinarpet extends Command {
 		const embedPreso = new ClientEmbed(author)
 			.setTitle('👮 | Preso');
 
-		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
-			presoTime = 36000000;
+		if (user.prisao.isPreso && user.prisao.prenderCmd) {
+			presoTime = user.prisao.prenderMili;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
@@ -67,8 +67,8 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.crime) {
-			presoTime = 600000;
+		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
@@ -107,7 +107,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.velha) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.velha) {
 			presoTime = 300000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -117,7 +117,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.frentista) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.frentista) {
 			presoTime = 600000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -127,7 +127,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.joalheria) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.joalheria) {
 			presoTime = 900000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -137,7 +137,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.agiota) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.agiota) {
 			presoTime = 1200000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -147,7 +147,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.casaLoterica) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.casaLoterica) {
 			presoTime = 1200000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -157,7 +157,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.brazino) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.brazino) {
 			presoTime = 2100000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -167,7 +167,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.facebook) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.facebook) {
 			presoTime = 2700000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -177,7 +177,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.bancoCentral) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.bancoCentral) {
 			presoTime = 3600000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -187,7 +187,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.shopping) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.shopping) {
 			presoTime = 7200000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -197,7 +197,7 @@ module.exports = class Treinarpet extends Command {
 
 				return message.channel.send(author, embedPreso);
 			}
-		} else if (user.prisao.isPreso && user.prisao.banco) {
+		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.banco) {
 			presoTime = 14400000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {

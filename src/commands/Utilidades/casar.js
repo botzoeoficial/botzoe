@@ -109,7 +109,7 @@ module.exports = class Casar extends Command {
 				const embedFim = new ClientEmbed(author)
 					.setTitle('❤️ | Casamento')
 					.setImage(body.results[randomCasamento].url)
-					.setDescription(`${user}, você deseja se casar com o(a) ${author}?`);
+					.setDescription(`${author}, ${user} aceitou seu pedido de casamento! :tada:`);
 
 				message.channel.send(`${author} 💕 ${user}`, embedFim);
 

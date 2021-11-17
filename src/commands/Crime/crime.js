@@ -68,7 +68,17 @@ module.exports = class Crime extends Command {
 			const embedPreso = new ClientEmbed(author)
 				.setTitle('👮 | Preso');
 
-			if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+			if (userAuthor.prisao.isPreso && userAuthor.prisao.prenderCmd) {
+				presoTime = userAuthor.prisao.prenderMili;
+
+				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+					return message.channel.send(author, embedPreso);
+				}
+			} else if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
 				presoTime = 36000000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
@@ -267,26 +277,12 @@ module.exports = class Crime extends Command {
 						position: index
 					}));
 
-					const emojis = {
-						0: '0️⃣',
-						1: '1️⃣',
-						2: '2️⃣',
-						3: '3️⃣',
-						4: '4️⃣',
-						5: '5️⃣',
-						6: '6️⃣',
-						7: '7️⃣',
-						8: '8️⃣',
-						9: '9️⃣',
-						10: '1️⃣0️⃣'
-					};
-
 					let embedMessage = '';
 
 					const embed2 = new ClientEmbed(author)
 						.setTitle('🥷 | Lista de Crimes');
 
-					crimesArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - ${eu.roubo} - REP: ${eu.rep}\n`);
+					crimesArray.forEach((eu) => embedMessage += `${eu.position + 1} - ${eu.roubo} - REP: ${eu.rep}\n`);
 					embed2.setDescription(`*Lista de Crimes que você pode cometer:*\n\n${embedMessage}`);
 
 					message.channel.send(author, embed2).then(async (msg) => {

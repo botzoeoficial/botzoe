@@ -60,30 +60,6 @@ module.exports = class Mercadonegro extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣',
-			10: '1️⃣0️⃣',
-			11: '1️⃣1️⃣',
-			12: '1️⃣2️⃣',
-			13: '1️⃣3️⃣',
-			14: '1️⃣4️⃣',
-			15: '1️⃣5️⃣',
-			16: '1️⃣6️⃣',
-			17: '1️⃣7️⃣',
-			18: '1️⃣8️⃣',
-			19: '1️⃣9️⃣',
-			20: '2️⃣0️⃣'
-		};
-
 		let embedMessage = '';
 
 		const embed = new ClientEmbed(author)
@@ -92,7 +68,7 @@ module.exports = class Mercadonegro extends Command {
 		mapProdutos.slice(0, 10).forEach((eu) => {
 			const faltam = ms(eu.tempo - (Date.now() - eu.tempo2));
 
-			embedMessage += `${emojis[eu.position + 1]} - **${eu.nome}** - \`x${eu.quantia}\` - R$${Utils.numberFormat(eu.preco)},00 - <@${eu.dono}> - ${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s\n`;
+			embedMessage += `${eu.position + 1} - **${eu.nome}** - \`x${eu.quantia}\` - R$${Utils.numberFormat(eu.preco)},00 - <@${eu.dono}> - ${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s\n`;
 		});
 
 		embed.setDescription(`Estes são os Itens disponíveis no Mercado Negro neste momento:\nDigite o número do item que você deseja comprar.\n\n${!server.mercadoNegro.length ? '**Sem Itens no Mercado Negro no momento!**\n' : embedMessage}\nDigite \`0\` para cancelar a seleção.`);
@@ -193,7 +169,7 @@ module.exports = class Mercadonegro extends Command {
 										}
 									});
 
-									if (user2.mochila.find((a) => a.item === findSelectedEvento.nome)) {
+									if (user2.mochila.find((a) => a.item === findSelectedEvento.nome).quantia > 1) {
 										await this.client.database.users.findOneAndUpdate({
 											userId: findSelectedEvento.dono,
 											guildId: message.guild.id,

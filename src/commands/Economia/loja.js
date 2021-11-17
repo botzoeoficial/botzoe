@@ -1795,6 +1795,14 @@ module.exports = class Loja extends Command {
 
 						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item!');
 
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
+
 						if (user.mochila.find((a) => a.item === loja5.utilidades[4].item)) {
 							if (user.mochila.find((a) => a.item === loja5.utilidades[4].item).quantia === 1) {
 								return message.reply(`você já tem o máximo de **Porte de Armas** na mochila!`).then((b) => b.delete({
@@ -1989,6 +1997,14 @@ module.exports = class Loja extends Command {
 
 						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
 
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
+
 						if (user.saldo < loja5.utilidades[2].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 						} else {
@@ -2123,15 +2139,25 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
+
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						const server2 = await this.client.database.guilds.findOne({
 							_id: message.guild.id
 						});
 
-						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+						if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						const itens = user.mochila;
+
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
 
 						if (itens.find((a) => a.item === loja6.pm[0].item)) {
 							if (itens.find((a) => a.item === loja6.pm[0].item).quantia === 1) {
@@ -2183,15 +2209,25 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
+
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						const server2 = await this.client.database.guilds.findOne({
 							_id: message.guild.id
 						});
 
-						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+						if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						const itens = user.mochila;
+
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
 
 						if (itens.find((a) => a.item === loja6.pm[1].item)) {
 							if (itens.find((a) => a.item === loja6.pm[1].item).quantia === 1) {
@@ -2243,15 +2279,25 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
+
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						const server2 = await this.client.database.guilds.findOne({
 							_id: message.guild.id
 						});
 
-						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+						if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
 
 						const itens = user.mochila;
+
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
 
 						if (itens.find((a) => a.item === loja6.pm[2].item)) {
 							if (itens.find((a) => a.item === loja6.pm[2].item).quantia === 1) {
@@ -2303,13 +2349,23 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
+
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						const server2 = await this.client.database.guilds.findOne({
 							_id: message.guild.id
 						});
 
-						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+						if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
 
 						if (user.saldo < loja6.pm[3].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
@@ -2368,13 +2424,23 @@ module.exports = class Loja extends Command {
 							guildId: message.guild.id
 						});
 
+						if (!user.isMochila) return message.reply('você precisa ter uma **Mochila** antes de comprar este item! Vá até a Loja > Utilidades e Compre uma!');
+
 						if (user.prisao.isPreso) return message.reply('você não pode comprar esse item, pois você está **preso**!');
 
 						const server2 = await this.client.database.guilds.findOne({
 							_id: message.guild.id
 						});
 
-						if (!user.policia.isPolice || server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+						if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para comprar este item!');
+
+						if (user.mochila.length > 0) {
+							if (user.mochila.map((a) => a.quantia).reduce((a, b) => a + b) === 200) {
+								return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+						}
 
 						if (user.saldo < loja6.pm[4].preco) {
 							return message.reply('você não tem saldo suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');

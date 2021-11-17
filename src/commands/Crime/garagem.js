@@ -66,36 +66,12 @@ module.exports = class Garagem extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣',
-			10: '1️⃣0️⃣',
-			11: '1️⃣1️⃣',
-			12: '1️⃣2️⃣',
-			13: '1️⃣3️⃣',
-			14: '1️⃣4️⃣',
-			15: '1️⃣5️⃣',
-			16: '1️⃣6️⃣',
-			17: '1️⃣7️⃣',
-			18: '1️⃣8️⃣',
-			19: '1️⃣9️⃣',
-			20: '2️⃣0️⃣'
-		};
-
 		let embedMessage = '';
 
 		const embed = new ClientEmbed(author)
 			.setTitle('<:garagem:901528229112844308> | Garagem');
 
-		carrosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} | **Modelo:** ${eu.modelo}\n`);
+		carrosArray.forEach((eu) => embedMessage += `${eu.position + 1} **Carro:** ${eu.nome} | **Modelo:** ${eu.modelo}\n`);
 		embed.setDescription(!user.garagem.length ? 'Você não possui nenhum carro no momento.' : `**DIGITE A POSIÇÃO DO CARRO NO CHAT PARA VER INFORMAÇÕES SOBRE ELE!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {
@@ -174,36 +150,12 @@ module.exports = class Garagem extends Command {
 								position: index
 							}));
 
-							const emojis2 = {
-								0: '0️⃣',
-								1: '1️⃣',
-								2: '2️⃣',
-								3: '3️⃣',
-								4: '4️⃣',
-								5: '5️⃣',
-								6: '6️⃣',
-								7: '7️⃣',
-								8: '8️⃣',
-								9: '9️⃣',
-								10: '1️⃣0️⃣',
-								11: '1️⃣1️⃣',
-								12: '1️⃣2️⃣',
-								13: '1️⃣3️⃣',
-								14: '1️⃣4️⃣',
-								15: '1️⃣5️⃣',
-								16: '1️⃣6️⃣',
-								17: '1️⃣7️⃣',
-								18: '1️⃣8️⃣',
-								19: '1️⃣9️⃣',
-								20: '2️⃣0️⃣'
-							};
-
 							let embedMessage2 = '';
 
 							const embed2 = new ClientEmbed(author)
 								.setTitle('<:garagem:901528229112844308> | Garagem');
 
-							carrosArray2.forEach((eu) => embedMessage2 += `[${emojis2[eu.position + 1]}] **Carro:** ${eu.nome} | **Modelo:** ${eu.modelo}\n`);
+							carrosArray2.forEach((eu) => embedMessage2 += `${eu.position + 1} **Carro:** ${eu.nome} | **Modelo:** ${eu.modelo}\n`);
 							embed2.setDescription(!user.garagem.length ? 'Você não possui nenhum carro no momento.' : `**DIGITE A POSIÇÃO DO CARRO NO CHAT PARA VER INFORMAÇÕES SOBRE ELE!**\n\n${embedMessage}`);
 
 							msg.edit(author, embed2).then(async (msg4) => {

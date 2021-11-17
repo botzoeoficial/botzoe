@@ -1,21 +1,21 @@
-/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable id-length */
+/* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 
-module.exports = class Deleteuser extends Command {
+module.exports = class Deleteacc extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'deleteuser';
-		this.category = 'Editor';
-		this.description = 'Delete os dados de um usuário do servidor!';
-		this.usage = 'deleteuser <usuário>';
-		this.aliases = ['deletarusuário', 'deletarusuario'];
+		this.name = 'deleteacc';
+		this.category = 'Utilidades';
+		this.description = 'Delete seus dados do servidor!';
+		this.usage = 'deleteacc';
+		this.aliases = ['deletarconta'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -40,22 +40,18 @@ module.exports = class Deleteuser extends Command {
 	async run({
 		message,
 		author,
-		args
+		prefix
 	}) {
-		const member = await this.client.users.cache.get(args[0]) || message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-		if (!member) return message.reply('você precisa mencionar um usuário para deletar!');
-
 		const user = await this.client.database.users.findOne({
-			userId: member.id,
+			userId: author.id,
 			guildId: message.guild.id
 		});
 
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor!`);
+		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Use o comando: \`${prefix}cadastrar\`.`);
 
 		const embed = new ClientEmbed(author)
 			.setTitle('Deletar Conta')
-			.setDescription(`Você está prestes a deletar a conta de ${member} deste Servidor, e todo o progresso dele será deletado/resetado.\n\nDepois que clicar na reação ✅, você deletará/resetará todo o progresso do Banco de Dados deste usuário, como: Informações, Saldo, Bitcoins, Carros, Armas e tudo que ele conquistou **Neste** servidor.\n\nVocê tem  certeza que deseja Deletar/Resetar a conta deste usuário?`);
+			.setDescription(`Você está prestes a deletar/resetar a sua conta de todos os Servidores em que possui acesso na Zoe.\n\nDepois que clicar na reação ✅, você terá todos os seus dados deletados/resetados, do Banco de Dados de nosso Bot como: Informações, Saldo, Bitcoins, Carros, Armas e todo o progresso que você conquistou em **TODOS** os Servidores que você joga.\n\nPara que o seu progresso seja Resetado apenas neste Servidor, peça para que um dos Adms ou Editor use o comando \`++deleteuser <@${author.id}>\`, aqui no servidor.\n\nVocê tem  certeza que deseja Deletar/Resetar, a sua conta agora?`);
 
 		message.channel.send(author, embed).then(async (msg) => {
 			await msg.react('✅');
@@ -76,7 +72,7 @@ module.exports = class Deleteuser extends Command {
 				não.stop();
 				msg.delete();
 
-				message.reply(`a conta de ${member} no servidor ${message.guild.name} foi deletada com sucesso!`);
+				message.reply(`sua conta no servidor ${message.guild.name} foi deletada com sucesso!`);
 
 				if (user.fac.createFac) {
 					const fb = user?.fac;
@@ -100,7 +96,7 @@ module.exports = class Deleteuser extends Command {
 					});
 
 					await this.client.database.users.findOneAndUpdate({
-						userId: member.id,
+						userId: author.id,
 						guildId: message.guild.id
 					}, {
 						$set: {
@@ -117,7 +113,7 @@ module.exports = class Deleteuser extends Command {
 						'faccoes.nome': user.fac.nome
 					}, {
 						$pull: {
-							'faccoes.$.membros': member.id
+							'faccoes.$.membros': author.id
 						}
 					});
 				}
@@ -127,7 +123,7 @@ module.exports = class Deleteuser extends Command {
 					const owner = await this.client.users.fetch(fb.dono);
 
 					await this.client.database.users.findOneAndUpdate({
-						userId: member.id,
+						userId: author.id,
 						guildId: message.guild.id
 					}, {
 						$set: {
@@ -141,7 +137,7 @@ module.exports = class Deleteuser extends Command {
 						guildId: message.guild.id
 					}, {
 						$pull: {
-							'fac.membros': member.id
+							'fac.membros': author.id
 						}
 					});
 
@@ -150,7 +146,7 @@ module.exports = class Deleteuser extends Command {
 						'faccoes.nome': user.fac.nome
 					}, {
 						$pull: {
-							'faccoes.$.membros': member.id
+							'faccoes.$.membros': author.id
 						}
 					});
 				}
@@ -181,7 +177,7 @@ module.exports = class Deleteuser extends Command {
 				}
 
 				return await this.client.database.users.findOneAndDelete({
-					userId: member.id,
+					userId: author.id,
 					guildId: message.guild.id
 				});
 			});

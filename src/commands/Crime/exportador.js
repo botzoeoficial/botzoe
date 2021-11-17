@@ -159,6 +159,8 @@ module.exports = class Exportador extends Command {
 								guildId: message.guild.id
 							});
 
+							if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+
 							const timeoutRoubar = 300000;
 
 							if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador) > 0) {
@@ -171,9 +173,9 @@ module.exports = class Exportador extends Command {
 							} else {
 								const embedPolicia = new ClientEmbed(this.client.user)
 									.setTitle('Prisão')
-									.setDescription(`Você foi preso em flagrante por <@${user.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
+									.setDescription(`${author}, você foi preso em flagrante por <@${user.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
 
-								message.channel.send(embedPolicia);
+								message.channel.send(author, embedPolicia);
 
 								server.exportador.quantiaQueFalta -= randomDrogaUser;
 

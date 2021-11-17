@@ -182,7 +182,13 @@ const shopSchema = new Schema({
 				preco: 25000,
 				desc: 'Munição para Metralhadora.\nQtde: 1 (vem 5)'
 			}
-			]
+			],
+			bitcoin: [{
+				emoji: '<:bolso:908780753884696706>',
+				item: 'Bolso',
+				preco: 150,
+				desc: 'Aumenta +200 a quantidade de itens no seu inventário no servidor que você comprar.\nQtde: Só pode ser comprado 1 vez'
+			}]
 		}
 	}
 });

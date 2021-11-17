@@ -46,9 +46,20 @@ module.exports = class Mochila extends Command {
 
 		if (!user.isMochila) return message.reply(`você não possui uma **Mochila**, vá até a Loja > Utilidades e Compre uma!`);
 
-		const itens = user.mochila.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
+		const arma = user.mochila.find((a) => a.item === user.armaEquipada)?.item;
 
-		const total = user.mochila.length;
+		let arma2 = '';
+
+		if (['Ak-47', 'UMP', 'MP5', 'ACR', 'KNT-308', 'Desert Eagle', 'Revolver 38', 'G18'].includes(arma)) {
+			arma2 = '(Equipada)';
+		} else {
+			arma2 = '';
+		}
+
+		const itens = user.mochila.filter((a) => a.item === user.armaEquipada).map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\` ${arma2}`).join('\n');
+		const itens2 = user.mochila.filter((a) => a.item !== user.armaEquipada).map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
+
+		const total = !user.mochila.length ? 0 : user.mochila.map((a) => a.quantia).reduce((a, b) => a + b);
 
 		const embed = new ClientEmbed(author)
 			.setTitle(`<:mochila:899007409006215188> | Sua Mochila`)
@@ -56,7 +67,7 @@ module.exports = class Mochila extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setDescription(`***Total de Itens na Mochila:*** \`${total}\`\n\n${itens || 'Mochila Vazia.'}`);
+			.setDescription(`***Total de Itens na Mochila:*** \`${total}\`\n\n${`${itens}\n${itens2}` || 'Mochila Vazia.'}`);
 
 		message.channel.send(author, embed);
 	}

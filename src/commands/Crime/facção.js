@@ -190,7 +190,17 @@ module.exports = class Facção extends Command {
 			const embedPreso = new ClientEmbed(author)
 				.setTitle('👮 | Preso');
 
-			if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+			if (user.prisao.isPreso && user.prisao.prenderCmd) {
+				presoTime = user.prisao.prenderMili;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+					return message.channel.send(author, embedPreso);
+				}
+			} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 				presoTime = 36000000;
 
 				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -988,26 +998,12 @@ module.exports = class Facção extends Command {
 					position: index
 				}));
 
-				const emojis = {
-					0: '0️⃣',
-					1: '1️⃣',
-					2: '2️⃣',
-					3: '3️⃣',
-					4: '4️⃣',
-					5: '5️⃣',
-					6: '6️⃣',
-					7: '7️⃣',
-					8: '8️⃣',
-					9: '9️⃣',
-					10: '1️⃣0️⃣'
-				};
-
 				let embedMessage = '';
 
 				const embed = new ClientEmbed(author)
 					.setTitle('Promoção');
 
-				cargosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **Cargo:** ${eu.nome}\n`);
+				cargosArray.forEach((eu) => embedMessage += `${eu.position + 1} - **Cargo:** ${eu.nome}\n`);
 				embed.setDescription(`**➡️ | Digite o número do cargo que deseja dar para o ${USER}:**\n\n${embedMessage}`);
 
 				message.channel.send(author, embed).then((msg) => {
@@ -1102,26 +1098,12 @@ module.exports = class Facção extends Command {
 					position: index
 				}));
 
-				const emojis = {
-					0: '0️⃣',
-					1: '1️⃣',
-					2: '2️⃣',
-					3: '3️⃣',
-					4: '4️⃣',
-					5: '5️⃣',
-					6: '6️⃣',
-					7: '7️⃣',
-					8: '8️⃣',
-					9: '9️⃣',
-					10: '1️⃣0️⃣'
-				};
-
 				let embedMessage = '';
 
 				const embed = new ClientEmbed(author)
 					.setTitle('Promoção');
 
-				cargosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **Cargo:** ${eu.nome}\n`);
+				cargosArray.forEach((eu) => embedMessage += `${eu.position + 1} - **Cargo:** ${eu.nome}\n`);
 				embed.setDescription(`**➡️ | Digite o número do cargo que deseja rebaixar para o ${USER}:**\n\n${embedMessage}`);
 
 				message.channel.send(author, embed).then((msg) => {

@@ -53,25 +53,12 @@ module.exports = class Eventosdiv extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣'
-		};
-
 		let embedMessage = '';
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🎉 | Eventos Disponíveis:');
 
-		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Evento:** ${eu.nome} | **Data:** ${eu.date} | **Hora:** ${eu.hour} | **Tag:** <@&${eu.tag}>\n`);
+		eventosArray.forEach((eu) => embedMessage += `${eu.position + 1} **Evento:** ${eu.nome} | **Data:** ${eu.date} | **Hora:** ${eu.hour} | **Tag:** <@&${eu.tag}>\n`);
 		embed.setDescription(!server.eventos.length ? 'Não há eventos cadastrados no momento.' : `**DIGITE A POSIÇÃO DO EVENTO NO CHAT PARA ANUNCIAR ELE!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {

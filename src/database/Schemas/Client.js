@@ -14,6 +14,10 @@ const clientSchema = new Schema({
 	reason: {
 		type: String,
 		default: ''
+	},
+	usersBan: {
+		type: Array,
+		default: []
 	}
 });
 

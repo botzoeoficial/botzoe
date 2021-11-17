@@ -67,9 +67,9 @@ module.exports = class Inventario extends Command {
 			}));
 
 		if (user.inventory.find((a) => a.item === 'Bolso')) {
-			embed.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(400, total, 10)[0]}** (${Math.round(total / 400 * 100)}%)\n\n${itens || 'Inventário vazio.'}`);
+			embed.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(400, total || 0, 10)[0]}** (${Math.round(total / 400 * 100)}%)\n\n${itens || 'Inventário vazio.'}`);
 		} else {
-			embed.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(200, total, 10)[0]}** (${Math.round(total / 200 * 100)}%)\n\n${itens || 'Inventário vazio.'}`);
+			embed.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(200, total || 0, 10)[0]}** (${Math.round(total / 200 * 100)}%)\n\n${itens || 'Inventário vazio.'}`);
 		}
 
 		message.channel.send(author, embed);

@@ -342,6 +342,14 @@ const userSchema = new Schema({
 			type: Number,
 			default: 0
 		},
+		prenderCmd: {
+			type: Boolean,
+			default: false
+		},
+		prenderMili: {
+			type: Number,
+			default: 0
+		},
 		traficoDrogas: {
 			type: Boolean,
 			default: false

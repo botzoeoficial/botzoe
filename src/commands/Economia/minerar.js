@@ -55,7 +55,17 @@ module.exports = class Minerar extends Command {
 		const embedPreso = new ClientEmbed(author)
 			.setTitle('👮 | Preso');
 
-		if (user.prisao.isPreso && user.prisao.traficoDrogas) {
+		if (user.prisao.isPreso && user.prisao.prenderCmd) {
+			presoTime = user.prisao.prenderMili;
+
+			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+				const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+				embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embedPreso);
+			}
+		} else if (user.prisao.isPreso && user.prisao.traficoDrogas) {
 			presoTime = 36000000;
 
 			if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
@@ -205,6 +215,22 @@ module.exports = class Minerar extends Command {
 					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
 				return message.channel.send(author, embed);
+			} else if (message.guild.id === '885645282614861854') {
+				const embed = new ClientEmbed(author)
+					.setTitle('MINERAÇÃO')
+					.setDescription(`💻 | Você minerou \`2\` bitcoins <:btc:908786996535787551>`);
+
+				message.channel.send(author, embed);
+
+				const authorAll = await this.client.database.users.find({
+					userId: message.author.id
+				});
+
+				authorAll.forEach(async (as) => {
+					as.bitcoin = as.bitcoin += 2;
+					as.cooldown.minerar = Date.now();
+					as.save();
+				});
 			} else {
 				const embed = new ClientEmbed(author)
 					.setTitle('MINERAÇÃO')
@@ -217,19 +243,9 @@ module.exports = class Minerar extends Command {
 				});
 
 				authorAll.forEach(async (as) => {
-					if (as.cadastrado) {
-						as.bitcoin = as.bitcoin += 1;
-						as.save();
-					}
-				});
-
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'cooldown.minerar': Date.now()
-					}
+					as.bitcoin = as.bitcoin += 1;
+					as.cooldown.minerar = Date.now();
+					as.save();
 				});
 			}
 		}

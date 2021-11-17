@@ -65,36 +65,12 @@ module.exports = class Fabricarmunicao extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣',
-			10: '1️⃣0️⃣',
-			11: '1️⃣1️⃣',
-			12: '1️⃣2️⃣',
-			13: '1️⃣3️⃣',
-			14: '1️⃣4️⃣',
-			15: '1️⃣5️⃣',
-			16: '1️⃣6️⃣',
-			17: '1️⃣7️⃣',
-			18: '1️⃣8️⃣',
-			19: '1️⃣9️⃣',
-			20: '2️⃣0️⃣'
-		};
-
 		let embedMessage = '';
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🔫 | Fábrica de Munições');
 
-		municoesArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - ${eu.img} - ${eu.municao} - Alumínio: \`${eu.aluminio}\` - Borracha: \`${eu.borracha}\` - Cobre: \`${eu.cobre}\`\n`);
+		municoesArray.forEach((eu) => embedMessage += `${eu.position + 1} - ${eu.img} - ${eu.municao} - Alumínio: \`${eu.aluminio}\` - Borracha: \`${eu.borracha}\` - Cobre: \`${eu.cobre}\`\n`);
 		embed.setDescription(`Qual munição você deseja fabricar?\n\n${embedMessage}\nDigite \`0\` para sair.`);
 
 		message.channel.send(author, embed).then(async (msg) => {

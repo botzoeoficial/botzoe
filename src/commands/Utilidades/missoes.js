@@ -50,25 +50,12 @@ module.exports = class Missoes extends Command {
 			position: index
 		}));
 
-		const emojis = {
-			0: '0️⃣',
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣'
-		};
-
 		let embedMessage = '';
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🔰 | Missões Disponíveis:');
 
-		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Missão:** ${eu.nome}\n`);
+		eventosArray.forEach((eu) => embedMessage += `${eu.position + 1} **Missão:** ${eu.nome}\n`);
 		embed.setDescription(!server.missoes.length ? 'Não há missões cadastradas no momento.' : `**DIGITE A POSIÇÃO DA MISSÃO NO CHAT PARA VER INFORMAÇÕES SOBRE ELA!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {
