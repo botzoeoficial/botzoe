@@ -78,6 +78,188 @@ module.exports = class Deleteuser extends Command {
 
 				message.reply(`a conta de ${member} no servidor ${message.guild.name} foi deletada com sucesso!`);
 
+				const server = await this.client.database.guilds.findOne({
+					_id: message.guild.id
+				});
+
+				if (server.editor.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							editor: {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.governador === member.id) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$set: {
+							'cidade.governador': ''
+						}
+					});
+				}
+
+				if (server.cidade.delegado === member.id) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$set: {
+							'cidade.delegado': ''
+						}
+					});
+				}
+
+				if (server.cidade.policiais.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.policiais': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.carcereiro.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.carcereiro': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.diretorHP === member.id) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$set: {
+							'cidade.diretorHP': ''
+						}
+					});
+				}
+
+				if (server.cidade.medicos.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.medicos': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.donoFavela === member.id) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$set: {
+							'cidade.donoFavela': ''
+						}
+					});
+				}
+
+				if (server.cidade.donoFabricadeArmas.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.donoFabricadeArmas': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.donoFabricadeDrogas.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.donoFabricadeDrogas': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.donoDesmanche === member.id) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$set: {
+							'cidade.donoDesmanche': ''
+						}
+					});
+				}
+
+				if (server.cidade.donoLavagem === member.id) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$set: {
+							'cidade.donoLavagem': ''
+						}
+					});
+				}
+
+				if (server.cidade.ajudanteDesmanche.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.ajudanteDesmanche': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.ajudanteLavagem.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.ajudanteLavagem': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.cidade.mecanico.find((f) => f.id === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'cidade.mecanico': {
+								id: member.id
+							}
+						}
+					});
+				}
+
+				if (server.mecanica.dono.find((f) => f === member.id)) {
+					await this.client.database.guilds.findOneAndUpdate({
+						_id: message.guild.id
+					}, {
+						$pull: {
+							'mecanica.dono': member.id
+						}
+					});
+				}
+
 				if (user.fac.createFac) {
 					const fb = user?.fac;
 					const random = Math.floor(Math.random() * user.fac.membros.length);
