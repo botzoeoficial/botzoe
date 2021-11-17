@@ -64,8 +64,8 @@ module.exports = class Prender extends Command {
 
 		const timeout = 3600000;
 
-		if (timeout - (Date.now() - user.policia.revistar) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.policia.revistar));
+		if (timeout - (Date.now() - user.policia.prender) > 0) {
+			const faltam = ms(timeout - (Date.now() - user.policia.prender));
 
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
@@ -90,6 +90,15 @@ module.exports = class Prender extends Command {
 			const tempo = this.timeToMilliseconds(args.slice(1).join(' '));
 
 			if (!tempo) return message.reply('por favor, coloque um tempo válido. Ex: **1d** ou **1h**');
+
+			await this.client.database.users.findOneAndUpdate({
+				userId: author.id,
+				guildId: message.guild.id
+			}, {
+				$set: {
+					'policia.prender': Date.now()
+				}
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: member.id,
