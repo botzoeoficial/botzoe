@@ -38,15 +38,17 @@ module.exports = class Addmedico extends Command {
 		message,
 		args
 	}) {
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
 		if (member.user.bot) return message.reply(`você não pode dar função de Médico para um bot.`);
-
-		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
-		});
 
 		if (server.cidade.medicos.length === 10) return message.reply('esse servidor já possui o máximo de Médicos.');
 

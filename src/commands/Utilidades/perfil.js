@@ -53,6 +53,10 @@ module.exports = class Perfil extends Command {
 			guildId: message.guild.id
 		});
 
+		const server = await this.client.database.users.find({
+			guildId: message.guild.id
+		});
+
 		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
 		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
@@ -65,7 +69,7 @@ module.exports = class Perfil extends Command {
 			.setTitle(`Perfil do(a) ${member.user.tag}`)
 			.addField('👤 Nick:', user.nick, true)
 			.addField('🏦 Saldo:', `R$${Utils.numberFormat(user.saldo + user.banco)},00`, true)
-			.addField('<:btc:908786996535787551> BitCoins:', `${Utils.numberFormat(user.bitcoin)}`, true)
+			.addField('<:btc:908786996535787551> BitCoins:', `ㅤ${Utils.numberFormat(user.bitcoin)}`, true)
 			.addField('💵 Empréstimos Zoe:', `R$${Utils.numberFormat(user.emprestimos)},00`, true)
 			.addField('📈 Level:', user.level, true)
 			.addField('💍 Casado(a) com:', user.marry.has ? await this.client.users.fetch(user.marry.user).then((x) => x) : user.marry.user, true)
@@ -76,8 +80,10 @@ module.exports = class Perfil extends Command {
 			.addField('\u2800', '\u2800', true)
 			.addField('🔫 Arma', user.armaEquipada === '' ? 'Nenhuma arma equipada.' : user.armaEquipada, true)
 			.addField('⭐ Estrelas:', !user.estrelas.length ? 'Nenhuma Estrela.' : user.estrelas.join(''))
+			.addField('🎉 Eventos:', !user.eventos.length ? 'Nenhum Evento Participado.' : `${user.eventos.map(a => `<@&${a}>`).join('\n')}`, true)
+			.addField('\u2800', '\u2800', true)
+			.addField('🏆 Top Ranking:', `ㅤ#${server.sort((a, b) => (b.banco + b.saldo) - (a.banco + a.saldo)).findIndex(c => c.userId === user.userId) + 1}º`, true)
 			.addField('🗓️ Aniversário:', user.aniversario)
-			.addField('🎉 Eventos:', !user.eventos.length ? 'Nenhum Evento Participado.' : `${user.eventos.map(a => `<@&${a}>`).join('\n')}`)
 			.addField('\u200b', `**SOBREMIM:**\n${user.sobremim}`);
 
 		message.channel.send(author, embed);

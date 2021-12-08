@@ -156,8 +156,8 @@ const guildSchema = new Schema({
 			default: ''
 		},
 		tempo: {
-			type: Date,
-			default: null
+			type: Number,
+			default: 0
 		}
 	},
 	cidade: {
@@ -239,6 +239,28 @@ const guildSchema = new Schema({
 			channel: {
 				type: String,
 				default: ''
+			}
+		},
+		golpeEstado: {
+			existe: {
+				type: Boolean,
+				default: false
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			message: {
+				type: String,
+				default: ''
+			},
+			channel: {
+				type: String,
+				default: ''
+			},
+			caos: {
+				type: Boolean,
+				default: false
 			}
 		},
 		alterarBolsa: {
@@ -454,6 +476,66 @@ const guildSchema = new Schema({
 		quantiaQueFalta: {
 			type: Number,
 			default: 0
+		}
+	},
+	desmanche: {
+		type: Array,
+		default: [],
+		nome: {
+			type: String,
+			default: ''
+		},
+		dono: {
+			type: String,
+			default: ''
+		},
+		modelo: {
+			type: String,
+			default: ''
+		},
+		valor: {
+			type: Number,
+			default: 0
+		},
+		ano: {
+			type: Number,
+			default: 0
+		},
+		danificado: {
+			type: Number,
+			default: 0
+		},
+		velocidade: {
+			type: Number,
+			default: 0
+		},
+		cavalos: {
+			type: Number,
+			default: 0
+		},
+		peso: {
+			type: Number,
+			default: 0
+		},
+		desmanche: {
+			type: Number,
+			default: 0
+		},
+		img: {
+			type: String,
+			default: ''
+		},
+		arrumado: {
+			type: Boolean,
+			default: false
+		},
+		emplacado: {
+			type: Boolean,
+			default: false
+		},
+		liberado: {
+			type: Boolean,
+			default: false
 		}
 	}
 });

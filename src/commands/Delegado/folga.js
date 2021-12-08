@@ -45,6 +45,8 @@ module.exports = class Folga extends Command {
 			_id: message.guild.id
 		});
 
+		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+
 		if (!server.cidade.policiais.length) return message.reply('esse servidor não possui Policiais para dar folga.');
 
 		const timeout = 86400000;
@@ -73,6 +75,8 @@ module.exports = class Folga extends Command {
 				if (a.policia.isPolice) {
 					a.policia.prender = Date.now();
 					a.policia.revistar = Date.now();
+					a.policia.prenderRoubar = Date.now();
+					a.policia.prenderExportador = Date.now();
 					a.policia.isFolga = true;
 
 					a.save();
@@ -86,6 +90,8 @@ module.exports = class Folga extends Command {
 					if (a.policia.isPolice) {
 						a.policia.prender = 0;
 						a.policia.revistar = 0;
+						a.policia.prenderRoubar = 0;
+						a.policia.prenderExportador = 0;
 						a.policia.isFolga = false;
 
 						a.save();

@@ -59,7 +59,7 @@ module.exports = class Sacar extends Command {
 
 		if (parseInt(btc) <= 0) return message.reply('a quantia a ser removida precisa ser maior que **0**.');
 
-		if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) return message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
 
 		if (user.banco <= 0) return message.reply('você não tem dinheiro para sacar do banco.');
 

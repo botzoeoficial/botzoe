@@ -43,6 +43,8 @@ module.exports = class Removerpolicial extends Command {
 			_id: message.guild.id
 		});
 
+		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+
 		if (!server.cidade.medicos.length) return message.reply('não há mais Médicos nesse servidor para ser retirado.');
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);

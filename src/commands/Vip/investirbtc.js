@@ -9,6 +9,10 @@ const ClientEmbed = require('../../structures/ClientEmbed');
 const moment = require('moment');
 moment.locale('pt-BR');
 const ms = require('parse-ms');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Investirbtc extends Command {
 
@@ -219,19 +223,19 @@ module.exports = class Investirbtc extends Command {
 
 				collector.on('collect', async (ce) => {
 					if (!parseInt(ce.content)) {
-						message.channel.send(`${author}, você precisa enviar uma quantia válida!`).then((a) => a.delete({
+						message.channel.send(`${author}, você precisa enviar uma quantia válida. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else if (parseInt(ce.content) <= 0) {
-						message.channel.send(`${author}, você precisa colocar uma quantia acima de **0**!`).then((a) => a.delete({
+						message.channel.send(`${author}, você precisa colocar uma quantia acima de **0**. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else if (parseInt(ce.content) > user.bitcoin) {
-						message.channel.send(`${author}, você não tem essa quantia toda de bitcoins para investir!`).then((a) => a.delete({
+						message.channel.send(`${author}, você não tem essa quantia toda de bitcoins para investir. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else if (isNaN(ce.content)) {
-						message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**!`).then((a) => a.delete({
+						message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else {
@@ -239,83 +243,73 @@ module.exports = class Investirbtc extends Command {
 
 						embed.setDescription(`📈 | Você tem certeza que deseja investir **${ce.content}** bitcoin(s) com duração de 10 dias?`);
 
-						msg.edit(author, embed).then(async (msg2) => {
-							await msg2.react('✅');
-							await msg2.react('❌');
+						const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
+						const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+						const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-							const sim = msg2.createReactionCollector((r, u) => r.emoji.name === '✅' && u.id === author.id, {
-								time: 30000,
+						msg.edit(author, {
+							embed: embed,
+							components: [botoes]
+						}).then(async (msg2) => {
+							const collectorBotoes = msg2.createButtonCollector((button) => button.clicker.user.id === author.id, {
+								time: 60000,
 								max: 1
 							});
 
-							const não = msg2.createReactionCollector((r, u) => r.emoji.name === '❌' && u.id === author.id, {
-								time: 30000,
-								max: 1
-							});
+							collectorBotoes.on('collect', async (b) => {
+								if (b.id === 'aceitar') {
+									b.reply.defer();
 
-							sim.on('collect', async () => {
-								await msg2.reactions.removeAll();
-								sim.stop();
+									embed.setDescription(`📈 | Você investiu **${ce.content}** Bitcoin(s) com duração de 10 dias com 100% de Lucro.`);
 
-								embed.setDescription(`📈 | Você investiu **${ce.content}** Bitcoin(s) com duração de 10 dias com 100% de Lucro.`);
-
-								msg.edit(author, embed);
-
-								Date.prototype.addDays = function (days) {
-									const date = new Date(this.valueOf());
-									date.setDate(date.getDate() + days);
-									return date;
-								};
-
-								const date = new Date(Date.now());
-
-								let valor2 = Number(ce.content);
-
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										bitcoin: user.bitcoin -= Number(ce.content),
-										'investimento.investido': Number(ce.content),
-										'investimento.dobro': valor2 *= 2,
-										'cooldown.bitcoin': date.addDays(10)
-									}
-								});
-
-								setTimeout(async () => {
-									const user2 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
+									msg.edit(author, {
+										embed: embed,
+										components: []
 									});
 
-									let valor = user2.bitcoin + Number(ce.content);
+									let valor2 = Number(ce.content);
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											bitcoin: valor *= 2,
-											'investimento.dobro': valor *= 2,
-											'investimento.investido': 0,
-											'cooldown.bitcoin': null
+											bitcoin: user.bitcoin -= Number(ce.content),
+											'investimento.investido': Number(ce.content),
+											'investimento.dobro': valor2 *= 2,
+											'cooldown.bitcoin': Date.now()
 										}
 									});
-								}, 864000000);
+
+									return setTimeout(async () => {
+										const user2 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										let valor = user2.bitcoin += Number(ce.content);
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												bitcoin: valor *= 2,
+												'investimento.dobro': valor *= 2,
+												'investimento.investido': 0,
+												'cooldown.bitcoin': 0
+											}
+										});
+									}, 10 * 24 * 60 * 60 * 1000);
+								} else if (b.id === 'negar') {
+									b.reply.defer();
+
+									return msg.delete();
+								}
 							});
 
-							não.on('collect', async () => {
-								sim.stop();
-								não.stop();
-
-								msg.delete();
-							});
-
-							sim.on('end', async (collected, reason) => {
+							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
-									sim.stop();
-									não.stop();
 									msg.delete();
 
 									return message.channel.send(`${author}, você demorou demais para escolher! Use o comando novamente!`);

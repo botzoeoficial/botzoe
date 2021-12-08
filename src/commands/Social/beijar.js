@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
-/* eslint-disable max-len */
-/* eslint-disable id-length */
 /* eslint-disable consistent-return */
+/* eslint-disable max-len */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
-const Emojis = require('../../utils/Emojis');
 const fetch = require('node-fetch');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Beijar extends Command {
 
@@ -89,98 +91,75 @@ module.exports = class Beijar extends Command {
 				}))
 				.setDescription(`${member}, o(a) usuário(a) ${author} está te pedindo um beijo!!\n\nVocê aceita?\n✅ - Sim\n❌ - Não`);
 
-			message.channel.send(member, embed).then(async (msg) => {
-				await msg.react(Emojis.Okay);
-				await msg.react(Emojis.Error);
+			const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
+			const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+			const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-				const sim = msg.createReactionCollector((r, u) => r.emoji.name === Emojis.Okay && u.id === member.id, {
+			message.channel.send(author, {
+				embed: embed,
+				components: [botoes]
+			}).then(async (msg) => {
+				const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === member.id, {
 					time: 60000,
 					max: 1
 				});
 
-				const não = msg.createReactionCollector((r, u) => r.emoji.name === Emojis.Error && u.id === member.id, {
-					time: 60000,
-					max: 1
-				});
+				collectorBotoes.on('collect', async (b) => {
+					if (b.id === 'aceitar') {
+						b.reply.defer();
 
-				sim.on('collect', async () => {
-					sim.stop();
-					não.stop();
+						const apikey = 'LUU697F9Y5BI';
+						const lmt = 50;
 
-					const apikey = 'LUU697F9Y5BI';
-					const lmt = 50;
+						const search_term = 'anime kiss';
 
-					const search_term = 'anime kiss';
+						const search_url = `https://g.tenor.com/v1/search?q=${search_term}&key=${apikey}&limit=${lmt}&contentfilter=off`;
 
-					const search_url = `https://g.tenor.com/v1/search?q=${search_term}&key=${apikey}&limit=${lmt}&contentfilter=off`;
+						const body = await fetch(search_url).then((res) => res.json());
 
-					const body = await fetch(search_url).then((res) => res.json());
+						const random = Math.floor(Math.random() * body.results.length);
 
-					const beijos = require('../../json/beijar.json');
+						const embedSim = new ClientEmbed(author)
+							.setDescription(`**${author} beijou ${member}!**`)
+							.setImage(body.results[random].media[0].gif.url);
 
-					let random = Math.floor(Math.random() * body.results.length);
+						message.channel.send(`${author} e ${member}`, embedSim);
 
-					const randomNumber = Math.floor(Math.random() * 100);
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								'cooldown.beijar': Date.now()
+							}
+						});
 
-					const beijosEspeciais = ['https://c.tenor.com/-QJAy2wqJFAAAAAd/french-kiss-tongue.gif', 'https://c.tenor.com/yWGhrAd0cioAAAAC/kissing-couple.gif', 'https://c.tenor.com/DQX85qB9MuEAAAAC/kiss-love.gif', 'https://c.tenor.com/RWV_N4uFraUAAAAC/passionate-kiss-deep-kiss.gif'];
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								'humores.estressado': user.humores.estressado + 20,
+								'humores.bravo': user.humores.bravo + 20,
+								'humores.fome': user.humores.fome - 30,
+								'humores.sede': user.humores.sede - 30,
+								'humores.desanimado': user.humores.desanimado + 10,
+								'humores.cansado': user.humores.cansado + 10,
+								'humores.solitario': user.humores.solitario + 30,
+								'humores.triste': user.humores.triste + 20
+							}
+						});
+					} else if (b.id === 'negar') {
+						b.reply.defer();
 
-					const randomBeijoEspecial = beijosEspeciais[Math.floor(Math.random() * beijosEspeciais.length)];
+						msg.delete();
 
-					const embedSim = new ClientEmbed(author)
-						.setDescription(`**${author} beijou ${member}!**`);
-
-					if ((author.id === '463421520686088192' && member.id === '897148854951104612') || (author.id === '897148854951104612' && member.id === '463421520686088192')) {
-						embedSim.setImage(randomBeijoEspecial);
-					} else if (randomNumber < 50) {
-						random = Math.floor(Math.random() * beijos.length);
-						embedSim.setImage(beijos[random]);
-					} else if (randomNumber >= 50) {
-						random = Math.floor(Math.random() * body.results.length);
-						embedSim.setImage(body.results[random].url);
+						return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de beijo!`);
 					}
-
-					message.channel.send(`${author} e ${member}`, embedSim);
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.beijar': Date.now()
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.estressado': user.humores.estressado + 20,
-							'humores.bravo': user.humores.bravo + 20,
-							'humores.fome': user.humores.fome - 30,
-							'humores.sede': user.humores.sede - 30,
-							'humores.desanimado': user.humores.desanimado + 10,
-							'humores.cansado': user.humores.cansado + 10,
-							'humores.solitario': user.humores.solitario + 30,
-							'humores.triste': user.humores.triste + 20
-						}
-					});
 				});
 
-				não.on('collect', async () => {
-					sim.stop();
-					não.stop();
-
-					msg.delete();
-
-					return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de beijo!`);
-				});
-
-				sim.on('end', async (collected, reason) => {
+				collectorBotoes.on('end', async (collected, reason) => {
 					if (reason === 'time') {
-						sim.stop();
-						não.stop();
-
 						msg.delete();
 
 						return message.channel.send(`${author}, o(a) usuário(a) ${member} demorou demais para responder seu pedido! Use o comando novamente!`);

@@ -45,6 +45,8 @@ module.exports = class Removerfolga extends Command {
 			_id: message.guild.id
 		});
 
+		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+
 		if (!server.cidade.policiais.length) return message.reply('esse servidor não possui Policiais para remover folga.');
 
 		const timeout = 86400000;

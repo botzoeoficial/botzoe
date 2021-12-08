@@ -84,11 +84,13 @@ module.exports = class Alterarbolsa extends Command {
 
 			const porcentagem = bolsa.valor / 100;
 
-			const allItens = await Shop.find({});
+			const allItens = await Shop.find({
+				_id: message.guild.id
+			});
 
 			allItens.forEach(async (e) => {
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.bebidas': e.loja.bebidas[0]
 				}, {
 					$set: {
@@ -97,7 +99,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.bebidas': e.loja.bebidas[1]
 				}, {
 					$set: {
@@ -106,7 +108,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.bebidas': e.loja.bebidas[2]
 				}, {
 					$set: {
@@ -115,7 +117,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.bebidas': e.loja.bebidas[3]
 				}, {
 					$set: {
@@ -124,7 +126,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.bebidas': e.loja.bebidas[4]
 				}, {
 					$set: {
@@ -133,7 +135,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.bebidas': e.loja.bebidas[5]
 				}, {
 					$set: {
@@ -142,7 +144,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[0]
 				}, {
 					$set: {
@@ -151,7 +153,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[1]
 				}, {
 					$set: {
@@ -160,7 +162,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[2]
 				}, {
 					$set: {
@@ -169,7 +171,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[3]
 				}, {
 					$set: {
@@ -178,7 +180,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[4]
 				}, {
 					$set: {
@@ -187,7 +189,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[5]
 				}, {
 					$set: {
@@ -196,7 +198,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.comidas': e.loja.comidas[6]
 				}, {
 					$set: {
@@ -205,7 +207,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.doces': e.loja.doces[0]
 				}, {
 					$set: {
@@ -214,7 +216,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.doces': e.loja.doces[1]
 				}, {
 					$set: {
@@ -223,7 +225,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.doces': e.loja.doces[2]
 				}, {
 					$set: {
@@ -232,7 +234,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.doces': e.loja.doces[3]
 				}, {
 					$set: {
@@ -241,7 +243,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.doces': e.loja.doces[4]
 				}, {
 					$set: {
@@ -250,7 +252,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.utilidades': e.loja.utilidades[0]
 				}, {
 					$set: {
@@ -259,7 +261,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.utilidades': e.loja.utilidades[1]
 				}, {
 					$set: {
@@ -268,7 +270,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.utilidades': e.loja.utilidades[2]
 				}, {
 					$set: {
@@ -277,7 +279,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.utilidades': e.loja.utilidades[3]
 				}, {
 					$set: {
@@ -286,7 +288,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.utilidades': e.loja.utilidades[4]
 				}, {
 					$set: {
@@ -295,7 +297,16 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
+					'loja.utilidades': e.loja.utilidades[5]
+				}, {
+					$set: {
+						'loja.utilidades.$.preco': 1000 - (porcentagem * 1000)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
 					'loja.pm': e.loja.pm[0]
 				}, {
 					$set: {
@@ -304,7 +315,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.pm': e.loja.pm[1]
 				}, {
 					$set: {
@@ -313,7 +324,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.pm': e.loja.pm[2]
 				}, {
 					$set: {
@@ -322,7 +333,7 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.pm': e.loja.pm[3]
 				}, {
 					$set: {
@@ -331,11 +342,191 @@ module.exports = class Alterarbolsa extends Command {
 				});
 
 				await Shop.findOneAndUpdate({
-					_id: message.guild.id,
+					_id: e._id,
 					'loja.pm': e.loja.pm[4]
 				}, {
 					$set: {
 						'loja.pm.$.preco': 25000 - (porcentagem * 25000)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[0]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 800 - (porcentagem * 800)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[1]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 900 - (porcentagem * 900)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[2]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 1100 - (porcentagem * 1100)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[3]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 750 - (porcentagem * 750)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[4]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 1500 - (porcentagem * 1500)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[5]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 1800 - (porcentagem * 1800)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[6]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 2100 - (porcentagem * 2100)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[7]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 2500 - (porcentagem * 2500)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[8]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 2900 - (porcentagem * 2900)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[9]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 3300 - (porcentagem * 3300)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[10]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 3900 - (porcentagem * 3900)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[11]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 4400 - (porcentagem * 4400)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[12]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 5000 - (porcentagem * 5000)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[13]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 3900 - (porcentagem * 3900)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[14]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 4400 - (porcentagem * 4400)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.sementes': e.loja.sementes[15]
+				}, {
+					$set: {
+						'loja.sementes.$.preco': 5000 - (porcentagem * 5000)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.utilidadesAgro': e.loja.utilidadesAgro[0]
+				}, {
+					$set: {
+						'loja.utilidadesAgro.$.preco': 100 - (porcentagem * 100)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.utilidadesAgro': e.loja.utilidadesAgro[1]
+				}, {
+					$set: {
+						'loja.utilidadesAgro.$.preco': 150 - (porcentagem * 150)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.utilidadesAgro': e.loja.utilidadesAgro[2]
+				}, {
+					$set: {
+						'loja.utilidadesAgro.$.preco': 130 - (porcentagem * 130)
+					}
+				});
+
+				await Shop.findOneAndUpdate({
+					_id: e._id,
+					'loja.utilidadesAgro': e.loja.utilidadesAgro[3]
+				}, {
+					$set: {
+						'loja.utilidadesAgro.$.preco': 300 - (porcentagem * 300)
 					}
 				});
 			});

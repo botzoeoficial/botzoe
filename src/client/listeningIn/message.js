@@ -43,7 +43,7 @@ module.exports = class {
 			}
 
 			if (!user) {
-				if (message.author.id === '463421520686088192' || message.author.id === '707677540583735338' || message.author.id === '804677047959027714') {
+				if (message.author.id === '463421520686088192' || message.author.id === '707677540583735338') {
 					await await this.client.database.users.create({
 						userId: message.author.id,
 						guildId: message.guild.id,
@@ -127,11 +127,6 @@ module.exports = class {
 					return;
 				}
 
-				if (message.guild.id === '830972296176992296' && (message.member.roles.cache.some(r => r.id === '831007436990971905') && comando._id !== 'cadastrar' && !cmd.aliases.includes('cadastrar-se') && comando._id !== 'cadastro') && !message.member.roles.cache.some(r => r.id === '830972296260485192')) {
-					message.reply('você não pode usar meus comandos!');
-					return;
-				}
-
 				if (!user.cadastrado && cmd.name !== 'cadastrar' && !cmd.aliases.includes('cadastrar-se') && cmd.name !== 'ajuda' && !cmd.aliases.includes('help')) {
 					message.reply(`você não está cadastrado no servidor **${message.guild.name}**! Registre-se usando o comando: \`${prefix}cadastrar\`.`);
 					return;
@@ -145,7 +140,7 @@ module.exports = class {
 				}
 
 				if (!cmd.owner && !cmd.editor && !cmd.adm && cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
-					if (!message.member.roles.cache.some(r => r.id === '830972296260485189')) {
+					if (!server.vip.find((a) => a.id === message.author.id)) {
 						message.reply(`você precisa ser \`VIP\` do servidor para usar esse comando!`);
 						return;
 					}
@@ -166,7 +161,7 @@ module.exports = class {
 				}
 
 				if (!cmd.owner && cmd.editor && cmd.adm && cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
-					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && !message.member.roles.cache.some(r => r.id === '830972296260485189')) {
+					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && !server.vip.find((a) => a.id === message.author.id)) {
 						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`VIP\` do servidor para usar esse comando!`);
 						return;
 					}
@@ -270,6 +265,13 @@ module.exports = class {
 					}
 				}
 
+				if (!cmd.owner && !cmd.editor && !cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && cmd.donoDesmanche && !cmd.donoLavagem && cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
+					if (server.cidade.donoDesmanche !== message.author.id && !server.cidade.ajudanteDesmanche.find((a) => a.id === message.author.id)) {
+						message.reply(`você precisa ser \`Dono do Desmanche\` ou ser \`Ajudante do Desmanche\` do servidor para usar esse comando!`);
+						return;
+					}
+				}
+
 				if (!cmd.owner && !cmd.editor && !cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && cmd.donoDesmanche && !cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
 					if (server.cidade.donoFavela !== message.author.id && server.cidade.donoDesmanche !== message.author.id) {
 						message.reply(`você precisa ser \`Dono da Favela\` ou ser \`Dono do Desmanche\` do servidor para usar esse comando!`);
@@ -284,9 +286,23 @@ module.exports = class {
 					}
 				}
 
+				if (!cmd.owner && cmd.editor && cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && cmd.donoDesmanche && !cmd.donoLavagem && cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
+					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && server.cidade.donoFavela !== message.author.id && server.cidade.donoDesmanche !== message.author.id && !server.cidade.ajudanteDesmanche.find((a) => a.id === message.author.id)) {
+						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Dono da Favela\` ou ser \`Dono do Desmanche\` ou ser \`Ajudante do Desmanche\` do servidor para usar esse comando!`);
+						return;
+					}
+				}
+
 				if (!cmd.owner && !cmd.editor && !cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
 					if (server.cidade.donoLavagem !== message.author.id) {
 						message.reply(`você precisa ser \`Dono da Lavagem de Dinheiro\` do servidor para usar esse comando!`);
+						return;
+					}
+				}
+
+				if (!cmd.owner && !cmd.editor && !cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && !cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && cmd.donoLavagem && !cmd.ajudanteDesmanche && cmd.ajudanteLavagem) {
+					if (server.cidade.donoLavagem !== message.author.id && !server.cidade.ajudanteLavagem.find((a) => a.id === message.author.id)) {
+						message.reply(`você precisa ser \`Dono da Lavagem de Dinheiro\` ou ser \`Ajudante da Lavagem de Dinheiro\` do servidor para usar esse comando!`);
 						return;
 					}
 				}
@@ -301,13 +317,6 @@ module.exports = class {
 				if (!cmd.owner && cmd.editor && cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && !cmd.donoDesmanche && cmd.donoLavagem && !cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
 					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && server.cidade.donoFavela !== message.author.id && server.cidade.donoLavagem !== message.author.id) {
 						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Dono da Favela\` ou ser \`Dono da Lavagem de Dinheiro\` do servidor para usar esse comando!`);
-						return;
-					}
-				}
-
-				if (!cmd.owner && cmd.editor && cmd.adm && !cmd.vip && !cmd.governador && !cmd.delegado && !cmd.diretorHP && cmd.donoFavela && !cmd.donoArmas && !cmd.donoDrogas && cmd.donoDesmanche && !cmd.donoLavagem && cmd.ajudanteDesmanche && !cmd.ajudanteLavagem) {
-					if (!server.editor.find(a => a.id === message.author.id) && !message.member.hasPermission('ADMINISTRATOR') && server.cidade.donoFavela !== message.author.id && server.cidade.donoDesmanche !== message.author.id && !server.cidade.ajudanteDesmanche.find((a) => a.id === message.author.id)) {
-						message.reply(`você precisa ter permissão de \`Administrador\` ou ser \`Editor\` ou ser \`Dono da Favela\` ou ser \`Dono do Desmanche\` ou ser \`Ajudante do Desmanche\` do servidor para usar esse comando!`);
 						return;
 					}
 				}

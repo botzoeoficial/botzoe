@@ -80,8 +80,8 @@ module.exports = class Cadastrar extends Command {
 					msg2.delete();
 				} else {
 					collector.stop();
-
 					msg.delete();
+
 					embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie seu **GÊNERO** no chat!\n\n**GÊNEROS DISPONÍVEIS:**\n\`Masculino\`\n\`Feminino\`\n`);
 					embed.addField('Nome Verdadeiro:', msg2.content, true);
 
@@ -110,8 +110,8 @@ module.exports = class Cadastrar extends Command {
 								msg4.delete();
 							} else {
 								collector2.stop();
-
 								msg3.delete();
+
 								embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **IDADE** no chat!`);
 								embed.addField('Gênero:', await this.capitalize(msg4.content), true);
 
@@ -140,8 +140,8 @@ module.exports = class Cadastrar extends Command {
 											msg6.delete();
 										} else {
 											collector3.stop();
-
 											msg5.delete();
+
 											embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **ORIENTAÇÃO SEXUAL** no chat!\n\n**ORIENTAÇÕES SEXUAIS DISPONÍVEIS:**\n\`Não Binário\`\n\`Hétero\`\n\`LGBT\`\n`);
 											embed.addField('Idade:', msg6.content, true);
 
@@ -170,8 +170,8 @@ module.exports = class Cadastrar extends Command {
 														msg8.delete();
 													} else {
 														collector4.stop();
-
 														msg7.delete();
+
 														embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **PLATAFORMA DE JOGO** no chat!\n\n**PLATAFORMAS DISPONÍVEIS:**\n\`Pc\`\n\`Celular\`\n\`Pc/Celular\``);
 														embed.addField('Orientação Sexual:', await this.capitalize(msg8.content), true);
 
@@ -200,8 +200,8 @@ module.exports = class Cadastrar extends Command {
 																	msg10.delete();
 																} else {
 																	collector5.stop();
-
 																	msg9.delete();
+
 																	embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **REGIÃO** no chat!\n\n**REGIÕES DISPONÍVEIS:**\n\`Nordeste\`\n\`Norte\`\n\`Sudeste\`\n\`Sul\`\n\`Centro-Oeste\`\n`);
 																	embed.addField('Plataforma de Jogo:', await this.capitalize(msg10.content), true);
 
@@ -230,8 +230,8 @@ module.exports = class Cadastrar extends Command {
 																				msg12.delete();
 																			} else {
 																				collector6.stop();
-
 																				msg11.delete();
+
 																				embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie seu **ID** no chat!\n`);
 																				embed.addField('Região:', await this.capitalize(msg12.content), true);
 
@@ -260,8 +260,8 @@ module.exports = class Cadastrar extends Command {
 																							msg14.delete();
 																						} else {
 																							collector7.stop();
-
 																							msg13.delete();
+
 																							embed.setDescription(`Muito bem ${author}, agora eu preciso que você envie sua **DATA DE NASCIMENTO** no chat!\n`);
 																							embed.addField('ID:', msg14.content, true);
 
@@ -287,8 +287,8 @@ module.exports = class Cadastrar extends Command {
 																										msg18.delete();
 																									} else {
 																										collector9.stop();
-
 																										msg17.delete();
+
 																										embed.setDescription(`Muito bem ${author}, agora para terminarmos, preciso que você envie no chat seu nome de **RP** (Roleplay), o nome do seu Personagem no Jogo (NickName)!\n`);
 																										embed.addField('Data de Nascimento:', msg18.content, true);
 																										embed.addField('\u2800', '\u2800', true);
@@ -305,11 +305,12 @@ module.exports = class Cadastrar extends Command {
 																													msg19.delete();
 																													return message.channel.send(`${author}, você cancelou o seu **cadastro** com sucesso!`);
 																												} else {
-																													msg20.delete();
 																													collector10.stop();
+																													msg19.delete();
 
 																													if (message.guild.id === '885645282614861854') {
-																														message.member.setNickname(msg20);
+																														message.member.setNickname(String(msg20));
+																														message.member.roles.add('885645282660995086');
 																													}
 
 																													embed.fields = [];
@@ -347,7 +348,6 @@ module.exports = class Cadastrar extends Command {
 																													await msg12.delete();
 																													await msg14.delete();
 																													await msg18.delete();
-																													await msg19.delete();
 																													await msg20.delete();
 																												}
 																											});

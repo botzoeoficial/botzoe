@@ -47,10 +47,10 @@ module.exports = class Investimentobtc extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.cooldown.bitcoin === null) return message.reply(`você não tem um investimento de bitcoin em andamento! Use o comando \`${prefix}investirbtc\`.`);
+		if (user.cooldown.bitcoin <= 0) return message.reply(`você não tem um investimento de bitcoin em andamento! Use o comando \`${prefix}investirbtc\`.`);
 
-		if (new Date(user.cooldown.bitcoin).getTime() - Date.now() > 0) {
-			const faltam = ms(new Date(user.cooldown.bitcoin).getTime() - Date.now());
+		if ((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin) > 0) {
+			const faltam = ms((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin));
 
 			const embed = new ClientEmbed(author)
 				.setTitle('<:btc:908786996535787551> BITCOIN')

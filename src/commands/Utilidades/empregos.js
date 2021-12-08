@@ -56,7 +56,6 @@ module.exports = class Empregos extends Command {
 		}));
 
 		const emojis = {
-			0: '0️⃣',
 			1: '1️⃣',
 			2: '2️⃣',
 			3: '3️⃣',
@@ -66,7 +65,27 @@ module.exports = class Empregos extends Command {
 			7: '7️⃣',
 			8: '8️⃣',
 			9: '9️⃣',
-			10: '1️⃣0️⃣'
+			10: '🔟',
+			11: '1️⃣1️⃣',
+			12: '1️⃣2️⃣',
+			13: '1️⃣3️⃣',
+			14: '1️⃣4️⃣',
+			15: '1️⃣5️⃣',
+			16: '1️⃣6️⃣',
+			17: '1️⃣7️⃣',
+			18: '1️⃣8️⃣',
+			19: '1️⃣9️⃣',
+			20: '2️⃣0️⃣',
+			21: '2️⃣1️⃣',
+			22: '2️⃣2️⃣',
+			23: '2️⃣3️⃣',
+			24: '2️⃣4️⃣',
+			25: '2️⃣5️⃣',
+			26: '2️⃣6️⃣',
+			27: '2️⃣7️⃣',
+			28: '2️⃣8️⃣',
+			29: '2️⃣9️⃣',
+			30: '3️⃣0️⃣'
 		};
 
 		let embedMessage = '';
@@ -92,11 +111,15 @@ module.exports = class Empregos extends Command {
 					}));
 					ce.delete();
 				} else if (user.level < findSelectedEmprego.level) {
-					message.reply(`você precisa ser level **${findSelectedEmprego.level}** para pegar esse emprego!`).then(a => a.delete({
+					msg.delete();
+
+					return message.reply(`você precisa ser level **${findSelectedEmprego.level}** para pegar esse emprego!`).then(a => a.delete({
 						timeout: 5000
 					}));
 				} else if (user.emprego === findSelectedEmprego.trabalho) {
-					message.reply('você já possui esse emprego! Por favor, selecione outro.').then(a => a.delete({
+					msg.delete();
+
+					return message.reply('você já possui esse emprego! Por favor, selecione outro.').then(a => a.delete({
 						timeout: 5000
 					}));
 				} else {

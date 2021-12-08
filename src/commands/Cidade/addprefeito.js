@@ -45,15 +45,17 @@ module.exports = class Addprefeito extends Command {
 			_id: message.guild.id
 		});
 
+		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+
 		const {
 			channel
 		} = server.cidade.impeachment;
 		const msg1 = server.cidade.impeachment.message;
 
 		if (server.cidade.impeachment.existe) {
-			const embedExistes = new ClientEmbed(author)
+			const embedExistes = new ClientEmbed(this.client.user)
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
-				.setDescription(`${author}, você não pode adicionar um novo Prefeito na Cidade pois está rolando um **Impeachment** neste momento.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
+				.setDescription(`${author}, não é possível abrir um Golpe de Estado pois está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
 
 			return message.channel.send(author, embedExistes);
 		}
@@ -64,7 +66,18 @@ module.exports = class Addprefeito extends Command {
 		if (server.cidade.eleicao.existe) {
 			const embedExistes = new ClientEmbed(this.client.user)
 				.setTitle('<:Urna:895779255491911740> | Eleição')
-				.setDescription(`${author}, você não pode adicionar um novo Prefeito na Cidade pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
+				.setDescription(`${author}, não é possível abrir um Golpe de Estado pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
+
+			return message.channel.send(author, embedExistes);
+		}
+
+		const channel3 = server.cidade.golpeEstado.channel;
+		const msg3 = server.cidade.golpeEstado.message;
+
+		if (server.cidade.golpeEstado.existe) {
+			const embedExistes = new ClientEmbed(this.client.user)
+				.setTitle('🕵️ | Golpe de Estado')
+				.setDescription(`${author}, já está rolando um **Golpe de Estado** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel3}/${msg3})`);
 
 			return message.channel.send(author, embedExistes);
 		}

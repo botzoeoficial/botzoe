@@ -279,10 +279,43 @@ module.exports = class Crime extends Command {
 
 					let embedMessage = '';
 
+					const emojis = {
+						1: '1️⃣',
+						2: '2️⃣',
+						3: '3️⃣',
+						4: '4️⃣',
+						5: '5️⃣',
+						6: '6️⃣',
+						7: '7️⃣',
+						8: '8️⃣',
+						9: '9️⃣',
+						10: '🔟',
+						11: '1️⃣1️⃣',
+						12: '1️⃣2️⃣',
+						13: '1️⃣3️⃣',
+						14: '1️⃣4️⃣',
+						15: '1️⃣5️⃣',
+						16: '1️⃣6️⃣',
+						17: '1️⃣7️⃣',
+						18: '1️⃣8️⃣',
+						19: '1️⃣9️⃣',
+						20: '2️⃣0️⃣',
+						21: '2️⃣1️⃣',
+						22: '2️⃣2️⃣',
+						23: '2️⃣3️⃣',
+						24: '2️⃣4️⃣',
+						25: '2️⃣5️⃣',
+						26: '2️⃣6️⃣',
+						27: '2️⃣7️⃣',
+						28: '2️⃣8️⃣',
+						29: '2️⃣9️⃣',
+						30: '3️⃣0️⃣'
+					};
+
 					const embed2 = new ClientEmbed(author)
 						.setTitle('🥷 | Lista de Crimes');
 
-					crimesArray.forEach((eu) => embedMessage += `${eu.position + 1} - ${eu.roubo} - REP: ${eu.rep}\n`);
+					crimesArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - ${eu.roubo} - REP: ${eu.rep}\n`);
 					embed2.setDescription(`*Lista de Crimes que você pode cometer:*\n\n${embedMessage}`);
 
 					message.channel.send(author, embed2).then(async (msg) => {
@@ -313,24 +346,30 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você não conseguiu roubar a Senhorinha, pois ela lhe aplicou um Golpe de KUNG-FU e te dominou. Ela chamou os Policiais e você foi preso.',
-									'{{author}}, você não conseguiu roubar a Senhorinha, pois ela jogou Spray de Pimenta em você que caiu e ficou chorando. Ela chamou os Policiais e você foi preso.',
-									'{{author}}, você não conseguiu roubar a Senhorinha, pois ela lhe encheu de bengalada e você desmaiou. Ela chamou os Policiais e você foi preso.'
+									'{{author}}, você não conseguiu roubar a Senhorinha, pois ela lhe aplicou um Golpe de KUNG-FU e te dominou. Ela chamou os Policiais e você foi preso.\n\n> Você ganhou: **+5** REP.',
+									'{{author}}, você não conseguiu roubar a Senhorinha, pois ela jogou Spray de Pimenta em você que caiu e ficou chorando. Ela chamou os Policiais e você foi preso.\n\n> Você ganhou: **+5** REP.',
+									'{{author}}, você não conseguiu roubar a Senhorinha, pois ela lhe encheu de bengalada e você desmaiou. Ela chamou os Policiais e você foi preso.\n\n> Você ganhou: **+5** REP.'
 								];
 
 								if (randomChance < 30) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 5,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.velha': true,
@@ -338,17 +377,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -374,7 +402,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -387,17 +414,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 1) {
 								sim.stop();
@@ -412,23 +428,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você não conseguiu roubar o Frentista, na hora da fuga sua moto Pifou e o Frentista te encheu de vassourada. Ele chamou os Policiais e você foi preso.',
-									'{{author}}, você não conseguiu roubar o Frentista, na hora da fuga você precisou abastecer o seu veículo em outro posto, mas a Gasolina estava muito cara e você ficou sem nada.'
+									'{{author}}, você não conseguiu roubar o Frentista, na hora da fuga sua moto Pifou e o Frentista te encheu de vassourada. Ele chamou os Policiais e você foi preso.\n\n> Você ganhou: **+10** REP.',
+									'{{author}}, você não conseguiu roubar o Frentista, na hora da fuga você precisou abastecer o seu veículo em outro posto, mas a Gasolina estava muito cara e você ficou sem nada.\n\n> Você ganhou: **+10** REP.'
 								];
 
 								if (randomChance < 40) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 10,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.frentista': true,
@@ -436,17 +458,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -472,7 +483,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -485,17 +495,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 2) {
 								sim.stop();
@@ -510,23 +509,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, as Jóias que você roubou tinha um dispositivo rastreador, você foi rastreado e Preso.',
-									'{{author}}, você foi pego tentando vender uns anéis para um policial à paisana e foi Preso.'
+									'{{author}}, as Jóias que você roubou tinha um dispositivo rastreador, você foi rastreado e Preso.\n\n> Você ganhou: **+20** REP.',
+									'{{author}}, você foi pego tentando vender uns anéis para um policial à paisana e foi Preso.\n\n> Você ganhou: **+20** REP.'
 								];
 
 								if (randomChance < 50) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 20,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.joalheria': true,
@@ -534,17 +539,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -570,7 +564,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -583,17 +576,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 3) {
 								sim.stop();
@@ -608,23 +590,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você não conseguiu roubar o Agiota, pois ele estava armado e lhe pegou no flagra, você correu mas acabou sendo parado pela polícia com porte ilegal de armas e foi Preso.',
-									'{{author}}, você não conseguiu roubar o agiota, os Capangas dele viram sua ação e te bateram até você desmaiar, eles te denunciaram para a polícia e você foi Preso.'
+									'{{author}}, você não conseguiu roubar o Agiota, pois ele estava armado e lhe pegou no flagra, você correu mas acabou sendo parado pela polícia com porte ilegal de armas e foi Preso.\n\n> Você ganhou: **+30** REP.',
+									'{{author}}, você não conseguiu roubar o agiota, os Capangas dele viram sua ação e te bateram até você desmaiar, eles te denunciaram para a polícia e você foi Preso.\n\n> Você ganhou: **+30** REP.'
 								];
 
 								if (randomChance < 60) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 30,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.agiota': true,
@@ -632,17 +620,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -668,7 +645,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -681,17 +657,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 4) {
 								sim.stop();
@@ -706,23 +671,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, a Casa lotérica tinha um sistema anti-roubo e fechou as portas e te trancou la dentro. A polícia chegou e você foi Preso.',
-									'{{author}}, você roubou a Casa Lotérica, mas na fuga você encontrou uma bicicleta e saiu pedalando, mas como não tinha rodinhas você caiu e foi preso pela polícia.'
+									'{{author}}, a Casa lotérica tinha um sistema anti-roubo e fechou as portas e te trancou la dentro. A polícia chegou e você foi Preso.\n\n> Você ganhou: **+40** REP.',
+									'{{author}}, você roubou a Casa Lotérica, mas na fuga você encontrou uma bicicleta e saiu pedalando, mas como não tinha rodinhas você caiu e foi preso pela polícia.\n\n> Você ganhou: **+40** REP.'
 								];
 
 								if (randomChance < 70) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 40,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.casaLoterica': true,
@@ -730,17 +701,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -766,7 +726,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -779,17 +738,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 5) {
 								sim.stop();
@@ -804,23 +752,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você perdeu todo o dinheiro que roubou apostando no Brazino777 e ficou sem nada.',
-									'{{author}}, você ficou entretido com os vídeos do Brazino777 e acabou sendo desconectado, rastreado e Preso pela polícia.'
+									'{{author}}, você perdeu todo o dinheiro que roubou apostando no Brazino777 e ficou sem nada.\n\n> Você ganhou: **+50** REP.',
+									'{{author}}, você ficou entretido com os vídeos do Brazino777 e acabou sendo desconectado, rastreado e Preso pela polícia.\n\n> Você ganhou: **+50** REP.'
 								];
 
 								if (randomChance < 80) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 50,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.brazino': true,
@@ -828,17 +782,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -864,7 +807,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -877,17 +819,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 6) {
 								sim.stop();
@@ -902,23 +833,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você tentou hackear o Facebook, mas o Mark Zuckerberg percebeu e acabou lhe Hackeando, ele logo te rastreou e mandou a polícia atrás de você e acabou sendo Preso.',
-									'{{author}}, você tentou hackear o Facebook, mas o seu computador da Xuxa não conseguiu Rodar os programas de Camuflagem de IP e queimou, você foi descoberto e Preso.'
+									'{{author}}, você tentou hackear o Facebook, mas o Mark Zuckerberg percebeu e acabou lhe Hackeando, ele logo te rastreou e mandou a polícia atrás de você e acabou sendo Preso.\n\n> Você ganhou: **+60** REP.',
+									'{{author}}, você tentou hackear o Facebook, mas o seu computador da Xuxa não conseguiu Rodar os programas de Camuflagem de IP e queimou, você foi descoberto e Preso.\n\n> Você ganhou: **+60** REP.'
 								];
 
 								if (randomChance < 90) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 60,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.facebook': true,
@@ -926,17 +863,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -962,7 +888,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -975,17 +900,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 7) {
 								sim.stop();
@@ -1000,23 +914,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, a Policía Federal ja estava de olho em você, e quando você começou a hackear o banco ela invadiu a sua casa e te levou preso.',
-									'{{author}}, seu conhecimento não era tão bom para invadir o sistema do banco, você foi localizado e preso.'
+									'{{author}}, a Policía Federal ja estava de olho em você, e quando você começou a hackear o banco ela invadiu a sua casa e te levou preso.\n\n> Você ganhou: **+70** REP.',
+									'{{author}}, seu conhecimento não era tão bom para invadir o sistema do banco, você foi localizado e preso.\n\n> Você ganhou: **+70** REP.'
 								];
 
 								if (randomChance < 95) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 70,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.bancoCentral': true,
@@ -1024,17 +944,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -1060,7 +969,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -1073,17 +981,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 8) {
 								sim.stop();
@@ -1098,23 +995,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você é muito burro e se perdeu nos andares e escadas rolantes do Shopping, não achou a saída e a Polícia chegou e te prendeu.',
-									'{{author}}, você foi pego pelas câmeras de segurança tentando descer a escada rolante que estava subindo, os seguranças chegaram e você foi preso.'
+									'{{author}}, você é muito burro e se perdeu nos andares e escadas rolantes do Shopping, não achou a saída e a Polícia chegou e te prendeu.\n\n> Você ganhou: **+80** REP.',
+									'{{author}}, você foi pego pelas câmeras de segurança tentando descer a escada rolante que estava subindo, os seguranças chegaram e você foi preso.\n\n> Você ganhou: **+80** REP.'
 								];
 
 								if (randomChance < 97) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 80,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.shopping': true,
@@ -1122,17 +1025,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -1158,7 +1050,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -1171,17 +1062,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							} else if (findSelectedEvento.position === 9) {
 								sim.stop();
@@ -1196,23 +1076,29 @@ module.exports = class Crime extends Command {
 								];
 
 								const msgLose = [
-									'{{author}}, você não conseguiu roubar o Banco, os seguranças do banco perceberam que sua arma era de brinquedo e você foi preso.',
-									'{{author}}, você conseguiu roubar o banco, mas na perseguição você errou o caminho e foi parar na rua da Delegacia, onde te cercaram e você foi preso.'
+									'{{author}}, você não conseguiu roubar o Banco, os seguranças do banco perceberam que sua arma era de brinquedo e você foi preso.\n\n> Você ganhou: **+90** REP.',
+									'{{author}}, você conseguiu roubar o banco, mas na perseguição você errou o caminho e foi parar na rua da Delegacia, onde te cercaram e você foi preso.\n\n> Você ganhou: **+90** REP.'
 								];
 
 								if (randomChance < 99) {
+									const user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									const embed = new ClientEmbed(author)
 										.setTitle('Crime Cometido')
 										.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
+											'crime.reputacao': user.crime.reputacao + 90,
+											'crime.feito': user.crime.feito + 1,
 											'prisao.isPreso': true,
 											'prisao.tempo': Date.now(),
 											'prisao.banco': true,
@@ -1220,17 +1106,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 
 									setTimeout(async () => {
 										await this.client.database.users.findOneAndUpdate({
@@ -1256,7 +1131,6 @@ module.exports = class Crime extends Command {
 										.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
 									msg.edit(author, embed);
-									ce.delete();
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -1269,17 +1143,6 @@ module.exports = class Crime extends Command {
 											'cooldown.crime': Date.now()
 										}
 									});
-
-									setTimeout(async () => {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$set: {
-												'cooldown.crime': 0
-											}
-										});
-									}, 600000);
 								}
 							}
 						});

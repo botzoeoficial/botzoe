@@ -1,9 +1,14 @@
+/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
 /* eslint-disable max-nested-callbacks */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class BlackList extends Command {
 
@@ -57,10 +62,43 @@ module.exports = class BlackList extends Command {
 
 		let embedMessage = '';
 
+		const emojis = {
+			1: '1️⃣',
+			2: '2️⃣',
+			3: '3️⃣',
+			4: '4️⃣',
+			5: '5️⃣',
+			6: '6️⃣',
+			7: '7️⃣',
+			8: '8️⃣',
+			9: '9️⃣',
+			10: '🔟',
+			11: '1️⃣1️⃣',
+			12: '1️⃣2️⃣',
+			13: '1️⃣3️⃣',
+			14: '1️⃣4️⃣',
+			15: '1️⃣5️⃣',
+			16: '1️⃣6️⃣',
+			17: '1️⃣7️⃣',
+			18: '1️⃣8️⃣',
+			19: '1️⃣9️⃣',
+			20: '2️⃣0️⃣',
+			21: '2️⃣1️⃣',
+			22: '2️⃣2️⃣',
+			23: '2️⃣3️⃣',
+			24: '2️⃣4️⃣',
+			25: '2️⃣5️⃣',
+			26: '2️⃣6️⃣',
+			27: '2️⃣7️⃣',
+			28: '2️⃣8️⃣',
+			29: '2️⃣9️⃣',
+			30: '3️⃣0️⃣'
+		};
+
 		const embed = new ClientEmbed(author)
 			.setTitle('🚫 | BlackList');
 
-		eventosArray.forEach((eu) => embedMessage += `${eu.position + 1} **Usuário:** ${eu.nick} | **ID:** ${eu.id}\n`);
+		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Usuário:** ${eu.nick} | **ID:** ${eu.id}\n`);
 		embed.setDescription(!server.blacklist.length ? 'Não há usuários cadastrados na blacklist no momento.' : `**DIGITE A POSIÇÃO DO USUÁRIO NO CHAT PARA VER INFORMAÇÕES SOBRE ELE!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {
@@ -91,15 +129,32 @@ module.exports = class BlackList extends Command {
 						.addField('💵 Saldo:', `R$${Utils.numberFormat(findSelectedEvento.saldo)},00`)
 						.addField('🗒️ Motivo:', findSelectedEvento.motivo);
 
-					msg.edit(author, embed).then((msg1) => {
-						msg1.react('🗑️');
+					const buttonLixeira = new MessageButton().setStyle('blurple').setEmoji('🗑️').setID('lixeira');
+					const botoes = new MessageActionRow().addComponents([buttonLixeira]);
 
-						const trash = msg1.createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === author.id, {
-							max: 1
+					msg.edit(author, {
+						embed: embed,
+						components: [botoes]
+					}).then(async (msg1) => {
+						const collectorBotoes = msg1.createButtonCollector((button) => button.clicker.user.id === author.id, {
+							time: 60000
 						});
 
-						trash.on('collect', async () => {
-							msg.delete();
+						collectorBotoes.on('collect', async (b) => {
+							if (b.id === 'lixeira') {
+								b.reply.defer();
+
+								return msg.delete();
+							}
+						});
+
+						collectorBotoes.on('end', async (collected, reason) => {
+							if (reason === 'time') {
+								return msg.edit(author, {
+									embed: embed,
+									components: []
+								});
+							}
 						});
 					});
 				}

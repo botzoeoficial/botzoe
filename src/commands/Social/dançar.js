@@ -4,7 +4,10 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
-const Emojis = require('../../utils/Emojis');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Dançar extends Command {
 
@@ -87,72 +90,68 @@ module.exports = class Dançar extends Command {
 				}))
 				.setDescription(`${member}, o(a) usuário(a) ${author} está te chamando para dançar!!\n\nVocê aceita?\n✅ - Sim\n❌ - Não`);
 
-			message.channel.send(member, embed).then(async (msg) => {
-				await msg.react(Emojis.Okay);
-				await msg.react(Emojis.Error);
+			const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
+			const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+			const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-				const sim = msg.createReactionCollector((r, u) => r.emoji.name === Emojis.Okay && u.id === member.id, {
+			message.channel.send(author, {
+				embed: embed,
+				components: [botoes]
+			}).then(async (msg) => {
+				const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === member.id, {
 					time: 60000,
 					max: 1
 				});
 
-				const não = msg.createReactionCollector((r, u) => r.emoji.name === Emojis.Error && u.id === member.id, {
-					time: 60000,
-					max: 1
+				collectorBotoes.on('collect', async (b) => {
+					if (b.id === 'aceitar') {
+						b.reply.defer();
+
+						const dancas = require('../../json/dancar.json');
+
+						const random = Math.floor(Math.random() * dancas.length);
+
+						const embedSim = new ClientEmbed(author)
+							.setDescription(`**${author} dançou com ${member}!**`)
+							.setImage(dancas[random]);
+
+						message.channel.send(`${author} e ${member}`, embedSim);
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								'cooldown.dancar': Date.now()
+							}
+						});
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								'humores.estressado': user.humores.estressado + 30,
+								'humores.bravo': user.humores.bravo + 30,
+								'humores.fome': user.humores.fome - 40,
+								'humores.sede': user.humores.sede - 20,
+								'humores.desanimado': user.humores.desanimado + 20,
+								'humores.cansado': user.humores.cansado - 40,
+								'humores.solitario': user.humores.solitario + 50,
+								'humores.triste': user.humores.triste + 40
+							}
+						});
+					} else if (b.id === 'negar') {
+						b.reply.defer();
+
+						msg.delete();
+
+						return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de dança!`);
+					}
 				});
 
-				sim.on('collect', async () => {
-					sim.stop();
-					não.stop();
-
-					const dancas = require('../../json/dancar.json');
-
-					const random = Math.floor(Math.random() * dancas.length);
-
-					const embedSim = new ClientEmbed(author)
-						.setDescription(`**${author} dançou com ${member}!**`)
-						.setImage(dancas[random]);
-
-					message.channel.send(`${author} e ${member}`, embedSim);
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.dancar': Date.now()
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.estressado': user.humores.estressado + 30,
-							'humores.bravo': user.humores.bravo + 30,
-							'humores.fome': user.humores.fome - 40,
-							'humores.sede': user.humores.sede - 20,
-							'humores.desanimado': user.humores.desanimado + 20,
-							'humores.cansado': user.humores.cansado - 40,
-							'humores.solitario': user.humores.solitario + 50,
-							'humores.triste': user.humores.triste + 40
-						}
-					});
-				});
-
-				não.on('collect', async () => {
-					sim.stop();
-					não.stop();
-					msg.delete();
-
-					return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de dança!`);
-				});
-
-				sim.on('end', async (collected, reason) => {
+				collectorBotoes.on('end', async (collected, reason) => {
 					if (reason === 'time') {
-						sim.stop();
-						não.stop();
 						msg.delete();
 
 						return message.channel.send(`${author}, o(a) usuário(a) ${member} demorou demais para responder seu pedido! Use o comando novamente!`);

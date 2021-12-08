@@ -251,17 +251,6 @@ module.exports = class Roubarveículo extends Command {
 							'cooldown.roubarVeiculo': Date.now()
 						}
 					});
-
-					setTimeout(async () => {
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'cooldown.roubarVeiculo': 0
-							}
-						});
-					}, 300000);
 				} else if (randomChance > 50 && randomChance < 91) {
 					const randomFrases = [
 						'você ficou sem gasolina e não tinha dinheiro para abastecer, a polícia chegou e te prendeu.',
@@ -294,7 +283,6 @@ module.exports = class Roubarveículo extends Command {
 							guildId: message.guild.id
 						}, {
 							$set: {
-								'cooldown.roubarVeiculo': 0,
 								'prisao.isPreso': false,
 								'prisao.tempo': 0,
 								'prisao.roubarVeiculo': false

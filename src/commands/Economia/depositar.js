@@ -59,7 +59,7 @@ module.exports = class Depositar extends Command {
 
 		if (parseInt(btc) <= 0) return message.reply('a quantia a ser depositada precisa ser maior que **0**.');
 
-		if (isNaN(btc)) message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) return message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
 
 		if (user.saldo <= 0) return message.reply('você não tem dinheiro para depositar no banco.');
 

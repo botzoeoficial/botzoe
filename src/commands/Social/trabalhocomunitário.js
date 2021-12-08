@@ -48,11 +48,11 @@ module.exports = class Trabalhocomunitario extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.prisao.isPreso) return message.reply('você não está preso!');
+		if (!user.prisao.isPreso) return message.reply('você não está preso(a)!');
 
-		if (user.prisao.crime && user.prisao.isPreso) return message.reply(`você foi preso pelo comando \`${prefix}crime\`, então você não pode usar esse comando!`);
+		if (user.prisao.isPreso && user.prisao.crime && user.prisao.velha || user.prisao.isPreso && user.prisao.crime && user.prisao.frentista) return message.reply(`você foi preso pelo \`${prefix}crime\` portanto você não pode usar esse comando!`);
 
-		if (user.prisao.isPreso && user.prisao.roubarVeiculo) return message.reply(`você foi preso pelo comando \`${prefix}roubar-veículo\`, então você não pode usar esse comando!`);
+		if (user.prisao.isPreso && user.prisao.roubarVeiculo) return message.reply(`você foi preso pelo \`${prefix}roubarcarro\` portanto você não pode usar esse comando!`);
 
 		const timeout = 3600000;
 
@@ -75,7 +75,8 @@ module.exports = class Trabalhocomunitario extends Command {
 				guildId: message.guild.id
 			}, {
 				$set: {
-					'prisao.tempo': user.prisao.tempo - 15 * 60 * 1000
+					'prisao.tempo': user.prisao.tempo - 15 * 60 * 1000,
+					'cooldown.trabalhoComunitario': Date.now()
 				}
 			});
 		}

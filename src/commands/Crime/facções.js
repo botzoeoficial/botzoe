@@ -6,6 +6,10 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Facções extends Command {
 
@@ -59,10 +63,43 @@ module.exports = class Facções extends Command {
 
 		let embedMessage = '';
 
+		const emojis = {
+			1: '1️⃣',
+			2: '2️⃣',
+			3: '3️⃣',
+			4: '4️⃣',
+			5: '5️⃣',
+			6: '6️⃣',
+			7: '7️⃣',
+			8: '8️⃣',
+			9: '9️⃣',
+			10: '🔟',
+			11: '1️⃣1️⃣',
+			12: '1️⃣2️⃣',
+			13: '1️⃣3️⃣',
+			14: '1️⃣4️⃣',
+			15: '1️⃣5️⃣',
+			16: '1️⃣6️⃣',
+			17: '1️⃣7️⃣',
+			18: '1️⃣8️⃣',
+			19: '1️⃣9️⃣',
+			20: '2️⃣0️⃣',
+			21: '2️⃣1️⃣',
+			22: '2️⃣2️⃣',
+			23: '2️⃣3️⃣',
+			24: '2️⃣4️⃣',
+			25: '2️⃣5️⃣',
+			26: '2️⃣6️⃣',
+			27: '2️⃣7️⃣',
+			28: '2️⃣8️⃣',
+			29: '2️⃣9️⃣',
+			30: '3️⃣0️⃣'
+		};
+
 		const embed = new ClientEmbed(author)
 			.setTitle('🎭 | Facções do Servidor');
 
-		eventosArray.forEach((eu) => embedMessage += `${eu.position + 1} **Facção:** ${eu.nome}\n`);
+		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Facção:** ${eu.nome}\n`);
 		embed.setDescription(!server.faccoes.length ? 'Não há Facções no Servidor no momento.' : `Lista de Facções do Servidor **${message.guild.name}**\n\n${embedMessage}\nSelecione o Número da Facção para saber mais, ou digite \`0\` para sair.`);
 
 		message.channel.send(author, embed).then((msg) => {
@@ -109,95 +146,101 @@ module.exports = class Facções extends Command {
 							.addField('\u2800', '\u2800')
 							.addField('Membros:', findSelectedEvento.membros.map((a) => `<@${a}>`).join('\n'));
 
-						msg.edit(author, embed).then(async (msg3) => {
-							await msg3.react('⬅️');
+						const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
+						const botoes = new MessageActionRow().addComponents([buttonVoltar]);
 
-							const sim2 = msg3.createReactionCollector((re, ue) => re.emoji.name === '⬅️' && ue.id === author.id, {
+						msg.edit(author, {
+							embed: embed,
+							components: [botoes]
+						}).then(async (msg3) => {
+							const collectorBotoes = msg3.createButtonCollector((button) => button.clicker.user.id === author.id, {
 								time: 60000
 							});
 
-							sim2.on('collect', async () => {
-								if (page < 0) {
-									page = 0;
-								} else {
-									page -= 1;
-								}
+							collectorBotoes.on('collect', async (b) => {
+								if (b.id === 'voltar') {
+									b.reply.defer();
 
-								const eventosArray2 = server.faccoes.map((value, index) => ({
-									nome: value.nome,
-									criado: value.criado,
-									membros: value.membros,
-									level: value.level,
-									money: value.money,
-									position: index
-								}));
+									if (page < 0) {
+										page = 0;
+									} else {
+										page -= 1;
+									}
 
-								let embedMessage2 = '';
+									const eventosArray2 = server.faccoes.map((value, index) => ({
+										nome: value.nome,
+										criado: value.criado,
+										membros: value.membros,
+										level: value.level,
+										money: value.money,
+										position: index
+									}));
 
-								const embed2 = new ClientEmbed(author)
-									.setTitle('🎭 | Facções do Servidor');
+									let embedMessage2 = '';
 
-								eventosArray2.forEach((eu) => embedMessage2 += `${eu.position + 1} **Facção:** ${eu.nome}\n`);
-								embed2.setDescription(!server.faccoes.length ? 'Não há Facções no Servidor no momento.' : `Lista de Facções do Servidor **${message.guild.name}**\n\n${embedMessage}\nSelecione o Número da Facção para saber mais, ou digite \`0\` para sair.`);
+									const embed2 = new ClientEmbed(author)
+										.setTitle('🎭 | Facções do Servidor');
 
-								msg.edit(author, embed2).then(async (msg4) => {
-									const collector3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
-										time: 300000
-									});
+									eventosArray2.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} **Facção:** ${eu.nome}\n`);
+									embed2.setDescription(!server.faccoes.length ? 'Não há Facções no Servidor no momento.' : `Lista de Facções do Servidor **${message.guild.name}**\n\n${embedMessage}\nSelecione o Número da Facção para saber mais, ou digite \`0\` para sair.`);
 
-									collector3.on('collect', async (ce3) => {
-										if (Number(ce3.content) === 0) {
-											msg4.delete();
-											collector3.stop();
-											return message.channel.send(`${author}, seleção cancelada com sucesso!`);
-										} else {
-											const selected2 = Number(ce3.content - 1);
-											const findSelectedEvento2 = eventosArray2.find((xis) => xis.position === selected2);
+									msg.edit(author, embed2).then(async (msg4) => {
+										const collector3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+											time: 300000
+										});
 
-											if (!findSelectedEvento2) {
-												message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-													timeout: 5000
-												}));
-												ce3.delete();
-											} else {
-												page += 1;
+										collector3.on('collect', async (ce3) => {
+											if (Number(ce3.content) === 0) {
+												msg4.delete();
 												collector3.stop();
-												ce3.delete();
+												return message.channel.send(`${author}, seleção cancelada com sucesso!`);
+											} else {
+												const selected2 = Number(ce3.content - 1);
+												const findSelectedEvento2 = eventosArray2.find((xis) => xis.position === selected2);
 
-												embed2
-													.setDescription(`**Você selecionou a Facção:** \`${findSelectedEvento.nome}\``)
-													.addField('Nome:', findSelectedEvento.nome, true)
-													.addField('Data de Criação:', findSelectedEvento.criado, true)
-													.addField('\u2800', '\u2800', true)
-													.addField('Qtde Membros:', findSelectedEvento.membros.length, true)
-													.addField('Level:', findSelectedEvento.level, true)
-													.addField('\u2800', '\u2800', true)
-													.addField('Dinheiro em caixa:', `R$${Utils.numberFormat(findSelectedEvento.money)},00`)
-													.addField('\u2800', '\u2800')
-													.addField('Membros:', findSelectedEvento.membros.map((a) => `<@${a}>`).join('\n'));
+												if (!findSelectedEvento2) {
+													message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
+														timeout: 5000
+													}));
+													ce3.delete();
+												} else {
+													page += 1;
+													collector3.stop();
+													ce3.delete();
 
-												msg.edit(author, embed2);
+													embed2
+														.setDescription(`**Você selecionou a Facção:** \`${findSelectedEvento.nome}\``)
+														.addField('Nome:', findSelectedEvento.nome, true)
+														.addField('Data de Criação:', findSelectedEvento.criado, true)
+														.addField('\u2800', '\u2800', true)
+														.addField('Qtde Membros:', findSelectedEvento.membros.length, true)
+														.addField('Level:', findSelectedEvento.level, true)
+														.addField('\u2800', '\u2800', true)
+														.addField('Dinheiro em caixa:', `R$${Utils.numberFormat(findSelectedEvento.money)},00`)
+														.addField('\u2800', '\u2800')
+														.addField('Membros:', findSelectedEvento.membros.map((a) => `<@${a}>`).join('\n'));
+
+													msg.edit(author, embed2);
+												}
 											}
-										}
-									});
+										});
 
-									collector3.on('end', async (collected, reason) => {
-										if (reason === 'time') {
-											collector3.stop();
+										collector3.on('end', async (collected, reason) => {
+											if (reason === 'time') {
+												collector3.stop();
 
-											return message.channel.send(`${author}, você demorou demais para escolher a Facção. Use o comando novamente!`).then((a) => a.delete({
-												timeout: 6000
-											}));
-										}
+												return message.channel.send(`${author}, você demorou demais para escolher a Facção. Use o comando novamente!`).then((a) => a.delete({
+													timeout: 6000
+												}));
+											}
+										});
 									});
-								});
+								}
 							});
 
-							sim2.on('end', async (collected, reason) => {
+							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
-									sim2.stop();
-
-									return msg3.reactions.removeAll();
+									return msg.delete();
 								}
 							});
 						});
@@ -207,12 +250,8 @@ module.exports = class Facções extends Command {
 
 			sim.on('end', (collected, reason) => {
 				if (reason === 'time') {
-					msg.delete();
-					message.reply(`você demorou demais para escolher a Facção. Use o comando novamente!`).then((a) => a.delete({
-						timeout: 6000
-					}));
 					sim.stop();
-					return;
+					return msg.delete();
 				}
 			});
 		});

@@ -53,6 +53,8 @@ const client = new BotTutorial({
 	partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER']
 });
 
+require('discord-buttons')(client);
+
 const onLoad = async () => {
 	klaw('src/commands').on('data', (item) => {
 		const cmdFile = path.parse(item.path);

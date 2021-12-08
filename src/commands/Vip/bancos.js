@@ -8,6 +8,10 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Bancos extends Command {
 
@@ -150,87 +154,97 @@ module.exports = class Bancos extends Command {
 									.addField('⏰ Hora:', findSelectedEvento.hora)
 									.addField('🔎 Status:', findSelectedEvento.status);
 
-								msg.edit(author, embed).then(async (msg3) => {
-									await msg3.react('⬅️');
+								const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
+								const botoes = new MessageActionRow().addComponents([buttonVoltar]);
 
-									const sim = msg3.createReactionCollector((r, u) => r.emoji.name === '⬅️' && u.id === author.id, {
+								msg.edit(author, {
+									embed: embed,
+									components: [botoes]
+								}).then(async (msg3) => {
+									const collectorBotoes = msg3.createButtonCollector((button) => button.clicker.user.id === author.id, {
 										time: 60000
 									});
 
-									sim.on('collect', async () => {
-										page -= 1;
+									collectorBotoes.on('collect', async (b) => {
+										if (b.id === 'voltar') {
+											b.reply.defer();
 
-										const usersData2 = await this.client.database.guilds.find({});
+											if (page < 0) {
+												page = 0;
+											} else {
+												page -= 1;
+											}
 
-										let embedMessage3 = '';
+											const usersData2 = await this.client.database.guilds.find({});
 
-										embedMessage3 += `${usersData2[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `[${i}] **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
+											let embedMessage3 = '';
 
-										embed.fields = [];
-										embed.setDescription(`**USUÁRIOS DA DATA: ${ce.content}**\n\n${embedMessage3}`);
+											embedMessage3 += `${usersData2[0].banco.filter((u) => u.dia === ce.content).map((a, i) => `[${i}] **ID:** ${a.id} | **Hora:** ${a.hora} | **Valor:** R$${Utils.numberFormat(Number(a.valor))},00`).sort().join('\n')}`;
 
-										msg.edit(author, embed).then(async (msg4) => {
-											const collector3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
-												time: 60000
+											embed.fields = [];
+											embed.setDescription(`**USUÁRIOS DA DATA: ${ce.content}**\n\n${embedMessage3}`);
+
+											msg.edit(author, embed).then(async (msg4) => {
+												const collector3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+													time: 60000
+												});
+
+												collector3.on('collect', async (ce3) => {
+													const datesMap2 = usersData[0].banco.filter((u) => u.dia === ce.content).map((a) => a).sort();
+
+													const mapUsers2 = datesMap2.map((value, index) => ({
+														nick: value.nick,
+														id: value.id,
+														valor: value.valor,
+														dia: value.dia,
+														hora: value.hora,
+														status: value.status,
+														timestamps: value.timestamps,
+														position: index
+													})).sort();
+
+													const selected2 = Number(ce3.content);
+													const findSelectedEvento2 = mapUsers2.find((xis) => xis.position === selected2);
+
+													if (!findSelectedEvento2) {
+														message.channel.send(`${author}, este número não existe! Por favor, envie o número novamente.`).then(a => a.delete({
+															timeout: 5000
+														}));
+														ce3.delete();
+													} else {
+														ce3.delete();
+														collector3.stop();
+
+														embed
+															.setTitle(`🏦 | Usuário: ${findSelectedEvento2.nick}`)
+															.setDescription(`Informações sobre o usuário <@${findSelectedEvento2.id}>:`)
+															.addField('👤 Nick:', findSelectedEvento2.nick)
+															.addField('🆔 ID:', findSelectedEvento2.id)
+															.addField('💵 Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento2.valor))},00`)
+															.addField('🗓️ Dia:', findSelectedEvento2.dia)
+															.addField('⏰ Hora:', findSelectedEvento2.hora)
+															.addField('🔎 Status:', findSelectedEvento2.status);
+
+														msg.edit(author, embed);
+													}
+												});
+
+												collector3.on('end', async (collected, reason) => {
+													if (reason === 'time') {
+														collector3.stop();
+
+														return message.channel.send(`${author}, você demorou demais para escolher o usuário! Use o comando novamente.`).then((a) => a.delete({
+															timeout: 6000
+														}));
+													}
+												});
 											});
-
-											collector3.on('collect', async (ce3) => {
-												const datesMap2 = usersData[0].banco.filter((u) => u.dia === ce.content).map((a) => a).sort();
-
-												const mapUsers2 = datesMap2.map((value, index) => ({
-													nick: value.nick,
-													id: value.id,
-													valor: value.valor,
-													dia: value.dia,
-													hora: value.hora,
-													status: value.status,
-													timestamps: value.timestamps,
-													position: index
-												})).sort();
-
-												const selected2 = Number(ce3.content);
-												const findSelectedEvento2 = mapUsers2.find((xis) => xis.position === selected2);
-
-												if (!findSelectedEvento2) {
-													message.channel.send(`${author}, este número não existe! Por favor, envie o número novamente.`).then(a => a.delete({
-														timeout: 5000
-													}));
-													ce3.delete();
-												} else {
-													ce3.delete();
-													collector3.stop();
-
-													embed
-														.setTitle(`🏦 | Usuário: ${findSelectedEvento2.nick}`)
-														.setDescription(`Informações sobre o usuário <@${findSelectedEvento2.id}>:`)
-														.addField('👤 Nick:', findSelectedEvento2.nick)
-														.addField('🆔 ID:', findSelectedEvento2.id)
-														.addField('💵 Valor:', `R$${Utils.numberFormat(Number(findSelectedEvento2.valor))},00`)
-														.addField('🗓️ Dia:', findSelectedEvento2.dia)
-														.addField('⏰ Hora:', findSelectedEvento2.hora)
-														.addField('🔎 Status:', findSelectedEvento2.status);
-
-													msg.edit(author, embed);
-												}
-											});
-
-											collector3.on('end', async (collected, reason) => {
-												if (reason === 'time') {
-													collector3.stop();
-
-													return message.channel.send(`${author}, você demorou demais para escolher o usuário! Use o comando novamente.`).then((a) => a.delete({
-														timeout: 6000
-													}));
-												}
-											});
-										});
+										}
 									});
 
-									sim.on('end', async (collected, reason) => {
+									collectorBotoes.on('end', async (collected, reason) => {
 										if (reason === 'time') {
-											sim.stop();
-
-											return msg3.reactions.removeAll();
+											return msg.delete();
 										}
 									});
 								});

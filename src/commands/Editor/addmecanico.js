@@ -22,7 +22,7 @@ module.exports = class Addmecanico extends Command {
 		this.adm = true;
 
 		this.vip = false;
-		this.governador = false;
+		this.governador = true;
 		this.delegado = false;
 		this.diretorHP = false;
 		this.donoFavela = false;

@@ -1,0 +1,38 @@
+[
+    {
+        "bau": "300",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/899946786247028756/barraco_favela.gif?width=517&height=603",
+        "nome": "Barraco na Favela",
+        "valor": 80000
+    },
+    {
+        "bau": "500",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/899946964634963968/kitnet.gif",
+        "nome": "KitNet",
+        "valor": 350000
+    },
+    {
+        "bau": "900",
+        "gif": "https://images-ext-2.discordapp.net/external/mtujPU8y9sPqbMItrNFKm9ftxc4r-yE-DTspOz79JCo/https/media.discordapp.net/attachments/887089600726720512/899946839644700702/casa_gif.gif",
+        "nome": "Casa",
+        "valor": 600000
+    },
+    {
+        "bau": "1600",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/899946714214047764/apartamento_1.gif",
+        "nome": "Apartamento",
+        "valor": 1200000
+    },
+    {
+        "bau": "2200",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/899946879561916416/Cobertura_praia_1.jpg",
+        "nome": "Cobertura de Frente a Praia",
+        "valor": 1950000
+    },
+    {
+        "bau": "4000",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/899946984742486026/Mansao.gif",
+        "nome": "Mansão",
+        "valor": 3100000
+    }
+]

@@ -182,7 +182,31 @@ module.exports = class Salario extends Command {
 						saldo: user.saldo += 15000
 					}
 				});
+			} else if (server.cidade.ajudanteDesmanche.find((a) => a.id === author.id)) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$15.000,00\``);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 15000
+					}
+				});
 			} else if (server.cidade.donoLavagem === author.id) {
+				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$15.000,00\``);
+
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$set: {
+						'cooldown.salario': Date.now(),
+						saldo: user.saldo += 15000
+					}
+				});
+			} else if (server.cidade.ajudanteLavagem.find((a) => a.id === author.id)) {
 				embed.setDescription(`✅ | Você recebeu seu pagamento diário.\n\n💵 \`R$15.000,00\``);
 
 				await this.client.database.users.findOneAndUpdate({

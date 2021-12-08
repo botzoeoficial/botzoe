@@ -11,7 +11,7 @@ module.exports = class Remedio extends Command {
 		this.client = client;
 
 		this.name = 'remédio';
-		this.category = 'Economia';
+		this.category = 'Social';
 		this.description = 'Cure-se para usar alguns comandos!';
 		this.usage = 'remédio';
 		this.aliases = ['remedio', 'tomar-remedio'];

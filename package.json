@@ -4,7 +4,8 @@
   "description": "Bot feito para a TD2CÚPULA",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
   },
   "author": "NathanDark#3530",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "discord-cars": "^3.0.1",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.4.0",
     "klaw": "^3.0.0",
@@ -32,6 +34,8 @@
   },
   "devDependencies": {
     "eslint": "^7.32.0",
-    "eslint-config-tesseract": "github:MenuDocs/eslint-config-tesseract"
-  }
+    "eslint-config-tesseract": "github:MenuDocs/eslint-config-tesseract",
+    "node": "^14.17.4"
+  },
+  "keywords": []
 }

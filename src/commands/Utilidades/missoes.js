@@ -52,10 +52,43 @@ module.exports = class Missoes extends Command {
 
 		let embedMessage = '';
 
+		const emojis = {
+			1: '1️⃣',
+			2: '2️⃣',
+			3: '3️⃣',
+			4: '4️⃣',
+			5: '5️⃣',
+			6: '6️⃣',
+			7: '7️⃣',
+			8: '8️⃣',
+			9: '9️⃣',
+			10: '🔟',
+			11: '1️⃣1️⃣',
+			12: '1️⃣2️⃣',
+			13: '1️⃣3️⃣',
+			14: '1️⃣4️⃣',
+			15: '1️⃣5️⃣',
+			16: '1️⃣6️⃣',
+			17: '1️⃣7️⃣',
+			18: '1️⃣8️⃣',
+			19: '1️⃣9️⃣',
+			20: '2️⃣0️⃣',
+			21: '2️⃣1️⃣',
+			22: '2️⃣2️⃣',
+			23: '2️⃣3️⃣',
+			24: '2️⃣4️⃣',
+			25: '2️⃣5️⃣',
+			26: '2️⃣6️⃣',
+			27: '2️⃣7️⃣',
+			28: '2️⃣8️⃣',
+			29: '2️⃣9️⃣',
+			30: '3️⃣0️⃣'
+		};
+
 		const embed = new ClientEmbed(author)
 			.setTitle('🔰 | Missões Disponíveis:');
 
-		eventosArray.forEach((eu) => embedMessage += `${eu.position + 1} **Missão:** ${eu.nome}\n`);
+		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Missão:** ${eu.nome}\n`);
 		embed.setDescription(!server.missoes.length ? 'Não há missões cadastradas no momento.' : `**DIGITE A POSIÇÃO DA MISSÃO NO CHAT PARA VER INFORMAÇÕES SOBRE ELA!**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {

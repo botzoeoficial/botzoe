@@ -1,0 +1,32 @@
+[
+    {
+        "desc": "Na Fazenda 1, você só poderá plantar as seguintes frutas:\n**<:maca:911706991783735306> | Maçã**\n**<:banana:911706991297187851> | Banana**\n**<:laranja:911706992056365176> | Laranja**\n**<:limao:911706991217496075> | Limão**",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/911328371588354088/Farm1.png?width=804&height=603",
+        "nome": "Fazenda 1",
+        "valor": 300000
+    },
+    {
+        "desc": "Na Fazenda 2, você só poderá plantar as seguintes frutas:\n**<:pera:911706991796301874> | Pêra**\n**<:morango:911706991280410755> | Morango**\n**<:tomate:911706991599173653> | Tomate**",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/911351017650679848/fazenda2.png",
+        "nome": "Fazenda 2",
+        "valor": 600000
+    },
+    {
+        "desc": "Na Fazenda 3, você só poderá plantar as seguintes frutas:\n**<:abacaxi:911706991804678144> | Abacaxi**\n**<:melao:911706991766933574> | Melão**\n**<:manga:911706991594995732> | Manga**",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/911328372158758932/images.png",
+        "nome": "Fazenda 3",
+        "valor": 1000000
+    },
+    {
+        "desc": "Na Fazenda 4, você só poderá plantar as seguintes frutas:\n**<:pessego:911706991632736316> | Pêssego**\n**<:cereja:911706991934734406> | Cereja**\n**<:melancia:911706991808884776> | Melancia**",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/911328372343336962/images.png",
+        "nome": "Fazenda 4",
+        "valor": 2000000
+    },
+    {
+        "desc": "Na Fazenda 5, você só poderá plantar as seguintes frutas:\n**<:cafe:911706991615950898> | Café**\n**<:milho:911706992400298056> | Milho**\n**<:arroz:911706991670493214> | Arroz**",
+        "gif": "https://media.discordapp.net/attachments/887089600726720512/911328372557250601/images.png",
+        "nome": "Fazenda 5",
+        "valor": 4500000
+    }
+]

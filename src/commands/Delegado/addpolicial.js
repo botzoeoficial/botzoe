@@ -39,6 +39,12 @@ module.exports = class Addpolicial extends Command {
 		args,
 		prefix
 	}) {
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
@@ -53,10 +59,6 @@ module.exports = class Addpolicial extends Command {
 		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
 		if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
-		});
 
 		if (server.cidade.policiais.length === 10) return message.reply('esse servidor já possui o máximo de Policiais.');
 

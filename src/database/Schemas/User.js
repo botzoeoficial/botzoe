@@ -166,8 +166,8 @@ const userSchema = new Schema({
 			default: 0
 		},
 		bitcoin: {
-			type: Date,
-			default: null
+			type: Number,
+			default: 0
 		},
 		estudar: {
 			type: Number,
@@ -218,6 +218,10 @@ const userSchema = new Schema({
 			default: 0
 		},
 		garimpar: {
+			type: Number,
+			default: 0
+		},
+		diminuirpena: {
 			type: Number,
 			default: 0
 		}
@@ -687,6 +691,306 @@ const userSchema = new Schema({
 		sucess: {
 			type: Boolean,
 			default: false
+		}
+	},
+	casas: {
+		tipo: {
+			type: String,
+			default: ''
+		},
+		nome: {
+			type: String,
+			default: ''
+		},
+		valor: {
+			type: Number,
+			default: 0
+		},
+		gif: {
+			type: String,
+			default: ''
+		},
+		quantiaItens: {
+			type: Number,
+			default: 0
+		},
+		bau: {
+			type: Array,
+			default: [],
+			item: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: Number,
+				default: ''
+			},
+			id: {
+				type: String,
+				default: ''
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			}
+		}
+	},
+	fazendas: {
+		type: Array,
+		default: [],
+		nome: {
+			type: String,
+			default: ''
+		},
+		lote1: {
+			bloqueado: {
+				type: Boolean,
+				default: true
+			},
+			fruta: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			adubo: {
+				type: Number,
+				default: 0
+			},
+			fertilizante: {
+				type: Number,
+				default: 0
+			},
+			irrigacao: {
+				type: Number,
+				default: 0
+			},
+			trator: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			id: {
+				type: String,
+				default: ''
+			},
+			fruta2: {
+				type: String,
+				default: ''
+			}
+		},
+		lote2: {
+			bloqueado: {
+				type: Boolean,
+				default: true
+			},
+			fruta: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			adubo: {
+				type: Number,
+				default: 0
+			},
+			fertilizante: {
+				type: Number,
+				default: 0
+			},
+			irrigacao: {
+				type: Number,
+				default: 0
+			},
+			trator: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			id: {
+				type: String,
+				default: ''
+			},
+			fruta2: {
+				type: String,
+				default: ''
+			}
+		},
+		lote3: {
+			bloqueado: {
+				type: Boolean,
+				default: true
+			},
+			fruta: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			adubo: {
+				type: Number,
+				default: 0
+			},
+			fertilizante: {
+				type: Number,
+				default: 0
+			},
+			irrigacao: {
+				type: Number,
+				default: 0
+			},
+			trator: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			id: {
+				type: String,
+				default: ''
+			},
+			fruta2: {
+				type: String,
+				default: ''
+			}
+		},
+		lote4: {
+			bloqueado: {
+				type: Boolean,
+				default: true
+			},
+			fruta: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			adubo: {
+				type: Number,
+				default: 0
+			},
+			fertilizante: {
+				type: Number,
+				default: 0
+			},
+			irrigacao: {
+				type: Number,
+				default: 0
+			},
+			trator: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			id: {
+				type: String,
+				default: ''
+			},
+			fruta2: {
+				type: String,
+				default: ''
+			}
+		},
+		lote5: {
+			bloqueado: {
+				type: Boolean,
+				default: true
+			},
+			fruta: {
+				type: String,
+				default: ''
+			},
+			emoji: {
+				type: String,
+				default: ''
+			},
+			cooldown: {
+				type: Number,
+				default: 0
+			},
+			adubo: {
+				type: Number,
+				default: 0
+			},
+			fertilizante: {
+				type: Number,
+				default: 0
+			},
+			irrigacao: {
+				type: Number,
+				default: 0
+			},
+			trator: {
+				type: Number,
+				default: 0
+			},
+			quantia: {
+				type: Number,
+				default: 0
+			},
+			id: {
+				type: String,
+				default: ''
+			},
+			fruta2: {
+				type: String,
+				default: ''
+			}
+		}
+	},
+	caixote: {
+		type: Array,
+		default: [],
+		item: {
+			type: String,
+			default: ''
+		},
+		emoji: {
+			type: Number,
+			default: ''
+		},
+		id: {
+			type: String,
+			default: ''
+		},
+		quantia: {
+			type: Number,
+			default: 0
 		}
 	}
 });

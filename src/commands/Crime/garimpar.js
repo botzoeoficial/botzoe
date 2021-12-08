@@ -205,6 +205,22 @@ module.exports = class Garimpar extends Command {
 				return message.channel.send(author, embedPreso);
 			}
 		} else {
+			if (user.inventory.length > 0) {
+				if (user.inventory.find((a) => a.item === 'Bolso')) {
+					if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 400) {
+						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+							timeout: 5000
+						}));
+					}
+				} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
+					if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
+						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
+							timeout: 5000
+						}));
+					}
+				}
+			}
+
 			const timeout = 1200000;
 
 			if (timeout - (Date.now() - user.cooldown.garimpar) > 0) {

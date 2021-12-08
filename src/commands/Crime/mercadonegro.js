@@ -1,12 +1,17 @@
-/* eslint-disable max-nested-callbacks */
-/* eslint-disable id-length */
-/* eslint-disable max-len */
+/* eslint-disable no-bitwise */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
+/* eslint-disable complexity */
+/* eslint-disable max-len */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
-const Emojis = require('../../utils/Emojis');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Mercadonegro extends Command {
 
@@ -45,222 +50,451 @@ module.exports = class Mercadonegro extends Command {
 		message,
 		author
 	}) {
-		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
+		const confirm = new ClientEmbed(author)
+			.setTitle('🏴‍☠️ | Mercado Negro')
+			.setDescription(`Você deseja **realmente** ver o Mercado Negro?`);
+
+		const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
+		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
+
+		const as = await message.channel.send(author, {
+			embed: confirm,
+			components: [botoes]
 		});
 
-		const mapProdutos = server.mercadoNegro.map((value, index) => ({
-			nome: value.nome,
-			quantia: value.quantia,
-			preco: value.preco,
-			dono: value.dono,
-			tempo: value.tempo,
-			tempo2: value.tempo2,
-			emoji: value.emoji,
-			position: index
-		}));
-
-		let embedMessage = '';
-
-		const embed = new ClientEmbed(author)
-			.setTitle('🏴‍☠️ | Mercado Negro');
-
-		mapProdutos.slice(0, 10).forEach((eu) => {
-			const faltam = ms(eu.tempo - (Date.now() - eu.tempo2));
-
-			embedMessage += `${eu.position + 1} - **${eu.nome}** - \`x${eu.quantia}\` - R$${Utils.numberFormat(eu.preco)},00 - <@${eu.dono}> - ${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s\n`;
+		const collectorBotoes = as.createButtonCollector((button) => button.clicker.user.id === author.id, {
+			max: 1
 		});
 
-		embed.setDescription(`Estes são os Itens disponíveis no Mercado Negro neste momento:\nDigite o número do item que você deseja comprar.\n\n${!server.mercadoNegro.length ? '**Sem Itens no Mercado Negro no momento!**\n' : embedMessage}\nDigite \`0\` para cancelar a seleção.`);
+		collectorBotoes.on('collect', async (b) => {
+			if (b.id === 'negar') {
+				b.reply.defer();
 
-		message.channel.send(author, embed).then(async (msg) => {
-			if (!server.mercadoNegro.length) return;
+				return as.delete();
+			} else if (b.id === 'aceitar') {
+				b.reply.defer();
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
-				time: 300000
-			});
+				as.delete();
 
-			sim.on('collect', async (ce) => {
-				if (Number(ce.content) === 0) {
-					msg.delete();
-					sim.stop();
-					return message.reply(`seleção cancelada com sucesso!`);
-				} else {
-					const selected = Number(ce.content - 1);
-					const findSelectedEvento = mapProdutos.find((xis) => xis.position === selected);
+				const server = await this.client.database.guilds.findOne({
+					_id: message.guild.id
+				});
 
-					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-							timeout: 5000
+				const mapProdutos = server.mercadoNegro.map((value, index) => ({
+					nome: value.nome,
+					quantia: value.quantia,
+					preco: value.preco,
+					dono: value.dono,
+					tempo: value.tempo,
+					tempo2: value.tempo2,
+					emoji: value.emoji,
+					position: index
+				}));
+
+				let embedMessage = '';
+
+				const emojis = {
+					1: '1️⃣',
+					2: '2️⃣',
+					3: '3️⃣',
+					4: '4️⃣',
+					5: '5️⃣',
+					6: '6️⃣',
+					7: '7️⃣',
+					8: '8️⃣',
+					9: '9️⃣',
+					10: '🔟',
+					11: '1️⃣1️⃣',
+					12: '1️⃣2️⃣',
+					13: '1️⃣3️⃣',
+					14: '1️⃣4️⃣',
+					15: '1️⃣5️⃣',
+					16: '1️⃣6️⃣',
+					17: '1️⃣7️⃣',
+					18: '1️⃣8️⃣',
+					19: '1️⃣9️⃣',
+					20: '2️⃣0️⃣',
+					21: '2️⃣1️⃣',
+					22: '2️⃣2️⃣',
+					23: '2️⃣3️⃣',
+					24: '2️⃣4️⃣',
+					25: '2️⃣5️⃣',
+					26: '2️⃣6️⃣',
+					27: '2️⃣7️⃣',
+					28: '2️⃣8️⃣',
+					29: '2️⃣9️⃣',
+					30: '3️⃣0️⃣'
+				};
+
+				let pagina = 0;
+
+				const embed = new ClientEmbed(author)
+					.setTitle('🏴‍☠️ | Mercado Negro');
+
+				mapProdutos.slice(pagina * 10, pagina * 10 + 10).forEach((eu) => {
+					const faltam = ms(eu.tempo - (Date.now() - eu.tempo2));
+
+					embedMessage += `${emojis[eu.position + 1]} - **${eu.nome}** - \`x${eu.quantia}\` - R$${Utils.numberFormat(eu.preco)},00 - <@${eu.dono}> - ${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s\n`;
+				});
+
+				embed.setDescription(`Estes são os Itens disponíveis no Mercado Negro neste momento:\nDigite o número do item que você deseja comprar.\n\n${!server.mercadoNegro.length ? '**Sem Itens no Mercado Negro no momento!**\n' : embedMessage}\nClique no \`❌\` para fechar o **Mercado Negro**.`);
+
+				const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
+				const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
+				const buttonFechar = new MessageButton().setStyle('blurple').setEmoji('❌').setID('fechar');
+				const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonFechar, buttonIr]);
+
+				const escolha = await message.channel.send(author, {
+					embed: embed,
+					components: [botoes]
+				});
+
+				const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+
+				collectorEscolhas.on('collect', async (b) => {
+					if (b.id === 'voltar') {
+						b.reply.defer();
+
+						if (pagina <= 0) {
+							pagina = 0;
+						} else {
+							pagina--;
+						}
+
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						const mapProdutos2 = server2.mercadoNegro.map((value, index) => ({
+							nome: value.nome,
+							quantia: value.quantia,
+							preco: value.preco,
+							dono: value.dono,
+							tempo: value.tempo,
+							tempo2: value.tempo2,
+							emoji: value.emoji,
+							position: index
 						}));
-						ce.delete();
-					} else if (findSelectedEvento.dono === author.id) {
-						message.reply('você não pode comprar seu próprio produto. Por favor, escolha outro!').then(ba => ba.delete({
-							timeout: 5000
+
+						let embedMessage2 = '';
+
+						const emojis2 = {
+							1: '1️⃣',
+							2: '2️⃣',
+							3: '3️⃣',
+							4: '4️⃣',
+							5: '5️⃣',
+							6: '6️⃣',
+							7: '7️⃣',
+							8: '8️⃣',
+							9: '9️⃣',
+							10: '🔟',
+							11: '1️⃣1️⃣',
+							12: '1️⃣2️⃣',
+							13: '1️⃣3️⃣',
+							14: '1️⃣4️⃣',
+							15: '1️⃣5️⃣',
+							16: '1️⃣6️⃣',
+							17: '1️⃣7️⃣',
+							18: '1️⃣8️⃣',
+							19: '1️⃣9️⃣',
+							20: '2️⃣0️⃣',
+							21: '2️⃣1️⃣',
+							22: '2️⃣2️⃣',
+							23: '2️⃣3️⃣',
+							24: '2️⃣4️⃣',
+							25: '2️⃣5️⃣',
+							26: '2️⃣6️⃣',
+							27: '2️⃣7️⃣',
+							28: '2️⃣8️⃣',
+							29: '2️⃣9️⃣',
+							30: '3️⃣0️⃣'
+						};
+
+						const embed2 = new ClientEmbed(author)
+							.setTitle('🏴‍☠️ | Mercado Negro');
+
+						mapProdutos2.slice(pagina * 10, pagina * 10 + 10).forEach((eu) => {
+							const faltam = ms(eu.tempo - (Date.now() - eu.tempo2));
+
+							embedMessage2 += `${emojis2[eu.position + 1]} - **${eu.nome}** - \`x${eu.quantia}\` - R$${Utils.numberFormat(eu.preco)},00 - <@${eu.dono}> - ${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s\n`;
+						});
+
+						embed2.setDescription(`Estes são os Itens disponíveis no Mercado Negro neste momento:\nDigite o número do item que você deseja comprar.\n\n${!server.mercadoNegro.length ? '**Sem Itens no Mercado Negro no momento!**\n' : embedMessage2}\nClique no \`❌\` para fechar o **Mercado Negro**.`);
+
+						b.message.edit(author, {
+							embed: embed2
+						});
+					} else if (b.id === 'ir') {
+						b.reply.defer();
+
+						if (pagina !== ~~(mapProdutos.length / 10)) {
+							pagina++;
+						}
+
+						const server2 = await this.client.database.guilds.findOne({
+							_id: message.guild.id
+						});
+
+						const mapProdutos2 = server2.mercadoNegro.map((value, index) => ({
+							nome: value.nome,
+							quantia: value.quantia,
+							preco: value.preco,
+							dono: value.dono,
+							tempo: value.tempo,
+							tempo2: value.tempo2,
+							emoji: value.emoji,
+							position: index
 						}));
+
+						let embedMessage2 = '';
+
+						const emojis2 = {
+							1: '1️⃣',
+							2: '2️⃣',
+							3: '3️⃣',
+							4: '4️⃣',
+							5: '5️⃣',
+							6: '6️⃣',
+							7: '7️⃣',
+							8: '8️⃣',
+							9: '9️⃣',
+							10: '🔟',
+							11: '1️⃣1️⃣',
+							12: '1️⃣2️⃣',
+							13: '1️⃣3️⃣',
+							14: '1️⃣4️⃣',
+							15: '1️⃣5️⃣',
+							16: '1️⃣6️⃣',
+							17: '1️⃣7️⃣',
+							18: '1️⃣8️⃣',
+							19: '1️⃣9️⃣',
+							20: '2️⃣0️⃣',
+							21: '2️⃣1️⃣',
+							22: '2️⃣2️⃣',
+							23: '2️⃣3️⃣',
+							24: '2️⃣4️⃣',
+							25: '2️⃣5️⃣',
+							26: '2️⃣6️⃣',
+							27: '2️⃣7️⃣',
+							28: '2️⃣8️⃣',
+							29: '2️⃣9️⃣',
+							30: '3️⃣0️⃣'
+						};
+
+						const embed2 = new ClientEmbed(author)
+							.setTitle('🏴‍☠️ | Mercado Negro');
+
+						mapProdutos2.slice(pagina * 10, pagina * 10 + 10).forEach((eu) => {
+							const faltam = ms(eu.tempo - (Date.now() - eu.tempo2));
+
+							embedMessage2 += `${emojis2[eu.position + 1]} - **${eu.nome}** - \`x${eu.quantia}\` - R$${Utils.numberFormat(eu.preco)},00 - <@${eu.dono}> - ${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s\n`;
+						});
+
+						embed2.setDescription(`Estes são os Itens disponíveis no Mercado Negro neste momento:\nDigite o número do item que você deseja comprar.\n\n${!server.mercadoNegro.length ? '**Sem Itens no Mercado Negro no momento!**\n' : embedMessage2}\nClique no \`❌\` para fechar o **Mercado Negro**.`);
+
+						b.message.edit(author, {
+							embed: embed2
+						});
+					} else if (b.id === 'fechar') {
+						b.reply.defer();
+
+						await escolha.delete();
+						return message.reply('mercado negro fechado com sucesso!');
+					}
+				});
+
+				const sim = message.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+					max: 1
+				});
+
+				sim.on('collect', async (ce) => {
+					const selected2 = Number(ce.content - 1);
+					const findSelectedEvento2 = mapProdutos.find((xis) => xis.position === selected2);
+
+					const mercado = await this.client.database.guilds.findOne({
+						_id: message.guild.id
+					});
+
+					if (!findSelectedEvento2) {
+						sim.stop();
 						ce.delete();
+						escolha.delete();
+
+						return message.reply('número não encontrado. Por favor, use o comando novamente!');
+					} else if (!mercado.mercadoNegro.find((a) => a.nome === findSelectedEvento2.nome)) {
+						sim.stop();
+						ce.delete();
+						escolha.delete();
+
+						return message.reply('esse produto não está mais no **Mercado Negro**. Alguém deve ter comprado ele primeiro que você!');
+					} else if (findSelectedEvento2.dono === author.id) {
+						sim.stop();
+						ce.delete();
+						escolha.delete();
+
+						return message.reply('você não pode comprar seu próprio produto!');
 					} else {
 						sim.stop();
 						ce.delete();
 
-						const faltam = ms(findSelectedEvento.tempo - (Date.now() - findSelectedEvento.tempo2));
+						const faltam = ms(findSelectedEvento2.tempo - (Date.now() - findSelectedEvento2.tempo2));
 
 						embed.setDescription(`Você deseja comprar o item?`);
-						embed.addField(`Produto:`, findSelectedEvento.nome);
-						embed.addField(`Quantia:`, `\`x${findSelectedEvento.quantia}\``);
-						embed.addField(`Preço:`, `R$${Utils.numberFormat(findSelectedEvento.preco)},00`);
-						embed.addField(`Quem colocou:`, `<@${findSelectedEvento.dono}>`);
+						embed.addField(`Produto:`, findSelectedEvento2.nome);
+						embed.addField(`Quantia:`, `\`x${findSelectedEvento2.quantia}\``);
+						embed.addField(`Preço:`, `R$${Utils.numberFormat(findSelectedEvento2.preco)},00`);
+						embed.addField(`Quem colocou:`, `<@${findSelectedEvento2.dono}>`);
 						embed.addField(`Tempo restante:`, `${faltam.days}d ${faltam.hours}h ${faltam.minutes}m ${faltam.seconds}s`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							await msg1.react(Emojis.Okay);
-							await msg1.react(Emojis.Error);
+						escolha.delete();
 
-							const sim2 = msg1.createReactionCollector((r, u) => r.emoji.name === Emojis.Okay && u.id === author.id, {
-								time: 60000
-							});
+						const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
+						const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+						const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-							const não2 = msg1.createReactionCollector((r, u) => r.emoji.name === Emojis.Error && u.id === author.id, {
-								time: 60000,
-								max: 1
-							});
+						const msg2 = await message.channel.send(author, {
+							embed: embed,
+							components: [botoes]
+						});
 
-							sim2.on('collect', async () => {
+						const collectorBotoes = msg2.createButtonCollector((button) => button.clicker.user.id === author.id, {
+							max: 1
+						});
+
+						collectorBotoes.on('collect', async (b) => {
+							if (b.id === 'negar') {
+								b.reply.defer();
+
+								sim.stop();
+								msg2.delete();
+								return message.reply('compra cancelada com sucesso!');
+							} else if (b.id === 'aceitar') {
+								b.reply.defer();
+
 								const user = await this.client.database.users.findOne({
 									userId: author.id,
 									guildId: message.guild.id
 								});
 
-								const user2 = await this.client.database.users.findOne({
-									userId: findSelectedEvento.dono,
-									guildId: message.guild.id
+								const mercado2 = await this.client.database.guilds.findOne({
+									_id: message.guild.id
 								});
 
 								if (!user.isMochila) {
-									return message.reply('você não tem uma **Mochila**. Vá até Loja > Utilidades e Compre uma!');
-								} else if (user.banco < findSelectedEvento.preco) {
-									message.reply('você não tem esse saldo todo no **banco** para comprar este produto!').then((ba) => ba.delete({
-										timeout: 5000
-									}));
-								} else {
-									sim2.stop();
+									msg2.delete();
 
+									return message.reply('você não tem uma **Mochila**. Vá até Loja > Utilidades e Compre uma!');
+								} else if (user.banco < findSelectedEvento2.preco) {
+									msg2.delete();
+
+									return message.reply('você não tem esse saldo todo no **banco** para comprar este produto!');
+								} else if (!mercado2.mercadoNegro.find((a) => a.nome === findSelectedEvento2.nome)) {
+									msg2.delete();
+
+									return message.reply('esse produto não está mais no **Mercado Negro**. Alguém deve ter comprado ele primeiro que você!');
+								} else {
 									embed.setDescription(`Produto Comprado com Sucesso!`);
 									embed.fields = [];
 
-									msg.edit(author, embed);
-									msg.reactions.removeAll();
+									b.message.edit(author, {
+										embed: embed,
+										components: []
+									});
+
+									const user2 = await this.client.database.users.findOne({
+										userId: findSelectedEvento2.dono,
+										guildId: message.guild.id
+									});
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											banco: user.banco -= findSelectedEvento.preco
+											banco: user.banco -= findSelectedEvento2.preco
 										}
 									});
 
 									await this.client.database.users.findOneAndUpdate({
-										userId: findSelectedEvento.dono,
+										userId: findSelectedEvento2.dono,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											banco: user2.banco += findSelectedEvento.preco
+											banco: user2.banco += findSelectedEvento2.preco
 										}
 									});
 
-									if (user2.mochila.find((a) => a.item === findSelectedEvento.nome).quantia > 1) {
-										await this.client.database.users.findOneAndUpdate({
-											userId: findSelectedEvento.dono,
-											guildId: message.guild.id,
-											'mochila.item': findSelectedEvento.nome
-										}, {
-											$set: {
-												'mochila.$.quantia': user2.mochila.find((a) => a.item === findSelectedEvento.nome).quantia - findSelectedEvento.quantia
-											}
-										});
-									} else {
-										await this.client.database.users.findOneAndUpdate({
-											userId: findSelectedEvento.dono,
-											guildId: message.guild.id
-										}, {
-											$pull: {
-												mochila: {
-													item: findSelectedEvento.nome
+									if (findSelectedEvento2.nome === 'Chave Micha' || findSelectedEvento2.nome === 'Maconha' || findSelectedEvento2.nome === 'Cocaína' || findSelectedEvento2.nome === 'LSD' || findSelectedEvento2.nome === 'Metanfetamina' || findSelectedEvento2.nome === 'Munição Metralhadora' || findSelectedEvento2.nome === 'Munição Pistola' || findSelectedEvento2.nome === 'Munição KNT' || findSelectedEvento2.nome === 'Ak-47' || findSelectedEvento2.nome === 'UMP' || findSelectedEvento2.nome === 'MP5' || findSelectedEvento2.nome === 'ACR' || findSelectedEvento2.nome === 'KNT-308' || findSelectedEvento2.nome === 'Desert Eagle' || findSelectedEvento2.nome === 'Revolver 38' || findSelectedEvento2.nome === 'G18' || findSelectedEvento2.nome === 'Máscara' || findSelectedEvento2.nome === 'Porte de Armas' || findSelectedEvento2.nome === 'Algemas') {
+										if (user.mochila.find((a) => a.item === findSelectedEvento2.nome)) {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id,
+												'mochila.item': findSelectedEvento2.nome
+											}, {
+												$set: {
+													'mochila.$.quantia': user.mochila.find((a) => a.item === findSelectedEvento2.nome).quantia + findSelectedEvento2.quantia
 												}
-											}
-										});
+											});
+										} else {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$push: {
+													mochila: {
+														item: findSelectedEvento2.nome,
+														emoji: findSelectedEvento2.emoji,
+														id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+														quantia: findSelectedEvento2.quantia
+													}
+												}
+											});
+										}
+									} else if (findSelectedEvento2.nome !== 'Chave Micha' || findSelectedEvento2.nome !== 'Maconha' || findSelectedEvento2.nome !== 'Cocaína' || findSelectedEvento2.nome !== 'LSD' || findSelectedEvento2.nome !== 'Metanfetamina' || findSelectedEvento2.nome !== 'Munição Metralhadora' || findSelectedEvento2.nome !== 'Munição Pistola' || findSelectedEvento2.nome !== 'Munição KNT' || findSelectedEvento2.nome !== 'Ak-47' || findSelectedEvento2.nome !== 'UMP' || findSelectedEvento2.nome !== 'MP5' || findSelectedEvento2.nome !== 'ACR' || findSelectedEvento2.nome !== 'KNT-308' || findSelectedEvento2.nome !== 'Desert Eagle' || findSelectedEvento2.nome !== 'Revolver 38' || findSelectedEvento2.nome !== 'G18' || findSelectedEvento2.nome !== 'Máscara' || findSelectedEvento2.nome !== 'Porte de Armas' || findSelectedEvento2.nome !== 'Algemas') {
+										if (user.inventory.find((a) => a.item === findSelectedEvento2.nome)) {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id,
+												'inventory.item': findSelectedEvento2.nome
+											}, {
+												$set: {
+													'inventory.$.quantia': user.inventory.find((a) => a.item === findSelectedEvento2.nome).quantia + findSelectedEvento2.quantia
+												}
+											});
+										} else {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$push: {
+													inventory: {
+														item: findSelectedEvento2.nome,
+														emoji: findSelectedEvento2.emoji,
+														id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+														quantia: findSelectedEvento2.quantia
+													}
+												}
+											});
+										}
 									}
 
-									if (user2.mochila.find((a) => a.item === findSelectedEvento.nome).quantia === 0) {
-										await this.client.database.users.findOneAndUpdate({
-											userId: findSelectedEvento.dono,
-											guildId: message.guild.id
-										}, {
-											$pull: {
-												mochila: {
-													item: findSelectedEvento.nome
-												}
-											}
-										});
-									}
-
-									if (user.mochila.find((a) => a.item === findSelectedEvento.nome)) {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id,
-											'mochila.item': findSelectedEvento.nome
-										}, {
-											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === findSelectedEvento.nome).quantia + findSelectedEvento.quantia
-											}
-										});
-									} else {
-										await this.client.database.users.findOneAndUpdate({
-											userId: author.id,
-											guildId: message.guild.id
-										}, {
-											$push: {
-												mochila: {
-													item: findSelectedEvento.nome,
-													emoji: findSelectedEvento.emoji,
-													id: findSelectedEvento.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: findSelectedEvento.quantia
-												}
-											}
-										});
-									}
-
-									await this.client.database.guilds.findOneAndUpdate({
+									return await this.client.database.guilds.findOneAndUpdate({
 										_id: message.guild.id
 									}, {
 										$pull: {
 											mercadoNegro: {
-												nome: findSelectedEvento.nome
+												nome: findSelectedEvento2.nome
 											}
 										}
 									});
 								}
-							});
-
-							não2.on('collect', async () => {
-								sim.stop();
-								não2.stop();
-								sim2.stop();
-								msg.delete();
-							});
+							}
 						});
 					}
-				}
-			});
-
-			sim.on('end', async (collected, reason) => {
-				if (reason === 'time') {
-					sim.stop();
-					msg.delete();
-					return message.reply('você demorou demais para responder. Use o comando novamente!');
-				}
-			});
+				});
+			}
 		});
 	}
 

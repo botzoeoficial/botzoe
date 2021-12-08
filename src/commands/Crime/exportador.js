@@ -159,7 +159,7 @@ module.exports = class Exportador extends Command {
 								guildId: message.guild.id
 							});
 
-							if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, por tanto, você não pode prender ninguém ainda!');
+							if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, portanto, você não pode prender ninguém ainda!');
 
 							const timeoutRoubar = 300000;
 

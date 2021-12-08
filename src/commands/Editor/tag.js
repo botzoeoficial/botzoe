@@ -56,16 +56,16 @@ module.exports = class Tag extends Command {
 
 		if (!tag) return message.reply('você precisar mencionar uma tag logo após o usuário no comando.');
 
-		if (tag.managed) return message.reply('você não pode dar um tag que é de um bot.');
+		if (tag.managed) return message.reply('você não pode dar uma tag que é de um bot.');
 
-		member.roles.add(tag.id);
+		if (user.eventos.find((a) => a === tag.id)) return message.reply('esse usuário já possui essa tag.');
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: member.id,
 			guildId: message.guild.id
 		}, {
 			$push: {
-				eventos: tag
+				eventos: tag.id
 			}
 		});
 

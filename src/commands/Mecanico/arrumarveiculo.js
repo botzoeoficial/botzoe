@@ -15,7 +15,7 @@ module.exports = class Arrumarveiculo extends Command {
 		this.category = 'Mecanico';
 		this.description = 'Arrume o veículo de um cliente!';
 		this.usage = 'arrumarveiculo';
-		this.aliases = ['arrumarveículo', 'arrumar-veiculo', 'arrumar-veículo'];
+		this.aliases = ['arrumarveículo', 'arrumar-veiculo', 'arrumar-veículo', 'arrumarcarro'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -46,7 +46,7 @@ module.exports = class Arrumarveiculo extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.mecanico.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Mecânico** na cidade para emplacar algum veículo!');
+		if (!server.cidade.mecanico.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Mecânico** na cidade para arrumar algum veículo!');
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,
@@ -68,10 +68,43 @@ module.exports = class Arrumarveiculo extends Command {
 
 		let embedMessage = '';
 
+		const emojis = {
+			1: '1️⃣',
+			2: '2️⃣',
+			3: '3️⃣',
+			4: '4️⃣',
+			5: '5️⃣',
+			6: '6️⃣',
+			7: '7️⃣',
+			8: '8️⃣',
+			9: '9️⃣',
+			10: '🔟',
+			11: '1️⃣1️⃣',
+			12: '1️⃣2️⃣',
+			13: '1️⃣3️⃣',
+			14: '1️⃣4️⃣',
+			15: '1️⃣5️⃣',
+			16: '1️⃣6️⃣',
+			17: '1️⃣7️⃣',
+			18: '1️⃣8️⃣',
+			19: '1️⃣9️⃣',
+			20: '2️⃣0️⃣',
+			21: '2️⃣1️⃣',
+			22: '2️⃣2️⃣',
+			23: '2️⃣3️⃣',
+			24: '2️⃣4️⃣',
+			25: '2️⃣5️⃣',
+			26: '2️⃣6️⃣',
+			27: '2️⃣7️⃣',
+			28: '2️⃣8️⃣',
+			29: '2️⃣9️⃣',
+			30: '3️⃣0️⃣'
+		};
+
 		const embed = new ClientEmbed(author)
 			.setTitle('🧑‍🔧 | Arrumar Veículo');
 
-		mecanicaArray.forEach((eu) => embedMessage += `${eu.position + 1} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
+		mecanicaArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 		embed.setDescription(!server.mecanica.length ? 'Não há carros na **Oficina** no momento.' : `**Qual veículo você deseja arrumar?**\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
 
 		message.channel.send(author, embed).then((msg) => {

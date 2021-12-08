@@ -13,7 +13,7 @@ module.exports = class Mecanicos extends Command {
 		this.category = 'Cidade';
 		this.description = 'Veja os Mecânicos do servidor!';
 		this.usage = 'mecanicos';
-		this.aliases = ['mecânicos'];
+		this.aliases = ['mecânicos', 'mecanico'];
 
 		this.enabled = true;
 		this.guildOnly = true;
