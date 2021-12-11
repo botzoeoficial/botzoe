@@ -43,7 +43,6 @@ module.exports = class Apostar extends Command {
 	}
 	async run({
 		message,
-		prefix,
 		args,
 		author
 	}) {
@@ -100,8 +99,6 @@ module.exports = class Apostar extends Command {
 
 		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
-		if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
 		const btc = args[1];
 
 		if (!btc) return message.reply('você precisa colocar uma quantia de saldo para apostar.');
@@ -126,11 +123,11 @@ module.exports = class Apostar extends Command {
 		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
 		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-		message.channel.send(author, {
+		message.channel.send(member, {
 			embed: embed,
 			components: [botoes]
 		}).then(async (msg) => {
-			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === author.id, {
+			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === member.id, {
 				time: 60000,
 				max: 1
 			});

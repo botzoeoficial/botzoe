@@ -349,6 +349,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -474,6 +475,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -599,6 +601,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -724,6 +727,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -851,6 +855,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -976,6 +981,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1101,6 +1107,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1226,6 +1233,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1353,6 +1361,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1478,6 +1487,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1603,6 +1613,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1728,6 +1739,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1855,6 +1867,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -1980,6 +1993,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -2105,6 +2119,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});
@@ -2230,6 +2245,7 @@ module.exports = class Fabricardroga extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
 																	});

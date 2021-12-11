@@ -67,7 +67,7 @@ module.exports = class Pescar extends Command {
 			} else {
 				const embed = new ClientEmbed(author)
 					.setTitle('<:Varadepescar:891297733774819328> | PESCARIA')
-					.setDescription(`<:Varadepescar:891297733774819328> | Você pescou para relaxar, e conseguiu as seguintes melhorias:\n\n🤯 **Estressado:** +50\n😡 **Bravo:** +20`);
+					.setDescription(`<:Varadepescar:891297733774819328> | Você pescou para relaxar, e conseguiu as seguintes melhorias:\n\n🤯 **Estressado:** +50\n😡 **Bravo:** +20\n<:Varadepescar:891297733774819328> **Vara de Pesca:** -1`);
 
 				message.channel.send(author, embed);
 

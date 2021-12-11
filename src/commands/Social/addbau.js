@@ -147,12 +147,12 @@ module.exports = class Addbau extends Command {
 							'901118376951304262': 'LSD',
 							'901118279530217552': 'Metanfetamina',
 							'905653583171706980': 'Munição KNT',
-							'901590892727660564': 'Alumínio',
-							'901590941033435157': 'Borracha',
-							'901590641274921030': 'Caulim',
-							'901590776545431613': 'Cobre',
-							'901590546441715782': 'Ferro',
-							'901590709235253338': 'Plástico',
+							'918835445780074507': 'Alumínio',
+							'918835444794400799': 'Borracha',
+							'918835445700378684': 'Caulim',
+							'918835446040133652': 'Cobre',
+							'918835445746532412': 'Ferro',
+							'918835445838774322': 'Plástico',
 							'901590833151746128': 'Prata'
 						};
 
@@ -172,46 +172,103 @@ module.exports = class Addbau extends Command {
 
 							const itemEmoji = objeto[collected.emoji.id];
 
-							message.reply(`você enviou o item \`${itemEmoji}\` para o Baú da(o) sua(seu) **${user2.casas.tipo}** com sucesso!`);
+							embed.setDescription(`Qual a quantidade de **${itemEmoji}** você deseja enviar para o Baú?`);
 
-							if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id,
-									'casas.bau.item': itemEmoji
-								}, {
-									$set: {
-										'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.inventory.find((a) => a.item === itemEmoji).quantia
-									}
+							msg.edit(author, embed).then(async (msg2) => {
+								const resposta = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+									time: 120000
 								});
-							} else {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$push: {
-										'casas.bau': {
-											item: itemEmoji,
-											emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
-											id: user2.inventory.find((a) => a.item === itemEmoji).id,
-											quantia: user2.inventory.find((a) => a.item === itemEmoji).quantia
+
+								resposta.on('collect', async (ce2) => {
+									if (Number(ce2.content) <= 0) {
+										message.reply('você precisa enviar uma quantia válida e maior que **0*. Por favor, envie a quantia novamente no chat!');
+									} else if (Number(ce2.content) > user2.inventory.find((a) => a.item === itemEmoji).quantia) {
+										message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, envie a quantia novamente no chat!`);
+									} else {
+										resposta.stop();
+										sim.stop();
+										msg.delete();
+
+										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para o Baú da(o) sua(seu) **${user2.casas.tipo}** com sucesso!`);
+
+										if (Number(ce2.content) < user2.inventory.find((a) => a.item === itemEmoji).quantia) {
+											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'casas.bau.item': itemEmoji
+												}, {
+													$set: {
+														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + Number(ce2.content)
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														'casas.bau': {
+															item: itemEmoji,
+															emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
+															id: user2.inventory.find((a) => a.item === itemEmoji).id,
+															quantia: Number(ce2.content)
+														}
+													}
+												});
+											}
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id,
+												'inventory.item': itemEmoji
+											}, {
+												$set: {
+													'inventory.$.quantia': user2.inventory.find((a) => a.item === itemEmoji).quantia - Number(ce2.content)
+												}
+											});
+										} else {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$pull: {
+													inventory: {
+														item: itemEmoji
+													}
+												}
+											});
+
+											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'casas.bau.item': itemEmoji
+												}, {
+													$set: {
+														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.inventory.find((a) => a.item === itemEmoji).quantia
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														'casas.bau': {
+															item: itemEmoji,
+															emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
+															id: user2.inventory.find((a) => a.item === itemEmoji).id,
+															quantia: user2.inventory.find((a) => a.item === itemEmoji).quantia
+														}
+													}
+												});
+											}
 										}
 									}
 								});
-							}
-
-							await this.client.database.users.findOneAndUpdate({
-								userId: author.id,
-								guildId: message.guild.id
-							}, {
-								$pull: {
-									inventory: {
-										item: itemEmoji
-									}
-								}
 							});
 
-							msg1.delete();
 							return;
 						});
 					});
@@ -305,12 +362,12 @@ module.exports = class Addbau extends Command {
 							'901118376951304262': 'LSD',
 							'901118279530217552': 'Metanfetamina',
 							'905653583171706980': 'Munição KNT',
-							'901590892727660564': 'Alumínio',
-							'901590941033435157': 'Borracha',
-							'901590641274921030': 'Caulim',
-							'901590776545431613': 'Cobre',
-							'901590546441715782': 'Ferro',
-							'901590709235253338': 'Plástico',
+							'918835445780074507': 'Alumínio',
+							'918835444794400799': 'Borracha',
+							'918835445700378684': 'Caulim',
+							'918835446040133652': 'Cobre',
+							'918835445746532412': 'Ferro',
+							'918835445838774322': 'Plástico',
 							'901590833151746128': 'Prata'
 						};
 
@@ -330,46 +387,103 @@ module.exports = class Addbau extends Command {
 
 							const itemEmoji = objeto[collected.emoji.id];
 
-							message.reply(`você enviou o item \`${itemEmoji}\` para o Baú da(o) sua(seu) **${user2.casas.tipo}** com sucesso!`);
+							embed.setDescription(`Qual a quantidade de **${itemEmoji}** você deseja enviar para o Baú?`);
 
-							if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id,
-									'casas.bau.item': itemEmoji
-								}, {
-									$set: {
-										'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.mochila.find((a) => a.item === itemEmoji).quantia
-									}
+							msg.edit(author, embed).then(async (msg2) => {
+								const resposta = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+									time: 120000
 								});
-							} else {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$push: {
-										'casas.bau': {
-											item: itemEmoji,
-											emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
-											id: user2.mochila.find((a) => a.item === itemEmoji).id,
-											quantia: user2.mochila.find((a) => a.item === itemEmoji).quantia
+
+								resposta.on('collect', async (ce2) => {
+									if (Number(ce2.content) <= 0) {
+										message.reply('você precisa enviar uma quantia válida e maior que **0*. Por favor, envie a quantia novamente no chat!');
+									} else if (Number(ce2.content) > user2.mochila.find((a) => a.item === itemEmoji).quantia) {
+										message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, envie a quantia novamente no chat!`);
+									} else {
+										resposta.stop();
+										sim.stop();
+										msg.delete();
+
+										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para o Baú da(o) sua(seu) **${user2.casas.tipo}** com sucesso!`);
+
+										if (Number(ce2.content) < user2.mochila.find((a) => a.item === itemEmoji).quantia) {
+											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'casas.bau.item': itemEmoji
+												}, {
+													$set: {
+														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + Number(ce2.content)
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														'casas.bau': {
+															item: itemEmoji,
+															emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
+															id: user2.mochila.find((a) => a.item === itemEmoji).id,
+															quantia: Number(ce2.content)
+														}
+													}
+												});
+											}
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id,
+												'mochila.item': itemEmoji
+											}, {
+												$set: {
+													'mochila.$.quantia': user2.mochila.find((a) => a.item === itemEmoji).quantia - Number(ce2.content)
+												}
+											});
+										} else {
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$pull: {
+													mochila: {
+														item: itemEmoji
+													}
+												}
+											});
+
+											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'casas.bau.item': itemEmoji
+												}, {
+													$set: {
+														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.mochila.find((a) => a.item === itemEmoji).quantia
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														'casas.bau': {
+															item: itemEmoji,
+															emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
+															id: user2.mochila.find((a) => a.item === itemEmoji).id,
+															quantia: user2.mochila.find((a) => a.item === itemEmoji).quantia
+														}
+													}
+												});
+											}
 										}
 									}
 								});
-							}
-
-							await this.client.database.users.findOneAndUpdate({
-								userId: author.id,
-								guildId: message.guild.id
-							}, {
-								$pull: {
-									mochila: {
-										item: itemEmoji
-									}
-								}
 							});
 
-							msg1.delete();
 							return;
 						});
 					});

@@ -537,6 +537,18 @@ const guildSchema = new Schema({
 			type: Boolean,
 			default: false
 		}
+	},
+	hospital: {
+		type: Array,
+		default: [],
+		usuario: {
+			type: String,
+			default: ''
+		},
+		entrada: {
+			type: Number,
+			default: Date.now()
+		}
 	}
 });
 

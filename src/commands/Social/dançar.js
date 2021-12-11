@@ -80,8 +80,6 @@ module.exports = class Dançar extends Command {
 
 			if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
 
-			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
 			const embed = new ClientEmbed(author)
 				.setTitle('👯 | PEDIDO DE DANÇA')
 				.setThumbnail(author.displayAvatarURL({

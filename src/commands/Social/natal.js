@@ -3,18 +3,18 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 
-module.exports = class Saldo extends Command {
+module.exports = class Natal extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'saldo';
-		this.category = 'Economia';
-		this.description = 'Veja o saldo de alguém!';
-		this.usage = 'saldo [usuário]';
-		this.aliases = ['coins', 'money'];
+		this.name = 'natal';
+		this.category = 'Social';
+		this.description = 'Veja a quantia de presentes que um usuário tem!';
+		this.usage = 'natal [usuário]';
+		this.aliases = ['presentes', 'feliznatal'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -55,9 +55,10 @@ module.exports = class Saldo extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setTitle(`🎄 Saldo de ${member.user.tag}`)
-			.addField('💵 | Carteira:', `R$${Utils.numberFormat(user.saldo)},00`)
-			.addField('🏦 | Banco:', `R$${Utils.numberFormat(user.banco)},00`);
+			.setTitle(`🎄 Presentes de ${member.user.tag}`)
+			.addField('🎁 | Presentes:', `ㅤㅤ\`${Utils.numberFormat(user.presentes)}\``)
+			.addField('Prazo de coleta de Presentes:', '10/12/2021 à 25/12/2021')
+			.addField('Prazo de Troca:', 'Você poderá Trocar seus presentes no site da Zoe, de 25/12/2021 à 05/01/2022.');
 
 		message.channel.send(author, embed);
 	}

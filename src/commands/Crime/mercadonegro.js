@@ -152,6 +152,11 @@ module.exports = class Mercadonegro extends Command {
 
 				const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
 
+				const sim = message.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+					max: 1,
+					time: 120000
+				});
+
 				collectorEscolhas.on('collect', async (b) => {
 					if (b.id === 'voltar') {
 						b.reply.defer();
@@ -300,13 +305,10 @@ module.exports = class Mercadonegro extends Command {
 					} else if (b.id === 'fechar') {
 						b.reply.defer();
 
+						sim.stop();
 						await escolha.delete();
 						return message.reply('mercado negro fechado com sucesso!');
 					}
-				});
-
-				const sim = message.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
-					max: 1
 				});
 
 				sim.on('collect', async (ce) => {
@@ -398,11 +400,6 @@ module.exports = class Mercadonegro extends Command {
 									embed.setDescription(`Produto Comprado com Sucesso!`);
 									embed.fields = [];
 
-									b.message.edit(author, {
-										embed: embed,
-										components: []
-									});
-
 									const user2 = await this.client.database.users.findOne({
 										userId: findSelectedEvento2.dono,
 										guildId: message.guild.id
@@ -480,7 +477,7 @@ module.exports = class Mercadonegro extends Command {
 										}
 									}
 
-									return await this.client.database.guilds.findOneAndUpdate({
+									await this.client.database.guilds.findOneAndUpdate({
 										_id: message.guild.id
 									}, {
 										$pull: {
@@ -489,9 +486,21 @@ module.exports = class Mercadonegro extends Command {
 											}
 										}
 									});
+
+									return b.message.edit(author, {
+										embed: embed,
+										components: []
+									});
 								}
 							}
 						});
+					}
+				});
+
+				sim.on('end', async (collected, reason) => {
+					if (reason === 'time') {
+						sim.stop();
+						return;
 					}
 				});
 			}

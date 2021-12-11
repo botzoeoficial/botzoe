@@ -243,7 +243,7 @@ module.exports = class Garimpar extends Command {
 					if (randomItens[0] === 'Ferro' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -265,8 +265,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -291,8 +291,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -317,8 +317,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -338,7 +338,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -360,8 +360,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -386,8 +386,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -412,8 +412,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -433,7 +433,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -455,8 +455,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -481,8 +481,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -507,8 +507,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -528,7 +528,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -550,8 +550,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -576,8 +576,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -602,8 +602,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -623,7 +623,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -645,8 +645,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -671,8 +671,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -697,8 +697,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -718,7 +718,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -740,8 +740,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -766,8 +766,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -792,8 +792,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -813,7 +813,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -835,8 +835,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -861,8 +861,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -887,8 +887,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -908,7 +908,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -930,8 +930,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -956,8 +956,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -982,8 +982,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1003,7 +1003,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1025,8 +1025,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1051,8 +1051,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1077,8 +1077,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1098,7 +1098,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1120,8 +1120,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1146,8 +1146,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1172,8 +1172,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1193,7 +1193,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1215,8 +1215,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1241,8 +1241,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1267,8 +1267,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1288,7 +1288,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1310,8 +1310,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1336,8 +1336,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1362,8 +1362,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1383,7 +1383,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1405,8 +1405,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1431,8 +1431,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1457,8 +1457,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1478,7 +1478,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1500,8 +1500,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1526,8 +1526,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1552,8 +1552,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1573,7 +1573,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1595,8 +1595,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1621,8 +1621,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1647,8 +1647,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1668,7 +1668,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1690,8 +1690,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1716,8 +1716,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1742,8 +1742,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1763,7 +1763,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1785,8 +1785,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1811,8 +1811,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1837,8 +1837,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1858,7 +1858,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1880,8 +1880,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -1906,8 +1906,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -1932,8 +1932,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -1953,7 +1953,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -1975,8 +1975,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2001,8 +2001,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2027,8 +2027,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2048,7 +2048,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:aluminio:901590892727660564> | Alumínio: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2070,8 +2070,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Alumínio',
-										emoji: '<:aluminio:901590892727660564>',
-										id: '<:aluminio:901590892727660564>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:aluminiumpaper:918835445780074507>',
+										id: '<:aluminiumpaper:918835445780074507>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2096,8 +2096,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2122,8 +2122,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2145,7 +2145,7 @@ module.exports = class Garimpar extends Command {
 					if (randomItens[0] === 'Ferro' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2167,8 +2167,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2193,8 +2193,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2219,8 +2219,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2240,7 +2240,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2262,8 +2262,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2288,8 +2288,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2314,8 +2314,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2335,7 +2335,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2357,8 +2357,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2383,8 +2383,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2409,8 +2409,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2430,7 +2430,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2452,8 +2452,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2478,8 +2478,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2504,8 +2504,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2525,7 +2525,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2547,8 +2547,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2573,8 +2573,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2599,8 +2599,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2620,7 +2620,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2642,8 +2642,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2668,8 +2668,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2694,8 +2694,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2715,7 +2715,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2737,8 +2737,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2763,8 +2763,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2789,8 +2789,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2810,7 +2810,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2832,8 +2832,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2858,8 +2858,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2884,8 +2884,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -2905,7 +2905,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -2927,8 +2927,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -2953,8 +2953,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -2979,8 +2979,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3000,7 +3000,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3022,8 +3022,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3048,8 +3048,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3074,8 +3074,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3095,7 +3095,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3117,8 +3117,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3143,8 +3143,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3169,8 +3169,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3190,7 +3190,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3212,8 +3212,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3238,8 +3238,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3264,8 +3264,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3285,7 +3285,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3307,8 +3307,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3333,8 +3333,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3359,8 +3359,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3380,7 +3380,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3402,8 +3402,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3428,8 +3428,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3454,8 +3454,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3475,7 +3475,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3497,8 +3497,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3523,8 +3523,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3549,8 +3549,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3570,7 +3570,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia2}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3592,8 +3592,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3618,8 +3618,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3644,8 +3644,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3665,7 +3665,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:ferro:901590546441715782> | Ferro: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3687,8 +3687,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3713,8 +3713,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3739,8 +3739,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Ferro',
-										emoji: '<:ferro:901590546441715782>',
-										id: '<:ferro:901590546441715782>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:beam:918835445746532412>',
+										id: '<:beam:918835445746532412>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3760,7 +3760,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:caulim:901590641274921030> | Caulim: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3782,8 +3782,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3808,8 +3808,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3834,8 +3834,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Caulim',
-										emoji: '<:caulim:901590641274921030>',
-										id: '<:caulim:901590641274921030>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:landslide:918835445700378684>',
+										id: '<:landslide:918835445700378684>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3855,7 +3855,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:plastico:901590709235253338> | Plástico: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3877,8 +3877,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3903,8 +3903,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -3929,8 +3929,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Plástico',
-										emoji: '<:plastico:901590709235253338>',
-										id: '<:plastico:901590709235253338>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:plasticbag:918835445838774322>',
+										id: '<:plasticbag:918835445838774322>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}
@@ -3950,7 +3950,7 @@ module.exports = class Garimpar extends Command {
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
 							.setTitle('Garimpo')
-							.setDescription(`Você garimpou:\n\n<:borracha:901590941033435157> | Borracha: \`${randomQuantia}\`\n\n<:prata:901590833151746128> | Prata: \`${randomQuantia2}\`\n\n<:cobre:901590776545431613> | Cobre: \`${randomQuantia3}\``);
+							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
 						message.channel.send(author, embed);
 
@@ -3972,8 +3972,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Borracha',
-										emoji: '<:borracha:901590941033435157>',
-										id: '<:borracha:901590941033435157>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:eraser:918835444794400799>',
+										id: '<:eraser:918835444794400799>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia
 									}
 								}
@@ -3998,8 +3998,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Prata',
-										emoji: '<:prata:901590833151746128>',
-										id: '<:prata:901590833151746128>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:silver:918835445939458088>',
+										id: '<:silver:918835445939458088>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia2
 									}
 								}
@@ -4024,8 +4024,8 @@ module.exports = class Garimpar extends Command {
 								$push: {
 									inventory: {
 										item: 'Cobre',
-										emoji: '<:cobre:901590776545431613>',
-										id: '<:cobre:901590776545431613>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+										emoji: '<:copperwire:918835446040133652>',
+										id: '<:copperwire:918835446040133652>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 										quantia: randomQuantia3
 									}
 								}

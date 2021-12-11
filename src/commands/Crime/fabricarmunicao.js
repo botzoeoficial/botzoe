@@ -345,6 +345,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -470,6 +471,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -595,6 +597,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -720,6 +723,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -847,6 +851,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -972,6 +977,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -1097,6 +1103,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -1222,6 +1229,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -1349,6 +1357,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -1474,6 +1483,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -1599,6 +1609,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});
@@ -1724,6 +1735,7 @@ module.exports = class Fabricarmunicao extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.municao}** com sucesso!`);
 																		}
 																	});

@@ -349,6 +349,7 @@ module.exports = class Fabricarchaves extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.chave}** com sucesso!`);
 																		}
 																	});
@@ -472,6 +473,7 @@ module.exports = class Fabricarchaves extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.chave}** com sucesso!`);
 																		}
 																	});
@@ -595,6 +597,7 @@ module.exports = class Fabricarchaves extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.chave}** com sucesso!`);
 																		}
 																	});
@@ -718,6 +721,7 @@ module.exports = class Fabricarchaves extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.chave}** com sucesso!`);
 																		}
 																	});

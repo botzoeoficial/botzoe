@@ -283,7 +283,7 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.utilidades': e.loja.utilidades[3]
 				}, {
 					$set: {
-						'loja.utilidades.$.preco': 25000 - (porcentagem * 25000)
+						'loja.utilidades.$.preco': 150000 - (porcentagem * 150000)
 					}
 				});
 
@@ -301,7 +301,7 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.utilidades': e.loja.utilidades[5]
 				}, {
 					$set: {
-						'loja.utilidades.$.preco': 1000 - (porcentagem * 1000)
+						'loja.utilidades.$.preco': 10000 - (porcentagem * 10000)
 					}
 				});
 
@@ -310,7 +310,7 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.pm': e.loja.pm[0]
 				}, {
 					$set: {
-						'loja.pm.$.preco': 2000 - (porcentagem * 2000)
+						'loja.pm.$.preco': 20000 - (porcentagem * 20000)
 					}
 				});
 
@@ -319,7 +319,7 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.pm': e.loja.pm[1]
 				}, {
 					$set: {
-						'loja.pm.$.preco': 55000 - (porcentagem * 55000)
+						'loja.pm.$.preco': 350000 - (porcentagem * 350000)
 					}
 				});
 
@@ -328,7 +328,7 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.pm': e.loja.pm[2]
 				}, {
 					$set: {
-						'loja.pm.$.preco': 28000 - (porcentagem * 28000)
+						'loja.pm.$.preco': 200000 - (porcentagem * 200000)
 					}
 				});
 
@@ -355,7 +355,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[0]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 800 - (porcentagem * 800)
+						'loja.sementes.$.preco': 800 - (porcentagem * 800),
+						'loja.sementes.$.venda': 421 + (porcentagem * 421)
 					}
 				});
 
@@ -364,7 +365,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[1]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 900 - (porcentagem * 900)
+						'loja.sementes.$.preco': 900 - (porcentagem * 900),
+						'loja.sementes.$.venda': 685 + (porcentagem * 685)
 					}
 				});
 
@@ -373,7 +375,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[2]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 1100 - (porcentagem * 1100)
+						'loja.sementes.$.preco': 1100 - (porcentagem * 1100),
+						'loja.sementes.$.venda': 790 + (porcentagem * 790)
 					}
 				});
 
@@ -382,7 +385,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[3]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 750 - (porcentagem * 750)
+						'loja.sementes.$.preco': 750 - (porcentagem * 750),
+						'loja.sementes.$.venda': 1000 + (porcentagem * 1000)
 					}
 				});
 
@@ -391,7 +395,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[4]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 1500 - (porcentagem * 1500)
+						'loja.sementes.$.preco': 1500 - (porcentagem * 1500),
+						'loja.sementes.$.venda': 948 + (porcentagem * 948)
 					}
 				});
 
@@ -400,7 +405,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[5]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 1800 - (porcentagem * 1800)
+						'loja.sementes.$.preco': 1800 - (porcentagem * 1800),
+						'loja.sementes.$.venda': 1369 + (porcentagem * 1369)
 					}
 				});
 
@@ -409,7 +415,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[6]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 2100 - (porcentagem * 2100)
+						'loja.sementes.$.preco': 2100 - (porcentagem * 2100),
+						'loja.sementes.$.venda': 2106 + (porcentagem * 2106)
 					}
 				});
 
@@ -418,7 +425,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[7]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 2500 - (porcentagem * 2500)
+						'loja.sementes.$.preco': 2500 - (porcentagem * 2500),
+						'loja.sementes.$.venda': 1632 + (porcentagem * 1632)
 					}
 				});
 
@@ -427,7 +435,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[8]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 2900 - (porcentagem * 2900)
+						'loja.sementes.$.preco': 2900 - (porcentagem * 2900),
+						'loja.sementes.$.venda': 1790 + (porcentagem * 1790)
 					}
 				});
 
@@ -436,7 +445,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[9]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 3300 - (porcentagem * 3300)
+						'loja.sementes.$.preco': 3300 - (porcentagem * 3300),
+						'loja.sementes.$.venda': 2790 + (porcentagem * 2790)
 					}
 				});
 
@@ -445,7 +455,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[10]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 3900 - (porcentagem * 3900)
+						'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
+						'loja.sementes.$.venda': 3105 + (porcentagem * 3105)
 					}
 				});
 
@@ -454,7 +465,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[11]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 4400 - (porcentagem * 4400)
+						'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
+						'loja.sementes.$.venda': 2211 + (porcentagem * 2211)
 					}
 				});
 
@@ -463,7 +475,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[12]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 5000 - (porcentagem * 5000)
+						'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
+						'loja.sementes.$.venda': 2579 + (porcentagem * 2579)
 					}
 				});
 
@@ -472,7 +485,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[13]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 3900 - (porcentagem * 3900)
+						'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
+						'loja.sementes.$.venda': 4100 + (porcentagem * 4100)
 					}
 				});
 
@@ -481,7 +495,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[14]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 4400 - (porcentagem * 4400)
+						'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
+						'loja.sementes.$.venda': 3237 + (porcentagem * 3237)
 					}
 				});
 
@@ -490,7 +505,8 @@ module.exports = class Alterarbolsa extends Command {
 					'loja.sementes': e.loja.sementes[15]
 				}, {
 					$set: {
-						'loja.sementes.$.preco': 5000 - (porcentagem * 5000)
+						'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
+						'loja.sementes.$.venda': 5263 + (porcentagem * 5263)
 					}
 				});
 

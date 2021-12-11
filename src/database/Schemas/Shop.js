@@ -142,7 +142,7 @@ const shopSchema = new Schema({
 			{
 				emoji: '<:mochila:899007409006215188>',
 				item: 'Mochila',
-				preco: 25000,
+				preco: 150000,
 				desc: 'Libera 25 espaços na sua Mochila para itens.\nQtde: Máx 1 mochila'
 			},
 			{
@@ -154,26 +154,26 @@ const shopSchema = new Schema({
 			{
 				emoji: '<:transferir:900544627097108531>',
 				item: 'Transferir',
-				preco: 1000,
+				preco: 10000,
 				desc: 'Transfira um item da sua **mochila** ou **inventário** para outro usuário.\nQtde: 1 transferir'
 			}
 			],
 			pm: [{
 				emoji: '<:algema:898326104413188157>',
 				item: 'Algemas',
-				preco: 2000,
+				preco: 20000,
 				desc: 'Usado para algemar e Prender um meliante.\nQtde: Máx 1 algema'
 			},
 			{
 				emoji: '<:Mp5:901117948180168724>',
 				item: 'MP5',
-				preco: 55000,
+				preco: 350000,
 				desc: 'Arma específica para policial, necessário para prender em qualquer ocasião.\nQtde: Máx 1 MP5'
 			},
 			{
 				emoji: '<:G18:901117282003075072>',
 				item: 'G18',
-				preco: 28000,
+				preco: 200000,
 				desc: 'Arma específica para policial, necessário para prender em qualquer ocasião.\nQtde: Máx 1 G18'
 			},
 			{
@@ -192,104 +192,125 @@ const shopSchema = new Schema({
 			bitcoin: [{
 				emoji: '<:bolso:908780753884696706>',
 				item: 'Bolso',
-				preco: 150,
+				preco: 100,
 				desc: 'Aumenta +200 a quantidade de itens no seu inventário no servidor que você comprar.\nQtde: Só pode ser comprado 1 vez'
+			}, {
+				emoji: '<:bulletproofvest:919034790940921906>',
+				item: 'Colete à Prova de Balas',
+				preco: 10,
+				desc: 'Diminui em 70% a chance de ser atingido por um tiro.\nQtde: Só pode ser comprado 1 vez'
 			}],
 			sementes: [{
 				emoji: '<:maca:911706991783735306>',
 				item: 'Semente de Maçã',
 				preco: 800,
-				desc: 'Maçã só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes'
+				desc: 'Maçã só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes',
+				venda: 421
 			},
 			{
 				emoji: '<:banana:911706991297187851>',
 				item: 'Semente de Banana',
 				preco: 900,
-				desc: 'Banana só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes'
+				desc: 'Banana só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes',
+				venda: 685
 			},
 			{
 				emoji: '<:laranja:911706992056365176>',
 				item: 'Semente de Laranja',
 				preco: 1100,
-				desc: 'Laranja só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes'
+				desc: 'Laranja só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes',
+				venda: 790
 			},
 			{
 				emoji: '<:limao:911706991217496075>',
 				item: 'Semente de Limão',
 				preco: 750,
-				desc: 'Limão só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes'
+				desc: 'Limão só pode ser plantada em **Fazenda 1**\nQtde: 5 sementes',
+				venda: 1000
 			},
 			{
 				emoji: '<:pera:911706991796301874>',
 				item: 'Semente de Pêra',
 				preco: 1500,
-				desc: 'Pêra só pode ser plantada em **Fazenda 2**\nQtde: 5 sementes'
+				desc: 'Pêra só pode ser plantada em **Fazenda 2**\nQtde: 5 sementes',
+				venda: 948
 			},
 			{
 				emoji: '<:morango:911706991280410755>',
 				item: 'Semente de Morango',
 				preco: 1800,
-				desc: 'Morango só pode ser plantada em **Fazenda 2**\nQtde: 5 sementes'
+				desc: 'Morango só pode ser plantada em **Fazenda 2**\nQtde: 5 sementes',
+				venda: 1369
 			},
 			{
 				emoji: '<:tomate:911706991599173653>',
 				item: 'Semente de Tomate',
 				preco: 2100,
-				desc: 'Tomate só pode ser plantada em **Fazenda 2**\nQtde: 5 sementes'
+				desc: 'Tomate só pode ser plantada em **Fazenda 2**\nQtde: 5 sementes',
+				venda: 2106
 			},
 			{
 				emoji: '<:abacaxi:911706991804678144>',
 				item: 'Semente de Abacaxi',
 				preco: 2500,
-				desc: 'Abacaxi só pode ser plantada em **Fazenda 3**\nQtde: 5 sementes'
+				desc: 'Abacaxi só pode ser plantada em **Fazenda 3**\nQtde: 5 sementes',
+				venda: 1632
 			},
 			{
 				emoji: '<:melao:911706991766933574>',
 				item: 'Semente de Melão',
 				preco: 2900,
-				desc: 'Melão só pode ser plantada em **Fazenda 3**\nQtde: 5 sementes'
+				desc: 'Melão só pode ser plantada em **Fazenda 3**\nQtde: 5 sementes',
+				venda: 1790
 			},
 			{
 				emoji: '<:manga:911706991594995732>',
 				item: 'Semente de Manga',
 				preco: 3300,
-				desc: 'Manga só pode ser plantada em **Fazenda 3**\nQtde: 5 sementes'
+				desc: 'Manga só pode ser plantada em **Fazenda 3**\nQtde: 5 sementes',
+				venda: 2790
 			},
 			{
 				emoji: '<:pessego:911706991632736316>',
 				item: 'Semente de Pêssego',
 				preco: 3900,
-				desc: 'Pêssego só pode ser plantada em **Fazenda 4**\nQtde: 5 sementes'
+				desc: 'Pêssego só pode ser plantada em **Fazenda 4**\nQtde: 5 sementes',
+				venda: 3105
 			},
 			{
 				emoji: '<:cereja:911706991934734406>',
 				item: 'Semente de Cereja',
 				preco: 4400,
-				desc: 'Cereja só pode ser plantada em **Fazenda 4**\nQtde: 5 sementes'
+				desc: 'Cereja só pode ser plantada em **Fazenda 4**\nQtde: 5 sementes',
+				venda: 2211
 			},
 			{
 				emoji: '<:melancia:911706991808884776>',
 				item: 'Semente de Melancia',
 				preco: 5000,
-				desc: 'Melancia só pode ser plantada em **Fazenda 4**\nQtde: 5 sementes'
+				desc: 'Melancia só pode ser plantada em **Fazenda 4**\nQtde: 5 sementes',
+				venda: 2579
 			},
 			{
 				emoji: '<:cafe:911706991615950898>',
 				item: 'Semente de Café',
 				preco: 3900,
-				desc: 'Café só pode ser plantada em **Fazenda 5**\nQtde: 5 sementes'
+				desc: 'Café só pode ser plantada em **Fazenda 5**\nQtde: 5 sementes',
+				venda: 4100
 			},
 			{
 				emoji: '<:milho:911706992400298056>',
 				item: 'Semente de Milho',
 				preco: 4400,
-				desc: 'Milho só pode ser plantada em **Fazenda 5**\nQtde: 5 sementes'
+				desc: 'Milho só pode ser plantada em **Fazenda 5**\nQtde: 5 sementes',
+				venda: 3237
 			},
 			{
 				emoji: '<:arroz:911706991670493214>',
 				item: 'Semente de Arroz',
 				preco: 5000,
-				desc: 'Arroz só pode ser plantada em **Fazenda 5**\nQtde: 5 sementes'
+				desc: 'Arroz só pode ser plantada em **Fazenda 5**\nQtde: 5 sementes',
+				venda: 5263
 			}
 			],
 			utilidadesAgro: [{

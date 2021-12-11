@@ -348,6 +348,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -473,6 +474,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -598,6 +600,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -723,6 +726,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -850,6 +854,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -975,6 +980,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1100,6 +1106,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1225,6 +1232,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1352,6 +1360,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1477,6 +1486,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1602,6 +1612,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1727,6 +1738,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1854,6 +1866,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -1979,6 +1992,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2104,6 +2118,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2229,6 +2244,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2356,6 +2372,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2481,6 +2498,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2606,6 +2624,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2731,6 +2750,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2858,6 +2878,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -2983,6 +3004,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3108,6 +3130,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3233,6 +3256,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3360,6 +3384,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3485,6 +3510,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3610,6 +3636,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3735,6 +3762,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3862,6 +3890,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -3987,6 +4016,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -4112,6 +4142,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});
@@ -4237,6 +4268,7 @@ module.exports = class Fabricararma extends Command {
 																				});
 																			}
 
+																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.arma}** com sucesso!`);
 																		}
 																	});

@@ -224,6 +224,10 @@ const userSchema = new Schema({
 		diminuirpena: {
 			type: Number,
 			default: 0
+		},
+		atirar: {
+			type: Number,
+			default: 0
 		}
 	},
 	pets: {
@@ -335,6 +339,10 @@ const userSchema = new Schema({
 		prenderExportador: {
 			type: Number,
 			default: 0
+		},
+		prenderAtirar: {
+			type: Number,
+			default: 0
 		}
 	},
 	prisao: {
@@ -371,6 +379,10 @@ const userSchema = new Schema({
 			default: false
 		},
 		roubarVeiculo: {
+			type: Boolean,
+			default: false
+		},
+		atirarPrisao: {
 			type: Boolean,
 			default: false
 		},
@@ -991,6 +1003,20 @@ const userSchema = new Schema({
 		quantia: {
 			type: Number,
 			default: 0
+		}
+	},
+	presentes: {
+		type: Number,
+		default: 0
+	},
+	hp: {
+		ferido: {
+			type: Boolean,
+			default: false
+		},
+		vida: {
+			type: Number,
+			default: 100
 		}
 	}
 });

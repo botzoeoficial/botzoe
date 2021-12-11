@@ -1347,25 +1347,25 @@ module.exports = class Cadastraritem extends Command {
 
 						const minerioArray = [{
 							minerio: 'Alumínio',
-							emoji: '<:aluminio:901590892727660564>'
+							emoji: '<:aluminiumpaper:918835445780074507>'
 						}, {
 							minerio: 'Borracha',
-							emoji: '<:borracha:901590941033435157>'
+							emoji: '<:eraser:918835444794400799>'
 						}, {
 							minerio: 'Caulim',
-							emoji: '<:caulim:901590641274921030>'
+							emoji: '<:landslide:918835445700378684>'
 						}, {
 							minerio: 'Cobre',
-							emoji: '<:cobre:901590776545431613>'
+							emoji: '<:copperwire:918835446040133652>'
 						}, {
 							minerio: 'Ferro',
-							emoji: '<:ferro:901590546441715782>'
+							emoji: '<:beam:918835445746532412>'
 						}, {
 							minerio: 'Plástico',
-							emoji: '<:plastico:901590709235253338>'
+							emoji: '<:plasticbag:918835445838774322>'
 						}, {
 							minerio: 'Prata',
-							emoji: '<:prata:901590833151746128>'
+							emoji: '<:silver:918835445939458088>'
 						}];
 
 						const mapMinerio = minerioArray.map((value, index) => ({
@@ -1387,6 +1387,7 @@ module.exports = class Cadastraritem extends Command {
 							sim2.on('collect', async (ce2) => {
 								if (Number(ce2.content) === 0) {
 									msg.delete();
+									ce2.delete();
 									sim2.stop();
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
@@ -1399,15 +1400,17 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-											timeout: 6000
-										}));
 										ce2.delete();
+										msg.delete();
+										sim2.stop();
+
+										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.inventory.find((a) => a.item === findSelectedEvento2.minerio)) {
-										message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
 										ce2.delete();
+										msg.delete();
+										sim2.stop();
+
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1422,20 +1425,23 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('collect', async (ce3) => {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
+													ce3.delete();
 													msg.delete();
-													return message.reply(`cancelado com sucesso!`);
+													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													message.reply(`coloque uma quantia válida. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
 													ce3.delete();
+													collector.stop();
+													msg.delete();
+
+													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.inventory.find((a) => a.item === findSelectedEvento2.minerio).quantia < Number(ce3.content)) {
-													message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.minerio}\` no seu **inventário**. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
 													ce3.delete();
+													collector.stop();
+													msg.delete();
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.minerio}\` no seu **inventário**. Por favor, use o comando novamente!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -1450,15 +1456,17 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('collect', async (ce4) => {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
+																ce4.delete();
 																msg.delete();
-																return message.reply(`cancelado com sucesso!`);
+																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
-																message.reply(`coloque um preço válido. Por favor, envie o preço novamente!`).then(ba => ba.delete({
-																	timeout: 5000
-																}));
 																ce4.delete();
+																collector2.stop();
+																msg.delete();
+
+																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -1512,6 +1520,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
+																			ce5.delete();
 																			sim3.stop();
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
@@ -1519,10 +1528,11 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-																					timeout: 6000
-																				}));
 																				ce5.delete();
+																				sim3.stop();
+																				msg.delete();
+
+																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.minerio}**`, true);
@@ -1530,7 +1540,6 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
 
-																				msg.edit(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -1593,7 +1602,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return setTimeout(async () => {
+																				setTimeout(async () => {
 																					await this.client.database.guilds.findOneAndUpdate({
 																						_id: message.guild.id
 																					}, {
@@ -1604,6 +1613,8 @@ module.exports = class Cadastraritem extends Command {
 																						}
 																					});
 																				}, findSelectedEvento3.milisegundos);
+
+																				return msg.edit(author, embed);
 																			}
 																		}
 																	});
@@ -1678,6 +1689,7 @@ module.exports = class Cadastraritem extends Command {
 							sim2.on('collect', async (ce2) => {
 								if (Number(ce2.content) === 0) {
 									msg.delete();
+									ce2.delete();
 									sim2.stop();
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {

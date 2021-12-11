@@ -1,15 +1,13 @@
-/* eslint-disable handle-callback-err */
-/* eslint-disable id-length */
-/* eslint-disable new-cap */
-/* eslint-disable no-return-assign */
 /* eslint-disable consistent-return */
+/* eslint-disable no-return-assign */
 /* eslint-disable max-len */
+/* eslint-disable new-cap */
+/* eslint-disable id-length */
 /* eslint-disable complexity */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
-const User = require('../../database/Schemas/User');
 
 module.exports = class Crime extends Command {
 
@@ -1147,6 +1145,7 @@ module.exports = class Crime extends Command {
 							}
 						});
 
+						// eslint-disable-next-line consistent-return
 						sim.on('collect', async (collected, reason) => {
 							if (reason === 'time') {
 								sim.stop();
@@ -1158,23 +1157,46 @@ module.exports = class Crime extends Command {
 				}
 			}
 		} else if (args[0].toLowerCase() === 'estatisticas') {
-			User.findOne({
-				userId: author.id
-			}, async () => {
-				await require('mongoose').connection.collection('users').find({
+			const CRIMES = await require('mongoose')
+				.connection.collection('users')
+				.find({
 					'crime.feito': {
 						$gt: 0
 					}
-				}).toArray((err, res) => {
-					if (err) throw err;
-					const Exp = res.map((x) => x.crime).sort((x, f) => f.feito - x.feito);
+				})
+				.toArray();
 
-					const EMBED = new ClientEmbed(author)
-						.setTitle('Crime Estatísticas')
-						.setDescription(Exp.map((x, f) => `\`${f + 1}º\`) **${x.user}** - **${x.feito}**`).slice(0, 10).join('\n\n'));
+			const crimes = Object.entries(CRIMES)
+				.map(([, x]) => x.userId)
+				.sort((x, f) => x.feito - f.feito);
 
-					message.channel.send(author, EMBED);
-				});
+			const members = [];
+
+			await this.PUSH(crimes, members, message.guild);
+
+			const crimesMap = members
+				.map((x) => x)
+				.sort((x, f) => f.feito - x.feito)
+				.slice(0, 10);
+
+			const EMBED = new ClientEmbed(author)
+				.setTitle('Crime Estatísticas')
+				.setDescription(crimesMap.map((x, f) => `\`${f + 1}º\`) **${x.user}** - **${x.feito}**`).join('\n\n'));
+
+			message.channel.send(author, EMBED);
+		}
+	}
+
+	async PUSH(crimes, members, guild) {
+		for (const member of crimes) {
+			const doc = await this.client.database.users.findOne({
+				userId: member,
+				guildId: guild.id
+			});
+
+			members.push({
+				user: await this.client.users.fetch(member).then((user) => user),
+				feito: doc.crime.feito
 			});
 		}
 	}

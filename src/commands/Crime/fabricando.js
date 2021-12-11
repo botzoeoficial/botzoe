@@ -619,6 +619,8 @@ module.exports = class Fabricando extends Command {
 			} else {
 				embed.setDescription(`Você está fabricando nenhuma munição no momento. Use o comando \`${prefix}fabricarmunição\`!`);
 			}
+
+			message.channel.send(author, embed);
 		} else {
 			return message.reply('você não tem uma função especial na **Cidade** para fabricar alguma coisa!');
 		}

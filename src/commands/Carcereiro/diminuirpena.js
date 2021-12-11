@@ -76,15 +76,7 @@ module.exports = class Diminuirpena extends Command {
 				guildId: message.guild.id
 			});
 
-			if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
 			if (!user2.prisao.isPreso) return message.reply('este usuário não está preso.');
-
-			if (user2.prisao.crime && user.prisao.isPreso) return message.reply(`esse usuário foi preso pelo comando \`${prefix}crime\`, então você não pode diminuir o tempo de prisão dele!`);
-
-			if (user2.prisao.isPreso && user.prisao.roubarVeiculo) return message.reply(`esse usuário foi preso pelo comando \`${prefix}roubar-veículo\`, então você não pode diminuir o tempo de prisão dele!`);
 
 			const tempo = this.timeToMilliseconds(args.slice(1).join(' '));
 
@@ -137,6 +129,35 @@ module.exports = class Diminuirpena extends Command {
 						'prisao.tempo': user2.prisao.tempo - tempo
 					}
 				});
+
+				setTimeout(async () => {
+					await this.client.database.users.findOneAndUpdate({
+						userId: member.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'prisao.isPreso': false,
+							'prisao.tempo': 0,
+							'prisao.prenderCmd': false,
+							'prisao.prenderMili': 0,
+							'prisao.traficoDrogas': false,
+							'prisao.crime': false,
+							'prisao.prender': false,
+							'prisao.revistar': false,
+							'prisao.roubarVeiculo': false,
+							'prisao.velha': false,
+							'prisao.frentista': false,
+							'prisao.joalheria': false,
+							'prisao.agiota': false,
+							'prisao.casaLoterica': false,
+							'prisao.brazino': false,
+							'prisao.facebook': false,
+							'prisao.bancoCentral': false,
+							'prisao.shopping': false,
+							'prisao.banco': false
+						}
+					});
+				}, user2.prisao.tempo - tempo);
 			}
 
 			return message.reply(`tempo de prisão diminuido com sucesso.`);

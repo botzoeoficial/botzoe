@@ -66,7 +66,7 @@ module.exports = class Perfil extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setTitle(`Perfil do(a) ${member.user.tag}`)
+			.setTitle(`🎄 Perfil de ${member.user.tag}`)
 			.addField('👤 Nick:', user.nick, true)
 			.addField('🏦 Saldo:', `R$${Utils.numberFormat(user.saldo + user.banco)},00`, true)
 			.addField('<:btc:908786996535787551> BitCoins:', `ㅤ${Utils.numberFormat(user.bitcoin)}`, true)
@@ -84,7 +84,7 @@ module.exports = class Perfil extends Command {
 			.addField('\u2800', '\u2800', true)
 			.addField('🏆 Top Ranking:', `ㅤ#${server.sort((a, b) => (b.banco + b.saldo) - (a.banco + a.saldo)).findIndex(c => c.userId === user.userId) + 1}º`, true)
 			.addField('🗓️ Aniversário:', user.aniversario)
-			.addField('\u200b', `**SOBREMIM:**\n${user.sobremim}`);
+			.addField('\u200b', `🎄 **SOBREMIM:**\n${user.sobremim}`);
 
 		message.channel.send(author, embed);
 	}

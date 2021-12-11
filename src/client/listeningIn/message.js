@@ -43,18 +43,10 @@ module.exports = class {
 			}
 
 			if (!user) {
-				if (message.author.id === '463421520686088192' || message.author.id === '707677540583735338') {
-					await await this.client.database.users.create({
-						userId: message.author.id,
-						guildId: message.guild.id,
-						cadastrado: true
-					});
-				} else {
-					await await this.client.database.users.create({
-						userId: message.author.id,
-						guildId: message.guild.id
-					});
-				}
+				await this.client.database.users.create({
+					userId: message.author.id,
+					guildId: message.guild.id
+				});
 			}
 
 			if (!client) {
@@ -116,7 +108,40 @@ module.exports = class {
 				_id: cmd.name
 			});
 
+			const random = Math.floor(Math.random() * 101);
+
 			if (comando) {
+				if (random < 51) {
+					await message.react('🎁');
+
+					const coletor = await message.createReactionCollector((r, u) => r.emoji.name === '🎁' && u.id !== this.client.user.id, {
+						max: 1,
+						time: 60000
+					});
+
+					coletor.on('collect', async (collected, user3) => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: user3.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								presentes: user.presentes += 1
+							}
+						});
+
+						message.reactions.removeAll();
+						message.channel.send(`O usuário <@${user3.id}> reinvidicou este presente 🎁.`);
+						return;
+					});
+
+					coletor.on('end', async (collected, reason) => {
+						if (reason === 'time') {
+							message.reactions.removeAll();
+							return;
+						}
+					});
+				}
+
 				if (client.usersBan.find((a) => a === message.author.id)) {
 					message.reply('você está banido de usar minhas funções **GLOBALMENTE**!');
 					return;
@@ -349,6 +374,7 @@ module.exports = class {
 					prefix,
 					author
 				});
+
 				var num = comando.usages;
 				num += 1;
 
