@@ -147,7 +147,7 @@ module.exports = class Exportador extends Command {
 					message.channel.send(author, embedExportada).then(async (msg1) => {
 						await msg1.react('👮');
 
-						const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && server.cidade.policiais.map(a => a.id).includes(user3.id);
+						const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(user3.id) || server.cidade.delegado === user3.id);
 						const coletor2 = msg1.createReactionCollector(filtro2, {
 							time: 4000,
 							max: 1

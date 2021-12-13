@@ -84,7 +84,7 @@ module.exports = class Casar extends Command {
 		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
 		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-		message.channel.send(author, {
+		message.channel.send(user, {
 			embed: embed,
 			components: [botoes]
 		}).then(async (msg) => {
@@ -137,12 +137,11 @@ module.exports = class Casar extends Command {
 						}
 					});
 
-					return;
+					return msg.delete();
 				} else if (b.id === 'negar') {
 					b.reply.defer();
 
 					msg.delete();
-
 					return message.reply(`${user} recusou seu pedido de casamento.`);
 				}
 			});

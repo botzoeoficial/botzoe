@@ -94,7 +94,7 @@ module.exports = class Abraçar extends Command {
 			const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
 			const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-			message.channel.send(author, {
+			message.channel.send(member, {
 				embed: embed,
 				components: [botoes]
 			}).then(async (msg) => {
@@ -148,6 +148,8 @@ module.exports = class Abraçar extends Command {
 								'humores.triste': user.humores.triste + 30
 							}
 						});
+
+						return msg.delete();
 					} else if (b.id === 'negar') {
 						b.reply.defer();
 

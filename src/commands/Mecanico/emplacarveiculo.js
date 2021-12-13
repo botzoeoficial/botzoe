@@ -15,7 +15,7 @@ module.exports = class Emplacarveiculo extends Command {
 		this.category = 'Mecanico';
 		this.description = 'Coloque placa no veículo de um cliente!';
 		this.usage = 'emplacarveiculo';
-		this.aliases = ['emplacarveículo', 'emplacar-veiculo', 'emplacar-veículo'];
+		this.aliases = ['emplacarveículo', 'emplacar-veiculo', 'emplacar-veículo', 'emplacarcarro'];
 
 		this.enabled = true;
 		this.guildOnly = true;

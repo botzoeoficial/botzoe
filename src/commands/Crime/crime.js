@@ -317,7 +317,7 @@ module.exports = class Crime extends Command {
 					embed2.setDescription(`*Lista de Crimes que você pode cometer:*\n\n${embedMessage}`);
 
 					message.channel.send(author, embed2).then(async (msg) => {
-						const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
 							time: 300000
 						});
 
@@ -326,10 +326,11 @@ module.exports = class Crime extends Command {
 							const findSelectedEvento = crimesArray.find((xis) => xis.position === selected);
 
 							if (!findSelectedEvento) {
-								message.reply('número do crime não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-									timeout: 5000
-								}));
+								msg.delete();
 								ce.delete();
+								sim.stop();
+
+								return message.reply('número do crime não encontrado. Por favor, use o comando novamente!');
 							} else if (findSelectedEvento.position === 0) {
 								sim.stop();
 								// velhinha - 5 minutos preso
@@ -1145,7 +1146,6 @@ module.exports = class Crime extends Command {
 							}
 						});
 
-						// eslint-disable-next-line consistent-return
 						sim.on('collect', async (collected, reason) => {
 							if (reason === 'time') {
 								sim.stop();

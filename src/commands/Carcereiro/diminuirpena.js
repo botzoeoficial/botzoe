@@ -93,72 +93,14 @@ module.exports = class Diminuirpena extends Command {
 				}
 			});
 
-			if (user2.prisao.tempo - tempo <= 0) {
-				await this.client.database.users.findOneAndUpdate({
-					userId: member.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'prisao.isPreso': false,
-						'prisao.tempo': 0,
-						'prisao.prenderCmd': false,
-						'prisao.prenderMili': 0,
-						'prisao.traficoDrogas': false,
-						'prisao.crime': false,
-						'prisao.prender': false,
-						'prisao.revistar': false,
-						'prisao.roubarVeiculo': false,
-						'prisao.velha': false,
-						'prisao.frentista': false,
-						'prisao.joalheria': false,
-						'prisao.agiota': false,
-						'prisao.casaLoterica': false,
-						'prisao.brazino': false,
-						'prisao.facebook': false,
-						'prisao.bancoCentral': false,
-						'prisao.shopping': false,
-						'prisao.banco': false
-					}
-				});
-			} else {
-				await this.client.database.users.findOneAndUpdate({
-					userId: member.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'prisao.tempo': user2.prisao.tempo - tempo
-					}
-				});
-
-				setTimeout(async () => {
-					await this.client.database.users.findOneAndUpdate({
-						userId: member.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'prisao.isPreso': false,
-							'prisao.tempo': 0,
-							'prisao.prenderCmd': false,
-							'prisao.prenderMili': 0,
-							'prisao.traficoDrogas': false,
-							'prisao.crime': false,
-							'prisao.prender': false,
-							'prisao.revistar': false,
-							'prisao.roubarVeiculo': false,
-							'prisao.velha': false,
-							'prisao.frentista': false,
-							'prisao.joalheria': false,
-							'prisao.agiota': false,
-							'prisao.casaLoterica': false,
-							'prisao.brazino': false,
-							'prisao.facebook': false,
-							'prisao.bancoCentral': false,
-							'prisao.shopping': false,
-							'prisao.banco': false
-						}
-					});
-				}, user2.prisao.tempo - tempo);
-			}
+			await this.client.database.users.findOneAndUpdate({
+				userId: member.id,
+				guildId: message.guild.id
+			}, {
+				$set: {
+					'prisao.tempo': user2.prisao.tempo - tempo
+				}
+			});
 
 			return message.reply(`tempo de prisão diminuido com sucesso.`);
 		}

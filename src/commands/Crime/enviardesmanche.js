@@ -110,7 +110,7 @@ module.exports = class Enviardesmanche extends Command {
 		message.channel.send(author, embed).then(async (msg) => {
 			if (!user.garagem.length) return;
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
 				time: 300000
 			});
 
@@ -118,23 +118,28 @@ module.exports = class Enviardesmanche extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
+
 					return message.reply(`seleção cancelada com sucesso!`);
 				} else {
 					const selected = Number(ce.content - 1);
 					const findSelectedEvento = carrosArray.find((xis) => xis.position === selected);
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
+						msg.delete();
+						ce.delete();
+						sim.stop();
+
+						return message.reply('número do carro não encontrado. Por favor, use o comando novamente!').then(ba => ba.delete({
 							timeout: 5000
 						}));
-						ce.delete();
 					} else if (findSelectedEvento.mecanica) {
 						msg.delete();
+						ce.delete();
+						sim.stop();
 
 						return message.reply('esse carro seu está na **Mecânica**. Você não pode enviar ele pra desmanche enquanto ele está na **Mecânica**!').then(ba => ba.delete({
 							timeout: 5000
 						}));
-						ce.delete();
 					} else {
 						sim.stop();
 						ce.delete();

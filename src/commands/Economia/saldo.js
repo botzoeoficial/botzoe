@@ -14,7 +14,7 @@ module.exports = class Saldo extends Command {
 		this.category = 'Economia';
 		this.description = 'Veja o saldo de alguém!';
 		this.usage = 'saldo [usuário]';
-		this.aliases = ['coins', 'money'];
+		this.aliases = ['coins', 'money', 'atm'];
 
 		this.enabled = true;
 		this.guildOnly = true;

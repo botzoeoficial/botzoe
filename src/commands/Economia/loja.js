@@ -6160,17 +6160,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[0].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[0].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[0].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Sementes de ', '')).quantia * loja4.sementes[0].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[0].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia * loja4.sementes[0].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Sementes de ', '')).quantia * loja4.sementes[0].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia * loja4.sementes[0].venda
 									}
 								});
 
@@ -6180,7 +6180,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[0].item.replace('Sementes de ', '')
+											item: loja4.sementes[0].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6193,17 +6193,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[1].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[1].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[1].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Sementes de ', '')).quantia * loja4.sementes[1].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[1].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia * loja4.sementes[1].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Sementes de ', '')).quantia * loja4.sementes[1].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia * loja4.sementes[1].venda
 									}
 								});
 
@@ -6213,7 +6213,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[1].item.replace('Sementes de ', '')
+											item: loja4.sementes[1].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6226,17 +6226,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[2].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[2].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[2].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Sementes de ', '')).quantia * loja4.sementes[2].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[2].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia * loja4.sementes[2].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Sementes de ', '')).quantia * loja4.sementes[2].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia * loja4.sementes[2].venda
 									}
 								});
 
@@ -6246,7 +6246,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[2].item.replace('Sementes de ', '')
+											item: loja4.sementes[2].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6259,17 +6259,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[3].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[3].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[3].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Sementes de ', '')).quantia * loja4.sementes[3].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[3].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia * loja4.sementes[3].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Sementes de ', '')).quantia * loja4.sementes[3].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia * loja4.sementes[3].venda
 									}
 								});
 
@@ -6279,7 +6279,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[3].item.replace('Sementes de ', '')
+											item: loja4.sementes[3].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6292,17 +6292,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[4].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[4].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[4].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Sementes de ', '')).quantia * loja4.sementes[4].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[4].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia * loja4.sementes[4].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Sementes de ', '')).quantia * loja4.sementes[4].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia * loja4.sementes[4].venda
 									}
 								});
 
@@ -6312,7 +6312,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[4].item.replace('Sementes de ', '')
+											item: loja4.sementes[4].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6325,17 +6325,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[5].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[5].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[5].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Sementes de ', '')).quantia * loja4.sementes[5].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[5].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia * loja4.sementes[5].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Sementes de ', '')).quantia * loja4.sementes[5].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia * loja4.sementes[5].venda
 									}
 								});
 
@@ -6345,7 +6345,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[5].item.replace('Sementes de ', '')
+											item: loja4.sementes[5].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6358,17 +6358,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[6].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[6].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[6].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Sementes de ', '')).quantia * loja4.sementes[6].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[6].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia * loja4.sementes[6].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Sementes de ', '')).quantia * loja4.sementes[6].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia * loja4.sementes[6].venda
 									}
 								});
 
@@ -6378,7 +6378,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[6].item.replace('Sementes de ', '')
+											item: loja4.sementes[6].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6391,17 +6391,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[7].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[7].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[7].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Sementes de ', '')).quantia * loja4.sementes[7].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[7].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia * loja4.sementes[7].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Sementes de ', '')).quantia * loja4.sementes[7].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia * loja4.sementes[7].venda
 									}
 								});
 
@@ -6411,7 +6411,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[7].item.replace('Sementes de ', '')
+											item: loja4.sementes[7].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6474,17 +6474,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[8].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[8].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[8].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Sementes de ', '')).quantia * loja4.sementes[8].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[8].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia * loja4.sementes[8].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Sementes de ', '')).quantia * loja4.sementes[8].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia * loja4.sementes[8].venda
 									}
 								});
 
@@ -6494,7 +6494,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[8].item.replace('Sementes de ', '')
+											item: loja4.sementes[8].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6507,17 +6507,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[9].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[9].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[9].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Sementes de ', '')).quantia * loja4.sementes[9].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[9].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia * loja4.sementes[9].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Sementes de ', '')).quantia * loja4.sementes[9].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia * loja4.sementes[9].venda
 									}
 								});
 
@@ -6527,7 +6527,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[9].item.replace('Sementes de ', '')
+											item: loja4.sementes[9].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6540,17 +6540,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[10].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[10].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[10].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Sementes de ', '')).quantia * loja4.sementes[10].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[10].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia * loja4.sementes[10].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Sementes de ', '')).quantia * loja4.sementes[10].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia * loja4.sementes[10].venda
 									}
 								});
 
@@ -6560,7 +6560,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[10].item.replace('Sementes de ', '')
+											item: loja4.sementes[10].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6573,17 +6573,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[11].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[11].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[11].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Sementes de ', '')).quantia * loja4.sementes[11].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[11].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia * loja4.sementes[11].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Sementes de ', '')).quantia * loja4.sementes[11].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia * loja4.sementes[11].venda
 									}
 								});
 
@@ -6593,7 +6593,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[11].item.replace('Sementes de ', '')
+											item: loja4.sementes[11].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6606,17 +6606,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[12].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[12].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[12].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Sementes de ', '')).quantia * loja4.sementes[12].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[12].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia * loja4.sementes[12].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Sementes de ', '')).quantia * loja4.sementes[12].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia * loja4.sementes[12].venda
 									}
 								});
 
@@ -6626,7 +6626,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[12].item.replace('Sementes de ', '')
+											item: loja4.sementes[12].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6639,17 +6639,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[13].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[13].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[13].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Sementes de ', '')).quantia * loja4.sementes[13].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[13].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia * loja4.sementes[13].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Sementes de ', '')).quantia * loja4.sementes[13].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia * loja4.sementes[13].venda
 									}
 								});
 
@@ -6659,7 +6659,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[13].item.replace('Sementes de ', '')
+											item: loja4.sementes[13].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6672,17 +6672,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[14].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[14].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[14].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Sementes de ', '')).quantia * loja4.sementes[14].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[14].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia * loja4.sementes[14].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Sementes de ', '')).quantia * loja4.sementes[14].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia * loja4.sementes[14].venda
 									}
 								});
 
@@ -6692,7 +6692,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[14].item.replace('Sementes de ', '')
+											item: loja4.sementes[14].item.replace('Semente de ', '')
 										}
 									}
 								});
@@ -6705,17 +6705,17 @@ module.exports = class Loja extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Sementes de ', ''))) {
-								return message.reply(`você não possui **${loja4.sementes[15].item.replace('Sementes de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
+							if (!user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', ''))) {
+								return message.reply(`você não possui **${loja4.sementes[15].item.replace('Semente de ', '')}** no seu caixote. Use \`${prefix}caixote\` para ver suas frutas!`);
 							} else {
-								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Sementes de ', '')).quantia}\` **${loja4.sementes[15].item.replace('Sementes de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Sementes de ', '')).quantia * loja4.sementes[15].venda))}**.`);
+								message.reply(`você vendeu \`x${user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia}\` **${loja4.sementes[15].item.replace('Semente de ', '')}** por **R$${Utils.numberFormat(Number(user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia * loja4.sementes[15].venda))}**.`);
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Sementes de ', '')).quantia * loja4.sementes[15].venda
+										saldo: user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia * loja4.sementes[15].venda
 									}
 								});
 
@@ -6725,7 +6725,7 @@ module.exports = class Loja extends Command {
 								}, {
 									$pull: {
 										caixote: {
-											item: loja4.sementes[15].item.replace('Sementes de ', '')
+											item: loja4.sementes[15].item.replace('Semente de ', '')
 										}
 									}
 								});

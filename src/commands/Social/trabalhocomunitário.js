@@ -50,7 +50,7 @@ module.exports = class Trabalhocomunitario extends Command {
 
 		if (!user.prisao.isPreso) return message.reply('você não está preso(a)!');
 
-		if (user.prisao.isPreso && user.prisao.crime && user.prisao.velha || user.prisao.isPreso && user.prisao.crime && user.prisao.frentista) return message.reply(`você foi preso pelo \`${prefix}crime\` portanto você não pode usar esse comando!`);
+		if (user.prisao.isPreso && user.prisao.crime && user.prisao.velha || user.prisao.isPreso && user.prisao.crime && user.prisao.frentista) return message.reply(`você foi preso pelo \`${prefix}crime\` da **velha** ou do **frentista** portanto você não pode usar esse comando!`);
 
 		if (user.prisao.isPreso && user.prisao.roubarVeiculo) return message.reply(`você foi preso pelo \`${prefix}roubarcarro\` portanto você não pode usar esse comando!`);
 
@@ -79,35 +79,6 @@ module.exports = class Trabalhocomunitario extends Command {
 					'cooldown.trabalhoComunitario': Date.now()
 				}
 			});
-
-			setTimeout(async () => {
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'prisao.isPreso': false,
-						'prisao.tempo': 0,
-						'prisao.prenderCmd': false,
-						'prisao.prenderMili': 0,
-						'prisao.traficoDrogas': false,
-						'prisao.crime': false,
-						'prisao.prender': false,
-						'prisao.revistar': false,
-						'prisao.roubarVeiculo': false,
-						'prisao.velha': false,
-						'prisao.frentista': false,
-						'prisao.joalheria': false,
-						'prisao.agiota': false,
-						'prisao.casaLoterica': false,
-						'prisao.brazino': false,
-						'prisao.facebook': false,
-						'prisao.bancoCentral': false,
-						'prisao.shopping': false,
-						'prisao.banco': false
-					}
-				});
-			}, user.prisao.tempo - 15 * 60 * 1000);
 		}
 	}
 

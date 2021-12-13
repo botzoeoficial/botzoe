@@ -111,7 +111,7 @@ module.exports = class {
 			const random = Math.floor(Math.random() * 101);
 
 			if (comando) {
-				if (random < 51) {
+				if (random < 21) {
 					await message.react('🎁');
 
 					const coletor = await message.createReactionCollector((r, u) => r.emoji.name === '🎁' && u.id !== this.client.user.id, {
@@ -120,16 +120,17 @@ module.exports = class {
 					});
 
 					coletor.on('collect', async (collected, user3) => {
-						await this.client.database.users.findOneAndUpdate({
+						coletor.stop();
+
+						await this.client.database.users.updateOne({
 							userId: user3.id,
 							guildId: message.guild.id
 						}, {
-							$set: {
-								presentes: user.presentes += 1
+							$inc: {
+								presentes: 1
 							}
 						});
 
-						message.reactions.removeAll();
 						message.channel.send(`O usuário <@${user3.id}> reinvidicou este presente 🎁.`);
 						return;
 					});

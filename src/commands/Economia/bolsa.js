@@ -45,19 +45,16 @@ module.exports = class Bolsa extends Command {
 		});
 
 		const timeout = 1200000;
+		const faltam = ms(timeout - (Date.now() - server.bolsa.tempo));
 
-		if (timeout - (Date.now() - server.bolsa.tempo) > 0) {
-			const faltam = ms(timeout - (Date.now() - server.bolsa.tempo));
+		const embed = new ClientEmbed(author)
+			.setThumbnail('https://media.discordapp.net/attachments/887089600726720512/891826029415510056/gettyimages-1186283017-1-1.jpg?width=905&height=603')
+			.setTitle('📈 | **Bolsa de Valores - Zoe Investing**')
+			.addField('📉 | Valor da Bolsa', `\`${server.bolsa.valor}.0%\``)
+			.setColor('#1cfc03')
+			.addField('🕑 | Tempo para Atualização da Bolsa', `${faltam.minutes}m ${faltam.seconds}s\n\n***Faça um Bom Investimento!***`);
 
-			const embed = new ClientEmbed(author)
-				.setThumbnail('https://media.discordapp.net/attachments/887089600726720512/891826029415510056/gettyimages-1186283017-1-1.jpg?width=905&height=603')
-				.setTitle('📈 | **Bolsa de Valores - Zoe Investing**')
-				.addField('📉 | Valor da Bolsa', `\`${server.bolsa.valor}.0%\``)
-				.setColor('#1cfc03')
-				.addField('🕑 | Tempo para Atualização da Bolsa', `${faltam.minutes}m ${faltam.seconds}s\n\n***Faça um Bom Investimento!***`);
-
-			return message.channel.send(author, embed);
-		}
+		return message.channel.send(author, embed);
 	}
 
 };

@@ -2,10 +2,6 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
-const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
 
 module.exports = class Pix extends Command {
 
@@ -73,61 +69,31 @@ module.exports = class Pix extends Command {
 
 		if (parseInt(btc) > user.saldo) return message.reply('você não tem esse saldo todo na carteira para ser transferido.');
 
-		const embedConfirm = new ClientEmbed(author)
+		const embed = new ClientEmbed(author)
 			.setTitle('🏦 Transferência')
-			.setDescription(`💵 | ${member}, o usuário ${author} está querendo lhe transferir **R$${Utils.numberFormat(Number(btc))},00**.\n\n✅ - Aceitar\n❌ - Recusar`);
+			.setDescription(`💵 | Você transferiu \`R$${Utils.numberFormat(Number(btc))},00\` para ${member} com sucesso!`);
 
-		const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
-		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
+		message.channel.send(author, embed);
 
-		message.channel.send(member, {
-			embed: embedConfirm,
-			components: [botoes]
-		}).then(async (msg) => {
-			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === member.id, {
-				time: 60000,
-				max: 1
-			});
-
-			collectorBotoes.on('collect', async (b) => {
-				if (b.id === 'aceitar') {
-					b.reply.defer();
-					msg.delete();
-
-					const embed = new ClientEmbed(author)
-						.setTitle('🏦 Transferência')
-						.setDescription(`💵 | Você transferiu \`R$${Utils.numberFormat(Number(btc))},00\` para ${member} com sucesso!`);
-
-					message.channel.send(author, embed);
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							saldo: user.saldo -= Number(btc)
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: member.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							banco: user2.banco += Number(btc)
-						}
-					});
-
-					return;
-				} else if (b.id === 'negar') {
-					b.reply.defer();
-					msg.delete();
-
-					return message.reply(`o usuário ${member} recusou sua **transferência**.`);
-				}
-			});
+		await this.client.database.users.findOneAndUpdate({
+			userId: author.id,
+			guildId: message.guild.id
+		}, {
+			$set: {
+				saldo: user.saldo -= Number(btc)
+			}
 		});
+
+		await this.client.database.users.findOneAndUpdate({
+			userId: member.id,
+			guildId: message.guild.id
+		}, {
+			$set: {
+				banco: user2.banco += Number(btc)
+			}
+		});
+
+		return;
 	}
 
 };

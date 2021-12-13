@@ -110,7 +110,7 @@ module.exports = class Enviarmecanica extends Command {
 		message.channel.send(author, embed).then(async (msg) => {
 			if (!user.garagem.length) return;
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
 				time: 300000
 			});
 
@@ -124,16 +124,21 @@ module.exports = class Enviarmecanica extends Command {
 					const findSelectedEvento = carrosArray.find((xis) => xis.position === selected);
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
+						ce.delete();
+						msg.delete();
+						sim.stop();
+
+						return message.reply('número do carro não encontrado. Por favor, use o comando novamente!').then(ba => ba.delete({
 							timeout: 5000
 						}));
-						ce.delete();
 					} else if (findSelectedEvento.arrumado) {
-						message.reply(`esse carro já está **arrumado**!`).then(ba => ba.delete({
+						ce.delete();
+						msg.delete();
+						sim.stop();
+
+						return message.reply(`esse carro já está **arrumado**. Por favor, use o comando novamente caso você tenha outro carro!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
-						ce.delete();
-						return msg.delete();
 					} else {
 						sim.stop();
 						ce.delete();

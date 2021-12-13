@@ -92,7 +92,7 @@ module.exports = class Dançar extends Command {
 			const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
 			const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-			message.channel.send(author, {
+			message.channel.send(member, {
 				embed: embed,
 				components: [botoes]
 			}).then(async (msg) => {
@@ -139,11 +139,12 @@ module.exports = class Dançar extends Command {
 								'humores.triste': user.humores.triste + 40
 							}
 						});
+
+						return msg.delete();
 					} else if (b.id === 'negar') {
 						b.reply.defer();
 
 						msg.delete();
-
 						return message.channel.send(`${author}, o(a) usuário(a) ${member} recusou seu pedido de dança!`);
 					}
 				});

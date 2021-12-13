@@ -97,7 +97,7 @@ module.exports = class Empregos extends Command {
 		embed.setDescription(`**➡️ | Digite o número da Profissão que deseja entrar:**\n\n${embedMessage}`);
 
 		message.channel.send(author, embed).then((msg) => {
-			const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
 				time: 60000
 			});
 
@@ -106,20 +106,27 @@ module.exports = class Empregos extends Command {
 				const findSelectedEmprego = empregosArray.find((xis) => xis.position === selected);
 
 				if (!findSelectedEmprego) {
-					message.reply(`este número não existe! Por favor, envie o número do emprego novamente.`).then(a => a.delete({
+					ce.delete();
+					msg.delete();
+					collector.stop();
+
+					return message.reply(`número do emprego não encontrado. Por favor, use o comando novamente!`).then(a => a.delete({
 						timeout: 5000
 					}));
-					ce.delete();
 				} else if (user.level < findSelectedEmprego.level) {
+					ce.delete();
 					msg.delete();
+					collector.stop();
 
-					return message.reply(`você precisa ser level **${findSelectedEmprego.level}** para pegar esse emprego!`).then(a => a.delete({
+					return message.reply(`você precisa ser level **${findSelectedEmprego.level}** para escolher esse emprego. Por favor, use o comando novamente!`).then(a => a.delete({
 						timeout: 5000
 					}));
 				} else if (user.emprego === findSelectedEmprego.trabalho) {
+					ce.delete();
 					msg.delete();
+					collector.stop();
 
-					return message.reply('você já possui esse emprego! Por favor, selecione outro.').then(a => a.delete({
+					return message.reply('você já possui esse emprego. Por favor, use o comando novamente!').then(a => a.delete({
 						timeout: 5000
 					}));
 				} else {
@@ -147,6 +154,7 @@ module.exports = class Empregos extends Command {
 				if (reason === 'time') {
 					msg.delete();
 					collector.stop();
+
 					return message.reply('você demorou demais para escolher o emprego! Use o comando novamente!').then((a) => a.delete({
 						timeout: 6000
 					}));

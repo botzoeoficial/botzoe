@@ -182,6 +182,17 @@ module.exports = class Revistar extends Command {
 
 					const userItens = user2.mochila;
 
+					await this.client.database.users.findOneAndUpdate({
+						userId: member.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'prisao.tempo': Date.now(),
+							'prisao.isPreso': true,
+							'prisao.revistar': true
+						}
+					});
+
 					if (userItens.find((a) => a.item === itemEmoji).quantia > 3) {
 						const random = Math.floor(Math.random() * userItens.find((a) => a.item === itemEmoji).quantia);
 
@@ -208,7 +219,6 @@ module.exports = class Revistar extends Command {
 
 						user2.save();
 						msg.delete();
-						return;
 					} else {
 						message.channel.send(`${author}, você retirou 1 \`${itemEmoji}\` da Mochila de ${member} com sucesso!`);
 
@@ -234,8 +244,20 @@ module.exports = class Revistar extends Command {
 
 						user2.save();
 						msg.delete();
-						return;
 					}
+
+					return setTimeout(async () => {
+						await this.client.database.users.findOneAndUpdate({
+							userId: member.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								'prisao.tempo': 0,
+								'prisao.isPreso': false,
+								'prisao.revistar': false
+							}
+						});
+					}, 21600000);
 				});
 
 				sim.on('end', async (collected, reason) => {

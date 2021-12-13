@@ -261,7 +261,7 @@ module.exports = class Roubar extends Command {
 								_id: message.guild.id
 							});
 
-							const collectorBotoes = msg.createButtonCollector((button) => server.cidade.policiais.map(a => a.id).includes(button.clicker.user.id), {
+							const collectorBotoes = msg.createButtonCollector((button) => server.cidade.policiais.map(a => a.id).includes(button.clicker.user.id) || server.cidade.delegado === button.clicker.user.id, {
 								time: 4000,
 								max: 1
 							});
@@ -343,7 +343,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -488,7 +487,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -633,7 +631,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -778,7 +775,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -923,7 +919,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -1068,7 +1063,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -1213,7 +1207,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false
@@ -1358,7 +1351,6 @@ module.exports = class Roubar extends Command {
 												guildId: message.guild.id
 											}, {
 												$set: {
-													'cooldown.roubar': 0,
 													'prisao.isPreso': false,
 													'prisao.tempo': 0,
 													'prisao.prender': false

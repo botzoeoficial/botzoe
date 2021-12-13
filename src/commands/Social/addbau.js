@@ -191,15 +191,41 @@ module.exports = class Addbau extends Command {
 
 										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para o Baú da(o) sua(seu) **${user2.casas.tipo}** com sucesso!`);
 
-										if (Number(ce2.content) < user2.inventory.find((a) => a.item === itemEmoji).quantia) {
-											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+										if (user2.inventory.find((a) => a.item === itemEmoji)) {
+											if (Number(ce2.content) < user2.inventory.find((a) => a.item === itemEmoji).quantia) {
+												if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id,
+														'casas.bau.item': itemEmoji
+													}, {
+														$set: {
+															'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + Number(ce2.content)
+														}
+													});
+												} else {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$push: {
+															'casas.bau': {
+																item: itemEmoji,
+																emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
+																id: user2.inventory.find((a) => a.item === itemEmoji).id,
+																quantia: Number(ce2.content)
+															}
+														}
+													});
+												}
+
 												await this.client.database.users.findOneAndUpdate({
 													userId: author.id,
 													guildId: message.guild.id,
-													'casas.bau.item': itemEmoji
+													'inventory.item': itemEmoji
 												}, {
 													$set: {
-														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + Number(ce2.content)
+														'inventory.$.quantia': user2.inventory.find((a) => a.item === itemEmoji).quantia - Number(ce2.content)
 													}
 												});
 											} else {
@@ -207,62 +233,38 @@ module.exports = class Addbau extends Command {
 													userId: author.id,
 													guildId: message.guild.id
 												}, {
-													$push: {
-														'casas.bau': {
-															item: itemEmoji,
-															emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
-															id: user2.inventory.find((a) => a.item === itemEmoji).id,
-															quantia: Number(ce2.content)
+													$pull: {
+														inventory: {
+															item: itemEmoji
 														}
 													}
 												});
-											}
 
-											await this.client.database.users.findOneAndUpdate({
-												userId: author.id,
-												guildId: message.guild.id,
-												'inventory.item': itemEmoji
-											}, {
-												$set: {
-													'inventory.$.quantia': user2.inventory.find((a) => a.item === itemEmoji).quantia - Number(ce2.content)
-												}
-											});
-										} else {
-											await this.client.database.users.findOneAndUpdate({
-												userId: author.id,
-												guildId: message.guild.id
-											}, {
-												$pull: {
-													inventory: {
-														item: itemEmoji
-													}
-												}
-											});
-
-											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
-												await this.client.database.users.findOneAndUpdate({
-													userId: author.id,
-													guildId: message.guild.id,
-													'casas.bau.item': itemEmoji
-												}, {
-													$set: {
-														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.inventory.find((a) => a.item === itemEmoji).quantia
-													}
-												});
-											} else {
-												await this.client.database.users.findOneAndUpdate({
-													userId: author.id,
-													guildId: message.guild.id
-												}, {
-													$push: {
-														'casas.bau': {
-															item: itemEmoji,
-															emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
-															id: user2.inventory.find((a) => a.item === itemEmoji).id,
-															quantia: user2.inventory.find((a) => a.item === itemEmoji).quantia
+												if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id,
+														'casas.bau.item': itemEmoji
+													}, {
+														$set: {
+															'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.inventory.find((a) => a.item === itemEmoji).quantia
 														}
-													}
-												});
+													});
+												} else {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$push: {
+															'casas.bau': {
+																item: itemEmoji,
+																emoji: user2.inventory.find((a) => a.item === itemEmoji).emoji,
+																id: user2.inventory.find((a) => a.item === itemEmoji).id,
+																quantia: user2.inventory.find((a) => a.item === itemEmoji).quantia
+															}
+														}
+													});
+												}
 											}
 										}
 									}
@@ -406,15 +408,41 @@ module.exports = class Addbau extends Command {
 
 										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para o Baú da(o) sua(seu) **${user2.casas.tipo}** com sucesso!`);
 
-										if (Number(ce2.content) < user2.mochila.find((a) => a.item === itemEmoji).quantia) {
-											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+										if (user2.mochila.find((a) => a.item === itemEmoji)) {
+											if (Number(ce2.content) < user2.mochila.find((a) => a.item === itemEmoji).quantia) {
+												if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id,
+														'casas.bau.item': itemEmoji
+													}, {
+														$set: {
+															'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + Number(ce2.content)
+														}
+													});
+												} else {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$push: {
+															'casas.bau': {
+																item: itemEmoji,
+																emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
+																id: user2.mochila.find((a) => a.item === itemEmoji).id,
+																quantia: Number(ce2.content)
+															}
+														}
+													});
+												}
+
 												await this.client.database.users.findOneAndUpdate({
 													userId: author.id,
 													guildId: message.guild.id,
-													'casas.bau.item': itemEmoji
+													'mochila.item': itemEmoji
 												}, {
 													$set: {
-														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + Number(ce2.content)
+														'mochila.$.quantia': user2.mochila.find((a) => a.item === itemEmoji).quantia - Number(ce2.content)
 													}
 												});
 											} else {
@@ -422,62 +450,38 @@ module.exports = class Addbau extends Command {
 													userId: author.id,
 													guildId: message.guild.id
 												}, {
-													$push: {
-														'casas.bau': {
-															item: itemEmoji,
-															emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
-															id: user2.mochila.find((a) => a.item === itemEmoji).id,
-															quantia: Number(ce2.content)
+													$pull: {
+														mochila: {
+															item: itemEmoji
 														}
 													}
 												});
-											}
 
-											await this.client.database.users.findOneAndUpdate({
-												userId: author.id,
-												guildId: message.guild.id,
-												'mochila.item': itemEmoji
-											}, {
-												$set: {
-													'mochila.$.quantia': user2.mochila.find((a) => a.item === itemEmoji).quantia - Number(ce2.content)
-												}
-											});
-										} else {
-											await this.client.database.users.findOneAndUpdate({
-												userId: author.id,
-												guildId: message.guild.id
-											}, {
-												$pull: {
-													mochila: {
-														item: itemEmoji
-													}
-												}
-											});
-
-											if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
-												await this.client.database.users.findOneAndUpdate({
-													userId: author.id,
-													guildId: message.guild.id,
-													'casas.bau.item': itemEmoji
-												}, {
-													$set: {
-														'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.mochila.find((a) => a.item === itemEmoji).quantia
-													}
-												});
-											} else {
-												await this.client.database.users.findOneAndUpdate({
-													userId: author.id,
-													guildId: message.guild.id
-												}, {
-													$push: {
-														'casas.bau': {
-															item: itemEmoji,
-															emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
-															id: user2.mochila.find((a) => a.item === itemEmoji).id,
-															quantia: user2.mochila.find((a) => a.item === itemEmoji).quantia
+												if (user2.casas.bau.find((a) => a.item === itemEmoji)) {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id,
+														'casas.bau.item': itemEmoji
+													}, {
+														$set: {
+															'casas.bau.$.quantia': user2.casas.bau.find((a) => a.item === itemEmoji).quantia + user2.mochila.find((a) => a.item === itemEmoji).quantia
 														}
-													}
-												});
+													});
+												} else {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$push: {
+															'casas.bau': {
+																item: itemEmoji,
+																emoji: user2.mochila.find((a) => a.item === itemEmoji).emoji,
+																id: user2.mochila.find((a) => a.item === itemEmoji).id,
+																quantia: user2.mochila.find((a) => a.item === itemEmoji).quantia
+															}
+														}
+													});
+												}
 											}
 										}
 									}

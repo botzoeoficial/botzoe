@@ -233,7 +233,7 @@ module.exports = class Gf extends Command {
 				const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
 				const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-				message.channel.send(author, {
+				message.channel.send(`<@${user.marry.user}>`, {
 					embed: embedConfirm,
 					components: [botoes]
 				}).then(async (confirm) => {
@@ -245,6 +245,7 @@ module.exports = class Gf extends Command {
 					collectorBotoes.on('collect', async (b) => {
 						if (b.id === 'aceitar') {
 							b.reply.defer();
+							confirm.delete();
 
 							const user2 = await this.client.database.users.findOne({
 								userId: user.marry.user,
