@@ -28,7 +28,7 @@ module.exports = class Ready {
 
 		console.log(c.green('[BOT] - Conectado a API do Discord.'));
 
-		await this.client.user.setActivity(`${this.client.users.cache.size} usuários jogarem na TD2CÚPULA!`, {
+		await this.client.user.setActivity(`${this.client.users.cache.size} usuários jogarem na Zoe City!`, {
 			type: 'WATCHING'
 		});
 
@@ -83,7 +83,7 @@ module.exports = class Ready {
 					.setTitle('📈 | **Bolsa de Valores - Zoe Investing**')
 					.addField('📉 | Valor da Bolsa', `\`${server.bolsa.valor}.0%\``)
 					.setColor('#1cfc03')
-					.addField('🕑 | Tempo para Atualização da Bolsa', `${faltam.minutes}m ${faltam.seconds}s\n\n***Faça um Bom Investimento!***`);
+					.addField('🕑 | Tempo para Atualização da Bolsa', `20m 0s\n\n***Faça um Bom Investimento!***`);
 
 				await this.client.channels.cache.get('915649663208661062').send(embed);
 			}
@@ -94,7 +94,9 @@ module.exports = class Ready {
 						_id: i._id
 					});
 
-					const { bolsa } = server3;
+					const {
+						bolsa
+					} = server3;
 
 					const porcentagem = bolsa.valor / 100;
 
@@ -161,390 +163,390 @@ module.exports = class Ready {
 						}
 					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.comidas': e.loja.comidas[1]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 1500 - (porcentagem * 1500)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.comidas': e.loja.comidas[1]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 1500 - (porcentagem * 1500)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.comidas': e.loja.comidas[2]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 900 - (porcentagem * 900)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.comidas': e.loja.comidas[2]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 900 - (porcentagem * 900)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.comidas': e.loja.comidas[3]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 600 - (porcentagem * 600)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.comidas': e.loja.comidas[3]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 600 - (porcentagem * 600)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.comidas': e.loja.comidas[4]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 1000 - (porcentagem * 1000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.comidas': e.loja.comidas[4]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 1000 - (porcentagem * 1000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.comidas': e.loja.comidas[5]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 1200 - (porcentagem * 1200)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.comidas': e.loja.comidas[5]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 1200 - (porcentagem * 1200)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.comidas': e.loja.comidas[6]
-				}, {
-					$set: {
-						'loja.comidas.$.preco': 500 - (porcentagem * 500)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.comidas': e.loja.comidas[6]
+					}, {
+						$set: {
+							'loja.comidas.$.preco': 500 - (porcentagem * 500)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.doces': e.loja.doces[0]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 300 - (porcentagem * 300)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.doces': e.loja.doces[0]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 300 - (porcentagem * 300)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.doces': e.loja.doces[1]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 750 - (porcentagem * 750)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.doces': e.loja.doces[1]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 750 - (porcentagem * 750)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.doces': e.loja.doces[2]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 450 - (porcentagem * 450)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.doces': e.loja.doces[2]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 450 - (porcentagem * 450)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.doces': e.loja.doces[3]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 700 - (porcentagem * 700)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.doces': e.loja.doces[3]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 700 - (porcentagem * 700)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.doces': e.loja.doces[4]
-				}, {
-					$set: {
-						'loja.doces.$.preco': 550 - (porcentagem * 550)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.doces': e.loja.doces[4]
+					}, {
+						$set: {
+							'loja.doces.$.preco': 550 - (porcentagem * 550)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidades': e.loja.utilidades[0]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 50000 - (porcentagem * 50000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidades': e.loja.utilidades[0]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 50000 - (porcentagem * 50000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidades': e.loja.utilidades[1]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 2000 - (porcentagem * 2000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidades': e.loja.utilidades[1]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 2000 - (porcentagem * 2000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidades': e.loja.utilidades[2]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 5000 - (porcentagem * 5000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidades': e.loja.utilidades[2]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 5000 - (porcentagem * 5000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidades': e.loja.utilidades[3]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 150000 - (porcentagem * 150000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidades': e.loja.utilidades[3]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 150000 - (porcentagem * 150000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidades': e.loja.utilidades[4]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 20000 - (porcentagem * 20000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidades': e.loja.utilidades[4]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 20000 - (porcentagem * 20000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidades': e.loja.utilidades[5]
-				}, {
-					$set: {
-						'loja.utilidades.$.preco': 10000 - (porcentagem * 10000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidades': e.loja.utilidades[5]
+					}, {
+						$set: {
+							'loja.utilidades.$.preco': 10000 - (porcentagem * 10000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.pm': e.loja.pm[0]
-				}, {
-					$set: {
-						'loja.pm.$.preco': 20000 - (porcentagem * 20000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.pm': e.loja.pm[0]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 20000 - (porcentagem * 20000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.pm': e.loja.pm[1]
-				}, {
-					$set: {
-						'loja.pm.$.preco': 350000 - (porcentagem * 350000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.pm': e.loja.pm[1]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 350000 - (porcentagem * 350000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.pm': e.loja.pm[2]
-				}, {
-					$set: {
-						'loja.pm.$.preco': 200000 - (porcentagem * 200000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.pm': e.loja.pm[2]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 200000 - (porcentagem * 200000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.pm': e.loja.pm[3]
-				}, {
-					$set: {
-						'loja.pm.$.preco': 15000 - (porcentagem * 15000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.pm': e.loja.pm[3]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 15000 - (porcentagem * 15000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.pm': e.loja.pm[4]
-				}, {
-					$set: {
-						'loja.pm.$.preco': 25000 - (porcentagem * 25000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.pm': e.loja.pm[4]
+					}, {
+						$set: {
+							'loja.pm.$.preco': 25000 - (porcentagem * 25000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[0]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 800 - (porcentagem * 800),
-						'loja.sementes.$.venda': 421 + (porcentagem * 421)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[0]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 800 - (porcentagem * 800),
+							'loja.sementes.$.venda': 421 + (porcentagem * 421)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[1]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 900 - (porcentagem * 900),
-						'loja.sementes.$.venda': 685 + (porcentagem * 685)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[1]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 900 - (porcentagem * 900),
+							'loja.sementes.$.venda': 685 + (porcentagem * 685)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[2]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 1100 - (porcentagem * 1100),
-						'loja.sementes.$.venda': 790 + (porcentagem * 790)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[2]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 1100 - (porcentagem * 1100),
+							'loja.sementes.$.venda': 790 + (porcentagem * 790)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[3]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 750 - (porcentagem * 750),
-						'loja.sementes.$.venda': 1000 + (porcentagem * 1000)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[3]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 750 - (porcentagem * 750),
+							'loja.sementes.$.venda': 1000 + (porcentagem * 1000)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[4]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 1500 - (porcentagem * 1500),
-						'loja.sementes.$.venda': 948 + (porcentagem * 948)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[4]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 1500 - (porcentagem * 1500),
+							'loja.sementes.$.venda': 948 + (porcentagem * 948)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[5]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 1800 - (porcentagem * 1800),
-						'loja.sementes.$.venda': 1369 + (porcentagem * 1369)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[5]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 1800 - (porcentagem * 1800),
+							'loja.sementes.$.venda': 1369 + (porcentagem * 1369)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[6]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 2100 - (porcentagem * 2100),
-						'loja.sementes.$.venda': 2106 + (porcentagem * 2106)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[6]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 2100 - (porcentagem * 2100),
+							'loja.sementes.$.venda': 2106 + (porcentagem * 2106)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[7]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 2500 - (porcentagem * 2500),
-						'loja.sementes.$.venda': 1632 + (porcentagem * 1632)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[7]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 2500 - (porcentagem * 2500),
+							'loja.sementes.$.venda': 1632 + (porcentagem * 1632)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[8]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 2900 - (porcentagem * 2900),
-						'loja.sementes.$.venda': 1790 + (porcentagem * 1790)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[8]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 2900 - (porcentagem * 2900),
+							'loja.sementes.$.venda': 1790 + (porcentagem * 1790)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[9]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 3300 - (porcentagem * 3300),
-						'loja.sementes.$.venda': 2790 + (porcentagem * 2790)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[9]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 3300 - (porcentagem * 3300),
+							'loja.sementes.$.venda': 2790 + (porcentagem * 2790)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[10]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
-						'loja.sementes.$.venda': 3105 + (porcentagem * 3105)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[10]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
+							'loja.sementes.$.venda': 3105 + (porcentagem * 3105)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[11]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
-						'loja.sementes.$.venda': 2211 + (porcentagem * 2211)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[11]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
+							'loja.sementes.$.venda': 2211 + (porcentagem * 2211)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[12]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
-						'loja.sementes.$.venda': 2579 + (porcentagem * 2579)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[12]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
+							'loja.sementes.$.venda': 2579 + (porcentagem * 2579)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[13]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
-						'loja.sementes.$.venda': 4100 + (porcentagem * 4100)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[13]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
+							'loja.sementes.$.venda': 4100 + (porcentagem * 4100)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[14]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
-						'loja.sementes.$.venda': 3237 + (porcentagem * 3237)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[14]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
+							'loja.sementes.$.venda': 3237 + (porcentagem * 3237)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.sementes': e.loja.sementes[15]
-				}, {
-					$set: {
-						'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
-						'loja.sementes.$.venda': 5263 + (porcentagem * 5263)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.sementes': e.loja.sementes[15]
+					}, {
+						$set: {
+							'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
+							'loja.sementes.$.venda': 5263 + (porcentagem * 5263)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidadesAgro': e.loja.utilidadesAgro[0]
-				}, {
-					$set: {
-						'loja.utilidadesAgro.$.preco': 100 - (porcentagem * 100)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidadesAgro': e.loja.utilidadesAgro[0]
+					}, {
+						$set: {
+							'loja.utilidadesAgro.$.preco': 100 - (porcentagem * 100)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidadesAgro': e.loja.utilidadesAgro[1]
-				}, {
-					$set: {
-						'loja.utilidadesAgro.$.preco': 150 - (porcentagem * 150)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidadesAgro': e.loja.utilidadesAgro[1]
+					}, {
+						$set: {
+							'loja.utilidadesAgro.$.preco': 150 - (porcentagem * 150)
+						}
+					});
 
-				await Shop.findOneAndUpdate({
-					_id: i._id,
-					'loja.utilidadesAgro': e.loja.utilidadesAgro[2]
-				}, {
-					$set: {
-						'loja.utilidadesAgro.$.preco': 130 - (porcentagem * 130)
-					}
-				});
+					await Shop.findOneAndUpdate({
+						_id: i._id,
+						'loja.utilidadesAgro': e.loja.utilidadesAgro[2]
+					}, {
+						$set: {
+							'loja.utilidadesAgro.$.preco': 130 - (porcentagem * 130)
+						}
+					});
 
 					await Shop.findOneAndUpdate({
 						_id: i._id,
@@ -4015,38 +4017,76 @@ module.exports = class Ready {
 				}
 
 				setInterval(async () => {
-					e.humores.fome -= 1;
+					try {
+						e.humores.fome -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 7200000);
 
 				setInterval(async () => {
-					e.humores.sede -= 1;
+					try {
+						e.humores.sede -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 3600000);
 
 				setInterval(async () => {
-					e.humores.bravo -= 1;
+					try {
+						e.humores.bravo -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 3000000);
 
 				setInterval(async () => {
-					e.humores.triste -= 1;
+					try {
+						e.humores.triste -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 10800000);
 
 				setInterval(async () => {
-					e.humores.cansado -= 1;
+					try {
+						e.humores.cansado -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 2400000);
 
 				setInterval(async () => {
-					e.humores.solitario -= 1;
+					try {
+						e.humores.solitario -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 4800000);
 
 				setInterval(async () => {
-					e.humores.desanimado -= 1;
+					try {
+						e.humores.desanimado -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 6000000);
 
 				setInterval(async () => {
-					e.humores.estressado -= 1;
+					try {
+						e.humores.estressado -= 1;
+						await e.save();
+					} catch (err) {
+						return;
+					}
 				}, 5400000);
-
-				await e.save();
 			}
 		});
 
@@ -4207,7 +4247,7 @@ module.exports = class Ready {
 											const embedRoubar = new ClientEmbed(this.client.user)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											msg.channel.send(`<@${user4.id}>`, embedRoubar);
+											return msg.channel.send(`<@${user4.id}>`, embedRoubar);
 										} else {
 											const embedPolicia = new ClientEmbed(this.client.user)
 												.setTitle('Prisão')

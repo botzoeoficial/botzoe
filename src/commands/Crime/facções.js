@@ -209,16 +209,16 @@ module.exports = class Facções extends Command {
 													ce3.delete();
 
 													embed2
-														.setDescription(`**Você selecionou a Facção:** \`${findSelectedEvento.nome}\``)
-														.addField('Nome:', findSelectedEvento.nome, true)
-														.addField('Data de Criação:', findSelectedEvento.criado, true)
+														.setDescription(`**Você selecionou a Facção:** \`${findSelectedEvento2.nome}\``)
+														.addField('Nome:', findSelectedEvento2.nome, true)
+														.addField('Data de Criação:', findSelectedEvento2.criado, true)
 														.addField('\u2800', '\u2800', true)
-														.addField('Qtde Membros:', findSelectedEvento.membros.length, true)
-														.addField('Level:', findSelectedEvento.level, true)
+														.addField('Qtde Membros:', findSelectedEvento2.membros.length, true)
+														.addField('Level:', findSelectedEvento2.level, true)
 														.addField('\u2800', '\u2800', true)
-														.addField('Dinheiro em caixa:', `R$${Utils.numberFormat(findSelectedEvento.money)},00`)
+														.addField('Dinheiro em caixa:', `R$${Utils.numberFormat(findSelectedEvento2.money)},00`)
 														.addField('\u2800', '\u2800')
-														.addField('Membros:', findSelectedEvento.membros.map((a) => `<@${a}>`).join('\n'));
+														.addField('Membros:', findSelectedEvento2.membros.map((a) => `<@${a}>`).join('\n'));
 
 													msg.edit(author, embed2);
 												}

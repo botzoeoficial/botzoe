@@ -2,18 +2,18 @@
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
-module.exports = class Removerpolicial extends Command {
+module.exports = class Removermedico extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'removerpolicial';
+		this.name = 'removermedico';
 		this.category = 'Cidade';
-		this.description = 'Remova usuários da Polícia do seu servidor!';
-		this.usage = 'removerpolicial <usuário>';
-		this.aliases = ['removepolicial', 'remove-policial'];
+		this.description = 'Remova usuários do SUS do seu servidor!';
+		this.usage = 'removermedico <usuário>';
+		this.aliases = ['removemedico', 'remove-medico'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -23,7 +23,7 @@ module.exports = class Removerpolicial extends Command {
 		this.adm = true;
 
 		this.vip = false;
-		this.governador = false;
+		this.governador = true;
 		this.delegado = false;
 		this.diretorHP = true;
 		this.donoFavela = false;

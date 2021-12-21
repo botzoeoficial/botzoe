@@ -243,6 +243,12 @@ module.exports = class Treinarpet extends Command {
 						}
 					});
 				} else if (randomNumber > 6 && randomNumber <= 60) {
+					const embed = new ClientEmbed(author)
+						.setTitle('TREINO DO PET!')
+						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua força!\n\nForça Atual: **${user.pets[randomPet].forca + 1}**`);
+
+					message.channel.send(author, embed);
+
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
 						guildId: message.guild.id,
@@ -253,13 +259,13 @@ module.exports = class Treinarpet extends Command {
 							'cooldown.treinarPet': Date.now()
 						}
 					});
-
+				} else if (randomNumber > 60) {
 					const embed = new ClientEmbed(author)
 						.setTitle('TREINO DO PET!')
-						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua força!\n\nForça Atual: **${user.pets[randomPet].forca}**`);
+						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua idade!\n\nIdade Atual: **${user.pets[randomPet].idade + 1}**`);
 
 					message.channel.send(author, embed);
-				} else if (randomNumber > 60) {
+
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
 						guildId: message.guild.id,
@@ -270,12 +276,6 @@ module.exports = class Treinarpet extends Command {
 							'cooldown.treinarPet': Date.now()
 						}
 					});
-
-					const embed = new ClientEmbed(author)
-						.setTitle('TREINO DO PET!')
-						.setDescription(`${author}, seu pet **${user.pets[randomPet].nome}** melhorou a sua idade!\n\nIdade Atual: **${user.pets[randomPet].idade}**`);
-
-					message.channel.send(author, embed);
 				}
 			}
 		}

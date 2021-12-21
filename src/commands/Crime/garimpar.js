@@ -208,15 +208,11 @@ module.exports = class Garimpar extends Command {
 			if (user.inventory.length > 0) {
 				if (user.inventory.find((a) => a.item === 'Bolso')) {
 					if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 400) {
-						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-							timeout: 5000
-						}));
+						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!');
 					}
 				} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
 					if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
-						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-							timeout: 5000
-						}));
+						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!');
 					}
 				}
 			}

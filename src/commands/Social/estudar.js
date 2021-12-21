@@ -217,7 +217,7 @@ module.exports = class Estudar extends Command {
 
 				return message.channel.send(author, embed);
 			} else if (!args.slice(0).join(' ')) {
-				return message.channel.send(`${author}, você precisa colocar alguma matéria para estudar!\nAs matérias disponíveis para estudos são: **Matemática**, **Português**, **Química**, **Física**, **Biologia**, **História** e **Geografia**.`);
+				return message.reply('você precisa colocar alguma matéria para estudar!\nAs matérias disponíveis para estudos são: **Matemática**, **Português**, **Química**, **Física**, **Biologia**, **História** e **Geografia**.');
 			} else if (args[0].toLowerCase() === 'matemática' || args[0].toLowerCase() === 'matematica') {
 				const timeout2 = 3600000;
 
@@ -229,6 +229,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 30,
+							'humores.sede': user.humores.sede - 20,
+							'humores.estressado': user.humores.estressado - 10,
+							'humores.cansado': user.humores.cansado - 20,
+							'cooldown.estudar': Date.now(),
+							'estudos.matematica': Date.now(),
+							xp: user.xp += 100
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -248,29 +265,6 @@ module.exports = class Estudar extends Command {
 
 					message.channel.send(author, embed);
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.matematica': Date.now(),
-							xp: user.xp += 100
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 30,
-							'humores.sede': user.humores.sede - 20,
-							'humores.estressado': user.humores.estressado - 10,
-							'humores.cansado': user.humores.cansado - 20
-						}
-					});
-
 					return;
 				}
 			} else if (args[0].toLowerCase() === 'português' || args[0].toLowerCase() === 'portugues') {
@@ -284,6 +278,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 30,
+							'humores.sede': user.humores.sede - 20,
+							'humores.estressado': user.humores.estressado - 10,
+							'humores.cansado': user.humores.cansado - 20,
+							'cooldown.estudar': Date.now(),
+							'estudos.portugues': Date.now(),
+							xp: user.xp += 100
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -303,29 +314,6 @@ module.exports = class Estudar extends Command {
 
 					message.channel.send(author, embed);
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.portugues': Date.now(),
-							xp: user.xp += 100
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 30,
-							'humores.sede': user.humores.sede - 20,
-							'humores.estressado': user.humores.estressado - 10,
-							'humores.cansado': user.humores.cansado - 20
-						}
-					});
-
 					return;
 				}
 			} else if (args[0].toLowerCase() === 'química' || args[0].toLowerCase() === 'quimica') {
@@ -339,6 +327,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 20,
+							'humores.sede': user.humores.sede - 30,
+							'humores.estressado': user.humores.estressado - 20,
+							'humores.cansado': user.humores.cansado - 30,
+							'cooldown.estudar': Date.now(),
+							'estudos.quimica': Date.now(),
+							xp: user.xp += 250
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -358,29 +363,6 @@ module.exports = class Estudar extends Command {
 
 					message.channel.send(author, embed);
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.quimica': Date.now(),
-							xp: user.xp += 250
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 20,
-							'humores.sede': user.humores.sede - 30,
-							'humores.estressado': user.humores.estressado - 20,
-							'humores.cansado': user.humores.cansado - 30
-						}
-					});
-
 					return;
 				}
 			} else if (args[0].toLowerCase() === 'física' || args[0].toLowerCase() === 'fisica') {
@@ -394,6 +376,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 40,
+							'humores.sede': user.humores.sede - 20,
+							'humores.estressado': user.humores.estressado - 30,
+							'humores.cansado': user.humores.cansado - 30,
+							'cooldown.estudar': Date.now(),
+							'estudos.fisica': Date.now(),
+							xp: user.xp += 350
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -413,29 +412,6 @@ module.exports = class Estudar extends Command {
 
 					message.channel.send(author, embed);
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.fisica': Date.now(),
-							xp: user.xp += 350
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 40,
-							'humores.sede': user.humores.sede - 20,
-							'humores.estressado': user.humores.estressado - 30,
-							'humores.cansado': user.humores.cansado - 30
-						}
-					});
-
 					return;
 				}
 			} else if (args[0].toLowerCase() === 'biologia') {
@@ -449,6 +425,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 30,
+							'humores.sede': user.humores.sede - 40,
+							'humores.estressado': user.humores.estressado - 25,
+							'humores.cansado': user.humores.cansado - 20,
+							'cooldown.estudar': Date.now(),
+							'estudos.biologia': Date.now(),
+							xp: user.xp += 500
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -468,29 +461,6 @@ module.exports = class Estudar extends Command {
 
 					message.channel.send(author, embed);
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.biologia': Date.now(),
-							xp: user.xp += 500
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 30,
-							'humores.sede': user.humores.sede - 40,
-							'humores.estressado': user.humores.estressado - 25,
-							'humores.cansado': user.humores.cansado - 20
-						}
-					});
-
 					return;
 				}
 			} else if (args[0].toLowerCase() === 'história' || args[0].toLowerCase() === 'historia') {
@@ -504,6 +474,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 45,
+							'humores.sede': user.humores.sede - 50,
+							'humores.estressado': user.humores.estressado - 30,
+							'humores.cansado': user.humores.cansado - 20,
+							'cooldown.estudar': Date.now(),
+							'estudos.historia': Date.now(),
+							xp: user.xp += 600
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -523,29 +510,6 @@ module.exports = class Estudar extends Command {
 
 					message.channel.send(author, embed);
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.historia': Date.now(),
-							xp: user.xp += 600
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 45,
-							'humores.sede': user.humores.sede - 50,
-							'humores.estressado': user.humores.estressado - 30,
-							'humores.cansado': user.humores.cansado - 20
-						}
-					});
-
 					return;
 				}
 			} else if (args[0].toLowerCase() === 'geografia') {
@@ -559,6 +523,23 @@ module.exports = class Estudar extends Command {
 
 					return message.channel.send(author, embed);
 				} else {
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.fome': user.humores.fome - 40,
+							'humores.sede': user.humores.sede - 10,
+							'humores.estressado': user.humores.estressado - 10,
+							'humores.cansado': user.humores.cansado - 20,
+							'cooldown.estudar': Date.now(),
+							'estudos.geografia': Date.now(),
+							xp: user.xp += 300
+						}
+					});
+
+					await user.save();
+
 					const xpToUp = (user.level + 1) * 6000;
 
 					if (user.xp >= xpToUp) {
@@ -577,29 +558,6 @@ module.exports = class Estudar extends Command {
 						.setDescription(`📚 | Você estudou \`Geografia\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+300\`\n🍽️ Fome: \`-40\`\n🥤 Sede: \`-10\`\n🤯 Estressado: \`-10\`\n😰 Cansado: \`-20\``);
 
 					message.channel.send(author, embed);
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'cooldown.estudar': Date.now(),
-							'estudos.geografia': Date.now(),
-							xp: user.xp += 300
-						}
-					});
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'humores.fome': user.humores.fome - 40,
-							'humores.sede': user.humores.sede - 10,
-							'humores.estressado': user.humores.estressado - 10,
-							'humores.cansado': user.humores.cansado - 20
-						}
-					});
 
 					return;
 				}

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable max-nested-callbacks */
 /* eslint-disable consistent-return */
 /* eslint-disable id-length */
@@ -153,10 +154,14 @@ module.exports = class Addbau extends Command {
 							'918835446040133652': 'Cobre',
 							'918835445746532412': 'Ferro',
 							'918835445838774322': 'Plástico',
-							'901590833151746128': 'Prata'
+							'918835445939458088': 'Prata'
 						};
 
 						sim.on('collect', async (collected) => {
+							sim.stop();
+
+							const itemEmoji = objeto[collected.emoji.id];
+
 							if (user2.casas.bau.length > 0) {
 								if (user2.casas.bau.map((a) => a.quantia).reduce((a, b) => a + b) >= user2.casas.quantiaItens) {
 									sim.stop();
@@ -168,10 +173,6 @@ module.exports = class Addbau extends Command {
 								}
 							}
 
-							sim.stop();
-
-							const itemEmoji = objeto[collected.emoji.id];
-
 							embed.setDescription(`Qual a quantidade de **${itemEmoji}** você deseja enviar para o Baú?`);
 
 							msg.edit(author, embed).then(async (msg2) => {
@@ -181,9 +182,23 @@ module.exports = class Addbau extends Command {
 
 								resposta.on('collect', async (ce2) => {
 									if (Number(ce2.content) <= 0) {
-										message.reply('você precisa enviar uma quantia válida e maior que **0*. Por favor, envie a quantia novamente no chat!');
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply('você precisa enviar uma quantia válida maior que **0*. Por favor, use o comando novamente!');
 									} else if (Number(ce2.content) > user2.inventory.find((a) => a.item === itemEmoji).quantia) {
-										message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, envie a quantia novamente no chat!`);
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, use o comando novamente!`);
+									} else if (Number(ce2.content) >= user2.casas.quantiaItens) {
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply(`você precisa colocar uma quantia de até **${user2.casas.quantiaItens - user2.casas.bau.map((a) => a.quantia).reduce((a, b) => a + b)}**. Por favor, use o comando novamente!`);
 									} else {
 										resposta.stop();
 										sim.stop();
@@ -370,7 +385,7 @@ module.exports = class Addbau extends Command {
 							'918835446040133652': 'Cobre',
 							'918835445746532412': 'Ferro',
 							'918835445838774322': 'Plástico',
-							'901590833151746128': 'Prata'
+							'918835445939458088': 'Prata'
 						};
 
 						sim.on('collect', async (collected) => {
@@ -401,6 +416,12 @@ module.exports = class Addbau extends Command {
 										message.reply('você precisa enviar uma quantia válida e maior que **0*. Por favor, envie a quantia novamente no chat!');
 									} else if (Number(ce2.content) > user2.mochila.find((a) => a.item === itemEmoji).quantia) {
 										message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, envie a quantia novamente no chat!`);
+									} else if (Number(ce2.content) >= user2.casas.quantiaItens) {
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply(`você precisa colocar uma quantia de até **${user2.casas.quantiaItens - user2.casas.bau.map((a) => a.quantia).reduce((a, b) => a + b)}**. Por favor, use o comando novamente!`);
 									} else {
 										resposta.stop();
 										sim.stop();

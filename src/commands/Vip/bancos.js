@@ -30,7 +30,7 @@ module.exports = class Bancos extends Command {
 		this.guildOnly = true;
 
 		this.owner = false;
-		this.editor = true;
+		this.editor = false;
 		this.adm = true;
 
 		this.vip = true;

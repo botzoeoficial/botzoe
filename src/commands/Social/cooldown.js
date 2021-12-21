@@ -97,6 +97,8 @@ module.exports = class Cooldown extends Command {
 		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.banco) {
 			timeout10 = 14400000;
 		}
+		// roubar
+		const timeout11 = 1800000;
 
 		const embed = new ClientEmbed(author);
 		// trabalhar
@@ -160,10 +162,16 @@ module.exports = class Cooldown extends Command {
 			const faltam = ms(timeout - (Date.now() - user.cooldown.treinarPet));
 
 			embed.addField(`🦴 Treinar Pet`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
-			embed.addField('\u2800', '\u2800', true);
 		} else {
 			embed.addField(`🦴 Treinar Pet`, `Pode usar!`, true);
-			embed.addField('\u2800', '\u2800', true);
+		}
+		// apostar
+		if (timeout9 - (Date.now() - user.cooldown.apostar) > 0) {
+			const faltam = ms(timeout9 - (Date.now() - user.cooldown.apostar));
+
+			embed.addField(`🎰 Apostar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`🎰 Apostar`, `Pode usar!`, true);
 		}
 		// minerar
 		if (timeout3 - (Date.now() - user.cooldown.minerar) > 0) {
@@ -174,8 +182,8 @@ module.exports = class Cooldown extends Command {
 			embed.addField(`⛏️ Minerar`, `Pode usar!`, true);
 		}
 		// investimentobtc
-		if (new Date(user.cooldown.bitcoin).getTime() - Date.now() > 0) {
-			const faltam = ms(new Date(user.cooldown.bitcoin).getTime() - Date.now());
+		if ((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin) > 0) {
+			const faltam = ms((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin));
 
 			embed.addField(`📈 InvestimentoBTC`, `\`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
@@ -250,10 +258,16 @@ module.exports = class Cooldown extends Command {
 			const faltam = ms(timeout10 - (Date.now() - user.prisao.tempo));
 
 			embed.addField(`⏰ Tempo de Prisão`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
-			embed.addField('\u2800', '\u2800', true);
 		} else {
 			embed.addField(`⏰ Tempo de Prisão`, `Livre!`, true);
-			embed.addField('\u2800', '\u2800', true);
+		}
+		// roubar
+		if (timeout11 - (Date.now() - user.cooldown.roubar) > 0) {
+			const faltam = ms(timeout11 - (Date.now() - user.cooldown.roubar));
+
+			embed.addField(`🔫 Roubar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`🔫 Roubar`, `Pode usar!`, true);
 		}
 
 		embed.setTitle('⏲️ | COOLDOWNS');

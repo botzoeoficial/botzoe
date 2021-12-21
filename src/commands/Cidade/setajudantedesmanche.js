@@ -48,7 +48,7 @@ module.exports = class Setajudantedesmanche extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.ajudanteDesmanche.length === 1) return message.reply('este servidor já possui o máximo de Ajudantes do Desmanche.');
+		if (server.cidade.ajudanteDesmanche.length === 3) return message.reply('este servidor já possui o máximo de Ajudantes do Desmanche.');
 
 		if (server.cidade.ajudanteDesmanche.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Ajudante do Desmanche do servidor.');
 

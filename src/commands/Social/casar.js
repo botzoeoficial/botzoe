@@ -137,7 +137,7 @@ module.exports = class Casar extends Command {
 						}
 					});
 
-					return msg.delete();
+					return;
 				} else if (b.id === 'negar') {
 					b.reply.defer();
 

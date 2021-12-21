@@ -9,7 +9,7 @@ const guildSchema = new Schema({
 	},
 	prefix: {
 		type: String,
-		default: '++'
+		default: '//'
 	},
 	editor: {
 		type: Array,
@@ -390,6 +390,14 @@ const guildSchema = new Schema({
 		emoji: {
 			type: String,
 			default: ''
+		},
+		id: {
+			type: String,
+			default: ''
+		},
+		comprado: {
+			type: Boolean,
+			default: false
 		}
 	},
 	mecanica: {

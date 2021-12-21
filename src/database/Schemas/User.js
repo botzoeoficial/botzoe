@@ -1018,6 +1018,10 @@ const userSchema = new Schema({
 			type: Number,
 			default: 100
 		}
+	},
+	cadastrandoItem: {
+		type: Boolean,
+		default: false
 	}
 });
 

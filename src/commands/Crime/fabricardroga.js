@@ -59,9 +59,9 @@ module.exports = class Fabricardroga extends Command {
 
 		if (userAuthor.fabricagem.fabricandoDroga) return message.reply(`você já está fabricando uma **droga**. Use o comando \`${prefix}fabricando\` para ver qual a **droga** que está sendo fabricada!`);
 
-		const armas = require('../../json/drogas.json');
+		const drogas = require('../../json/drogas.json');
 
-		const drogasArray = armas.map((value, index) => ({
+		const drogasArray = drogas.map((value, index) => ({
 			img: value.img,
 			droga: value.droga,
 			aluminio: value.aluminio,
@@ -120,7 +120,7 @@ module.exports = class Fabricardroga extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
-					return message.channel.send(`${author}, seleção cancelada com sucesso!`);
+					return message.reply(`seleção cancelada com sucesso!`);
 				} else {
 					const selected = Number(ce.content - 1);
 					const findSelectedEvento = drogasArray.find((xis) => xis.position === selected);
@@ -131,11 +131,15 @@ module.exports = class Fabricardroga extends Command {
 					});
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
+						sim.stop();
+						msg.delete();
+						ce.delete();
+
+						return message.reply('número não encontrado. Por favor, envie o comando novamente!').then(ba => ba.delete({
 							timeout: 6000
 						}));
-						ce.delete();
 					} else if (!user2.inventory.find((a) => a.item === 'Alumínio') || user2.inventory.find((a) => a.item === 'Alumínio').quantia < findSelectedEvento.aluminio) {
+						sim.stop();
 						msg.delete();
 						ce.delete();
 
@@ -143,6 +147,7 @@ module.exports = class Fabricardroga extends Command {
 							timeout: 6000
 						}));
 					} else if (!user2.inventory.find((a) => a.item === 'Borracha') || user2.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha) {
+						sim.stop();
 						msg.delete();
 						ce.delete();
 
@@ -150,6 +155,7 @@ module.exports = class Fabricardroga extends Command {
 							timeout: 6000
 						}));
 					} else if (!user2.inventory.find((a) => a.item === 'Plástico') || user2.inventory.find((a) => a.item === 'Plástico').quantia < findSelectedEvento.plastico) {
+						sim.stop();
 						msg.delete();
 						ce.delete();
 
@@ -170,14 +176,18 @@ module.exports = class Fabricardroga extends Command {
 
 							sim2.on('collect', async (ce2) => {
 								if (Number(ce2.content) === 0) {
-									msg2.delete();
 									sim2.stop();
-									return message.channel.send(`${author}, seleção cancelada com sucesso!`);
+									sim.stop();
+									msg2.delete();
+									return message.reply(`seleção cancelada com sucesso!`);
 								} else if (parseInt(ce2.content) && parseInt(ce2.content) < 0) {
-									message.reply('coloque uma quantia válida. Por favor, envie o número novamente!').then(ba => ba.delete({
+									sim2.stop();
+									sim.stop();
+									msg2.delete();
+
+									return message.reply('coloque uma quantia válida. Por favor, envie o comando novamente!').then(ba => ba.delete({
 										timeout: 6000
 									}));
-									ce2.delete();
 								} else {
 									const user3 = await this.client.database.users.findOne({
 										userId: author.id,
@@ -185,21 +195,28 @@ module.exports = class Fabricardroga extends Command {
 									});
 
 									if (user3.inventory.find((a) => a.item === 'Alumínio').quantia < findSelectedEvento.aluminio * Number(ce2.content)) {
+										sim2.stop();
+										sim.stop();
 										msg.delete();
 										ce2.delete();
 
 										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha * Number(ce2.content)) {
+										sim2.stop();
+										sim.stop();
 										msg.delete();
 										ce2.delete();
 
 										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alúminio').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Plástico').quantia < findSelectedEvento.plastico * Number(ce2.content)) {
+										sim2.stop();
+										sim.stop();
 										msg.delete();
 										ce2.delete();
 
 										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
 									} else {
+										sim.stop();
 										sim2.stop();
 										ce2.delete();
 
@@ -229,6 +246,10 @@ module.exports = class Fabricardroga extends Command {
 													let time = 0;
 
 													if (findSelectedEvento.droga === 'Maconha') {
+														collectorBotoes.stop();
+														sim2.stop();
+														sim.stop();
+
 														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
 															time = 43200000 * Number(ce2.content);
 
@@ -248,37 +269,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -313,19 +386,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -338,17 +398,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -374,37 +428,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -439,19 +545,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -464,17 +557,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -500,37 +587,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -565,19 +704,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -590,17 +716,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -626,37 +746,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -691,19 +863,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -716,17 +875,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -735,6 +888,10 @@ module.exports = class Fabricardroga extends Command {
 															}, time);
 														}
 													} else if (findSelectedEvento.droga === 'Cocaína') {
+														collectorBotoes.stop();
+														sim2.stop();
+														sim.stop();
+
 														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
 															time = 54000000 * Number(ce2.content);
 
@@ -754,37 +911,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -819,19 +1028,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -844,17 +1040,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -880,37 +1070,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -945,19 +1187,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -970,17 +1199,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1006,37 +1229,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1071,19 +1346,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1096,17 +1358,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1132,37 +1388,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1197,19 +1505,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1222,17 +1517,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1241,6 +1530,10 @@ module.exports = class Fabricardroga extends Command {
 															}, time);
 														}
 													} else if (findSelectedEvento.droga === 'LSD') {
+														collectorBotoes.stop();
+														sim2.stop();
+														sim.stop();
+
 														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
 															time = 1050000 * Number(ce2.content);
 
@@ -1260,37 +1553,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1325,19 +1670,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1350,17 +1682,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1386,37 +1712,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1451,19 +1829,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1476,17 +1841,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1512,37 +1871,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1577,19 +1988,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1602,17 +2000,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1638,37 +2030,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1703,19 +2147,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1728,17 +2159,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1747,6 +2172,10 @@ module.exports = class Fabricardroga extends Command {
 															}, time);
 														}
 													} else if (findSelectedEvento.droga === 'Metanfetamina') {
+														collectorBotoes.stop();
+														sim2.stop();
+														sim.stop();
+
 														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
 															time = 72000000 * Number(ce2.content);
 
@@ -1766,37 +2195,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1831,19 +2312,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1856,17 +2324,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -1892,37 +2354,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -1957,19 +2471,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -1982,17 +2483,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -2018,37 +2513,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -2083,19 +2630,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -2108,17 +2642,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}
@@ -2144,37 +2672,89 @@ module.exports = class Fabricardroga extends Command {
 																}
 															});
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Alumínio'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - findSelectedEvento.aluminio
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Alumínio'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Alumínio'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Borracha'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - findSelectedEvento.borracha
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Borracha'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Borracha'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																	}
+																});
+															}
 
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id,
-																'inventory.item': 'Plástico'
-															}, {
-																$set: {
-																	'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - findSelectedEvento.plastico
-																}
-															});
+															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$pull: {
+																		inventory: {
+																			item: 'Plástico'
+																		}
+																	}
+																});
+															} else {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id,
+																	'inventory.item': 'Plástico'
+																}, {
+																	$set: {
+																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																	}
+																});
+															}
 
 															setTimeout(async () => {
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': false,
+																		'fabricagem.drogas.tempo': 0,
+																		'fabricagem.drogas.quantia': 0,
+																		'fabricagem.drogas.nome': '',
+																		'fabricagem.drogas.emoji': ''
+																	}
+																});
+
 																const embedConfirm = new ClientEmbed(author)
 																	.setTitle('Pegar Droga')
 																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
@@ -2209,19 +2789,6 @@ module.exports = class Fabricardroga extends Command {
 																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
 																					}
 																				});
-
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
-																					}
-																				});
 																			} else {
 																				await this.client.database.users.findOneAndUpdate({
 																					userId: author.id,
@@ -2234,17 +2801,11 @@ module.exports = class Fabricardroga extends Command {
 																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 																							quantia: Number(ce2.content)
 																						}
-																					},
-																					$set: {
-																						'fabricagem.fabricandoDroga': false,
-																						'fabricagem.drogas.tempo': 0,
-																						'fabricagem.drogas.quantia': 0,
-																						'fabricagem.drogas.nome': '',
-																						'fabricagem.drogas.emoji': ''
 																					}
 																				});
 																			}
 
+																			collectorBotoes2.stop();
 																			confirm.delete();
 																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
 																		}

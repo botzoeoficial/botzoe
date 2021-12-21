@@ -1,5 +1,12 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable no-bitwise */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Pets extends Command {
 
@@ -44,19 +51,70 @@ module.exports = class Pets extends Command {
 			guildId: message.guild.id
 		});
 
-		const embed = new ClientEmbed(author);
+		let pagina = 0;
+
+		const embed = new ClientEmbed(author)
+			.setTitle(`Pets de: ${author.username}`);
 
 		if (user.pets.length <= 0) {
-			embed.setTitle(`Pets de: ${author.username}`);
 			embed.setDescription(`${author}, você não tem pets! Use o comando \`${prefix}adotar\`.`);
-		}
+			return message.channel.send(author, embed);
+		} else {
+			user.pets.slice(pagina * 6, pagina * 6 + 6).forEach((est) => {
+				embed.addField(`Nome: ${est.nome}`, `Animal: ${est.animal}\nForça: ${est.forca}\nIdade: ${est.idade}`, true);
+			});
 
-		for (var i = 0; i < user.pets.length; i++) {
-			embed.setTitle(`Pets de: ${author.username}`);
-			embed.addField(`Nome: ${user.pets[i].nome}`, `Animal: ${user.pets[i].animal}\nForça: ${user.pets[i].forca}\nIdade: ${user.pets[i].idade}`, true);
-		}
+			const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
+			const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
+			const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
 
-		message.channel.send(author, embed);
+			const escolha = await message.channel.send(author, {
+				embed: embed,
+				components: [botoes]
+			});
+
+			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+
+			collectorEscolhas.on('collect', async (b) => {
+				if (b.id === 'voltar') {
+					b.reply.defer();
+
+					if (pagina <= 0) {
+						pagina = 0;
+					} else {
+						pagina--;
+					}
+
+					const embed2 = new ClientEmbed(author)
+						.setTitle(`Pets de: ${author.username}`);
+
+					user.pets.slice(pagina * 6, pagina * 6 + 6).forEach((est) => {
+						embed2.addField(`Nome: ${est.nome}`, `Animal: ${est.animal}\nForça: ${est.forca}\nIdade: ${est.idade}`, true);
+					});
+
+					b.message.edit(author, {
+						embed: embed2
+					});
+				} else if (b.id === 'ir') {
+					b.reply.defer();
+
+					if (pagina !== ~~(user.pets.length / 6)) {
+						pagina++;
+					}
+
+					const embed2 = new ClientEmbed(author)
+						.setTitle(`Pets de: ${author.username}`);
+
+					user.pets.slice(pagina * 6, pagina * 6 + 6).forEach((est) => {
+						embed2.addField(`Nome: ${est.nome}`, `Animal: ${est.animal}\nForça: ${est.forca}\nIdade: ${est.idade}`, true);
+					});
+
+					b.message.edit(author, {
+						embed: embed2
+					});
+				}
+			});
+		}
 	}
 
 };

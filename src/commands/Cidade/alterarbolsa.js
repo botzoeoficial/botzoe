@@ -61,7 +61,7 @@ module.exports = class Alterarbolsa extends Command {
 
 			if (!xp) return message.reply('você precisa colocar um valor.');
 
-			if (parseInt(xp) < 0 || parseInt(xp) > 90) return message.reply('o valor da bolsa precisa ser **maior que 0** e **menor que 90**.');
+			if (parseInt(xp) < 0 || parseInt(xp) > 90) return message.reply('o valor da bolsa precisa ser **maior que 0** e **menor que 91**.');
 
 			server.bolsa.valor = Number(xp);
 			server.bolsa.tempo = Date.now();

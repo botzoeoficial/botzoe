@@ -46,10 +46,13 @@ module.exports = class Exportador extends Command {
 			_id: message.guild.id
 		});
 
+		const irEmbora = 600000;
+		const faltamHora = ms(irEmbora - (Date.now() - server.exportador.irEmbora));
+
 		const embed = new ClientEmbed(author)
 			.setTitle('Exportador de Drogas')
 			.setDescription(server.exportador.precisandoDroga === 'Nenhuma Droga' ? 'O Exportador não está na Cidade.' : `O Exportador de Drogas está precisando de **${server.exportador.precisandoQuantia}KG** de **${server.exportador.precisandoDroga}**, para levar a Europa.`)
-			.addField('Tempo para ir embora:', Utils.convertMS(server.exportador.irEmbora))
+			.addField('Tempo para ir embora:', irEmbora - (Date.now() - server.exportador.irEmbora) > 0 ? `\`${faltamHora.days}\`d \`${faltamHora.hours}\`h \`${faltamHora.minutes}\`m \`${faltamHora.seconds}\`s` : `\`0\`d \`0\`h \`0\`m \`0\`s`)
 			.addField('Quantidade que falta para a exportação:', `${server.exportador.quantiaQueFalta}/${server.exportador.precisandoQuantia}`);
 
 		message.channel.send(author, embed).then(async (msg) => {
@@ -84,11 +87,11 @@ module.exports = class Exportador extends Command {
 						return message.channel.send(author, embedPreso);
 					}
 				} else if (!userAuthor.isMochila) {
-					message.channel.send(`${author}, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
+					return message.channel.send(`${author}, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
 						timeout: 5000
 					}));
 				} else if (!userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga)) {
-					message.channel.send(`${author}, você não possui **${server.exportador.precisandoDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
+					return message.channel.send(`${author}, você não possui **${server.exportador.precisandoDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
 						timeout: 5000
 					}));
 				} else {
@@ -169,7 +172,7 @@ module.exports = class Exportador extends Command {
 								const embedRoubar = new ClientEmbed(this.client.user)
 									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-								message.channel.send(`<@${user.id}>`, embedRoubar);
+								return message.channel.send(`<@${user.id}>`, embedRoubar);
 							} else {
 								const embedPolicia = new ClientEmbed(this.client.user)
 									.setTitle('Prisão')
@@ -229,6 +232,8 @@ module.exports = class Exportador extends Command {
 										}
 									});
 								}, 36000000);
+
+								return;
 							}
 						});
 
@@ -254,6 +259,8 @@ module.exports = class Exportador extends Command {
 										'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga).quantia - randomDrogaUser
 									}
 								});
+
+								return;
 							}
 						});
 					});

@@ -61,22 +61,14 @@ module.exports = class Ajuda extends Command {
 				const comando = commands.get(name) || commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
 
 				if (!comando) {
-					return message.reply(`não achei nenhum comando com o nome/aliases: \`${name}\``);
+					return message.reply(`não achei nenhum comando com o nome/alternativo: \`${name}\``);
 				}
 
+				AJUDA.setDescription(!comando.description.length ? `\`Comando Sem Descrição.\`` : `**\`${comando.description}\`**`);
 				AJUDA.addField('Comando:', `\`${comando.name}\``);
-
-				if (comando.aliases) {
-					AJUDA.addField('Aliases:', !comando.aliases.length ? `\`Comando Sem Aliases.\`` : comando.aliases.map(a => `\`${a}\``).join(', '));
-				}
-
-				if (comando.description) {
-					AJUDA.addField('Descrição:', !comando.description.length ? `\`Comando Sem Descrição.\`` : `\`${comando.description}\``);
-				}
-
-				AJUDA.addField('Quantia de Usos:', !cmd ? `\`Comando Não Registrado.\`` : cmd.usages === 0 ? `\`Nenhum Uso.\`` : `\`${cmd.usages}\``);
-
-				if (comando.usage) AJUDA.addField('Modo de Uso:', `\`${prefix}${comando.usage}\``);
+				AJUDA.addField('Alternativos:', !comando.aliases.length ? `\`Comando Sem Alternativos.\`` : comando.aliases.map(a => `**\`${a}\`**`).join(', '));
+				AJUDA.addField('Modo de Uso:', `\`${prefix}${comando.usage}\``);
+				AJUDA.addField('Em Manutenção:', !cmd.manutenção ? `\`Não.\`` : `\`Sim.\`\nMotivo: **${cmd.reason}**`);
 
 				return message.channel.send(author, AJUDA);
 			});

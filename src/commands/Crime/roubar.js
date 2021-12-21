@@ -289,12 +289,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -308,16 +308,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -337,7 +337,7 @@ module.exports = class Roubar extends Command {
 											}
 										});
 
-										return setTimeout(async () => {
+										setTimeout(async () => {
 											await this.client.database.users.findOneAndUpdate({
 												userId: author.id,
 												guildId: message.guild.id
@@ -349,6 +349,8 @@ module.exports = class Roubar extends Command {
 												}
 											});
 										}, 43200000);
+
+										return;
 									}
 								}
 							});
@@ -433,12 +435,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -452,16 +454,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -577,12 +579,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -596,16 +598,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -721,12 +723,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -740,16 +742,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -865,12 +867,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -884,16 +886,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -1009,12 +1011,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -1028,16 +1030,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -1153,12 +1155,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -1172,16 +1174,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -1297,12 +1299,12 @@ module.exports = class Roubar extends Command {
 								});
 							}
 
-							collectorBotoes.on('collect', async (b, user3) => {
+							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
 
 									const userPolicia = await this.client.database.users.findOne({
-										userId: user3.id,
+										userId: b.clicker.id,
 										guildId: message.guild.id
 									});
 
@@ -1316,16 +1318,16 @@ module.exports = class Roubar extends Command {
 										const embedRoubar = new ClientEmbed(author)
 											.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-										message.channel.send(`<@${user3.id}>`, embedRoubar);
+										return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 									} else {
 										const embedPrisao = new ClientEmbed(author)
 											.setTitle('👮 | Preso')
-											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+											.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 										message.channel.send(author, embedPrisao);
 
 										await this.client.database.users.findOneAndUpdate({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										}, {
 											$set: {
@@ -1494,12 +1496,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -1513,16 +1515,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -1639,12 +1641,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -1658,16 +1660,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -1784,12 +1786,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -1803,16 +1805,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -1929,12 +1931,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -1948,16 +1950,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -2074,12 +2076,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -2093,16 +2095,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -2219,12 +2221,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -2238,16 +2240,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -2364,12 +2366,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -2383,16 +2385,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {
@@ -2509,12 +2511,12 @@ module.exports = class Roubar extends Command {
 									});
 								}
 
-								collectorBotoes.on('collect', async (b, user3) => {
+								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
 
 										const userPolicia = await this.client.database.users.findOne({
-											userId: user3.id,
+											userId: b.clicker.id,
 											guildId: message.guild.id
 										});
 
@@ -2528,16 +2530,16 @@ module.exports = class Roubar extends Command {
 											const embedRoubar = new ClientEmbed(author)
 												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-											message.channel.send(`<@${user3.id}>`, embedRoubar);
+											return message.channel.send(`<@${b.clicker.id}>`, embedRoubar);
 										} else {
 											const embedPrisao = new ClientEmbed(author)
 												.setTitle('👮 | Preso')
-												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${user3.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
+												.setDescription(`🚓 | ${author}, você foi preso em flagrante por <@${b.clicker.id}>, ao roubar **R$${Utils.numberFormat(Number(dindin))},00** de ${member}. Agora você passará um tempinho na **Cadeia.**`);
 
 											message.channel.send(author, embedPrisao);
 
 											await this.client.database.users.findOneAndUpdate({
-												userId: user3.id,
+												userId: b.clicker.id,
 												guildId: message.guild.id
 											}, {
 												$set: {

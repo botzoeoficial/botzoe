@@ -57,8 +57,6 @@ module.exports = class Gf extends Command {
 
 		if (!user.marry.has) return message.reply(`você não está casado! Use o comando \`${prefix}casar\`.`);
 
-		if (user.familia.length >= 25) return message.reply('você já tem o máximo de filhos possíveis.');
-
 		let presoTime = 0;
 
 		const embedPreso = new ClientEmbed(author)
@@ -272,6 +270,7 @@ module.exports = class Gf extends Command {
 											message.reply(`você já tem um filho com esse nome! Digite o nome novamente!`);
 										} else {
 											collector.stop();
+											msg.delete();
 											message.channel.send(`${author}, seu filho **${msg2.content}** nasceu! Você e <@${user.marry.user}> podem usar agora \`${prefix}familia\`!`);
 
 											await this.client.database.users.findOneAndUpdate({
@@ -332,6 +331,7 @@ module.exports = class Gf extends Command {
 											message.reply(`você já tem uma filha com esse nome! Digite o nome novamente!`);
 										} else {
 											collector.stop();
+											msg.delete();
 											message.channel.send(`${author}, sua filha **${msg2.content}** nasceu! Você e <@${user.marry.user}> podem usar agora \`${prefix}familia\`!`);
 
 											await this.client.database.users.findOneAndUpdate({

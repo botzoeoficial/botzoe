@@ -46,6 +46,22 @@ module.exports = class Cadastraritem extends Command {
 		author,
 		prefix
 	}) {
+		const userVenda = await this.client.database.users.findOne({
+			userId: author.id,
+			guildId: message.guild.id
+		});
+
+		if (userVenda.cadastrandoItem) return message.reply(`você usou o comando \`${prefix}vender\` ou \`${prefix}cadastraritem\` e deixou ele rodando. Digite \`0\` para cancelar ele e usar esse comando novamente!`);
+
+		await this.client.database.users.findOneAndUpdate({
+			userId: author.id,
+			guildId: message.guild.id
+		}, {
+			$set: {
+				cadastrandoItem: true
+			}
+		});
+
 		const arrayCategorias = [{
 			categoria: 'Drogas'
 		}, {
@@ -119,6 +135,16 @@ module.exports = class Cadastraritem extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							cadastrandoItem: false
+						}
+					});
+
 					return message.reply(`seleção cancelada com sucesso!`);
 				} else {
 					const selected = Number(ce.content - 1);
@@ -168,6 +194,16 @@ module.exports = class Cadastraritem extends Command {
 									msg.delete();
 									ce2.delete();
 									sim2.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
 									const selected2 = Number(ce2.content - 1);
@@ -207,6 +243,16 @@ module.exports = class Cadastraritem extends Command {
 													collector.stop();
 													ce3.delete();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply(`cancelado com sucesso!`);
 												}
 
@@ -239,6 +285,16 @@ module.exports = class Cadastraritem extends Command {
 																collector2.stop();
 																ce4.delete();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply(`cancelado com sucesso!`);
 															}
 
@@ -302,6 +358,16 @@ module.exports = class Cadastraritem extends Command {
 																			msg.delete();
 																			ce5.delete();
 																			sim3.stop();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -318,6 +384,15 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
 
 																				msg.edit(author, embed);
 																				sim3.stop();
@@ -377,21 +452,72 @@ module.exports = class Cadastraritem extends Command {
 																							dono: author.id,
 																							tempo: findSelectedEvento3.milisegundos,
 																							tempo2: Date.now(),
-																							emoji: findSelectedEvento2.emoji
+																							emoji: findSelectedEvento2.emoji,
+																							id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																							comprado: false
 																						}
 																					}
 																				});
 
 																				return setTimeout(async () => {
-																					await this.client.database.guilds.findOneAndUpdate({
-																						_id: message.guild.id
-																					}, {
-																						$pull: {
-																							mercadoNegro: {
-																								nome: findSelectedEvento2.droga
+																					if (!findSelectedEvento2.comprado) {
+																						const user5 = await this.client.database.users.findOne({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						});
+
+																						if (user5.mochila.find((x) => x.item === findSelectedEvento2.droga)) {
+																							if (user5.mochila.find((x) => x.item === findSelectedEvento2.droga).quantia > 1) {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id,
+																									'mochila.item': findSelectedEvento2.droga
+																								}, {
+																									$set: {
+																										'mochila.$.quantia': user5.mochila.find((a) => a.item === findSelectedEvento2.droga).quantia += Number(ce3.content)
+																									}
+																								});
+																							} else {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id
+																								}, {
+																									$push: {
+																										mochila: {
+																											item: findSelectedEvento2.droga,
+																											emoji: findSelectedEvento2.emoji,
+																											id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																											quantia: Number(ce3.content)
+																										}
+																									}
+																								});
 																							}
+																						} else {
+																							await this.client.database.users.findOneAndUpdate({
+																								userId: author.id,
+																								guildId: message.guild.id
+																							}, {
+																								$push: {
+																									mochila: {
+																										item: findSelectedEvento2.droga,
+																										emoji: findSelectedEvento2.emoji,
+																										id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																										quantia: Number(ce3.content)
+																									}
+																								}
+																							});
 																						}
-																					});
+
+																						await this.client.database.guilds.findOneAndUpdate({
+																							_id: message.guild.id
+																						}, {
+																							$pull: {
+																								mercadoNegro: {
+																									nome: findSelectedEvento2.droga
+																								}
+																							}
+																						});
+																					}
 																				}, findSelectedEvento3.milisegundos);
 																			}
 																		}
@@ -491,6 +617,16 @@ module.exports = class Cadastraritem extends Command {
 								if (Number(ce2.content) === 0) {
 									msg.delete();
 									sim2.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
 									const selected2 = Number(ce2.content - 1);
@@ -526,6 +662,16 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply(`cancelado com sucesso!`);
 												}
 
@@ -554,6 +700,16 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply(`cancelado com sucesso!`);
 															}
 
@@ -616,6 +772,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
 																			sim3.stop();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -632,6 +798,15 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
 
 																				msg.edit(author, embed);
 																				sim3.stop();
@@ -691,21 +866,72 @@ module.exports = class Cadastraritem extends Command {
 																							dono: author.id,
 																							tempo: findSelectedEvento3.milisegundos,
 																							tempo2: Date.now(),
-																							emoji: findSelectedEvento2.emoji
+																							emoji: findSelectedEvento2.emoji,
+																							id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																							comprado: false
 																						}
 																					}
 																				});
 
 																				return setTimeout(async () => {
-																					await this.client.database.guilds.findOneAndUpdate({
-																						_id: message.guild.id
-																					}, {
-																						$pull: {
-																							mercadoNegro: {
-																								nome: findSelectedEvento2.arma
+																					if (!findSelectedEvento2.comprado) {
+																						const user5 = await this.client.database.users.findOne({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						});
+
+																						if (user5.mochila.find((x) => x.item === findSelectedEvento2.arma)) {
+																							if (user5.mochila.find((x) => x.item === findSelectedEvento2.arma).quantia > 1) {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id,
+																									'mochila.item': findSelectedEvento2.arma
+																								}, {
+																									$set: {
+																										'mochila.$.quantia': user5.mochila.find((a) => a.item === findSelectedEvento2.arma).quantia += Number(ce3.content)
+																									}
+																								});
+																							} else {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id
+																								}, {
+																									$push: {
+																										mochila: {
+																											item: findSelectedEvento2.arma,
+																											emoji: findSelectedEvento2.emoji,
+																											id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																											quantia: Number(ce3.content)
+																										}
+																									}
+																								});
 																							}
+																						} else {
+																							await this.client.database.users.findOneAndUpdate({
+																								userId: author.id,
+																								guildId: message.guild.id
+																							}, {
+																								$push: {
+																									mochila: {
+																										item: findSelectedEvento2.arma,
+																										emoji: findSelectedEvento2.emoji,
+																										id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																										quantia: Number(ce3.content)
+																									}
+																								}
+																							});
 																						}
-																					});
+
+																						await this.client.database.guilds.findOneAndUpdate({
+																							_id: message.guild.id
+																						}, {
+																							$pull: {
+																								mercadoNegro: {
+																									nome: findSelectedEvento2.arma
+																								}
+																							}
+																						});
+																					}
 																				}, findSelectedEvento3.milisegundos);
 																			}
 																		}
@@ -788,6 +1014,16 @@ module.exports = class Cadastraritem extends Command {
 								if (Number(ce2.content) === 0) {
 									msg.delete();
 									sim2.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
 									const selected2 = Number(ce2.content - 1);
@@ -823,6 +1059,16 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply(`cancelado com sucesso!`);
 												}
 
@@ -851,6 +1097,16 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply(`cancelado com sucesso!`);
 															}
 
@@ -913,6 +1169,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
 																			sim3.stop();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -929,6 +1195,15 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
 
 																				msg.edit(author, embed);
 																				sim3.stop();
@@ -988,21 +1263,72 @@ module.exports = class Cadastraritem extends Command {
 																							dono: author.id,
 																							tempo: findSelectedEvento3.milisegundos,
 																							tempo2: Date.now(),
-																							emoji: findSelectedEvento2.emoji
+																							emoji: findSelectedEvento2.emoji,
+																							id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																							comprado: false
 																						}
 																					}
 																				});
 
 																				return setTimeout(async () => {
-																					await this.client.database.guilds.findOneAndUpdate({
-																						_id: message.guild.id
-																					}, {
-																						$pull: {
-																							mercadoNegro: {
-																								nome: findSelectedEvento2.municao
+																					if (!findSelectedEvento2.comprado) {
+																						const user5 = await this.client.database.users.findOne({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						});
+
+																						if (user5.mochila.find((x) => x.item === findSelectedEvento2.municao)) {
+																							if (user5.mochila.find((x) => x.item === findSelectedEvento2.municao).quantia > 1) {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id,
+																									'mochila.item': findSelectedEvento2.municao
+																								}, {
+																									$set: {
+																										'mochila.$.quantia': user5.mochila.find((a) => a.item === findSelectedEvento2.municao).quantia += Number(ce3.content)
+																									}
+																								});
+																							} else {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id
+																								}, {
+																									$push: {
+																										mochila: {
+																											item: findSelectedEvento2.municao,
+																											emoji: findSelectedEvento2.emoji,
+																											id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																											quantia: Number(ce3.content)
+																										}
+																									}
+																								});
 																							}
+																						} else {
+																							await this.client.database.users.findOneAndUpdate({
+																								userId: author.id,
+																								guildId: message.guild.id
+																							}, {
+																								$push: {
+																									mochila: {
+																										item: findSelectedEvento2.municao,
+																										emoji: findSelectedEvento2.emoji,
+																										id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																										quantia: Number(ce3.content)
+																									}
+																								}
+																							});
 																						}
-																					});
+
+																						await this.client.database.guilds.findOneAndUpdate({
+																							_id: message.guild.id
+																						}, {
+																							$pull: {
+																								mercadoNegro: {
+																									nome: findSelectedEvento2.municao
+																								}
+																							}
+																						});
+																					}
 																				}, findSelectedEvento3.milisegundos);
 																			}
 																		}
@@ -1079,6 +1405,16 @@ module.exports = class Cadastraritem extends Command {
 								if (Number(ce2.content) === 0) {
 									msg.delete();
 									sim2.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
 									const selected2 = Number(ce2.content - 1);
@@ -1114,6 +1450,16 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply(`cancelado com sucesso!`);
 												}
 
@@ -1142,6 +1488,16 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply(`cancelado com sucesso!`);
 															}
 
@@ -1204,6 +1560,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
 																			sim3.stop();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -1220,6 +1586,15 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
 
 																				msg.edit(author, embed);
 																				sim3.stop();
@@ -1279,21 +1654,72 @@ module.exports = class Cadastraritem extends Command {
 																							dono: author.id,
 																							tempo: findSelectedEvento3.milisegundos,
 																							tempo2: Date.now(),
-																							emoji: findSelectedEvento2.emoji
+																							emoji: findSelectedEvento2.emoji,
+																							id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																							comprado: false
 																						}
 																					}
 																				});
 
 																				return setTimeout(async () => {
-																					await this.client.database.guilds.findOneAndUpdate({
-																						_id: message.guild.id
-																					}, {
-																						$pull: {
-																							mercadoNegro: {
-																								nome: findSelectedEvento2.chave
+																					if (!findSelectedEvento2.comprado) {
+																						const user5 = await this.client.database.users.findOne({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						});
+
+																						if (user5.mochila.find((x) => x.item === findSelectedEvento2.chave)) {
+																							if (user5.mochila.find((x) => x.item === findSelectedEvento2.chave).quantia > 1) {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id,
+																									'mochila.item': findSelectedEvento2.chave
+																								}, {
+																									$set: {
+																										'mochila.$.quantia': user5.mochila.find((a) => a.item === findSelectedEvento2.chave).quantia += Number(ce3.content)
+																									}
+																								});
+																							} else {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id
+																								}, {
+																									$push: {
+																										mochila: {
+																											item: findSelectedEvento2.chave,
+																											emoji: findSelectedEvento2.emoji,
+																											id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																											quantia: Number(ce3.content)
+																										}
+																									}
+																								});
 																							}
+																						} else {
+																							await this.client.database.users.findOneAndUpdate({
+																								userId: author.id,
+																								guildId: message.guild.id
+																							}, {
+																								$push: {
+																									mochila: {
+																										item: findSelectedEvento2.chave,
+																										emoji: findSelectedEvento2.emoji,
+																										id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																										quantia: Number(ce3.content)
+																									}
+																								}
+																							});
 																						}
-																					});
+
+																						await this.client.database.guilds.findOneAndUpdate({
+																							_id: message.guild.id
+																						}, {
+																							$pull: {
+																								mercadoNegro: {
+																									nome: findSelectedEvento2.chave
+																								}
+																							}
+																						});
+																					}
 																				}, findSelectedEvento3.milisegundos);
 																			}
 																		}
@@ -1389,6 +1815,16 @@ module.exports = class Cadastraritem extends Command {
 									msg.delete();
 									ce2.delete();
 									sim2.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
 									const selected2 = Number(ce2.content - 1);
@@ -1427,6 +1863,16 @@ module.exports = class Cadastraritem extends Command {
 													collector.stop();
 													ce3.delete();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
@@ -1458,6 +1904,16 @@ module.exports = class Cadastraritem extends Command {
 																collector2.stop();
 																ce4.delete();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
@@ -1522,6 +1978,16 @@ module.exports = class Cadastraritem extends Command {
 																			msg.delete();
 																			ce5.delete();
 																			sim3.stop();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -1540,6 +2006,16 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
 
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
+
+																				msg.edit(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -1597,24 +2073,73 @@ module.exports = class Cadastraritem extends Command {
 																							dono: author.id,
 																							tempo: findSelectedEvento3.milisegundos,
 																							tempo2: Date.now(),
-																							emoji: findSelectedEvento2.emoji
+																							emoji: findSelectedEvento2.emoji,
+																							id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																							comprado: false
 																						}
 																					}
 																				});
 
-																				setTimeout(async () => {
-																					await this.client.database.guilds.findOneAndUpdate({
-																						_id: message.guild.id
-																					}, {
-																						$pull: {
-																							mercadoNegro: {
-																								nome: findSelectedEvento2.minerio
-																							}
-																						}
-																					});
-																				}, findSelectedEvento3.milisegundos);
+																				return setTimeout(async () => {
+																					if (!findSelectedEvento2.comprado) {
+																						const user5 = await this.client.database.users.findOne({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						});
 
-																				return msg.edit(author, embed);
+																						if (user5.inventory.find((x) => x.item === findSelectedEvento2.minerio)) {
+																							if (user5.inventory.find((x) => x.item === findSelectedEvento2.minerio).quantia > 1) {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id,
+																									'inventory.item': findSelectedEvento2.minerio
+																								}, {
+																									$set: {
+																										'inventory.$.quantia': user5.inventory.find((a) => a.item === findSelectedEvento2.minerio).quantia += Number(ce3.content)
+																									}
+																								});
+																							} else {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id
+																								}, {
+																									$push: {
+																										inventory: {
+																											item: findSelectedEvento2.minerio,
+																											emoji: findSelectedEvento2.emoji,
+																											id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																											quantia: Number(ce3.content)
+																										}
+																									}
+																								});
+																							}
+																						} else {
+																							await this.client.database.users.findOneAndUpdate({
+																								userId: author.id,
+																								guildId: message.guild.id
+																							}, {
+																								$push: {
+																									inventory: {
+																										item: findSelectedEvento2.minerio,
+																										emoji: findSelectedEvento2.emoji,
+																										id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																										quantia: Number(ce3.content)
+																									}
+																								}
+																							});
+																						}
+
+																						await this.client.database.guilds.findOneAndUpdate({
+																							_id: message.guild.id
+																						}, {
+																							$pull: {
+																								mercadoNegro: {
+																									nome: findSelectedEvento2.minerio
+																								}
+																							}
+																						});
+																					}
+																				}, findSelectedEvento3.milisegundos);
 																			}
 																		}
 																	});
@@ -1691,6 +2216,16 @@ module.exports = class Cadastraritem extends Command {
 									msg.delete();
 									ce2.delete();
 									sim2.stop();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else {
 									const selected2 = Number(ce2.content - 1);
@@ -1726,6 +2261,16 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply(`cancelado com sucesso!`);
 												}
 
@@ -1754,6 +2299,16 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply(`cancelado com sucesso!`);
 															}
 
@@ -1816,6 +2371,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (Number(ce5.content) === 0) {
 																			msg.delete();
 																			sim3.stop();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply(`seleção cancelada com sucesso!`);
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
@@ -1832,6 +2397,15 @@ module.exports = class Cadastraritem extends Command {
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
 																				embed.addField(`Preço:`, `**R$${Utils.numberFormat(Number(ce4.content))},00**`, true);
 																				embed.addField(`Tempo no Mercado:`, `**${findSelectedEvento3.tempo}**`);
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
 
 																				msg.edit(author, embed);
 																				sim3.stop();
@@ -1891,21 +2465,72 @@ module.exports = class Cadastraritem extends Command {
 																							dono: author.id,
 																							tempo: findSelectedEvento3.milisegundos,
 																							tempo2: Date.now(),
-																							emoji: findSelectedEvento2.emoji
+																							emoji: findSelectedEvento2.emoji,
+																							id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																							comprado: false
 																						}
 																					}
 																				});
 
 																				return setTimeout(async () => {
-																					await this.client.database.guilds.findOneAndUpdate({
-																						_id: message.guild.id
-																					}, {
-																						$pull: {
-																							mercadoNegro: {
-																								nome: findSelectedEvento2.item
+																					if (!findSelectedEvento2.comprado) {
+																						const user5 = await this.client.database.users.findOne({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						});
+
+																						if (user5.mochila.find((x) => x.item === findSelectedEvento2.item)) {
+																							if (user5.mochila.find((x) => x.item === findSelectedEvento2.item).quantia > 1) {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id,
+																									'mochila.item': findSelectedEvento2.item
+																								}, {
+																									$set: {
+																										'mochila.$.quantia': user5.mochila.find((a) => a.item === findSelectedEvento2.item).quantia += Number(ce3.content)
+																									}
+																								});
+																							} else {
+																								await this.client.database.users.findOneAndUpdate({
+																									userId: author.id,
+																									guildId: message.guild.id
+																								}, {
+																									$push: {
+																										mochila: {
+																											item: findSelectedEvento2.item,
+																											emoji: findSelectedEvento2.emoji,
+																											id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																											quantia: Number(ce3.content)
+																										}
+																									}
+																								});
 																							}
+																						} else {
+																							await this.client.database.users.findOneAndUpdate({
+																								userId: author.id,
+																								guildId: message.guild.id
+																							}, {
+																								$push: {
+																									mochila: {
+																										item: findSelectedEvento2.item,
+																										emoji: findSelectedEvento2.emoji,
+																										id: findSelectedEvento2.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																										quantia: Number(ce3.content)
+																									}
+																								}
+																							});
 																						}
-																					});
+
+																						await this.client.database.guilds.findOneAndUpdate({
+																							_id: message.guild.id
+																						}, {
+																							$pull: {
+																								mercadoNegro: {
+																									nome: findSelectedEvento2.item
+																								}
+																							}
+																						});
+																					}
 																				}, findSelectedEvento3.milisegundos);
 																			}
 																		}

@@ -54,9 +54,9 @@ module.exports = class Prender extends Command {
 			_id: message.guild.id
 		});
 
-		if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado do servidor para usar esse comando!');
+		if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado da Cidade para prender alguém!');
 
-		if (user.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, portanto, você não pode prender ninguém ainda!');
+		if (user.policia.isFolga) return message.reply('o Delegado da Cidade deu uma folga para todos os **Policiais** da Cidade, portanto, você não pode prender ninguém ainda!');
 
 		if (!user.mochila.find((a) => a.item === 'Algemas') && user.armaEquipada !== 'MP5' && user.armaEquipada !== 'G18') {
 			return message.reply('você precisa ter 1 **Algema** na mochila e uma **MP5** ou **G18** equipada para prender alguém!');
@@ -85,8 +85,6 @@ module.exports = class Prender extends Command {
 
 			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
-			if (user2.prisao.isPreso) return message.reply('este usuário já está preso.');
-
 			const tempo = this.timeToMilliseconds(args.slice(1).join(' '));
 
 			if (!tempo) return message.reply('por favor, coloque um tempo válido. Ex: **1d** ou **1h**');
@@ -106,7 +104,7 @@ module.exports = class Prender extends Command {
 			}, {
 				$set: {
 					'prisao.isPreso': true,
-					'prisao.tempo': Date.now(),
+					'prisao.tempo': user2.prisao.tempo + Date.now(),
 					'prisao.prenderCmd': true,
 					'prisao.prenderMili': tempo
 				}

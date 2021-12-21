@@ -21,14 +21,14 @@ module.exports = class Desmancharveiculo extends Command {
 		this.guildOnly = true;
 
 		this.owner = false;
-		this.editor = false;
-		this.adm = false;
+		this.editor = true;
+		this.adm = true;
 
 		this.vip = false;
 		this.governador = false;
 		this.delegado = false;
 		this.diretorHP = false;
-		this.donoFavela = false;
+		this.donoFavela = true;
 		this.donoArmas = false;
 		this.donoDrogas = false;
 		this.donoDesmanche = true;
@@ -167,7 +167,7 @@ module.exports = class Desmancharveiculo extends Command {
 					}, {
 						$pull: {
 							desmanche: {
-								nome: findSelectedEvento.nome
+								danificado: findSelectedEvento.danificado
 							}
 						}
 					});

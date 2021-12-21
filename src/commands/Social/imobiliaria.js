@@ -294,7 +294,7 @@ module.exports = class Imobiliaria extends Command {
 											fazendas: {
 												nome: fazendas[pg].nome,
 												lote1: {
-													bloqueado: true,
+													bloqueado: false,
 													fruta: '',
 													emoji: '',
 													cooldown: 0,
@@ -305,7 +305,7 @@ module.exports = class Imobiliaria extends Command {
 													quantia: 0
 												},
 												lote2: {
-													bloqueado: true,
+													bloqueado: false,
 													fruta: '',
 													emoji: '',
 													cooldown: 0,

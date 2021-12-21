@@ -42,7 +42,7 @@ module.exports = class Bitcoin extends Command {
 		prefix,
 		author
 	}) {
-		const member = this.client.users.cache.get(args[0]) || message.mentions.members.first() || message.member;
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
 		const user = await this.client.database.users.findOne({
 			userId: member.id,

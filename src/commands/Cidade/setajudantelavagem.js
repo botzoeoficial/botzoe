@@ -48,7 +48,7 @@ module.exports = class Setajudantelavagem extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.ajudanteLavagem.length === 1) return message.reply('este servidor já possui o máximo de Ajudantes da Lavagem de Dinheiro.');
+		if (server.cidade.ajudanteLavagem.length === 3) return message.reply('este servidor já possui o máximo de Ajudantes da Lavagem de Dinheiro.');
 
 		if (server.cidade.ajudanteLavagem.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Ajudante da Lavagem de Dinheiro do servidor.');
 

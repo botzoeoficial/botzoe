@@ -130,7 +130,7 @@ module.exports = class Descartardobau extends Command {
 				'918835446040133652': 'Cobre',
 				'918835445746532412': 'Ferro',
 				'918835445838774322': 'Plástico',
-				'901590833151746128': 'Prata'
+				'918835445939458088': 'Prata'
 			};
 
 			sim.on('collect', async (collected) => {

@@ -50,7 +50,7 @@ module.exports = class Diminuirpena extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.carcereiro.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Carcereiro** do servidor para usar esse comando!');
+		if (!server.cidade.carcereiro.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Carcereiro** da Cidade para diminuir a pena de alguém!');
 
 		const user = await this.client.database.users.findOneAndUpdate({
 			userId: author.id,

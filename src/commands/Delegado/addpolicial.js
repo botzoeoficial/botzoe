@@ -22,7 +22,7 @@ module.exports = class Addpolicial extends Command {
 		this.adm = true;
 
 		this.vip = false;
-		this.governador = false;
+		this.governador = true;
 		this.delegado = true;
 		this.diretorHP = false;
 		this.donoFavela = false;

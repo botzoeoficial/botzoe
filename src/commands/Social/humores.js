@@ -65,7 +65,7 @@ module.exports = class Humores extends Command {
 		if (user.humores.desanimado < 0) user.humores.desanimado = 0;
 		else if (user.humores.desanimado > 150) user.humores.desanimado = 150;
 
-		user.save();
+		await user.save();
 
 		const embed = new ClientEmbed(author)
 			.setThumbnail(author.displayAvatarURL({

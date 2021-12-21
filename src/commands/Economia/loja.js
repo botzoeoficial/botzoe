@@ -150,10 +150,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja2.bebidas[0].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja2.bebidas[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -166,7 +170,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja2.bebidas[0].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja2.bebidas[0].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja2.bebidas[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.bebidas[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -258,10 +262,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja2.bebidas[1].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja2.bebidas[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -274,7 +282,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja2.bebidas[1].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja2.bebidas[1].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja2.bebidas[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.bebidas[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -366,10 +374,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja2.bebidas[2].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja2.bebidas[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -382,7 +394,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja2.bebidas[2].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja2.bebidas[2].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja2.bebidas[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.bebidas[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -474,10 +486,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja2.bebidas[3].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja2.bebidas[3].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -490,7 +506,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja2.bebidas[3].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja2.bebidas[3].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja2.bebidas[3].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.bebidas[3].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -582,10 +598,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja2.bebidas[4].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja2.bebidas[4].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -598,7 +618,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja2.bebidas[4].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja2.bebidas[4].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja2.bebidas[4].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.bebidas[4].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -690,10 +710,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja2.bebidas[5].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja2.bebidas[5].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -706,7 +730,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja2.bebidas[5].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja2.bebidas[5].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja2.bebidas[5].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.bebidas[5].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -869,10 +893,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[0].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -885,7 +913,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[0].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[0].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -977,10 +1005,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[1].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -993,7 +1025,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[1].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[1].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1085,10 +1117,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[2].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1101,7 +1137,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[2].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[2].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1193,10 +1229,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[3].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[3].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1209,7 +1249,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[3].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[3].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[3].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[3].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1301,10 +1341,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[4].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[4].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1317,7 +1361,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[4].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[4].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[4].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[4].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1409,10 +1453,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[5].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[5].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1425,7 +1473,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[5].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[5].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[5].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[5].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1517,10 +1565,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja3.comidas[6].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja3.comidas[6].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1533,7 +1585,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja3.comidas[6].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja3.comidas[6].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja3.comidas[6].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.comidas[6].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1694,10 +1746,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja4.doces[0].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja4.doces[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1710,7 +1766,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja4.doces[0].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja4.doces[0].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja4.doces[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja4.doces[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1802,10 +1858,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja4.doces[1].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja4.doces[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1818,7 +1878,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja4.doces[1].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja4.doces[1].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja4.doces[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja4.doces[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -1910,10 +1970,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja4.doces[2].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja4.doces[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -1926,7 +1990,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja4.doces[2].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja4.doces[2].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja4.doces[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja4.doces[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2018,10 +2082,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja4.doces[3].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja4.doces[3].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2034,7 +2102,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja4.doces[3].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja4.doces[3].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja4.doces[3].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja4.doces[3].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2126,10 +2194,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja4.doces[4].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja4.doces[4].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2142,7 +2214,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja4.doces[4].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja4.doces[4].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja4.doces[4].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja4.doces[4].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2316,10 +2388,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja5.utilidades[0].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja5.utilidades[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2332,7 +2408,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja5.utilidades[0].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja5.utilidades[0].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja5.utilidades[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja5.utilidades[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2438,10 +2514,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja5.utilidades[1].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja5.utilidades[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2454,7 +2534,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja5.utilidades[1].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja5.utilidades[1].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja5.utilidades[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja5.utilidades[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2540,10 +2620,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja5.utilidades[2].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja5.utilidades[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2556,7 +2640,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja5.utilidades[2].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja5.utilidades[2].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja5.utilidades[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja5.utilidades[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2697,10 +2781,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja5.utilidades[4].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja5.utilidades[4].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2713,7 +2801,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja5.utilidades[4].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja5.utilidades[4].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja5.utilidades[4].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja5.utilidades[4].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2807,10 +2895,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja5.utilidades[5].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja5.utilidades[5].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -2823,7 +2915,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja5.utilidades[5].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja5.utilidades[5].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja5.utilidades[5].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja5.utilidades[5].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -2984,10 +3076,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja6.pm[0].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja6.pm[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -3000,7 +3096,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja6.pm[0].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja6.pm[0].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja6.pm[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja6.pm[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -3104,10 +3200,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja6.pm[1].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja6.pm[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -3120,7 +3220,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja6.pm[1].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja6.pm[1].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja6.pm[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja6.pm[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -3224,10 +3324,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja6.pm[2].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja6.pm[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -3240,7 +3344,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja6.pm[2].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja6.pm[2].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja6.pm[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja6.pm[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -3332,10 +3436,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja6.pm[3].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja6.pm[3].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -3348,7 +3456,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja6.pm[3].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja6.pm[3].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja6.pm[3].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja6.pm[3].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -3440,10 +3548,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 
-								msg.delete();
-								message.reply(`quantas(os) **${loja6.pm[4].item}(s)** você deseja comprar?`).then(async (as) => {
+								message.reply(`quantas(os) **${loja6.pm[4].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 									const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 										time: 60000
+									});
+
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
 									});
 
 									collectorMessage.on('collect', async (ce) => {
@@ -3456,7 +3568,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 											ce.delete();
 											return message.reply('compra cancelada com sucesso!');
-										} else if (user.saldo < loja6.pm[4].preco * Number(ce.content)) {
+										} else if (user3.saldo < loja6.pm[4].preco * Number(ce.content)) {
 											ce.delete();
 											message.reply(`você precisa de **R$${Utils.numberFormat(loja6.pm[4].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja6.pm[4].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 												timeout: 5000
@@ -3833,11 +3945,14 @@ module.exports = class Loja extends Command {
 									}
 								}
 							}
-
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[0].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -3850,7 +3965,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[0].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[0].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -3859,7 +3974,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[0].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[0].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -3880,7 +3995,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[0].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[0].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[0].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[0].preco * Number(ce.content)
 												}
 											});
@@ -3894,7 +4009,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[0].item,
 														emoji: loja2.sementes[0].emoji,
 														id: loja2.sementes[0].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -3938,10 +4053,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[1].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -3954,7 +4073,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[1].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[1].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -3963,7 +4082,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[1].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[1].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -3984,7 +4103,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[1].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[1].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[1].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[1].preco * Number(ce.content)
 												}
 											});
@@ -3998,7 +4117,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[1].item,
 														emoji: loja2.sementes[1].emoji,
 														id: loja2.sementes[1].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4042,10 +4161,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[2].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4058,7 +4181,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[2].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[2].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4067,7 +4190,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[2].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[2].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4088,7 +4211,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[2].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[2].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[2].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[2].preco * Number(ce.content)
 												}
 											});
@@ -4102,7 +4225,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[2].item,
 														emoji: loja2.sementes[2].emoji,
 														id: loja2.sementes[2].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4146,10 +4269,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[3].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[3].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4162,7 +4289,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[3].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[3].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[3].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[3].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4171,7 +4298,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[3].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[3].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4192,7 +4319,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[3].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[3].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[3].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[3].preco * Number(ce.content)
 												}
 											});
@@ -4206,7 +4333,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[3].item,
 														emoji: loja2.sementes[3].emoji,
 														id: loja2.sementes[3].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4250,10 +4377,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[4].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[4].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4266,7 +4397,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[4].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[4].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[4].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[4].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4275,7 +4406,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[4].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[4].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4296,7 +4427,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[4].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[4].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[4].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[4].preco * Number(ce.content)
 												}
 											});
@@ -4310,7 +4441,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[4].item,
 														emoji: loja2.sementes[4].emoji,
 														id: loja2.sementes[4].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4354,10 +4485,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[5].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[5].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4370,7 +4505,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[5].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[5].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[5].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[5].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4379,7 +4514,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[5].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[5].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4400,7 +4535,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[5].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[5].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[5].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[5].preco * Number(ce.content)
 												}
 											});
@@ -4414,7 +4549,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[5].item,
 														emoji: loja2.sementes[5].emoji,
 														id: loja2.sementes[5].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4458,10 +4593,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[6].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[6].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4474,7 +4613,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[6].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[6].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[6].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[6].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4483,7 +4622,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[6].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[6].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4504,7 +4643,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[6].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[6].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[6].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[6].preco * Number(ce.content)
 												}
 											});
@@ -4518,7 +4657,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[6].item,
 														emoji: loja2.sementes[6].emoji,
 														id: loja2.sementes[6].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4562,10 +4701,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[7].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[7].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4578,7 +4721,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[7].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[7].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[7].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[7].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4587,7 +4730,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[7].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[7].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4608,7 +4751,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[7].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[7].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[7].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[7].preco * Number(ce.content)
 												}
 											});
@@ -4622,7 +4765,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[7].item,
 														emoji: loja2.sementes[7].emoji,
 														id: loja2.sementes[7].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4716,10 +4859,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[8].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[8].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4732,7 +4879,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[8].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[8].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[8].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[8].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4741,7 +4888,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[8].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[8].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4762,7 +4909,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[8].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[8].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[8].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[8].preco * Number(ce.content)
 												}
 											});
@@ -4776,7 +4923,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[8].item,
 														emoji: loja2.sementes[8].emoji,
 														id: loja2.sementes[8].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4820,10 +4967,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[9].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[9].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4836,7 +4987,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[9].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[9].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[9].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[9].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4845,7 +4996,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[9].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[9].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4866,7 +5017,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[9].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[9].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[9].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[9].preco * Number(ce.content)
 												}
 											});
@@ -4880,7 +5031,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[9].item,
 														emoji: loja2.sementes[9].emoji,
 														id: loja2.sementes[9].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -4924,10 +5075,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[10].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[10].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -4940,7 +5095,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[10].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[10].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[10].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[10].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -4949,7 +5104,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[10].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[10].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4970,7 +5125,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[10].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[10].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[10].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[10].preco * Number(ce.content)
 												}
 											});
@@ -4984,7 +5139,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[10].item,
 														emoji: loja2.sementes[10].emoji,
 														id: loja2.sementes[10].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -5028,10 +5183,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[11].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[11].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5044,7 +5203,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[11].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[11].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[11].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[11].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5053,7 +5212,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[11].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[11].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5074,7 +5233,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[11].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[11].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[11].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[11].preco * Number(ce.content)
 												}
 											});
@@ -5088,7 +5247,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[11].item,
 														emoji: loja2.sementes[11].emoji,
 														id: loja2.sementes[11].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -5132,10 +5291,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[12].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[12].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5148,7 +5311,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[12].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[12].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[12].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[12].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5157,7 +5320,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[12].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[12].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5178,7 +5341,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[12].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[12].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[12].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[12].preco * Number(ce.content)
 												}
 											});
@@ -5192,7 +5355,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[12].item,
 														emoji: loja2.sementes[12].emoji,
 														id: loja2.sementes[12].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -5236,10 +5399,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[13].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[13].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5252,7 +5419,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[13].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[13].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[13].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[13].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5261,7 +5428,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[13].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[13].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5282,7 +5449,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[13].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[13].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[13].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[13].preco * Number(ce.content)
 												}
 											});
@@ -5296,7 +5463,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[13].item,
 														emoji: loja2.sementes[13].emoji,
 														id: loja2.sementes[13].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -5340,10 +5507,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[14].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[14].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5356,7 +5527,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[14].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[14].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[14].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[14].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5365,7 +5536,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[14].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[14].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5386,7 +5557,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[14].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[14].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[14].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[14].preco * Number(ce.content)
 												}
 											});
@@ -5400,7 +5571,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[14].item,
 														emoji: loja2.sementes[14].emoji,
 														id: loja2.sementes[14].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -5444,10 +5615,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja2.sementes[15].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja2.sementes[15].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5460,7 +5635,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja2.sementes[15].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja2.sementes[15].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja2.sementes[15].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja2.sementes[15].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5469,7 +5644,7 @@ module.exports = class Loja extends Command {
 										ce.delete();
 										collectorMessage.stop();
 
-										message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja2.sementes[15].item}(s)** com sucesso!`);
+										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[15].item}(s)** com sucesso!`);
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5490,7 +5665,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[15].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[15].item).quantia + Number(ce.content * 5),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[15].item).quantia + Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[15].preco * Number(ce.content)
 												}
 											});
@@ -5504,7 +5679,7 @@ module.exports = class Loja extends Command {
 														item: loja2.sementes[15].item,
 														emoji: loja2.sementes[15].emoji,
 														id: loja2.sementes[15].emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-														quantia: Number(ce.content * 5)
+														quantia: Number(ce.content)
 													}
 												},
 												$set: {
@@ -5613,10 +5788,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja3.utilidadesAgro[0].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja3.utilidadesAgro[0].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5629,7 +5808,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja3.utilidadesAgro[0].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja3.utilidadesAgro[0].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja3.utilidadesAgro[0].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[0].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5717,10 +5896,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja3.utilidadesAgro[1].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja3.utilidadesAgro[1].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5733,7 +5916,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja3.utilidadesAgro[1].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja3.utilidadesAgro[1].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja3.utilidadesAgro[1].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[1].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5821,10 +6004,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja3.utilidadesAgro[2].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja3.utilidadesAgro[2].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5837,7 +6024,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja3.utilidadesAgro[2].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja3.utilidadesAgro[2].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja3.utilidadesAgro[2].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[2].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -5925,10 +6112,14 @@ module.exports = class Loja extends Command {
 								}
 							}
 
-							msgTeste.delete();
-							message.reply(`quantas(os) **${loja3.utilidadesAgro[3].item}(s)** você deseja comprar?`).then(async (as) => {
+							message.reply(`quantas(os) **${loja3.utilidadesAgro[3].item}(s)** você deseja comprar?\nOBS: Digite \`0\` para cancelar.`).then(async (as) => {
 								const collectorMessage = as.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 									time: 60000
+								});
+
+								const user3 = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
 								});
 
 								collectorMessage.on('collect', async (ce) => {
@@ -5941,7 +6132,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 										ce.delete();
 										return message.reply('compra cancelada com sucesso!');
-									} else if (user.saldo < loja3.utilidadesAgro[3].preco * Number(ce.content)) {
+									} else if (user3.saldo < loja3.utilidadesAgro[3].preco * Number(ce.content)) {
 										ce.delete();
 										message.reply(`você precisa de **R$${Utils.numberFormat(loja3.utilidadesAgro[3].preco * Number(ce.content))}** para comprar \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[3].item}(s)**. Por favor, envie a quantia novamente no chat!`).then((b) => b.delete({
 											timeout: 5000
@@ -6013,7 +6204,7 @@ module.exports = class Loja extends Command {
 							// 	guildId: message.guild.id
 							// });
 
-							// if (user.saldo < loja3.utilidadesAgro[4].preco) {
+							// if (user3.saldo < loja3.utilidadesAgro[4].preco) {
 							// 	return message.reply('você não tem saldo suficiente para comprar o Agricultor! ||"SEU(A) POBRE!!!!!"||');
 							// } else {
 							// 	message.reply(`você comprou o item \`Agricultor\` com sucesso!`).then((b) => b.delete({
@@ -6170,7 +6361,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia * loja4.sementes[0].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia * loja4.sementes[0].venda
 									}
 								});
 
@@ -6203,7 +6394,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia * loja4.sementes[1].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia * loja4.sementes[1].venda
 									}
 								});
 
@@ -6236,7 +6427,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia * loja4.sementes[2].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia * loja4.sementes[2].venda
 									}
 								});
 
@@ -6269,7 +6460,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia * loja4.sementes[3].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia * loja4.sementes[3].venda
 									}
 								});
 
@@ -6302,7 +6493,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia * loja4.sementes[4].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia * loja4.sementes[4].venda
 									}
 								});
 
@@ -6335,7 +6526,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia * loja4.sementes[5].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia * loja4.sementes[5].venda
 									}
 								});
 
@@ -6368,7 +6559,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia * loja4.sementes[6].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia * loja4.sementes[6].venda
 									}
 								});
 
@@ -6401,7 +6592,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia * loja4.sementes[7].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia * loja4.sementes[7].venda
 									}
 								});
 
@@ -6484,7 +6675,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia * loja4.sementes[8].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia * loja4.sementes[8].venda
 									}
 								});
 
@@ -6517,7 +6708,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia * loja4.sementes[9].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia * loja4.sementes[9].venda
 									}
 								});
 
@@ -6550,7 +6741,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia * loja4.sementes[10].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia * loja4.sementes[10].venda
 									}
 								});
 
@@ -6583,7 +6774,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia * loja4.sementes[11].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia * loja4.sementes[11].venda
 									}
 								});
 
@@ -6616,7 +6807,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia * loja4.sementes[12].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia * loja4.sementes[12].venda
 									}
 								});
 
@@ -6649,7 +6840,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia * loja4.sementes[13].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia * loja4.sementes[13].venda
 									}
 								});
 
@@ -6682,7 +6873,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia * loja4.sementes[14].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia * loja4.sementes[14].venda
 									}
 								});
 
@@ -6715,7 +6906,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia * loja4.sementes[15].venda
+										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia * loja4.sementes[15].venda
 									}
 								});
 

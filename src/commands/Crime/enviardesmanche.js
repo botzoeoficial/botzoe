@@ -154,7 +154,7 @@ module.exports = class Enviardesmanche extends Command {
 						}, {
 							$pull: {
 								garagem: {
-									nome: findSelectedEvento.nome
+									danificado: findSelectedEvento.danificado
 								}
 							}
 						});

@@ -61,6 +61,43 @@ module.exports = class Perfil extends Command {
 
 		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
 
+		let reputacao = '';
+		let faltam;
+
+		if (user.crime.reputacao >= 0 && user.crime.reputacao < 2) {
+			reputacao = 'Cidadão de Bem';
+			faltam = 1;
+		} else if (user.crime.reputacao > 1 && user.crime.reputacao < 1001) {
+			reputacao = 'Nóia';
+			faltam = 1000;
+		} else if (user.crime.reputacao > 1000 && user.crime.reputacao < 2001) {
+			reputacao = 'Trombadinha';
+			faltam = 2000;
+		} else if (user.crime.reputacao > 2000 && user.crime.reputacao < 3001) {
+			reputacao = 'Maloqueiro';
+			faltam = 3000;
+		} else if (user.crime.reputacao > 3000 && user.crime.reputacao < 4001) {
+			reputacao = 'Criminoso';
+			faltam = 4000;
+		} else if (user.crime.reputacao > 4000 && user.crime.reputacao < 5001) {
+			reputacao = 'Ladrão';
+			faltam = 5000;
+		} else if (user.crime.reputacao > 5000 && user.crime.reputacao < 6001) {
+			reputacao = 'Traficante';
+			faltam = 6000;
+		} else if (user.crime.reputacao > 6000 && user.crime.reputacao < 7001) {
+			reputacao = 'Político';
+			faltam = 7000;
+		} else if (user.crime.reputacao > 7000 && user.crime.reputacao < 8001) {
+			reputacao = 'Assassino Profissional';
+			faltam = 8000;
+		} else if (user.crime.reputacao > 8000 && user.crime.reputacao < 9001) {
+			reputacao = 'Terrorista';
+			faltam = 9000;
+		} else if (user.crime.reputacao > 9000) {
+			reputacao = 'Dono do Morro';
+		}
+
 		const embed = new ClientEmbed(author)
 			.setThumbnail(member.user.displayAvatarURL({
 				dynamic: true,
@@ -79,11 +116,15 @@ module.exports = class Perfil extends Command {
 			.addField('🕰️ Tempo na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : `${moment(user.fac.tempo).format('ll')} [${moment().diff(user.fac.tempo, 'days')} dias atrás.]`, true)
 			.addField('\u2800', '\u2800', true)
 			.addField('🔫 Arma', user.armaEquipada === '' ? 'Nenhuma arma equipada.' : user.armaEquipada, true)
-			.addField('⭐ Estrelas:', !user.estrelas.length ? 'Nenhuma Estrela.' : user.estrelas.join(''))
+			.addField('⭐ Estrelas:', !user.estrelas.length ? 'Nenhuma Estrela.' : user.estrelas.join(''), true)
+			.addField('\u2800', '\u2800', true)
+			.addField('🎁 Presentes:', Utils.numberFormat(user.presentes), true)
 			.addField('🎉 Eventos:', !user.eventos.length ? 'Nenhum Evento Participado.' : `${user.eventos.map(a => `<@&${a}>`).join('\n')}`, true)
 			.addField('\u2800', '\u2800', true)
 			.addField('🏆 Top Ranking:', `ㅤ#${server.sort((a, b) => (b.banco + b.saldo) - (a.banco + a.saldo)).findIndex(c => c.userId === user.userId) + 1}º`, true)
-			.addField('🗓️ Aniversário:', user.aniversario)
+			.addField('🗓️ Aniversário:', user.aniversario, true)
+			.addField('\u2800', '\u2800', true)
+			.addField('🦹🏻 Reputação:', reputacao, true)
 			.addField('\u200b', `🎄 **SOBREMIM:**\n${user.sobremim}`);
 
 		message.channel.send(author, embed);

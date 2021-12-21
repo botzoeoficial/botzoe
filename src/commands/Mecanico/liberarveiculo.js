@@ -46,7 +46,7 @@ module.exports = class Liberarveiculo extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.mecanico.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Mecânico** na cidade para liberar algum veículo!');
+		if (!server.cidade.mecanico.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Mecânico** na Cidade para liberar algum veículo!');
 
 		const mecanicaArray = server.mecanica.map((value, index) => ({
 			nome: value.nome,

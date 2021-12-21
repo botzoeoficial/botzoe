@@ -82,6 +82,7 @@ module.exports = class Retiraritem extends Command {
 						}))
 						.setDescription(itens || '**Inventário Vazio.**');
 
+					msg.delete();
 					message.channel.send(author, embedInv).then(async (msg2) => {
 						for (const emoji of user.inventory.map((es) => es.id)) await msg2.react(emoji);
 
@@ -190,6 +191,7 @@ module.exports = class Retiraritem extends Command {
 										} else {
 											collector2.stop();
 
+											msg2.delete();
 											message.channel.send(`${author}, você retirou **${Number(r2.content)}** \`${itemEmoji}(s)\` do seu Inventário com sucesso!`);
 
 											if (Number(r2.content) === user.inventory.find((a) => a.item === itemEmoji).quantia) {
@@ -228,6 +230,7 @@ module.exports = class Retiraritem extends Command {
 									});
 								});
 							} else {
+								msg2.delete();
 								message.channel.send(`${author}, você retirou 1 \`${itemEmoji}\` do seu Inventário com sucesso!`);
 
 								await this.client.database.users.findOneAndUpdate({
@@ -261,6 +264,7 @@ module.exports = class Retiraritem extends Command {
 							}))
 							.setDescription(itens || '**Mochila Vazia.**');
 
+						msg.delete();
 						message.channel.send(author, embedMochila).then(async (msg3) => {
 							for (const emoji of user.mochila.map((es) => es.id)) await msg3.react(emoji);
 
@@ -371,6 +375,7 @@ module.exports = class Retiraritem extends Command {
 											} else {
 												collector2.stop();
 
+												msg3.delete();
 												message.channel.send(`${author}, você retirou **${Number(r2.content)}** \`${itemEmoji}(s)\` da sua Mochila com sucesso!`);
 
 												if (Number(r2.content) === user.mochila.find((a) => a.item === itemEmoji).quantia) {

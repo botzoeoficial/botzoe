@@ -1,3 +1,4 @@
+/* eslint-disable id-length */
 const Command = require('../../structures/Command');
 
 module.exports = class Cancelarvenda extends Command {
@@ -48,6 +49,55 @@ module.exports = class Cancelarvenda extends Command {
 		if (!nome) return message.reply('você precisa colocar o nome do produto que você deseja retirar do **Mercado Negro**!');
 
 		if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome !== nome)) return message.reply('você não possui um produto com este nome do **Mercado Negro**!');
+
+		const item = server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === nome);
+
+		const user = await this.client.database.users.findOne({
+			userId: author.id,
+			guildId: message.guild.id
+		});
+
+		if (user.mochila.find((x) => x.item === item.nome)) {
+			if (user.mochila.find((x) => x.item === item.nome).quantia > 1) {
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id,
+					'mochila.item': item.nome
+				}, {
+					$set: {
+						'mochila.$.quantia': user.mochila.find((a) => a.item === item.nome).quantia += Number(item.quantia)
+					}
+				});
+			} else {
+				await this.client.database.users.findOneAndUpdate({
+					userId: author.id,
+					guildId: message.guild.id
+				}, {
+					$push: {
+						mochila: {
+							item: item.nome,
+							emoji: item.emoji.emoji,
+							id: item.emoji.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+							quantia: Number(item.quantia)
+						}
+					}
+				});
+			}
+		} else {
+			await this.client.database.users.findOneAndUpdate({
+				userId: author.id,
+				guildId: message.guild.id
+			}, {
+				$push: {
+					mochila: {
+						item: item.nome,
+						emoji: item.emoji.emoji,
+						id: item.emoji.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+						quantia: Number(item.quantia)
+					}
+				}
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id

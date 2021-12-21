@@ -1,18 +1,19 @@
+/* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
-module.exports = class Addcarcereiro extends Command {
+module.exports = class Removermecanico extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'addcarcereiro';
-		this.category = 'Delegado';
-		this.description = 'Adicione um Carcereiro na sua cidade!';
-		this.usage = 'addcarcereiro <usuário>';
-		this.aliases = ['add-carcereiro'];
+		this.name = 'removermecanico';
+		this.category = 'Cidade';
+		this.description = 'Remova um Mecânico do seu servidor!';
+		this.usage = 'removermecanico <usuário>';
+		this.aliases = ['remover-mecanico', 'remove-mecânico'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -23,7 +24,7 @@ module.exports = class Addcarcereiro extends Command {
 
 		this.vip = false;
 		this.governador = true;
-		this.delegado = true;
+		this.delegado = false;
 		this.diretorHP = false;
 		this.donoFavela = false;
 		this.donoArmas = false;
@@ -42,29 +43,27 @@ module.exports = class Addcarcereiro extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (!server.cidade.mecanico.length) return message.reply('não há Mecânicos nesse servidor.');
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
-		if (member.user.bot) return message.reply(`você não pode dar função de Carcereiro para um bot.`);
+		if (member.user.bot) return message.reply(`um bot nunca irá ser Mecânico.`);
 
-		if (server.cidade.carcereiro.length === 3) return message.reply('esse servidor já possui o máximo de Carcereiros.');
-
-		if (server.cidade.carcereiro.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Carcereiro do servidor.');
+		if (!server.cidade.mecanico.find((f) => f.id === member.id)) return message.reply('esse usuário não é um Mecânico do servidor.');
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
 		}, {
-			$push: {
-				'cidade.carcereiro': {
+			$pull: {
+				'cidade.mecanico': {
 					id: member.id
 				}
 			}
 		});
 
-		message.reply(`o usuário ${member} virou Carcereiro desse servidor agora.`);
+		message.reply('esse usuário não é mais Mecânico do servidor agora.');
 	}
 
 };

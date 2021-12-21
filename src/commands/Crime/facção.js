@@ -62,28 +62,28 @@ module.exports = class Facção extends Command {
 				.setTitle('🎭 | Sistema de Facção')
 				.addField('❔ Como utilizar?', `\`${prefix}facção\` \`<subcomando>\``)
 				.addField('🔖 Exemplos:', [
-					`\`${prefix}facção\` **criar** - Cria uma Facção. (Apenas Level 3)`,
+					`\`${prefix}facção\` **criar** - Cria uma Facção. (Apenas Level 3 no **CRIME**)`,
 					`\`${prefix}facção\` **cargo <criar/deletar> <nome do cargo>** - Cria ou deleta um cargo da sua facção.`,
-					`\`${prefix}facção\` **adicionar <usuário>** - Adiciona um membro a sua Facção.`,
+					`\`${prefix}facção\` **convidar <usuário>** - Adiciona um membro a sua Facção.`,
 					`\`${prefix}facção\` **demitir <usuário>** - Demite um membro da sua Facção.`,
 					`\`${prefix}facção\` **promover <usuário>** - Promove um funcionário.`,
 					`\`${prefix}facção\` **rebaixar <usuário>** - Rebaixa um funcionário.`,
 					`\`${prefix}facção\` **trabalhar** - Trabalha e gera um valor para a sua Facção e também um level.`,
 					`\`${prefix}facção\` **registro <@usuario>** - Mostra registro de trabalho de um membro da sua Facção.`,
-					`\`${prefix}facção\` **valor <transferir> <@usuario> <saldo>** - Transfere um valor da sua Facção para um usuário.`,
+					`\`${prefix}facção\` **valor transferir <@usuario> <saldo>** - Transfere um valor da sua Facção para um usuário.`,
 					`\`${prefix}facção\` **info** - Mostra informações da sua Facção.`,
 					`\`${prefix}facção\` **sair** - Sai da Facção que você está.`,
 					`\`${prefix}facção\` **deletar** - Deleta a Facção.`
 				]);
 
-			message.channel.send(author, embed);
+			return message.channel.send(author, embed);
 		} else if (args[0].toLowerCase() === 'criar') {
 			if (user.fac.createFac) {
 				return message.reply(`você já é dono de uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`);
 			} else if (user.fac.isFac) {
 				return message.reply(`você já está em uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`);
-			} else if (user.level < 3) {
-				return message.reply('você precisa ser level **3** para poder criar uma Facção!');
+			} else if (user.crime.reputacao <= 2000) {
+				return message.reply(`você precisa ser **Maloqueiro** para poder criar uma Facção! Use \`${prefix}reputacao\`.`);
 			} else {
 				message.reply('qual nome você deseja dar a sua **Facção**? OBS: Digite no chat o nome dela!').then(async (msg) => {
 					const filter = (m) => m.author.id === author.id;
@@ -134,6 +134,8 @@ module.exports = class Facção extends Command {
 								}
 							}
 						});
+
+						return;
 					});
 
 					collector.on('end', async (collected, reason) => {
@@ -394,7 +396,7 @@ module.exports = class Facção extends Command {
 							'faccoes.nome': user.fac.nome
 						}, {
 							$set: {
-								'faccoes.level': fc.level + 1
+								'faccoes.$.level': fc.level + 1
 							}
 						});
 					}
@@ -405,7 +407,7 @@ module.exports = class Facção extends Command {
 					}, {
 						$set: {
 							'fac.lastWork': Date.now(),
-							'fac.money': fc.money + 200,
+							'fac.money': fc.money += 200,
 							'fac.xp': fc.xp + XP
 						},
 						$push: {
@@ -423,7 +425,7 @@ module.exports = class Facção extends Command {
 					}, {
 						$set: {
 							'fac.xp': fc.xp + XP,
-							'fac.money': fc.money + 200
+							'fac.money': fc.money += 200
 						}
 					});
 
@@ -432,9 +434,11 @@ module.exports = class Facção extends Command {
 						'faccoes.nome': user.fac.nome
 					}, {
 						$set: {
-							'faccoes.$.money': fc.money + 200
+							'faccoes.$.money': fc.money += 200
 						}
 					});
+
+					return;
 				}
 			}
 		} else if (args[0].toLowerCase() === 'convidar') {
@@ -510,6 +514,7 @@ module.exports = class Facção extends Command {
 
 							msg.delete();
 							collector.stop();
+							return;
 						}
 
 						if (['não', 'nao', 'no'].includes(collected.content.toLowerCase())) {
@@ -521,6 +526,7 @@ module.exports = class Facção extends Command {
 
 							msg.delete();
 							collector.stop();
+							return;
 						}
 					});
 
@@ -597,6 +603,8 @@ module.exports = class Facção extends Command {
 							'faccoes.$.membros': USER.id
 						}
 					});
+
+					return;
 				}
 			}
 		} else if (args[0].toLowerCase() === 'sair') {
@@ -671,6 +679,7 @@ module.exports = class Facção extends Command {
 						if (['não', 'nao', 'no'].includes(collected.content.toLowerCase())) {
 							msg.delete();
 							collector.stop();
+							return;
 						}
 					});
 
@@ -727,6 +736,7 @@ module.exports = class Facção extends Command {
 
 							collector.stop();
 							msg.delete();
+
 							const embed1 = new ClientEmbed(author)
 								.setTitle('🎭 | Facção')
 								.setDescription(`${author}, você saiu da sua Facção com sucesso!`);
@@ -737,6 +747,7 @@ module.exports = class Facção extends Command {
 						if (['não', 'nao', 'no'].includes(collected.content.toLowerCase())) {
 							msg.delete();
 							collector.stop();
+							return;
 						}
 					});
 
@@ -877,18 +888,14 @@ module.exports = class Facção extends Command {
 			if (user.fac.dono !== author.id) {
 				return message.reply('você precisa ser o dono da Facção para ver o registro de algum membro!');
 			} else {
-				const USER = this.client.users.cache.get(args[2]) || message.mentions.users.first();
+				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
 
-				if (!USER) return message.reply('mencione alguém para transferir o dinheiro!');
-
-				if (USER.bot) return message.reply('você não pode transferir dinheiro para bots!');
+				if (!USER) return message.reply('mencione alguém para ver o registro!');
 
 				const user2 = await this.client.database.users.findOne({
 					userId: USER.id,
 					guildId: message.guild.id
 				});
-
-				if (!user2.cadastrado) return message.reply('peça para esse usuário se cadastrar antes de receber dinheiro de uma Facção!');
 
 				const owner = await this.client.users.fetch(fb.dono);
 				const fd = await this.client.database.users
@@ -906,7 +913,7 @@ module.exports = class Facção extends Command {
 					.setTitle('Registros - Facção')
 					.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${user2.fac.registro.map((x, index) => `\`[${index++}]\` Trabalhou as: **${moment(x.tempo).format('LTS L')}** | Ganhou: **${x.xp} XP** e **R$${x.money},00**`).slice(0, 20).join('\n')}`);
 
-				message.channel.send(author, embed);
+				return message.channel.send(author, embed);
 			}
 		} else if (args[0].toLowerCase() === 'cargo') {
 			if (!args[1]) {
@@ -1083,6 +1090,8 @@ module.exports = class Facção extends Command {
 									'fac.emprego.numero': user2.fac.emprego.numero = findSelectedEmprego.position
 								}
 							});
+
+							return;
 						}
 					});
 
@@ -1216,6 +1225,8 @@ module.exports = class Facção extends Command {
 									'fac.emprego.numero': user2.fac.emprego.numero = findSelectedEmprego.position
 								}
 							});
+
+							return;
 						}
 					});
 
