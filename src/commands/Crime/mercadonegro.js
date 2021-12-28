@@ -89,6 +89,8 @@ module.exports = class Mercadonegro extends Command {
 					tempo: value.tempo,
 					tempo2: value.tempo2,
 					emoji: value.emoji,
+					id: value.id,
+					comprado: value.comprado,
 					position: index
 				}));
 
@@ -179,6 +181,8 @@ module.exports = class Mercadonegro extends Command {
 							tempo: value.tempo,
 							tempo2: value.tempo2,
 							emoji: value.emoji,
+							id: value.id,
+							comprado: value.comprado,
 							position: index
 						}));
 
@@ -250,6 +254,8 @@ module.exports = class Mercadonegro extends Command {
 							tempo: value.tempo,
 							tempo2: value.tempo2,
 							emoji: value.emoji,
+							id: value.id,
+							comprado: value.comprado,
 							position: index
 						}));
 

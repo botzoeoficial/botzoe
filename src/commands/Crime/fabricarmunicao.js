@@ -207,7 +207,7 @@ module.exports = class Fabricarmunicao extends Command {
 										msg.delete();
 										ce2.delete();
 
-										return message.reply(`para fabricar essa munição \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nCobre: \`x${findSelectedEvento.cobre * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Cobre').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alúminio').quantia}\`||)`);
+										return message.reply(`para fabricar essa munição \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nCobre: \`x${findSelectedEvento.cobre * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Cobre').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Cobre').quantia < findSelectedEvento.cobre * Number(ce2.content)) {
 										sim.stop();
 										sim2.stop();

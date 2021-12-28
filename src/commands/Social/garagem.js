@@ -71,7 +71,7 @@ module.exports = class Garagem extends Command {
 				.addField('Danificado:', `${user.garagem[pagina].danificado}%`, true)
 				.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(user.garagem[pagina].desmanche))},00`, true)
 				.addField('Emplacado:', `**\`${!user.garagem[pagina].emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
-				.addField('\u2800', '\u2800', true)
+				.addField('Placa:', `**${!user.garagem[pagina].emplacado ? `\`${user.garagem[pagina].placa}\` ❌` : `\`${user.garagem[pagina].placa}\` ✅`}**`, true)
 				.addField('Oficina:', `**\`${!user.garagem[pagina].mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)
 				.addField('Arrumado na Oficina:', `**\`${!user.garagem[pagina].arrumado ? 'Não está arrumado.' : 'Está arrumado.'}\`**`, true)
 				.addField('Liberado da Oficina:', `**\`${!user.garagem[pagina].liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
@@ -86,7 +86,9 @@ module.exports = class Garagem extends Command {
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
+				time: 60000
+			});
 
 			collectorEscolhas.on('collect', async (b) => {
 				if (b.id === 'voltar') {
@@ -109,7 +111,7 @@ module.exports = class Garagem extends Command {
 						.addField('Danificado:', `${user.garagem[pagina].danificado}%`, true)
 						.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(user.garagem[pagina].desmanche))},00`, true)
 						.addField('Emplacado:', `**\`${!user.garagem[pagina].emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
-						.addField('\u2800', '\u2800', true)
+						.addField('Placa:', `**${!user.garagem[pagina].emplacado ? `\`${user.garagem[pagina].placa}\` ❌` : `\`${user.garagem[pagina].placa}\` ✅`}**`, true)
 						.addField('Oficina:', `**\`${!user.garagem[pagina].mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)
 						.addField('Arrumado na Oficina:', `**\`${!user.garagem[pagina].arrumado ? 'Não está arrumado.' : 'Está arrumado.'}\`**`, true)
 						.addField('Liberado da Oficina:', `**\`${!user.garagem[pagina].liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
@@ -138,7 +140,7 @@ module.exports = class Garagem extends Command {
 						.addField('Danificado:', `${user.garagem[pagina].danificado}%`, true)
 						.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(user.garagem[pagina].desmanche))},00`, true)
 						.addField('Emplacado:', `**\`${!user.garagem[pagina].emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
-						.addField('\u2800', '\u2800', true)
+						.addField('Placa:', `**${!user.garagem[pagina].emplacado ? `\`${user.garagem[pagina].placa}\` ❌` : `\`${user.garagem[pagina].placa}\` ✅`}**`, true)
 						.addField('Oficina:', `**\`${!user.garagem[pagina].mecanica ? 'Não está na Oficina.' : 'Está na Oficina.'}\`**`, true)
 						.addField('Arrumado na Oficina:', `**\`${!user.garagem[pagina].arrumado ? 'Não está arrumado.' : 'Está arrumado.'}\`**`, true)
 						.addField('Liberado da Oficina:', `**\`${!user.garagem[pagina].liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)

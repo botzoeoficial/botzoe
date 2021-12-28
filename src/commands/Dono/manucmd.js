@@ -43,6 +43,8 @@ module.exports = class Manucmd extends Command {
 		const cmd = this.client.commands.get(command) || this.client.commands.get(this.client.aliases.get(command));
 		if (!cmd) return message.reply('comando não encontrado!');
 
+		const { name } = cmd;
+
 		const comando = await this.client.database.commands.findOne({
 			_id: name
 		});
@@ -51,10 +53,6 @@ module.exports = class Manucmd extends Command {
 
 		const reason = args.slice(1).join(' ');
 		if (!reason) return message.reply('coloque um motivo!');
-
-		const {
-			name
-		} = cmd;
 
 		if (comando.manutenção) {
 			await this.client.database.commands.findOneAndUpdate({

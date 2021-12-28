@@ -120,7 +120,6 @@ module.exports = class Fazenda extends Command {
 					ce.delete();
 				} else {
 					ce.delete();
-					sim.stop();
 
 					const findFazenda = user.fazendas.findIndex(f => f.nome === findSelectedEvento.nome);
 
@@ -10754,9 +10753,9 @@ module.exports = class Fazenda extends Command {
 
 						let timeout2;
 
-						if (user.fazendas[findFazenda].Lote2.fruta2 === 'Pêssego') {
+						if (user.fazendas[findFazenda].lote2.fruta2 === 'Pêssego') {
 							timeout2 = 86400000;
-						} else if (user.fazendas[findFazenda].Lote2.fruta2 === 'Cereja') {
+						} else if (user.fazendas[findFazenda].lote2.fruta2 === 'Cereja') {
 							timeout2 = 57600000;
 						} else if (user.fazendas[findFazenda].lote2.fruta2 === 'Melancia') {
 							timeout2 = 72000000;

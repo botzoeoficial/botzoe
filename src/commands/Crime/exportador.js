@@ -4,6 +4,10 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Exportador extends Command {
 
@@ -84,7 +88,104 @@ module.exports = class Exportador extends Command {
 							.setTitle('👮 | Preso')
 							.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-						return message.channel.send(author, embedPreso);
+						const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+						const botoes = new MessageActionRow().addComponents([buttonPreso]);
+
+						const escolha = await message.channel.send(author, {
+							embed: embedPreso,
+							components: [botoes]
+						});
+
+						const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
+							max: 1,
+							time: 60000
+						});
+
+						collectorEscolhas.on('collect', async (b) => {
+							if (b.id === 'preso') {
+								b.reply.defer();
+
+								const userMochila = await this.client.database.users.findOne({
+									userId: author.id,
+									guildId: message.guild.id
+								});
+
+								if (!userMochila.isMochila) {
+									escolha.delete();
+
+									return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
+								}
+
+								if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+									escolha.delete();
+
+									return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
+								}
+
+								if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id,
+										'mochila.item': 'Chave Micha'
+									}, {
+										$set: {
+											'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+										}
+									});
+								} else {
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$pull: {
+											mochila: {
+												item: 'Chave Micha'
+											}
+										}
+									});
+								}
+
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$set: {
+										'prisao.isPreso': false,
+										'prisao.tempo': 0,
+										'prisao.prenderCmd': false,
+										'prisao.prenderMili': 0,
+										'prisao.traficoDrogas': false,
+										'prisao.crime': false,
+										'prisao.prender': false,
+										'prisao.revistar': false,
+										'prisao.roubarVeiculo': false,
+										'prisao.atirarPrisao': false,
+										'prisao.velha': false,
+										'prisao.frentista': false,
+										'prisao.joalheria': false,
+										'prisao.agiota': false,
+										'prisao.casaLoterica': false,
+										'prisao.brazino': false,
+										'prisao.facebook': false,
+										'prisao.bancoCentral': false,
+										'prisao.shopping': false,
+										'prisao.banco': false
+									}
+								});
+
+								escolha.delete();
+								return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+							}
+						});
+
+						collectorEscolhas.on('end', async (collected, reason) => {
+							if (reason === 'time') {
+								return escolha.edit(author, {
+									embed: embedPreso,
+									components: []
+								});
+							}
+						});
 					}
 				} else if (!userAuthor.isMochila) {
 					return message.channel.send(`${author}, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({

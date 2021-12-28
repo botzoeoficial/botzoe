@@ -52,8 +52,8 @@ module.exports = class Emplacarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valor,
-			ano: value.ano,
+			valor: value.valore,
+			ano: value.nano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -63,6 +63,7 @@ module.exports = class Emplacarveiculo extends Command {
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,
+			placa: value.placa,
 			position: index
 		}));
 
@@ -134,6 +135,7 @@ module.exports = class Emplacarveiculo extends Command {
 						sim.stop();
 						ce.delete();
 						msg.delete();
+
 						return message.reply(`esse carro não está arrumado. Você precisa arrumar ele antes de emplacar usando o comando \`${prefix}arrumarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -143,6 +145,7 @@ module.exports = class Emplacarveiculo extends Command {
 						sim.stop();
 						ce.delete();
 						msg.delete();
+
 						return message.reply(`esse carro já está emplacado. Você precisa liberar ele usando o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -155,14 +158,17 @@ module.exports = class Emplacarveiculo extends Command {
 
 					msg.edit(author, embed);
 
-					return await this.client.database.guilds.findOneAndUpdate({
+					await this.client.database.guilds.findOneAndUpdate({
 						_id: message.guild.id,
 						'mecanica.nome': findSelectedEvento.nome
 					}, {
 						$set: {
-							'mecanica.$.emplacado': true
+							'mecanica.$.emplacado': true,
+							'mecanica.$.placa': this.makeid(7)
 						}
 					});
+
+					return;
 				}
 			});
 
@@ -175,6 +181,18 @@ module.exports = class Emplacarveiculo extends Command {
 				}
 			});
 		});
+	}
+
+	makeid(length) {
+		var result = '';
+		var characters = 'ABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
+		var charactersLength = characters.length;
+
+		for (var i = 0; i < length; i++) {
+			result += characters.charAt(Math.floor(Math.random() * charactersLength));
+		}
+
+		return result;
 	}
 
 };

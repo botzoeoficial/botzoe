@@ -133,6 +133,10 @@ const userSchema = new Schema({
 		}
 	},
 	cooldown: {
+		visitaintima: {
+			type: Number,
+			default: 0
+		},
 		gf: {
 			type: Number,
 			default: 0
@@ -599,6 +603,10 @@ const userSchema = new Schema({
 		liberado: {
 			type: Boolean,
 			default: false
+		},
+		placa: {
+			type: String,
+			default: ''
 		}
 	},
 	fabricagem: {
@@ -757,7 +765,7 @@ const userSchema = new Schema({
 		lote1: {
 			bloqueado: {
 				type: Boolean,
-				default: true
+				default: false
 			},
 			fruta: {
 				type: String,
@@ -803,7 +811,7 @@ const userSchema = new Schema({
 		lote2: {
 			bloqueado: {
 				type: Boolean,
-				default: true
+				default: false
 			},
 			fruta: {
 				type: String,

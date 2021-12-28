@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable max-len */
 /* eslint-disable func-names */
 /* eslint-disable consistent-return */
@@ -56,7 +57,7 @@ module.exports = class Addvipdoador extends Command {
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🔅 | VIP SETADO')
-			.setDescription(`💎 Parabéns <@${member.id}> 💎\n\n🥳 | Você acaba de se Tornar um ${message.guild.id === '885645282614861854' ? '<@885645282644213812>' : '**❪💎❯❱❱ ❱ VIP Premium**'}\n\n🗓️ | O prazo do seu plano é de 30 Dias à partir de agora.`);
+			.setDescription(`💎 Parabéns <@${member.id}> 💎\n\n🥳 | Você acaba de se Tornar um ${message.guild.id === '885645282614861854' ? '<@&885645282644213812>' : '**❪💎❯❱❱ ❱ VIP Premium**'}\n\n🗓️ | O prazo do seu plano é de 30 Dias à partir de agora.`);
 
 		message.channel.send(member, embed);
 
@@ -75,7 +76,7 @@ module.exports = class Addvipdoador extends Command {
 			}
 		});
 
-		setTimeout(async () => {
+		this.extendedSetTimeout(async () => {
 			member.roles.remove('885645282644213812');
 
 			await this.client.database.guilds.findOneAndUpdate({
@@ -88,6 +89,13 @@ module.exports = class Addvipdoador extends Command {
 				}
 			});
 		}, 30 * 24 * 60 * 60 * 1000);
+	}
+
+	extendedSetTimeout(callback, ms) {
+		const biggestInt = (2 ** 31) - 1;
+		const max = ms > biggestInt ? biggestInt : ms;
+
+		setTimeout(() => ms > max ? extendedSetTimeout(callback, ms - max) : callback(), max);
 	}
 
 };

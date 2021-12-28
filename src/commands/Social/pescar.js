@@ -1,9 +1,14 @@
+/* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Pescar extends Command {
 
@@ -50,67 +55,295 @@ module.exports = class Pescar extends Command {
 
 		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
 
-		const timeout = 600000;
+		if (user.prisao.isPreso) {
+			let presoTime = 0;
 
-		if (timeout - (Date.now() - user.cooldown.pescar) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.pescar));
+			const embedPreso = new ClientEmbed(author)
+				.setTitle('👮 | Preso');
 
-			const embed = new ClientEmbed(author)
-				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+			if (user.prisao.prenderCmd) {
+				presoTime = user.prisao.prenderMili;
 
-			return message.channel.send(author, embed);
-		} else {
-			const hasItem = user.inventory.find((xs) => xs.item === 'Vara de Pesca');
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-			if (!hasItem) {
-				return message.reply('você não possui uma **Vara de Pesca** no seu inventário!');
-			} else {
-				const embed = new ClientEmbed(author)
-					.setTitle('<:Varadepescar:891297733774819328> | PESCARIA')
-					.setDescription(`<:Varadepescar:891297733774819328> | Você pescou para relaxar, e conseguiu as seguintes melhorias:\n\n🤯 **Estressado:** +50\n😡 **Bravo:** +20\n<:Varadepescar:891297733774819328> **Vara de Pesca:** -1`);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.traficoDrogas) {
+				presoTime = 36000000;
 
-				message.channel.send(author, embed);
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'humores.estressado': user.humores.estressado += 50,
-						'humores.bravo': user.humores.bravo += 20
-					}
-				});
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.prender) {
+				presoTime = 43200000;
 
-				await this.client.database.users.findOneAndUpdate({
-					userId: author.id,
-					guildId: message.guild.id
-				}, {
-					$set: {
-						'cooldown.pescar': Date.now()
-					}
-				});
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-				if (user.inventory.find((x) => x.item === 'Vara de Pesca').quantia > 1) {
-					await this.client.database.users.findOneAndUpdate({
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.revistar) {
+				presoTime = 21600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.roubarVeiculo) {
+				presoTime = 180000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.velha) {
+				presoTime = 300000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.frentista) {
+				presoTime = 600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.joalheria) {
+				presoTime = 900000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.agiota) {
+				presoTime = 1200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.casaLoterica) {
+				presoTime = 1200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.brazino) {
+				presoTime = 2100000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.facebook) {
+				presoTime = 2700000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.bancoCentral) {
+				presoTime = 3600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.shopping) {
+				presoTime = 7200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.banco) {
+				presoTime = 14400000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			}
+
+			const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+			const botoes = new MessageActionRow().addComponents([buttonPreso]);
+
+			const escolha = await message.channel.send(author, {
+				embed: embedPreso,
+				components: [botoes]
+			});
+
+			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
+				max: 1,
+				time: 60000
+			});
+
+			collectorEscolhas.on('collect', async (b) => {
+				if (b.id === 'preso') {
+					b.reply.defer();
+
+					const userMochila = await this.client.database.users.findOne({
 						userId: author.id,
-						guildId: message.guild.id,
-						'inventory.item': 'Vara de Pesca'
-					}, {
-						$set: {
-							'inventory.$.quantia': user.inventory.find((x) => x.item === 'Vara de Pesca').quantia - 1
-						}
+						guildId: message.guild.id
 					});
-				} else {
+
+					if (!userMochila.isMochila) {
+						escolha.delete();
+
+						return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
+					}
+
+					if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+						escolha.delete();
+
+						return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
+					}
+
+					if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id,
+							'mochila.item': 'Chave Micha'
+						}, {
+							$set: {
+								'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+							}
+						});
+					} else {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$pull: {
+								mochila: {
+									item: 'Chave Micha'
+								}
+							}
+						});
+					}
+
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
 						guildId: message.guild.id
 					}, {
-						$pull: {
-							inventory: {
-								item: 'Vara de Pesca'
-							}
+						$set: {
+							'prisao.isPreso': false,
+							'prisao.tempo': 0,
+							'prisao.prenderCmd': false,
+							'prisao.prenderMili': 0,
+							'prisao.traficoDrogas': false,
+							'prisao.crime': false,
+							'prisao.prender': false,
+							'prisao.revistar': false,
+							'prisao.roubarVeiculo': false,
+							'prisao.atirarPrisao': false,
+							'prisao.velha': false,
+							'prisao.frentista': false,
+							'prisao.joalheria': false,
+							'prisao.agiota': false,
+							'prisao.casaLoterica': false,
+							'prisao.brazino': false,
+							'prisao.facebook': false,
+							'prisao.bancoCentral': false,
+							'prisao.shopping': false,
+							'prisao.banco': false
 						}
 					});
+
+					escolha.delete();
+					return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+				}
+			});
+
+			collectorEscolhas.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					return escolha.edit(author, {
+						embed: embedPreso,
+						components: []
+					});
+				}
+			});
+		} else {
+			const timeout = 600000;
+
+			if (timeout - (Date.now() - user.cooldown.pescar) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.pescar));
+
+				const embed = new ClientEmbed(author)
+					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+				return message.channel.send(author, embed);
+			} else {
+				const hasItem = user.inventory.find((xs) => xs.item === 'Vara de Pesca');
+
+				if (!hasItem) {
+					return message.reply('você não possui uma **Vara de Pesca** no seu inventário!');
+				} else {
+					const embed = new ClientEmbed(author)
+						.setTitle('<:Varadepescar:891297733774819328> | PESCARIA')
+						.setDescription(`<:Varadepescar:891297733774819328> | Você pescou para relaxar, e conseguiu as seguintes melhorias:\n\n🤯 **Estressado:** +50\n😡 **Bravo:** +20\n<:Varadepescar:891297733774819328> **Vara de Pesca:** -1`);
+
+					message.channel.send(author, embed);
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'humores.estressado': user.humores.estressado += 50,
+							'humores.bravo': user.humores.bravo += 20
+						}
+					});
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'cooldown.pescar': Date.now()
+						}
+					});
+
+					if (user.inventory.find((x) => x.item === 'Vara de Pesca').quantia > 1) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id,
+							'inventory.item': 'Vara de Pesca'
+						}, {
+							$set: {
+								'inventory.$.quantia': user.inventory.find((x) => x.item === 'Vara de Pesca').quantia - 1
+							}
+						});
+					} else {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$pull: {
+								inventory: {
+									item: 'Vara de Pesca'
+								}
+							}
+						});
+					}
 				}
 			}
 		}

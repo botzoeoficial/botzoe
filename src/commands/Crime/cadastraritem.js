@@ -1,9 +1,10 @@
-/* eslint-disable max-depth */
-/* eslint-disable max-len */
+/* eslint-disable no-inline-comments */
 /* eslint-disable id-length */
 /* eslint-disable max-nested-callbacks */
-/* eslint-disable consistent-return */
+/* eslint-disable max-depth */
 /* eslint-disable no-return-assign */
+/* eslint-disable max-len */
+/* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
@@ -151,10 +152,20 @@ module.exports = class Cadastraritem extends Command {
 					const findSelectedEvento = mapCategorias.find((xis) => xis.position === selected);
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						sim.stop();
+						msg.delete();
 						ce.delete();
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								cadastrandoItem: false
+							}
+						});
+
+						return message.reply('número não encontrado. Por favor, use o comando novamente!');
 					} else if (findSelectedEvento.position === 0) {
 						ce.delete();
 						sim.stop();
@@ -215,18 +226,35 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-											timeout: 6000
-										}));
+										msg.delete();
 										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.droga)) {
 										msg.delete();
 										ce2.delete();
 										sim2.stop();
 
-										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -253,22 +281,39 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`cancelado com sucesso!`);
+													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													message.reply(`coloque uma quantia válida. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
 													ce3.delete();
+													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.droga).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg.delete();
 													ce3.delete();
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.droga}\` na sua **mochila**!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.droga}\` na sua **mochila**. Por favor, envie o comando novamente!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -295,14 +340,24 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`cancelado com sucesso!`);
+																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
-															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
-																message.reply(`coloque um preço válido. Por favor, envie o preço novamente!`).then(ba => ba.delete({
-																	timeout: 5000
-																}));
+															if (Number(ce4.content) <= 0 || isNaN(ce4.content)) {
+																collector.stop();
 																ce4.delete();
+																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
+																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -374,10 +429,20 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-																					timeout: 6000
-																				}));
+																				msg.delete();
 																				ce5.delete();
+																				sim3.stop();
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
+
+																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.droga}**`, true);
@@ -460,7 +525,13 @@ module.exports = class Cadastraritem extends Command {
 																				});
 
 																				return setTimeout(async () => {
-																					if (!findSelectedEvento2.comprado) {
+																					const produto = await this.client.database.guilds.findOne({
+																						_id: message.guild.id
+																					});
+
+																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.droga);
+
+																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
 																							guildId: message.guild.id
@@ -529,6 +600,16 @@ module.exports = class Cadastraritem extends Command {
 																			sim2.stop();
 																			sim.stop();
 																			msg.delete();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
 																		}
 																	});
@@ -540,6 +621,16 @@ module.exports = class Cadastraritem extends Command {
 															if (reason === 'time') {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
 															}
 														});
@@ -551,6 +642,16 @@ module.exports = class Cadastraritem extends Command {
 												if (reason === 'time') {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
 												}
 											});
@@ -563,6 +664,16 @@ module.exports = class Cadastraritem extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
 								}
 							});
@@ -638,15 +749,35 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-											timeout: 6000
-										}));
+										msg.delete();
 										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.arma)) {
-										message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
+										msg.delete();
 										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -672,19 +803,39 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`cancelado com sucesso!`);
+													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													message.reply(`coloque uma quantia válida. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
 													ce3.delete();
+													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.arma).quantia < Number(ce3.content)) {
-													message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.arma}\` na sua **mochila**. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
+													msg.delete();
 													ce3.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.arma}\` na sua **mochila**. Por favor, envie o comando novamente!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -710,14 +861,24 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`cancelado com sucesso!`);
+																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
-																message.reply(`coloque um preço válido. Por favor, envie o preço novamente!`).then(ba => ba.delete({
-																	timeout: 5000
-																}));
+																collector.stop();
 																ce4.delete();
+																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
+																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -788,10 +949,20 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-																					timeout: 6000
-																				}));
+																				msg.delete();
 																				ce5.delete();
+																				sim3.stop();
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
+
+																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.arma}**`, true);
@@ -874,7 +1045,13 @@ module.exports = class Cadastraritem extends Command {
 																				});
 
 																				return setTimeout(async () => {
-																					if (!findSelectedEvento2.comprado) {
+																					const produto = await this.client.database.guilds.findOne({
+																						_id: message.guild.id
+																					});
+
+																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.arma);
+
+																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
 																							guildId: message.guild.id
@@ -941,6 +1118,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (reason === 'time') {
 																			sim3.stop();
 																			msg.delete();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
 																		}
 																	});
@@ -952,6 +1139,16 @@ module.exports = class Cadastraritem extends Command {
 															if (reason === 'time') {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
 															}
 														});
@@ -963,6 +1160,16 @@ module.exports = class Cadastraritem extends Command {
 												if (reason === 'time') {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
 												}
 											});
@@ -975,6 +1182,16 @@ module.exports = class Cadastraritem extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
 								}
 							});
@@ -1035,15 +1252,37 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-											timeout: 6000
-										}));
+										msg.delete();
 										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.municao)) {
-										message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
 											timeout: 5000
 										}));
-										ce2.delete();
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1069,19 +1308,39 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`cancelado com sucesso!`);
+													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													message.reply(`coloque uma quantia válida. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
 													ce3.delete();
+													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.municao).quantia < Number(ce3.content)) {
-													message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.municao}\` na sua **mochila**. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
+													msg.delete();
 													ce3.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.municao}\` na sua **mochila**. Por favor, envie o comando novamente!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -1107,14 +1366,24 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`cancelado com sucesso!`);
+																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
-																message.reply(`coloque um preço válido. Por favor, envie o preço novamente!`).then(ba => ba.delete({
-																	timeout: 5000
-																}));
+																collector.stop();
 																ce4.delete();
+																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
+																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -1185,10 +1454,20 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-																					timeout: 6000
-																				}));
+																				msg.delete();
 																				ce5.delete();
+																				sim3.stop();
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
+
+																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.municao}**`, true);
@@ -1271,7 +1550,13 @@ module.exports = class Cadastraritem extends Command {
 																				});
 
 																				return setTimeout(async () => {
-																					if (!findSelectedEvento2.comprado) {
+																					const produto = await this.client.database.guilds.findOne({
+																						_id: message.guild.id
+																					});
+
+																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.municao);
+
+																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
 																							guildId: message.guild.id
@@ -1338,6 +1623,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (reason === 'time') {
 																			sim3.stop();
 																			msg.delete();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
 																		}
 																	});
@@ -1349,6 +1644,16 @@ module.exports = class Cadastraritem extends Command {
 															if (reason === 'time') {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
 															}
 														});
@@ -1360,6 +1665,16 @@ module.exports = class Cadastraritem extends Command {
 												if (reason === 'time') {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
 												}
 											});
@@ -1372,6 +1687,16 @@ module.exports = class Cadastraritem extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
 								}
 							});
@@ -1426,15 +1751,37 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-											timeout: 6000
-										}));
+										msg.delete();
 										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.chave)) {
-										message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
 											timeout: 5000
 										}));
-										ce2.delete();
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1460,19 +1807,39 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`cancelado com sucesso!`);
+													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													message.reply(`coloque uma quantia válida. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
 													ce3.delete();
+													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.chave).quantia < Number(ce3.content)) {
-													message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.chave}\` na sua **mochila**. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
+													msg.delete();
 													ce3.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.chave}\` na sua **mochila**. Por favor, envie o comando novamente!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -1498,14 +1865,24 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`cancelado com sucesso!`);
+																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
-																message.reply(`coloque um preço válido. Por favor, envie o preço novamente!`).then(ba => ba.delete({
-																	timeout: 5000
-																}));
+																collector.stop();
 																ce4.delete();
+																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
+																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -1576,10 +1953,20 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-																					timeout: 6000
-																				}));
+																				msg.delete();
 																				ce5.delete();
+																				sim3.stop();
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
+
+																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.chave}**`, true);
@@ -1662,7 +2049,13 @@ module.exports = class Cadastraritem extends Command {
 																				});
 
 																				return setTimeout(async () => {
-																					if (!findSelectedEvento2.comprado) {
+																					const produto = await this.client.database.guilds.findOne({
+																						_id: message.guild.id
+																					});
+
+																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.chave);
+
+																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
 																							guildId: message.guild.id
@@ -1729,6 +2122,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (reason === 'time') {
 																			sim3.stop();
 																			msg.delete();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
 																		}
 																	});
@@ -1740,6 +2143,16 @@ module.exports = class Cadastraritem extends Command {
 															if (reason === 'time') {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
 															}
 														});
@@ -1751,6 +2164,16 @@ module.exports = class Cadastraritem extends Command {
 												if (reason === 'time') {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
 												}
 											});
@@ -1763,6 +2186,16 @@ module.exports = class Cadastraritem extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
 								}
 							});
@@ -1836,17 +2269,37 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										ce2.delete();
 										msg.delete();
+										ce2.delete();
 										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.inventory.find((a) => a.item === findSelectedEvento2.minerio)) {
-										ce2.delete();
 										msg.delete();
+										ce2.delete();
 										sim2.stop();
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
+											timeout: 5000
+										}));
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1877,17 +2330,35 @@ module.exports = class Cadastraritem extends Command {
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													ce3.delete();
 													collector.stop();
+													ce3.delete();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
 
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.inventory.find((a) => a.item === findSelectedEvento2.minerio).quantia < Number(ce3.content)) {
-													ce3.delete();
 													collector.stop();
 													msg.delete();
+													ce3.delete();
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.minerio}\` no seu **inventário**. Por favor, use o comando novamente!`);
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.minerio}\` no seu **inventário**!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -1918,9 +2389,18 @@ module.exports = class Cadastraritem extends Command {
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
+																collector.stop();
 																ce4.delete();
-																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
 
 																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
@@ -1994,9 +2474,18 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
+																				msg.delete();
 																				ce5.delete();
 																				sim3.stop();
-																				msg.delete();
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
@@ -2081,7 +2570,13 @@ module.exports = class Cadastraritem extends Command {
 																				});
 
 																				return setTimeout(async () => {
-																					if (!findSelectedEvento2.comprado) {
+																					const produto = await this.client.database.guilds.findOne({
+																						_id: message.guild.id
+																					});
+
+																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.minerio);
+
+																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
 																							guildId: message.guild.id
@@ -2148,6 +2643,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (reason === 'time') {
 																			sim3.stop();
 																			msg.delete();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
 																		}
 																	});
@@ -2159,6 +2664,16 @@ module.exports = class Cadastraritem extends Command {
 															if (reason === 'time') {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
 															}
 														});
@@ -2170,6 +2685,16 @@ module.exports = class Cadastraritem extends Command {
 												if (reason === 'time') {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
 												}
 											});
@@ -2182,6 +2707,16 @@ module.exports = class Cadastraritem extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
 								}
 							});
@@ -2237,15 +2772,37 @@ module.exports = class Cadastraritem extends Command {
 									});
 
 									if (!findSelectedEvento2) {
-										message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-											timeout: 6000
-										}));
+										msg.delete();
 										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('número não encontrado. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.item)) {
-										message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
 											timeout: 5000
 										}));
-										ce2.delete();
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -2271,19 +2828,39 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`cancelado com sucesso!`);
+													return message.reply(`seleção cancelada com sucesso!`);
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
-													message.reply(`coloque uma quantia válida. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
 													ce3.delete();
+													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.item).quantia < Number(ce3.content)) {
-													message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.item}\` na sua **mochila**. Por favor, envie a quantia novamente!`).then(ba => ba.delete({
-														timeout: 5000
-													}));
+													collector.stop();
+													msg.delete();
 													ce3.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
+													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.item}\` na sua **mochila**. Por favor, envie o comando novamente!`);
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -2309,14 +2886,24 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`cancelado com sucesso!`);
+																return message.reply(`seleção cancelada com sucesso!`);
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
-																message.reply(`coloque um preço válido. Por favor, envie o preço novamente!`).then(ba => ba.delete({
-																	timeout: 5000
-																}));
+																collector.stop();
 																ce4.delete();
+																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
+																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -2387,10 +2974,20 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-																					timeout: 6000
-																				}));
+																				msg.delete();
 																				ce5.delete();
+																				sim3.stop();
+
+																				await this.client.database.users.findOneAndUpdate({
+																					userId: author.id,
+																					guildId: message.guild.id
+																				}, {
+																					$set: {
+																						cadastrandoItem: false
+																					}
+																				});
+
+																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.item}**`, true);
@@ -2473,7 +3070,13 @@ module.exports = class Cadastraritem extends Command {
 																				});
 
 																				return setTimeout(async () => {
-																					if (!findSelectedEvento2.comprado) {
+																					const produto = await this.client.database.guilds.findOne({
+																						_id: message.guild.id
+																					});
+
+																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.item);
+
+																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
 																							guildId: message.guild.id
@@ -2540,6 +3143,16 @@ module.exports = class Cadastraritem extends Command {
 																		if (reason === 'time') {
 																			sim3.stop();
 																			msg.delete();
+
+																			await this.client.database.users.findOneAndUpdate({
+																				userId: author.id,
+																				guildId: message.guild.id
+																			}, {
+																				$set: {
+																					cadastrandoItem: false
+																				}
+																			});
+
 																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
 																		}
 																	});
@@ -2551,6 +3164,16 @@ module.exports = class Cadastraritem extends Command {
 															if (reason === 'time') {
 																collector2.stop();
 																msg.delete();
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		cadastrandoItem: false
+																	}
+																});
+
 																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
 															}
 														});
@@ -2562,6 +3185,16 @@ module.exports = class Cadastraritem extends Command {
 												if (reason === 'time') {
 													collector.stop();
 													msg.delete();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															cadastrandoItem: false
+														}
+													});
+
 													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
 												}
 											});
@@ -2574,6 +3207,16 @@ module.exports = class Cadastraritem extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											cadastrandoItem: false
+										}
+									});
+
 									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
 								}
 							});
@@ -2596,6 +3239,16 @@ module.exports = class Cadastraritem extends Command {
 				if (reason === 'time') {
 					sim.stop();
 					msg.delete();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							cadastrandoItem: false
+						}
+					});
+
 					return message.reply('você demorou demais para escolher a categoria. Use o comando novamente!');
 				}
 			});

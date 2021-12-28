@@ -50,8 +50,8 @@ module.exports = class Retirarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valor,
-			ano: value.ano,
+			valor: value.valore,
+			ano: value.nano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -61,6 +61,7 @@ module.exports = class Retirarveiculo extends Command {
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,
+			placa: value.placa,
 			position: index
 		}));
 
@@ -139,6 +140,7 @@ module.exports = class Retirarveiculo extends Command {
 						sim.stop();
 						ce.delete();
 						msg.delete();
+
 						return message.reply(`seu veículo não está arrumado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}arrumarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -148,6 +150,7 @@ module.exports = class Retirarveiculo extends Command {
 						sim.stop();
 						ce.delete();
 						msg.delete();
+
 						return message.reply(`seu veículo não está emplacado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -157,6 +160,7 @@ module.exports = class Retirarveiculo extends Command {
 						sim.stop();
 						ce.delete();
 						msg.delete();
+
 						return message.reply(`seu veículo não está liberado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -189,12 +193,13 @@ module.exports = class Retirarveiculo extends Command {
 								mecanica: false,
 								arrumado: true,
 								emplacado: true,
-								liberado: true
+								liberado: true,
+								placa: findSelectedEvento.placa
 							}
 						}
 					});
 
-					return await this.client.database.guilds.findOneAndUpdate({
+					await this.client.database.guilds.findOneAndUpdate({
 						_id: message.guild.id
 					}, {
 						$pull: {
@@ -203,6 +208,8 @@ module.exports = class Retirarveiculo extends Command {
 							}
 						}
 					});
+
+					return;
 				}
 			});
 

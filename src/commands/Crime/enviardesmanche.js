@@ -1,8 +1,13 @@
 /* eslint-disable max-len */
-/* eslint-disable no-return-assign */
+/* eslint-disable complexity */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
+const ms = require('parse-ms');
+const {
+	MessageButton,
+	MessageActionRow
+} = require('discord-buttons');
 
 module.exports = class Enviardesmanche extends Command {
 
@@ -40,6 +45,7 @@ module.exports = class Enviardesmanche extends Command {
 	async run({
 		message,
 		author,
+		args,
 		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
@@ -47,152 +53,287 @@ module.exports = class Enviardesmanche extends Command {
 			guildId: message.guild.id
 		});
 
-		const embed = new ClientEmbed(author)
-			.setTitle('🧑‍🔧 | Enviar para Desmanche');
+		if (user.prisao.isPreso) {
+			let presoTime = 0;
 
-		const carrosArray = user.garagem.map((value, index) => ({
-			nome: value.nome,
-			modelo: value.modelo,
-			valor: value.valor,
-			ano: value.ano,
-			danificado: value.danificado,
-			velocidade: value.velocidade,
-			cavalos: value.cavalos,
-			peso: value.peso,
-			desmanche: value.desmanche,
-			dono: value.dono,
-			img: value.img,
-			mecanica: value.mecanica,
-			arrumado: value.arrumado,
-			emplacado: value.emplacado,
-			liberado: value.liberado,
-			position: index
-		}));
+			const embedPreso = new ClientEmbed(author)
+				.setTitle('👮 | Preso');
 
-		let embedMessage = '';
+			if (user.prisao.prenderCmd) {
+				presoTime = user.prisao.prenderMili;
 
-		const emojis = {
-			1: '1️⃣',
-			2: '2️⃣',
-			3: '3️⃣',
-			4: '4️⃣',
-			5: '5️⃣',
-			6: '6️⃣',
-			7: '7️⃣',
-			8: '8️⃣',
-			9: '9️⃣',
-			10: '🔟',
-			11: '1️⃣1️⃣',
-			12: '1️⃣2️⃣',
-			13: '1️⃣3️⃣',
-			14: '1️⃣4️⃣',
-			15: '1️⃣5️⃣',
-			16: '1️⃣6️⃣',
-			17: '1️⃣7️⃣',
-			18: '1️⃣8️⃣',
-			19: '1️⃣9️⃣',
-			20: '2️⃣0️⃣',
-			21: '2️⃣1️⃣',
-			22: '2️⃣2️⃣',
-			23: '2️⃣3️⃣',
-			24: '2️⃣4️⃣',
-			25: '2️⃣5️⃣',
-			26: '2️⃣6️⃣',
-			27: '2️⃣7️⃣',
-			28: '2️⃣8️⃣',
-			29: '2️⃣9️⃣',
-			30: '3️⃣0️⃣'
-		};
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-		carrosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **${eu.nome}** (${!eu.mecanica ? `**\`Não está na Mecânica.\`**` : `**\`Está na Mecânica.\`**`}) [${!eu.arrumado ? `**\`Não está arrumado.\`**` : `**\`Está arrumado.\`**`}] [${!eu.liberado ? `**\`Não está liberado.\`**` : `**\`Está liberado.\`**`}]\n`);
-		embed.setDescription(!user.garagem.length ? `**Você ainda não possui carros na garagem. Use o comando \`${prefix}roubarveiculo\`!**` : `Qual carro você deseja enviar para a Mecânica?\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.traficoDrogas) {
+				presoTime = 36000000;
 
-		message.channel.send(author, embed).then(async (msg) => {
-			if (!user.garagem.length) return;
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
-				time: 300000
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.prender) {
+				presoTime = 43200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.revistar) {
+				presoTime = 21600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.roubarVeiculo) {
+				presoTime = 180000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.velha) {
+				presoTime = 300000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.frentista) {
+				presoTime = 600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.joalheria) {
+				presoTime = 900000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.agiota) {
+				presoTime = 1200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.casaLoterica) {
+				presoTime = 1200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.brazino) {
+				presoTime = 2100000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.facebook) {
+				presoTime = 2700000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.bancoCentral) {
+				presoTime = 3600000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.shopping) {
+				presoTime = 7200000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.crime && user.prisao.banco) {
+				presoTime = 14400000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			}
+
+			const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+			const botoes = new MessageActionRow().addComponents([buttonPreso]);
+
+			const escolha = await message.channel.send(author, {
+				embed: embedPreso,
+				components: [botoes]
 			});
 
-			sim.on('collect', async (ce) => {
-				if (Number(ce.content) === 0) {
-					msg.delete();
-					sim.stop();
+			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
+				max: 1,
+				time: 60000
+			});
 
-					return message.reply(`seleção cancelada com sucesso!`);
-				} else {
-					const selected = Number(ce.content - 1);
-					const findSelectedEvento = carrosArray.find((xis) => xis.position === selected);
+			collectorEscolhas.on('collect', async (b) => {
+				if (b.id === 'preso') {
+					b.reply.defer();
 
-					if (!findSelectedEvento) {
-						msg.delete();
-						ce.delete();
-						sim.stop();
+					const userMochila = await this.client.database.users.findOne({
+						userId: author.id,
+						guildId: message.guild.id
+					});
 
-						return message.reply('número do carro não encontrado. Por favor, use o comando novamente!').then(ba => ba.delete({
-							timeout: 5000
-						}));
-					} else if (findSelectedEvento.mecanica) {
-						msg.delete();
-						ce.delete();
-						sim.stop();
+					if (!userMochila.isMochila) {
+						escolha.delete();
 
-						return message.reply('esse carro seu está na **Mecânica**. Você não pode enviar ele pra desmanche enquanto ele está na **Mecânica**!').then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
+					}
+
+					if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+						escolha.delete();
+
+						return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
+					}
+
+					if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id,
+							'mochila.item': 'Chave Micha'
+						}, {
+							$set: {
+								'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+							}
+						});
 					} else {
-						sim.stop();
-						ce.delete();
-
-						embed.setDescription(`✅ | Você enviou seu veículo **${findSelectedEvento.nome}** com sucesso para o Desmanche!`);
-
-						msg.edit(author, embed);
-
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
 						}, {
 							$pull: {
-								garagem: {
-									danificado: findSelectedEvento.danificado
-								}
-							}
-						});
-
-						return await this.client.database.guilds.findOneAndUpdate({
-							_id: message.guild.id
-						}, {
-							$push: {
-								desmanche: {
-									nome: findSelectedEvento.nome,
-									dono: author.id,
-									modelo: findSelectedEvento.modelo,
-									valor: findSelectedEvento.valor,
-									ano: findSelectedEvento.ano,
-									danificado: findSelectedEvento.danificado,
-									velocidade: findSelectedEvento.velocidade,
-									cavalos: findSelectedEvento.cavalos,
-									peso: findSelectedEvento.peso,
-									desmanche: findSelectedEvento.desmanche,
-									img: findSelectedEvento.img,
-									arrumado: false,
-									emplacado: false,
-									liberado: false
+								mochila: {
+									item: 'Chave Micha'
 								}
 							}
 						});
 					}
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'prisao.isPreso': false,
+							'prisao.tempo': 0,
+							'prisao.prenderCmd': false,
+							'prisao.prenderMili': 0,
+							'prisao.traficoDrogas': false,
+							'prisao.crime': false,
+							'prisao.prender': false,
+							'prisao.revistar': false,
+							'prisao.roubarVeiculo': false,
+							'prisao.atirarPrisao': false,
+							'prisao.velha': false,
+							'prisao.frentista': false,
+							'prisao.joalheria': false,
+							'prisao.agiota': false,
+							'prisao.casaLoterica': false,
+							'prisao.brazino': false,
+							'prisao.facebook': false,
+							'prisao.bancoCentral': false,
+							'prisao.shopping': false,
+							'prisao.banco': false
+						}
+					});
+
+					escolha.delete();
+					return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
 				}
 			});
 
-			sim.on('end', async (collected, reason) => {
+			collectorEscolhas.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					sim.stop();
-					msg.delete();
-					return message.reply('você demorou demais para escolher o carro que deseja enviar para o **Desmanche**. Use o comando novamente!');
+					return escolha.edit(author, {
+						embed: embedPreso,
+						components: []
+					});
 				}
 			});
-		});
+		} else {
+			if (!user.garagem.length) return message.reply(`você não possui nenhum carro na **garagem**. Use o comando \`${prefix}roubarcarro\`.`);
+
+			const placa = args.slice(0).join(' ');
+			if (!placa) return message.reply('você precisa colocar a placa de um carro seu para ser enviado para o **Desmanche**!');
+
+			if (!user.garagem.find((a) => a.placa === placa)) return message.reply(`não achei nenhum carro seu com essa placa. Use \`${prefix}garagem\` para ver a placa de um!`);
+
+			const carro = user.garagem.find((a) => a.placa === placa);
+
+			if (carro.mecanica) return message.reply('esse carro está na **Oficina**. Retire ele de lá, e use esse comando novamente!');
+
+			const embed = new ClientEmbed(author)
+				.setTitle('🧑‍🔧 | Enviar para Desmanche')
+				.setDescription(`✅ | Você enviou seu veículo **${carro.nome}** com sucesso para o Desmanche!`);
+
+			message.channel.send(author, embed);
+
+			await this.client.database.guilds.findOneAndUpdate({
+				_id: message.guild.id
+			}, {
+				$push: {
+					desmanche: {
+						nome: carro.nome,
+						dono: carro.dono,
+						modelo: carro.modelo,
+						valor: carro.valor,
+						ano: carro.ano,
+						danificado: carro.danificado,
+						velocidade: carro.velocidade,
+						cavalos: carro.cavalos,
+						peso: carro.peso,
+						desmanche: carro.desmanche,
+						img: carro.img,
+						arrumado: carro.arrumado,
+						emplacado: carro.emplacado,
+						liberado: carro.liberado,
+						placa: carro.placa
+					}
+				}
+			});
+
+			await this.client.database.users.findOneAndUpdate({
+				userId: author.id,
+				guildId: message.guild.id
+			}, {
+				$pull: {
+					garagem: {
+						nome: carro.nome
+					}
+				}
+			});
+
+			return;
+		}
 	}
 
 };

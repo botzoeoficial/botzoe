@@ -60,6 +60,7 @@ module.exports = class Mecanica extends Command {
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,
+			placa: value.placa,
 			position: index
 		}));
 

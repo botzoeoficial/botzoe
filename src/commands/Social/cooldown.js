@@ -46,6 +46,10 @@ module.exports = class Cooldown extends Command {
 			guildId: message.guild.id
 		});
 
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
 		// trabalhar, auxilio, treinar-pet, estudar, fe, trabalho comunitário
 		const timeout = 3600000;
 		// gf
@@ -268,6 +272,27 @@ module.exports = class Cooldown extends Command {
 			embed.addField(`🔫 Roubar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
 			embed.addField(`🔫 Roubar`, `Pode usar!`, true);
+		}
+		// policia
+		if (user.policia.isPolice || server.cidade.delegado === author.id) {
+			// revistar
+			if (timeout - (Date.now() - user.policia.revistar) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.policia.revistar));
+
+				embed.addField(`<:algema:898326104413188157> Revistar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			} else {
+				embed.addField(`<:algema:898326104413188157> Revistar`, `Pode usar!`, true);
+			}
+			// prender
+			if (timeout - (Date.now() - user.policia.prender) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.policia.prender));
+
+				embed.addField(`👮 Prender`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+				embed.addField('\u200b', '\u200b', true);
+			} else {
+				embed.addField(`👮 Prender`, `Pode usar!`, true);
+				embed.addField('\u200b', '\u200b', true);
+			}
 		}
 
 		embed.setTitle('⏲️ | COOLDOWNS');

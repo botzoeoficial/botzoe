@@ -458,6 +458,10 @@ const guildSchema = new Schema({
 		liberado: {
 			type: Boolean,
 			default: false
+		},
+		placa: {
+			type: String,
+			default: ''
 		}
 	},
 	bank: {
@@ -544,6 +548,10 @@ const guildSchema = new Schema({
 		liberado: {
 			type: Boolean,
 			default: false
+		},
+		placa: {
+			type: String,
+			default: ''
 		}
 	},
 	hospital: {

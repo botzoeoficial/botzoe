@@ -52,8 +52,8 @@ module.exports = class Arrumarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valor,
-			ano: value.ano,
+			valor: value.valore,
+			ano: value.nano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -63,6 +63,7 @@ module.exports = class Arrumarveiculo extends Command {
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,
+			placa: value.placa,
 			position: index
 		}));
 
@@ -134,6 +135,7 @@ module.exports = class Arrumarveiculo extends Command {
 						sim.stop();
 						ce.delete();
 						msg.delete();
+
 						return message.reply(`esse carro já está arrumado. Você precisa emplacar ele agora usando o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
 							timeout: 5000
 						}));
@@ -146,7 +148,7 @@ module.exports = class Arrumarveiculo extends Command {
 
 					msg.edit(author, embed);
 
-					return await this.client.database.guilds.findOneAndUpdate({
+					await this.client.database.guilds.findOneAndUpdate({
 						_id: message.guild.id,
 						'mecanica.nome': findSelectedEvento.nome
 					}, {
@@ -155,6 +157,8 @@ module.exports = class Arrumarveiculo extends Command {
 							'mecanica.$.danificado': 0
 						}
 					});
+
+					return;
 				}
 			});
 

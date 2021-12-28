@@ -1,5 +1,5 @@
-/* eslint-disable complexity */
 /* eslint-disable consistent-return */
+/* eslint-disable complexity */
 /* eslint-disable id-length */
 /* eslint-disable max-len */
 const Command = require('../../structures/Command');
@@ -10,18 +10,18 @@ const {
 	MessageActionRow
 } = require('discord-buttons');
 
-module.exports = class Gf extends Command {
+module.exports = class Visitaintima extends Command {
 
 	constructor(client) {
 		super(client);
 
 		this.client = client;
 
-		this.name = 'gf';
+		this.name = 'visitaintima';
 		this.category = 'Social';
-		this.description = 'Faça um filho!';
-		this.usage = 'gf';
-		this.aliases = ['gozofone'];
+		this.description = 'Faça um filho na cadeia!';
+		this.usage = 'visitaintima';
+		this.aliases = ['visitar-preso'];
 
 		this.enabled = true;
 		this.guildOnly = true;
@@ -62,7 +62,7 @@ module.exports = class Gf extends Command {
 
 		if (!user.marry.has) return message.reply(`você não está casado! Use o comando \`${prefix}casar\`.`);
 
-		if (casado.prisao.isPreso) return message.reply(`seu(a) parceiro(a) está **preso(a)**. Use o comando \`${prefix}visitaintima\` para fazer **GF** na cadeia!`);
+		if (!casado.prisao.isPreso) return message.reply(`seu(a) parceiro(a) precisa estar **preso(a)** para fazer **GF** na prisão!`);
 
 		let presoTime = 0;
 
@@ -222,8 +222,8 @@ module.exports = class Gf extends Command {
 		} else {
 			const timeout = 7200000;
 
-			if (timeout - (Date.now() - user.cooldown.gf) > 0) {
-				const faltam = ms(timeout - (Date.now() - user.cooldown.gf));
+			if (timeout - (Date.now() - user.cooldown.visitaintima) > 0) {
+				const faltam = ms(timeout - (Date.now() - user.cooldown.visitaintima));
 
 				const embed = new ClientEmbed(author)
 					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
@@ -292,7 +292,7 @@ module.exports = class Gf extends Command {
 													}
 												},
 												$set: {
-													'cooldown.gf': Date.now()
+													'cooldown.visitaintima': Date.now()
 												}
 											});
 
@@ -353,7 +353,7 @@ module.exports = class Gf extends Command {
 													}
 												},
 												$set: {
-													'cooldown.gf': Date.now()
+													'cooldown.visitaintima': Date.now()
 												}
 											});
 
@@ -394,7 +394,7 @@ module.exports = class Gf extends Command {
 					collectorBotoes.on('end', async (collected, reason) => {
 						if (reason === 'time') {
 							confirm.delete();
-							return message.channel.send(`${author}, o(a) usuário(a) <@${user.marry.user}> demorou demais para aceitar seu gf!`);
+							return message.channel.send(`${author}, o(a) usuário(a) <@${user.marry.user}> demorou demais para aceitar seu gf na cadeia!`);
 						}
 					});
 				});

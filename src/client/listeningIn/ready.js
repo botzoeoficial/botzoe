@@ -73,20 +73,14 @@ module.exports = class Ready {
 				_id: '885645282614861854'
 			});
 
-			const timeout = 1200000;
+			const embed = new ClientEmbed(this.client.users.cache.get('887455458967826523'))
+				.setThumbnail('https://media.discordapp.net/attachments/887089600726720512/891826029415510056/gettyimages-1186283017-1-1.jpg?width=905&height=603')
+				.setTitle('📈 | **Bolsa de Valores - Zoe Investing**')
+				.addField('📉 | Valor da Bolsa', `\`${server.bolsa.valor}.0%\``)
+				.setColor('#1cfc03')
+				.addField('🕑 | Tempo para Atualização da Bolsa', `20m 0s\n\n***Faça um Bom Investimento!***`);
 
-			if (timeout - (Date.now() - server.bolsa.tempo) > 0) {
-				const faltam = ms(timeout - (Date.now() - server.bolsa.tempo));
-
-				const embed = new ClientEmbed(this.client.users.cache.get('887455458967826523'))
-					.setThumbnail('https://media.discordapp.net/attachments/887089600726720512/891826029415510056/gettyimages-1186283017-1-1.jpg?width=905&height=603')
-					.setTitle('📈 | **Bolsa de Valores - Zoe Investing**')
-					.addField('📉 | Valor da Bolsa', `\`${server.bolsa.valor}.0%\``)
-					.setColor('#1cfc03')
-					.addField('🕑 | Tempo para Atualização da Bolsa', `20m 0s\n\n***Faça um Bom Investimento!***`);
-
-				await this.client.channels.cache.get('915649663208661062').send(embed);
-			}
+			await this.client.channels.cache.get('915649663208661062').send(embed);
 
 			allItens.forEach(async (e) => {
 				allGuilds.forEach(async (i) => {
@@ -560,7 +554,7 @@ module.exports = class Ready {
 			});
 		});
 
-		allUsers.forEach(async e => {
+		allUsers.forEach(async (e) => {
 			if (e.cadastrado) {
 				setInterval(async () => {
 					const usersPrisao = await this.client.database.users.find({
@@ -3981,6 +3975,26 @@ module.exports = class Ready {
 						}
 					});
 				}, 1000 * 60);
+
+				setInterval(async () => {
+					if (e.garagem.length) {
+						for (var i = 0; i < e.garagem.length; i++) {
+							if (!e.garagem[i].emplacado) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: e.userId,
+									guildId: e.guildId,
+									'garagem.nome': e.garagem[i].nome
+								}, {
+									$pull: {
+										garagem: {
+											nome: e.garagem[i].nome
+										}
+									}
+								});
+							}
+						}
+					}
+				}, 86400000);
 
 				if (!e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) > 0) {
 					await this.client.database.users.findOneAndUpdate({
