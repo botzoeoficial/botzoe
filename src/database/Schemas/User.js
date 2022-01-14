@@ -1030,6 +1030,10 @@ const userSchema = new Schema({
 	cadastrandoItem: {
 		type: Boolean,
 		default: false
+	},
+	porteDeArmas: {
+		type: Number,
+		default: 0
 	}
 });
 

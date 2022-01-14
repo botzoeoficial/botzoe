@@ -417,6 +417,8 @@ module.exports = class Facção extends Command {
 						});
 					}
 				});
+
+				return;
 			} else {
 				const fd = user?.fac;
 
@@ -986,11 +988,91 @@ module.exports = class Facção extends Command {
 					return message.reply(`este usuário não está em sua Facção!`);
 				}
 
-				const embed = new ClientEmbed(author)
-					.setTitle('Registros - Facção')
-					.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${user2.fac.registro.map((x, index) => `\`[${index++}]\` Trabalhou as: **${moment(x.tempo).format('LTS L')}** | Ganhou: **${x.xp} XP** e **R$${x.money},00**`).slice(0, 20).join('\n')}`);
+				// user2.fac.registro.map((x, index) => `\`[${index++}]\` Trabalhou as: **${moment(x.tempo).format('LTS L')}** | Ganhou: **${x.xp} XP** e **R$${x.money},00**`).slice(0, 20).join('\n')
 
-				return message.channel.send(author, embed);
+				let pagina = 0;
+
+				const registroArray = user2.fac.registro.map((value, index) => ({
+					tempo: value.tempo,
+					xp: value.xp,
+					money: value.money,
+					position: index
+				}));
+
+				let embedMessage = '';
+
+				const embed = new ClientEmbed(author)
+					.setTitle('Registros - Facção');
+
+				registroArray.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
+				embed.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage}`);
+
+				const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
+				const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
+				const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
+
+				const escolha = await message.channel.send(author, {
+					embed: embed,
+					components: [botoes]
+				});
+
+				const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+
+				collectorEscolhas.on('collect', async (b) => {
+					if (b.id === 'voltar') {
+						b.reply.defer();
+
+						if (pagina <= 0) {
+							pagina = 0;
+						} else {
+							pagina--;
+						}
+
+						const registroArray2 = user2.fac.registro.map((value, index) => ({
+							tempo: value.tempo,
+							xp: value.xp,
+							money: value.money,
+							position: index
+						}));
+
+						let embedMessage2 = '';
+
+						const embed2 = new ClientEmbed(author)
+							.setTitle('Registros - Facção');
+
+						registroArray2.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage2 += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
+						embed2.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage2}`);
+
+						b.message.edit(author, {
+							embed: embed2
+						});
+					} else if (b.id === 'ir') {
+						b.reply.defer();
+
+						if (pagina !== ~~(user2.fac.registro.length / 20)) {
+							pagina++;
+						}
+
+						const registroArray3 = user2.fac.registro.map((value, index) => ({
+							tempo: value.tempo,
+							xp: value.xp,
+							money: value.money,
+							position: index
+						}));
+
+						let embedMessage3 = '';
+
+						const embed3 = new ClientEmbed(author)
+							.setTitle('Registros - Facção');
+
+						registroArray3.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage3 += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
+						embed3.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage3}`);
+
+						b.message.edit(author, {
+							embed: embed3
+						});
+					}
+				});
 			}
 		} else if (args[0].toLowerCase() === 'cargo') {
 			if (!args[1]) {

@@ -290,6 +290,8 @@ module.exports = class Roubarveículo extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 300000;
 
@@ -448,6 +450,8 @@ module.exports = class Roubarveículo extends Command {
 								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].raros[carrosRaros].cavalo)} HP`, true)
 								.addField('Ano:', `${Number(carrosArray.carros[0].raros[carrosRaros].ano)}`, true)
 								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].raros[carrosRaros].valor))},00`, true)
+								.addField('Placa:', `\`${randomPlaca}\``, true)
+								.addField('\u200b', '\u200b', true)
 								.setImage(carrosArray.carros[0].raros[carrosRaros].img);
 
 							message.channel.send(author, embed);
@@ -505,6 +509,8 @@ module.exports = class Roubarveículo extends Command {
 								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].cavalo)} HP`, true)
 								.addField('Ano:', `${Number(carrosArray.carros[0].epicos[carrosEpicos].ano)}`, true)
 								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos[carrosEpicos].valor))},00`, true)
+								.addField('Placa:', `\`${randomPlaca}\``, true)
+								.addField('\u200b', '\u200b', true)
 								.setImage(carrosArray.carros[0].epicos[carrosEpicos].img);
 
 							message.channel.send(author, embed);
@@ -562,6 +568,8 @@ module.exports = class Roubarveículo extends Command {
 								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].cavalo)} HP`, true)
 								.addField('Ano:', `${Number(carrosArray.carros[0].epicos2[carrosEpicos2].ano)}`, true)
 								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].epicos2[carrosEpicos2].valor))},00`, true)
+								.addField('Placa:', `\`${randomPlaca}\``, true)
+								.addField('\u200b', '\u200b', true)
 								.setImage(carrosArray.carros[0].epicos2[carrosEpicos2].img);
 
 							message.channel.send(author, embed);
@@ -619,6 +627,8 @@ module.exports = class Roubarveículo extends Command {
 								.addField('Cavalos de Força:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].cavalo)} HP`, true)
 								.addField('Ano:', `${Number(carrosArray.carros[0].lendario[carrosLendarios].ano)}`, true)
 								.addField('Valor para Desmanche:', `R$${Utils.numberFormat(porcentagem * Number(carrosArray.carros[0].lendario[carrosLendarios].valor))},00`, true)
+								.addField('Placa:', `\`${randomPlaca}\``, true)
+								.addField('\u200b', '\u200b', true)
 								.setImage(carrosArray.carros[0].lendario[carrosLendarios].img);
 
 							message.channel.send(author, embed);

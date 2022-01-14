@@ -284,6 +284,8 @@ module.exports = class Trabalhar extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 3600000;
 

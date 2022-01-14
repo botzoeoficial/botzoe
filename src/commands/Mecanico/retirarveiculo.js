@@ -50,8 +50,8 @@ module.exports = class Retirarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valore,
-			ano: value.nano,
+			valor: value.valor,
+			ano: value.ano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -130,10 +130,11 @@ module.exports = class Retirarveiculo extends Command {
 					}
 
 					if (findSelectedEvento.dono !== author.id) {
+						sim.stop();
 						ce.delete();
-						message.reply(`esse veículo não é seu. Escolha outro veículo por favor!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						msg.delete();
+
+						return message.reply(`esse veículo não é seu. Escolha outro veículo por favor!`);
 					}
 
 					if (!findSelectedEvento.arrumado) {
@@ -141,9 +142,7 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`seu veículo não está arrumado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}arrumarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`seu veículo não está arrumado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}arrumarveiculo\`!`);
 					}
 
 					if (!findSelectedEvento.emplacado) {
@@ -151,9 +150,7 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`seu veículo não está emplacado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`seu veículo não está emplacado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}emplacarveiculo\`!`);
 					}
 
 					if (!findSelectedEvento.liberado) {
@@ -161,9 +158,7 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`seu veículo não está liberado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`seu veículo não está liberado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}liberarveiculo\`!`);
 					}
 
 					sim.stop();

@@ -64,8 +64,7 @@ module.exports = class Exportador extends Command {
 
 			await msg.react('📦');
 
-			const filtro = (reaction, user) => reaction.emoji.name === '📦' && user.id === author.id;
-			const coletor = msg.createReactionCollector(filtro, {
+			const coletor = msg.createReactionCollector((reaction, user) => reaction.emoji.name === '📦' && user.id === author.id, {
 				time: 600000,
 				max: 1
 			});
@@ -188,15 +187,11 @@ module.exports = class Exportador extends Command {
 						});
 					}
 				} else if (!userAuthor.isMochila) {
-					return message.channel.send(`${author}, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
-						timeout: 5000
-					}));
+					return message.channel.send(`${author}, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`);
 				} else if (!userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga)) {
-					return message.channel.send(`${author}, você não possui **${server.exportador.precisandoDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
-						timeout: 5000
-					}));
+					return message.channel.send(`${author}, você não possui **${server.exportador.precisandoDroga}** na sua mochila para vender ela.`);
 				} else {
-					const randomDrogaUser = Math.floor(Math.random() * Math.min(server.exportador.precisandoQuantia, userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga).quantia));
+					const randomDrogaUser = userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga).quantia;
 
 					server.exportador.quantiaQueFalta += randomDrogaUser;
 					server.save();
@@ -211,6 +206,12 @@ module.exports = class Exportador extends Command {
 
 					if (server.exportador.quantiaQueFalta >= server.exportador.precisandoQuantia) {
 						server.exportador.quantiaQueFalta = server.exportador.precisandoQuantia;
+
+						embed.fields = [];
+						embed.addField('Tempo para o exportador ir embora:', `\`0\`d \`0\`h \`0\`m \`0\`s`);
+						embed.addField('Quantidade que falta para a exportação:', `${server.exportador.precisandoQuantia}/${server.exportador.precisandoQuantia}`);
+
+						await msg.edit(embed);
 
 						await this.client.database.guilds.findOneAndUpdate({
 							_id: message.guild.id
@@ -235,13 +236,13 @@ module.exports = class Exportador extends Command {
 					let valor = 0;
 
 					if (server.exportador.precisandoDroga === 'Maconha') {
-						valor = randomDrogaUser * 30;
+						valor = randomDrogaUser * 30000;
 					} else if (server.exportador.precisandoDroga === 'Cocaína') {
-						valor = randomDrogaUser * 50;
+						valor = randomDrogaUser * 50000;
 					} else if (server.exportador.precisandoDroga === 'LSD') {
-						valor = randomDrogaUser * 70;
+						valor = randomDrogaUser * 70000;
 					} else if (server.exportador.precisandoDroga === 'Metanfetamina') {
-						valor = randomDrogaUser * 90;
+						valor = randomDrogaUser * 90000;
 					}
 
 					const embedExportada = new ClientEmbed(this.client.user)
@@ -251,8 +252,7 @@ module.exports = class Exportador extends Command {
 					message.channel.send(author, embedExportada).then(async (msg1) => {
 						await msg1.react('👮');
 
-						const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(user3.id) || server.cidade.delegado === user3.id);
-						const coletor2 = msg1.createReactionCollector(filtro2, {
+						const coletor2 = msg1.createReactionCollector((reaction3, user3) => reaction3.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(user3.id) || server.cidade.delegado === user3.id), {
 							time: 4000,
 							max: 1
 						});
@@ -313,11 +313,12 @@ module.exports = class Exportador extends Command {
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
-									guildId: message.guild.id,
-									'mochila.item': server.exportador.precisandoDroga
+									guildId: message.guild.id
 								}, {
-									$set: {
-										'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga).quantia - randomDrogaUser
+									$pull: {
+										mochila: {
+											item: server.exportador.precisandoDroga
+										}
 									}
 								});
 
@@ -347,17 +348,18 @@ module.exports = class Exportador extends Command {
 									guildId: msg.guild.id
 								}, {
 									$set: {
-										saldo: userAuthor.saldo + valor
+										saldo: userAuthor.saldo += Number(valor)
 									}
 								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
-									guildId: msg.guild.id,
-									'mochila.item': server.exportador.precisandoDroga
+									guildId: message.guild.id
 								}, {
-									$set: {
-										'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga).quantia - randomDrogaUser
+									$pull: {
+										mochila: {
+											item: server.exportador.precisandoDroga
+										}
 									}
 								});
 

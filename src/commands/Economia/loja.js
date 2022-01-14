@@ -155,12 +155,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -180,6 +180,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.bebidas[0].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -267,12 +268,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -292,6 +293,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.bebidas[1].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -379,12 +381,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -404,6 +406,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.bebidas[2].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -491,12 +494,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -516,6 +519,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.bebidas[3].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -603,12 +607,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -628,6 +632,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.bebidas[4].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -715,12 +720,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -740,6 +745,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.bebidas[5].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -898,12 +904,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -923,6 +929,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[0].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1010,12 +1017,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1035,6 +1042,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[1].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1122,12 +1130,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1147,6 +1155,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[2].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1234,12 +1243,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1259,6 +1268,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[3].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1346,12 +1356,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1371,6 +1381,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[4].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1458,12 +1469,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1483,6 +1494,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[5].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1570,12 +1582,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1595,6 +1607,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.comidas[6].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1751,12 +1764,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1776,6 +1789,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja4.doces[0].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1863,12 +1877,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -1888,6 +1902,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja4.doces[1].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -1975,12 +1990,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2000,6 +2015,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja4.doces[2].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2087,12 +2103,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2112,6 +2128,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja4.doces[3].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2199,12 +2216,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2224,6 +2241,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja4.doces[4].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2393,12 +2411,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 1) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **2**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2418,6 +2436,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja5.utilidades[0].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2519,12 +2538,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 5) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **6**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2544,6 +2563,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja5.utilidades[1].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2625,12 +2645,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2650,6 +2670,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja5.utilidades[2].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2721,9 +2742,7 @@ module.exports = class Loja extends Command {
 										timeout: 7000
 									}));
 								} else {
-									message.reply(`você comprou o item \`Mochila\` com sucesso!`).then((b) => b.delete({
-										timeout: 7000
-									}));
+									message.reply(`você comprou \`x1\` **${loja5.utilidades[3].item}(s)** com sucesso!`);
 
 									const server = await this.client.database.guilds.findOne({
 										_id: message.guild.id
@@ -2786,15 +2805,15 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
-										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										if (Number(ce.content) < 0 || Number(ce.content) > 1) {
 											ce.delete();
-											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
+											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **2**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
 												timeout: 5000
 											}));
 										} else if (Number(ce.content) === 0) {
@@ -2811,6 +2830,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja5.utilidades[4].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -2849,7 +2869,8 @@ module.exports = class Loja extends Command {
 														}
 													},
 													$set: {
-														saldo: user.saldo -= loja5.utilidades[4].preco * Number(ce.content)
+														saldo: user.saldo -= loja5.utilidades[4].preco * Number(ce.content),
+														porteDeArmas: Date.now()
 													}
 												});
 
@@ -2900,12 +2921,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -2925,6 +2946,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja5.utilidades[5].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -3081,12 +3103,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -3106,6 +3128,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja6.pm[0].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -3205,12 +3228,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 1) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **2**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -3230,6 +3253,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja6.pm[1].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -3329,12 +3353,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 1) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **2**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -3354,6 +3378,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja6.pm[2].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -3441,12 +3466,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -3466,6 +3491,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content * 5)}\` **${loja6.pm[3].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -3553,12 +3579,12 @@ module.exports = class Loja extends Command {
 										time: 60000
 									});
 
-									const user3 = await this.client.database.users.findOne({
-										userId: author.id,
-										guildId: message.guild.id
-									});
-
 									collectorMessage.on('collect', async (ce) => {
+										const user3 = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
 										if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 											ce.delete();
 											message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -3578,6 +3604,7 @@ module.exports = class Loja extends Command {
 											collectorMessage.stop();
 
 											message.reply(`você comprou \`x${Number(ce.content)}\` **${loja6.pm[4].item}(s)** com sucesso!`);
+											as.delete();
 
 											const server = await this.client.database.guilds.findOne({
 												_id: message.guild.id
@@ -3720,9 +3747,7 @@ module.exports = class Loja extends Command {
 								} else if (user.bitcoin < loja7.bitcoin[0].preco) {
 									return message.reply('você não tem BitCoin suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 								} else {
-									message.reply(`você comprou o item \`Bolso\` com sucesso!`).then((b) => b.delete({
-										timeout: 7000
-									}));
+									message.reply(`você comprou \`x1\` **${loja7.bitcoin[0].preco}(s)** com sucesso!`);
 
 									const server = await this.client.database.guilds.findOne({
 										_id: message.guild.id
@@ -3776,9 +3801,7 @@ module.exports = class Loja extends Command {
 								} else if (user.bitcoin < loja7.bitcoin[1].preco) {
 									return message.reply('você não tem BitCoin suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 								} else {
-									message.reply(`você comprou o item \`Colete à Prova de Balas\` com sucesso!`).then((b) => b.delete({
-										timeout: 7000
-									}));
+									message.reply(`você comprou \`x${Number(ce.content)}\` **${loja7.bitcoin[1].preco}(s)** com sucesso!`);
 
 									const server = await this.client.database.guilds.findOne({
 										_id: message.guild.id
@@ -3950,12 +3973,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -3975,6 +3998,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[0].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4058,12 +4082,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4083,6 +4107,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[1].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4166,12 +4191,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4191,6 +4216,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[2].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4274,12 +4300,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4299,6 +4325,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[3].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4382,12 +4409,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4407,6 +4434,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[4].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4490,12 +4518,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4515,6 +4543,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[5].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4598,12 +4627,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4623,6 +4652,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[6].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4706,12 +4736,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4731,6 +4761,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[7].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4864,12 +4895,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4889,6 +4920,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[8].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -4972,12 +5004,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -4997,6 +5029,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[9].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5080,12 +5113,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5105,6 +5138,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[10].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5188,12 +5222,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5213,6 +5247,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[11].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5296,12 +5331,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5321,6 +5356,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[12].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5404,12 +5440,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5429,6 +5465,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[13].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5512,12 +5549,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5537,6 +5574,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[14].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5620,12 +5658,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5645,6 +5683,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja2.sementes[15].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5793,12 +5832,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5818,6 +5857,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[0].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -5901,12 +5941,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -5926,6 +5966,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[1].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -6009,12 +6050,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -6034,6 +6075,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[2].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id
@@ -6117,12 +6159,12 @@ module.exports = class Loja extends Command {
 									time: 60000
 								});
 
-								const user3 = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
 								collectorMessage.on('collect', async (ce) => {
+									const user3 = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
 									if (Number(ce.content) < 0 || Number(ce.content) > 100) {
 										ce.delete();
 										message.reply('você precisa enviar uma quantia válida e maior que **0** e menor que **100**. Por favor, envie a quantia novamente no chat!').then((b) => b.delete({
@@ -6142,6 +6184,7 @@ module.exports = class Loja extends Command {
 										collectorMessage.stop();
 
 										message.reply(`você comprou \`x${Number(ce.content)}\` **${loja3.utilidadesAgro[3].item}(s)** com sucesso!`);
+										as.delete();
 
 										const server = await this.client.database.guilds.findOne({
 											_id: message.guild.id

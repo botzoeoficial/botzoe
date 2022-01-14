@@ -110,25 +110,19 @@ module.exports = class Empregos extends Command {
 					msg.delete();
 					collector.stop();
 
-					return message.reply(`número do emprego não encontrado. Por favor, use o comando novamente!`).then(a => a.delete({
-						timeout: 5000
-					}));
+					return message.reply(`número do emprego não encontrado. Por favor, use o comando novamente!`);
 				} else if (user.level < findSelectedEmprego.level) {
 					ce.delete();
 					msg.delete();
 					collector.stop();
 
-					return message.reply(`você precisa ser level **${findSelectedEmprego.level}** para escolher esse emprego. Por favor, use o comando novamente!`).then(a => a.delete({
-						timeout: 5000
-					}));
+					return message.reply(`você precisa ser level **${findSelectedEmprego.level}** para escolher esse emprego. Por favor, use o comando novamente!`);
 				} else if (user.emprego === findSelectedEmprego.trabalho) {
 					ce.delete();
 					msg.delete();
 					collector.stop();
 
-					return message.reply('você já possui esse emprego. Por favor, use o comando novamente!').then(a => a.delete({
-						timeout: 5000
-					}));
+					return message.reply('você já possui esse emprego. Por favor, use o comando novamente!');
 				} else {
 					collector.stop();
 
@@ -155,9 +149,7 @@ module.exports = class Empregos extends Command {
 					msg.delete();
 					collector.stop();
 
-					return message.reply('você demorou demais para escolher o emprego! Use o comando novamente!').then((a) => a.delete({
-						timeout: 6000
-					}));
+					return message.reply('você demorou demais para escolher o emprego! Use o comando novamente!');
 				}
 			});
 		});

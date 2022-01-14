@@ -9,7 +9,7 @@ const guildSchema = new Schema({
 	},
 	prefix: {
 		type: String,
-		default: '//'
+		default: '++'
 	},
 	editor: {
 		type: Array,

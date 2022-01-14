@@ -41,7 +41,7 @@ module.exports = class Depall extends Command {
 		prefix,
 		author
 	}) {
-		const user = await this.client.database.users.findOne({
+		let user = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
@@ -51,6 +51,11 @@ module.exports = class Depall extends Command {
 		const embed = new ClientEmbed(author);
 
 		if (user.saldo <= 0) return message.reply('você não tem dinheiro para depositar no banco.');
+
+		user = await this.client.database.users.findOne({
+			userId: author.id,
+			guildId: message.guild.id
+		});
 
 		embed.setDescription(`💵 | Você depositou **R$${Utils.numberFormat(Number(user.saldo))},00** no banco com sucesso.`);
 

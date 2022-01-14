@@ -73,6 +73,8 @@ module.exports = class Revistar extends Command {
 
 			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
 
+			if (member.id === author.id) return message.reply('você não pode revistar você mesmo.');
+
 			const user2 = await this.client.database.users.findOne({
 				userId: member.id,
 				guildId: message.guild.id

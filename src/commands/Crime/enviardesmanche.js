@@ -279,6 +279,8 @@ module.exports = class Enviardesmanche extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			if (!user.garagem.length) return message.reply(`você não possui nenhum carro na **garagem**. Use o comando \`${prefix}roubarcarro\`.`);
 

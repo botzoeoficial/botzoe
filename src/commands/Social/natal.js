@@ -55,6 +55,7 @@ module.exports = class Natal extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
+			.setDescription(`**EVENTO TERMINADO!**\n\nObrigado a todos que participaram do evento!`)
 			.setTitle(`🎄 Presentes de ${member.user.tag}`)
 			.addField('🎁 | Presentes:', `ㅤㅤ\`${Utils.numberFormat(user.presentes)}\``)
 			.addField('Prazo de coleta de Presentes:', '10/12/2021 à 25/12/2021')

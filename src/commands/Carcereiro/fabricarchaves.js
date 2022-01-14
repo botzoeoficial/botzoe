@@ -139,33 +139,25 @@ module.exports = class Fabricarchaves extends Command {
 						msg.delete();
 						ce.delete();
 
-						return message.reply('número não encontrado. Por favor, envie o comando novamente!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply('número não encontrado. Por favor, envie o comando novamente!');
 					} else if (!user2.inventory.find((a) => a.item === 'Alumínio') || user2.inventory.find((a) => a.item === 'Alumínio').quantia < findSelectedEvento.aluminio) {
 						sim.stop();
 						msg.delete();
 						ce.delete();
 
-						return message.reply('você não possui **Alumínio** suficiente para fabricar essa chave. Por favor, escolha outra chave!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply('você não possui **Alumínio** suficiente para fabricar essa chave. Por favor, escolha outra chave!');
 					} else if (!user2.inventory.find((a) => a.item === 'Borracha') || user2.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha) {
 						sim.stop();
 						msg.delete();
 						ce.delete();
 
-						return message.reply('você não possui **Borracha** suficiente para fabricar essa chave. Por favor, escolha outra chave!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply('você não possui **Borracha** suficiente para fabricar essa chave. Por favor, escolha outra chave!');
 					} else if (!user2.inventory.find((a) => a.item === 'Prata') || user2.inventory.find((a) => a.item === 'Prata').quantia < findSelectedEvento.prata) {
 						sim.stop();
 						msg.delete();
 						ce.delete();
 
-						return message.reply('você não possui **Prata** suficiente para fabricar essa chave. Por favor, escolha outra chave!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply('você não possui **Prata** suficiente para fabricar essa chave. Por favor, escolha outra chave!');
 					} else {
 						sim.stop();
 						ce.delete();
@@ -189,9 +181,7 @@ module.exports = class Fabricarchaves extends Command {
 									sim.stop();
 									msg2.delete();
 
-									return message.reply('coloque uma quantia válida. Por favor, envie o comando novamente!').then(ba => ba.delete({
-										timeout: 6000
-									}));
+									return message.reply('coloque uma quantia válida. Por favor, envie o comando novamente!');
 								} else {
 									const user3 = await this.client.database.users.findOne({
 										userId: author.id,

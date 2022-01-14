@@ -52,8 +52,8 @@ module.exports = class Arrumarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valore,
-			ano: value.nano,
+			valor: value.valor,
+			ano: value.ano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -136,9 +136,7 @@ module.exports = class Arrumarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse carro já está arrumado. Você precisa emplacar ele agora usando o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`esse carro já está arrumado. Você precisa emplacar ele agora usando o comando \`${prefix}emplacarveiculo\`!`);
 					}
 
 					sim.stop();

@@ -42,11 +42,6 @@ module.exports = class {
 				}
 			});
 		}
-
-		await User.findOneAndDelete({
-			userId: member.id,
-			guildId: guild.id
-		});
 	}
 
 };

@@ -68,6 +68,8 @@ module.exports = class Familia extends Command {
 				embed.addField(`Nome: ${est.nome}`, `Idade: ${est.idade}\nGênero: ${est.genero}`, true);
 			});
 
+			embed.setFooter(`Página: ${pagina}/${~~(user.familia.length / 12)}`, author.displayAvatarURL({ dynamic: true, format: 'png' }));
+
 			const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
 			const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
 			const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
@@ -96,6 +98,8 @@ module.exports = class Familia extends Command {
 						embed2.addField(`Nome: ${est.nome}`, `Idade: ${est.idade}\nGênero: ${est.genero}`, true);
 					});
 
+					embed2.setFooter(`Página: ${pagina}/${~~(user.familia.length / 12)}`, author.displayAvatarURL({ dynamic: true, format: 'png' }));
+
 					b.message.edit(author, {
 						embed: embed2
 					});
@@ -112,6 +116,8 @@ module.exports = class Familia extends Command {
 					user.familia.slice(pagina * 12, pagina * 12 + 12).forEach((est) => {
 						embed2.addField(`Nome: ${est.nome}`, `Idade: ${est.idade}\nGênero: ${est.genero}`, true);
 					});
+
+					embed2.setFooter(`Página: ${pagina}/${~~(user.familia.length / 12)}`, author.displayAvatarURL({ dynamic: true, format: 'png' }));
 
 					b.message.edit(author, {
 						embed: embed2

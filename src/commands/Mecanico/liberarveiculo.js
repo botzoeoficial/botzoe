@@ -52,8 +52,8 @@ module.exports = class Liberarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valore,
-			ano: value.nano,
+			valor: value.valor,
+			ano: value.ano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -136,9 +136,7 @@ module.exports = class Liberarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse veículo não está arrumado ainda. Use o comando \`${prefix}arrumarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`esse veículo não está arrumado ainda. Use o comando \`${prefix}arrumarveiculo\`!`);
 					}
 
 					if (!findSelectedEvento.emplacado) {
@@ -146,9 +144,7 @@ module.exports = class Liberarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse veículo não está emplacado ainda. Use o comando \`${prefix}emplacarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`esse veículo não está emplacado ainda. Use o comando \`${prefix}emplacarveiculo\`!`);
 					}
 
 					if (findSelectedEvento.liberado) {
@@ -156,9 +152,7 @@ module.exports = class Liberarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse carro já está liberado. Peça para o dono retirar o carro dele agora usando o comando \`${prefix}retirarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`esse carro já está liberado. Peça para o dono retirar o carro dele agora usando o comando \`${prefix}retirarveiculo\`!`);
 					}
 
 					sim.stop();

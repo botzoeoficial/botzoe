@@ -290,12 +290,16 @@ module.exports = class Roubar extends Command {
 					});
 				}
 			});
+
+			return;
 		}
 
 		if (user.mochila.find((a) => a.item === 'Máscara')) {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+
+			if (member.id === author.id) return message.reply('você não pode roubar você mesmo.');
 
 			const user2 = await this.client.database.users.findOne({
 				userId: member.id,
@@ -1503,6 +1507,8 @@ module.exports = class Roubar extends Command {
 				const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 				if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+
+				if (member.id === author.id) return message.reply('você não pode roubar você mesmo.');
 
 				const user2 = await this.client.database.users.findOne({
 					userId: member.id,

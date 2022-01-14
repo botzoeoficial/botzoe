@@ -283,10 +283,13 @@ module.exports = class Investirbtc extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const embed = new ClientEmbed(author)
 				.setTitle('<:btc:908786996535787551> BITCOIN')
-				.setDescription('📈 | Quantos BitCoins você deseja investir?\n\n**OBS: Envie no chat um número!**');
+				.setDescription('📈 | Quantos BitCoins você deseja investir?\n\n**OBS: Envie no chat um número!**')
+				.setFooter('Digite 0 para cancelar.', author.displayAvatarURL({ dynamic: true }))
 
 			message.channel.send(author, embed).then(async (msg) => {
 				const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
@@ -294,20 +297,20 @@ module.exports = class Investirbtc extends Command {
 				});
 
 				collector.on('collect', async (ce) => {
-					if (!parseInt(ce.content)) {
-						message.channel.send(`${author}, você precisa enviar uma quantia válida. Digite a quantia novamente!`).then((a) => a.delete({
-							timeout: 5000
-						}));
-					} else if (parseInt(ce.content) <= 0) {
-						message.channel.send(`${author}, você precisa colocar uma quantia acima de **0**. Digite a quantia novamente!`).then((a) => a.delete({
+					if (parseInt(ce.content) <= 0) {
+						msg.delete();
+
+						return message.reply(`cancelado com sucesso!`);
+					} else if (!parseInt(ce.content)) {
+						message.reply(`você precisa enviar uma quantia válida. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else if (parseInt(ce.content) > user.bitcoin) {
-						message.channel.send(`${author}, você não tem essa quantia toda de bitcoins para investir. Digite a quantia novamente!`).then((a) => a.delete({
+						message.reply(`você não tem essa quantia toda de bitcoins para investir. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else if (isNaN(ce.content)) {
-						message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!`).then((a) => a.delete({
+						message.reply(`você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!`).then((a) => a.delete({
 							timeout: 5000
 						}));
 					} else {
@@ -386,7 +389,7 @@ module.exports = class Investirbtc extends Command {
 								if (reason === 'time') {
 									msg.delete();
 
-									return message.channel.send(`${author}, você demorou demais para escolher! Use o comando novamente!`);
+									return message.reply(`você demorou demais para escolher! Use o comando novamente!`);
 								}
 							});
 						});

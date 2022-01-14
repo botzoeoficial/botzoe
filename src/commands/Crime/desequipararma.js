@@ -83,9 +83,7 @@ module.exports = class Desequipararma extends Command {
 
 				if (user.armaEquipada !== itemEmoji) {
 					msg.delete();
-					return message.reply('você não está com essa arma equipada. Por favor, escolha outra!').then((ba) => ba.delete({
-						timeout: 6000
-					}));
+					return message.reply('você não está com essa arma equipada. Por favor, escolha outra!');
 				} else {
 					sim.stop();
 					msg.delete();

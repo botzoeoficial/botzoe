@@ -66,7 +66,7 @@ module.exports = class Impeachment extends Command {
 		if (server.cidade.impeachment.existe) {
 			const embedExistes = new ClientEmbed(this.client.user)
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
-				.setDescription(`${author}, já pois está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
+				.setDescription(`${author}, já está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
 
 			return message.channel.send(author, embedExistes);
 		}

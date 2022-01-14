@@ -281,6 +281,8 @@ module.exports = class Pescar extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 600000;
 

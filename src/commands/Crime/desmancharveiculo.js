@@ -49,8 +49,8 @@ module.exports = class Desmancharveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valor,
-			ano: value.ano,
+			valor: value.valore,
+			ano: value.nano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -60,6 +60,7 @@ module.exports = class Desmancharveiculo extends Command {
 			arrumado: value.arrumado,
 			emplacado: value.emplacado,
 			liberado: value.liberado,
+			placa: value.placa,
 			position: index
 		}));
 
@@ -121,9 +122,7 @@ module.exports = class Desmancharveiculo extends Command {
 					const findSelectedEvento = desmancheArray.find((xis) => xis.position === selected);
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-							timeout: 5000
-						}));
+						message.reply('número não encontrado. Por favor, envie o número novamente!');
 						ce.delete();
 					}
 
@@ -167,7 +166,7 @@ module.exports = class Desmancharveiculo extends Command {
 					}, {
 						$pull: {
 							desmanche: {
-								danificado: findSelectedEvento.danificado
+								placa: findSelectedEvento.placa
 							}
 						}
 					});

@@ -261,7 +261,7 @@ module.exports = class Cooldown extends Command {
 		if (timeout10 - (Date.now() - user.prisao.tempo) > 0) {
 			const faltam = ms(timeout10 - (Date.now() - user.prisao.tempo));
 
-			embed.addField(`⏰ Tempo de Prisão`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`⏰ Tempo de Prisão`, `\`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
 			embed.addField(`⏰ Tempo de Prisão`, `Livre!`, true);
 		}

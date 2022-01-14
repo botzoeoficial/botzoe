@@ -55,7 +55,7 @@ module.exports = class Addprefeito extends Command {
 		if (server.cidade.impeachment.existe) {
 			const embedExistes = new ClientEmbed(this.client.user)
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
-				.setDescription(`${author}, não é possível abrir um Golpe de Estado pois está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
+				.setDescription(`${author}, não é possível adicionar um Prefeito, pois está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
 
 			return message.channel.send(author, embedExistes);
 		}
@@ -66,7 +66,7 @@ module.exports = class Addprefeito extends Command {
 		if (server.cidade.eleicao.existe) {
 			const embedExistes = new ClientEmbed(this.client.user)
 				.setTitle('<:Urna:895779255491911740> | Eleição')
-				.setDescription(`${author}, não é possível abrir um Golpe de Estado pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
+				.setDescription(`${author}, não é possível adicionar um Prefeito, pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
 
 			return message.channel.send(author, embedExistes);
 		}
@@ -77,7 +77,7 @@ module.exports = class Addprefeito extends Command {
 		if (server.cidade.golpeEstado.existe) {
 			const embedExistes = new ClientEmbed(this.client.user)
 				.setTitle('🕵️ | Golpe de Estado')
-				.setDescription(`${author}, já está rolando um **Golpe de Estado** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel3}/${msg3})`);
+				.setDescription(`${author}, não é possível adicionar um Prefeito, pois está rolando um **Golpe de Estado** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel3}/${msg3})`);
 
 			return message.channel.send(author, embedExistes);
 		}

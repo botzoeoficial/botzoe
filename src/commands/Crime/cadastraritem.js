@@ -225,6 +225,10 @@ module.exports = class Cadastraritem extends Command {
 										guildId: message.guild.id
 									});
 
+									const server = await this.client.database.guilds.findOne({
+										_id: message.guild.id
+									});
+
 									if (!findSelectedEvento2) {
 										msg.delete();
 										ce2.delete();
@@ -240,6 +244,21 @@ module.exports = class Cadastraritem extends Command {
 										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.droga)) {
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.droga)) {
 										msg.delete();
 										ce2.delete();
@@ -748,6 +767,10 @@ module.exports = class Cadastraritem extends Command {
 										guildId: message.guild.id
 									});
 
+									const server = await this.client.database.guilds.findOne({
+										_id: message.guild.id
+									});
+
 									if (!findSelectedEvento2) {
 										msg.delete();
 										ce2.delete();
@@ -763,6 +786,21 @@ module.exports = class Cadastraritem extends Command {
 										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.arma)) {
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.arma)) {
 										msg.delete();
 										ce2.delete();
@@ -1251,6 +1289,10 @@ module.exports = class Cadastraritem extends Command {
 										guildId: message.guild.id
 									});
 
+									const server = await this.client.database.guilds.findOne({
+										_id: message.guild.id
+									});
+
 									if (!findSelectedEvento2) {
 										msg.delete();
 										ce2.delete();
@@ -1266,6 +1308,21 @@ module.exports = class Cadastraritem extends Command {
 										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.municao)) {
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.municao)) {
 										msg.delete();
 										ce2.delete();
@@ -1280,9 +1337,7 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1750,6 +1805,10 @@ module.exports = class Cadastraritem extends Command {
 										guildId: message.guild.id
 									});
 
+									const server = await this.client.database.guilds.findOne({
+										_id: message.guild.id
+									});
+
 									if (!findSelectedEvento2) {
 										msg.delete();
 										ce2.delete();
@@ -1765,6 +1824,21 @@ module.exports = class Cadastraritem extends Command {
 										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.chave)) {
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.chave)) {
 										msg.delete();
 										ce2.delete();
@@ -1779,9 +1853,7 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -2268,6 +2340,10 @@ module.exports = class Cadastraritem extends Command {
 										guildId: message.guild.id
 									});
 
+									const server = await this.client.database.guilds.findOne({
+										_id: message.guild.id
+									});
+
 									if (!findSelectedEvento2) {
 										msg.delete();
 										ce2.delete();
@@ -2283,6 +2359,21 @@ module.exports = class Cadastraritem extends Command {
 										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.minerio)) {
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
 									} else if (!user2.inventory.find((a) => a.item === findSelectedEvento2.minerio)) {
 										msg.delete();
 										ce2.delete();
@@ -2297,9 +2388,7 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -2771,6 +2860,10 @@ module.exports = class Cadastraritem extends Command {
 										guildId: message.guild.id
 									});
 
+									const server = await this.client.database.guilds.findOne({
+										_id: message.guild.id
+									});
+
 									if (!findSelectedEvento2) {
 										msg.delete();
 										ce2.delete();
@@ -2786,6 +2879,21 @@ module.exports = class Cadastraritem extends Command {
 										});
 
 										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.item)) {
+										msg.delete();
+										ce2.delete();
+										sim2.stop();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												cadastrandoItem: false
+											}
+										});
+
+										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.item)) {
 										msg.delete();
 										ce2.delete();
@@ -2800,9 +2908,7 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`).then(ba => ba.delete({
-											timeout: 5000
-										}));
+										return message.reply(`:x: | Você não possui este produto para vender.`);
 									} else {
 										ce2.delete();
 										sim2.stop();

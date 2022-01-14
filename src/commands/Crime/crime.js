@@ -65,7 +65,7 @@ module.exports = class Crime extends Command {
 
 		if (server.cidade.delegado === author.id) return message.reply('você não pode usar esse comando pois você é Delegado do servidor!');
 
-		if (args[0] && args[0].toLowerCase() === 'estatisticas') {
+		if (args[0] && ['estatisticas', 'estatistica', 'estatísticas'].includes(args[0].toLowerCase())) {
 			const CRIMES = await require('mongoose')
 				.connection.collection('users')
 				.find({
@@ -321,6 +321,8 @@ module.exports = class Crime extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 600000;
 
@@ -421,7 +423,7 @@ module.exports = class Crime extends Command {
 				crimesArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - ${eu.roubo} - REP: ${eu.rep}\n`);
 				embed2.setDescription(`*Lista de Crimes que você pode cometer:* Use (\`${prefix}crime <número do crime>\`)\n\n${embedMessage}`);
 
-				message.channel.send(author, embed2);
+				return message.channel.send(author, embed2);
 			} else if (args[0] === '1') {
 				// velhinha - 5 minutos preso
 				const randomValor = Utils.randomNumber(500, 2000);
@@ -467,7 +469,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -547,7 +549,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -627,7 +629,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -707,7 +709,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -787,7 +789,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -867,7 +869,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -947,7 +949,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -1027,7 +1029,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -1107,7 +1109,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
@@ -1187,7 +1189,7 @@ module.exports = class Crime extends Command {
 						}
 					});
 
-					setTimeout(async () => {
+					return setTimeout(async () => {
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id

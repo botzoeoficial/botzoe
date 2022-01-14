@@ -52,8 +52,8 @@ module.exports = class Emplacarveiculo extends Command {
 			nome: value.nome,
 			dono: value.dono,
 			modelo: value.modelo,
-			valor: value.valore,
-			ano: value.nano,
+			valor: value.valor,
+			ano: value.ano,
 			danificado: value.danificado,
 			velocidade: value.velocidade,
 			cavalos: value.cavalos,
@@ -136,9 +136,7 @@ module.exports = class Emplacarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse carro não está arrumado. Você precisa arrumar ele antes de emplacar usando o comando \`${prefix}arrumarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`esse carro não está arrumado. Você precisa arrumar ele antes de emplacar usando o comando \`${prefix}arrumarveiculo\`!`);
 					}
 
 					if (findSelectedEvento.emplacado) {
@@ -146,9 +144,7 @@ module.exports = class Emplacarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse carro já está emplacado. Você precisa liberar ele usando o comando \`${prefix}liberarveiculo\`!`).then(ba => ba.delete({
-							timeout: 5000
-						}));
+						return message.reply(`esse carro já está emplacado. Você precisa liberar ele usando o comando \`${prefix}liberarveiculo\`!`);
 					}
 
 					sim.stop();

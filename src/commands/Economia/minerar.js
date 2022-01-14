@@ -280,6 +280,8 @@ module.exports = class Minerar extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 43200000;
 

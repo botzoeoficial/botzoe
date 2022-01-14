@@ -281,6 +281,8 @@ module.exports = class Estudar extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 3600000;
 

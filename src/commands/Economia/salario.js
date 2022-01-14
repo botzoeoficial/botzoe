@@ -281,6 +281,8 @@ module.exports = class Salario extends Command {
 					});
 				}
 			});
+
+			return;
 		} else {
 			const timeout = 86400000;
 

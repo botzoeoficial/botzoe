@@ -28,8 +28,8 @@ module.exports = class Ready {
 
 		console.log(c.green('[BOT] - Conectado a API do Discord.'));
 
-		await this.client.user.setActivity(`${this.client.users.cache.size} usuários jogarem na Zoe City!`, {
-			type: 'WATCHING'
+		await this.client.user.setActivity(`com ${this.client.users.cache.size} usuários na Zoe City!`, {
+			type: 'PLAYING'
 		});
 
 		const channelServers = await this.client.channels.cache.get('885645282673590298');
@@ -3977,6 +3977,26 @@ module.exports = class Ready {
 				}, 1000 * 60);
 
 				setInterval(async () => {
+					if (864000000 - (Date.now() - e.porteDeArmas) < 0) {
+						if (e.mochila.find((a) => a.item === 'Porte de Armas')) {
+							await this.client.database.users.findOneAndUpdate({
+								userId: e.userId,
+								guildId: e.guildId
+							}, {
+								$pull: {
+									mochila: {
+										item: 'Porte de Armas'
+									}
+								},
+								$set: {
+									porteDeArmas: 0
+								}
+							});
+						}
+					}
+				}, 1000 * 60);
+
+				setInterval(async () => {
 					if (e.garagem.length) {
 						for (var i = 0; i < e.garagem.length; i++) {
 							if (!e.garagem[i].emplacado) {
@@ -3996,39 +4016,43 @@ module.exports = class Ready {
 					}
 				}, 86400000);
 
-				if (!e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) > 0) {
-					await this.client.database.users.findOneAndUpdate({
-						userId: e.userId,
-						guildId: e.guildId
-					}, {
-						$set: {
-							saldo: e.banco
-						}
-					});
+				setInterval(async () => {
+					if (!e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) > 0) {
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								saldo: e.banco
+							}
+						});
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: e.userId,
-						guildId: e.guildId
-					}, {
-						$set: {
-							banco: 0
-						}
-					});
-				}
+						await this.client.database.users.findOneAndUpdate({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								banco: 0
+							}
+						});
+					}
+				}, 1000 * 60);
 
-				if ((10 * 24 * 60 * 60 * 1000) - (Date.now() - e.cooldown.bitcoin) < 0) {
-					const user2 = await this.client.database.users.findOne({
-						userId: e.userId,
-						guildId: e.guildId
-					});
+				setInterval(async () => {
+					if (864000000 - (Date.now() - e.cooldown.bitcoin) < 0) {
+						const user2 = await this.client.database.users.findOne({
+							userId: e.userId,
+							guildId: e.guildId
+						});
 
-					let valor = user2.bitcoin += Number(user2.investimento.investido);
+						let valor = user2.bitcoin += Number(user2.investimento.investido);
 
-					user2.bitcoin = valor *= 2;
-					user2.investimento.investido = 0;
-					user2.cooldown.bitcoin = 0;
-					await e.save();
-				}
+						user2.bitcoin = valor *= 2;
+						user2.investimento.investido = 0;
+						user2.cooldown.bitcoin = 0;
+						await e.save();
+					}
+				}, 1000 * 60);
 
 				setInterval(async () => {
 					try {
@@ -4109,6 +4133,7 @@ module.exports = class Ready {
 				$exists: true
 			}
 		});
+
 		if (!hasDocGuild) return;
 
 		const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
@@ -4146,8 +4171,7 @@ module.exports = class Ready {
 							}
 						});
 
-						const filtro = (reaction, user) => reaction.emoji.name === '📦' && user.id !== this.client.user.id;
-						const coletor = msg.createReactionCollector(filtro, {
+						const coletor = msg.createReactionCollector((reaction, user) => reaction.emoji.name === '📦' && user.id !== this.client.user.id, {
 							time: 600000,
 							max: 10
 						});
@@ -4181,7 +4205,7 @@ module.exports = class Ready {
 									timeout: 5000
 								}));
 							} else {
-								const randomDrogaUser = Math.floor(Math.random() * Math.min(randomQuantia, userAuthor.mochila.find((a) => a.item === randomDroga).quantia));
+								const randomDrogaUser = userAuthor.mochila.find((a) => a.item === randomDroga).quantia;
 
 								atualDroga += randomDrogaUser;
 
@@ -4195,6 +4219,12 @@ module.exports = class Ready {
 
 								if (atualDroga >= randomQuantia) {
 									atualDroga = randomQuantia;
+
+									embed.fields = [];
+									embed.addField('Tempo para o exportador ir embora:', `\`0\`d \`0\`h \`0\`m \`0\`s`);
+									embed.addField('Quantidade que falta para a exportação:', `${randomQuantia}/${randomQuantia}`);
+
+									await msg.edit(embed);
 
 									await this.client.database.guilds.findOneAndUpdate({
 										_id: msg.guild.id
@@ -4219,13 +4249,13 @@ module.exports = class Ready {
 								let valor = 0;
 
 								if (randomDroga === 'Maconha') {
-									valor = randomDrogaUser * 30;
+									valor = randomDrogaUser * 30000;
 								} else if (randomDroga === 'Cocaína') {
-									valor = randomDrogaUser * 50;
+									valor = randomDrogaUser * 50000;
 								} else if (randomDroga === 'LSD') {
-									valor = randomDrogaUser * 70;
+									valor = randomDrogaUser * 70000;
 								} else if (randomDroga === 'Metanfetamina') {
-									valor = randomDrogaUser * 90;
+									valor = randomDrogaUser * 90000;
 								}
 
 								const embedExportada = new ClientEmbed(this.client.user)
@@ -4239,8 +4269,7 @@ module.exports = class Ready {
 										_id: msg.guild.id
 									});
 
-									const filtro2 = (reaction3, user3) => reaction3.emoji.name === '👮' && server.cidade.policiais.map(a => a.id).includes(user3.id);
-									const coletor2 = msg1.createReactionCollector(filtro2, {
+									const coletor2 = msg1.createReactionCollector((reaction3, user3) => reaction3.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(user3.id) || server.cidade.delegado === user3.id), {
 										time: 4000,
 										max: 1
 									});
@@ -4301,11 +4330,12 @@ module.exports = class Ready {
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
-												guildId: msg.guild.id,
-												'mochila.item': randomDroga
+												guildId: msg.guild.id
 											}, {
-												$set: {
-													'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+												$pull: {
+													mochila: {
+														item: randomDroga
+													}
 												}
 											});
 
@@ -4339,11 +4369,12 @@ module.exports = class Ready {
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: user2.id,
-												guildId: msg.guild.id,
-												'mochila.item': randomDroga
+												guildId: msg.guild.id
 											}, {
-												$set: {
-													'mochila.$.quantia': userAuthor.mochila.find((a) => a.item === randomDroga).quantia - randomDrogaUser
+												$pull: {
+													mochila: {
+														item: randomDroga
+													}
 												}
 											});
 										}
@@ -4394,6 +4425,13 @@ module.exports = class Ready {
 				}
 			}
 		});
+	}
+
+	extendedSetTimeout(callback, ms2) {
+		const biggestInt = (2 ** 31) - 1;
+		const max = ms2 > biggestInt ? biggestInt : ms2;
+
+		setTimeout(() => ms2 > max ? extendedSetTimeout(callback, ms2 - max) : callback(), max);
 	}
 
 };
