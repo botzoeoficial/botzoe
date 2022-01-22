@@ -51,6 +51,10 @@ module.exports = class Removercarcereiro extends Command {
 
 		if (!member) return message.reply('você precisa mencionar o usuário que é Carcereiro.');
 
+		if (member.user.bot) return message.reply('um Bot nunca será Carcereiro do Servidor.');
+
+		if (member.id === server.cidade.delegado) return message.reply('um Delegado nunca será **Carcereiro** do servidor.');
+
 		if (!server.cidade.carcereiro.find((f) => f.id === member.id)) {
 			return message.reply('esse usuário não está na lista de Carcereiros do servidor.');
 		}

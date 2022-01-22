@@ -39,10 +39,10 @@ module.exports = class Top extends Command {
 	}
 	async run({
 		message,
-		author
+		author,
+		args
 	}) {
-		const embed = new ClientEmbed(author)
-			.setTitle('📈 | Ranking Monetário');
+		const embed = new ClientEmbed(author);
 
 		const medalhas = {
 			0: '🥇',
@@ -67,17 +67,31 @@ module.exports = class Top extends Command {
 			19: '2️⃣0️⃣'
 		};
 
-		const users = (await User.find({})).map(u => ({
-			id: u.userId,
-			server: u.guildId,
-			money: u.banco + u.saldo
-		})).sort((a, b) => b.money - a.money).filter(u => u.money).slice(0, 20);
+		if (!args[0]) {
+			const users = (await User.find({ guildId: message.guild.id })).map(u => ({
+				id: u.userId,
+				money: u.banco + u.saldo
+			})).sort((a, b) => b.money - a.money).filter(u => u.money).slice(0, 20);
 
-		const list = users.map((u, i) => `[ ${medalhas[i] || i + 1} ] ${this.client.users.cache.get(u.id) || '**Usuário não encontrado**'} - Saldo: **R$${Utils.numberFormat(u.money)},00**`);
+			const list = users.map((u, i) => `[ ${medalhas[i] || i + 1} ] ${this.client.users.cache.get(u.id) || '**Usuário não encontrado**'} - Saldo: **R$${Utils.numberFormat(u.money)},00**`);
 
-		embed.setDescription(list.join('\n'));
+			embed.setTitle('📈 | Ranking Monetário');
+			embed.setDescription(list.join('\n') || '**Sem Usuários no Ranking Monetário!**');
 
-		message.channel.send(author, embed);
+			return message.channel.send(author, embed);
+		} else if (['bitcoin', 'btc', 'bitcoins'].includes(args[0])) {
+			const users = (await User.find({ guildId: message.guild.id })).map(u => ({
+				id: u.userId,
+				btc: u.bitcoin
+			})).sort((a, b) => b.btc - a.btc).filter(u => u.btc).slice(0, 20);
+
+			const list = users.map((u, i) => `[ ${medalhas[i] || i + 1} ] ${this.client.users.cache.get(u.id) || '**Usuário não encontrado**'} - BitCoin: **${Utils.numberFormat(u.btc)}**`);
+
+			embed.setTitle('<:btc:908786996535787551> | Ranking BitCoin');
+			embed.setDescription(list.join('\n') || '**Sem Usuários no Rankin BitCoin!**');
+
+			return message.channel.send(author, embed);
+		}
 	}
 
 };

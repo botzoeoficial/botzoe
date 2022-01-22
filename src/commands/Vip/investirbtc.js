@@ -289,7 +289,9 @@ module.exports = class Investirbtc extends Command {
 			const embed = new ClientEmbed(author)
 				.setTitle('<:btc:908786996535787551> BITCOIN')
 				.setDescription('📈 | Quantos BitCoins você deseja investir?\n\n**OBS: Envie no chat um número!**')
-				.setFooter('Digite 0 para cancelar.', author.displayAvatarURL({ dynamic: true }))
+				.setFooter('Digite 0 para cancelar.', author.displayAvatarURL({
+					dynamic: true
+				}));
 
 			message.channel.send(author, embed).then(async (msg) => {
 				const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {

@@ -232,6 +232,22 @@ const userSchema = new Schema({
 		atirar: {
 			type: Number,
 			default: 0
+		},
+		desmancharCarro: {
+			type: Number,
+			default: 0
+		},
+		arrumarVeiculo: {
+			type: Number,
+			default: 0
+		},
+		emplacarVeiculo: {
+			type: Number,
+			default: 0
+		},
+		liberarVeiculo: {
+			type: Number,
+			default: 0
 		}
 	},
 	pets: {
@@ -1034,6 +1050,10 @@ const userSchema = new Schema({
 	porteDeArmas: {
 		type: Number,
 		default: 0
+	},
+	fabricando: {
+		type: Boolean,
+		default: false
 	}
 });
 

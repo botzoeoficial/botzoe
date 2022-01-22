@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable max-nested-callbacks */
 /* eslint-disable complexity */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
@@ -556,6 +558,28 @@ module.exports = class Ready {
 
 		allUsers.forEach(async (e) => {
 			if (e.cadastrado) {
+				if (e.fabricando) {
+					await this.client.database.users.findOneAndUpdate({
+						userId: e.userId,
+						guildId: e.guildId
+					}, {
+						$set: {
+							fabricando: false
+						}
+					});
+				}
+
+				if (e.cadastrandoItem) {
+					await this.client.database.users.findOneAndUpdate({
+						userId: e.userId,
+						guildId: e.guildId
+					}, {
+						$set: {
+							cadastrandoItem: false
+						}
+					});
+				}
+
 				setInterval(async () => {
 					const usersPrisao = await this.client.database.users.find({
 						'prisao.isPreso': true
@@ -4017,7 +4041,7 @@ module.exports = class Ready {
 				}, 86400000);
 
 				setInterval(async () => {
-					if (!e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) > 0) {
+					if (e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) < 0) {
 						await this.client.database.users.findOneAndUpdate({
 							userId: e.userId,
 							guildId: e.guildId
@@ -4032,7 +4056,8 @@ module.exports = class Ready {
 							guildId: e.guildId
 						}, {
 							$set: {
-								banco: 0
+								banco: 0,
+								'payBank.sucess': false
 							}
 						});
 					}
@@ -4177,6 +4202,16 @@ module.exports = class Ready {
 						});
 
 						coletor.on('collect', async (reaction2, user2) => {
+							const serverDroga = await this.client.database.guilds.findOne({
+								_id: msg.guild.id
+							});
+
+							if (serverDroga.cidade.donoFabricadeDrogas.find((a) => a.id === author.id)) {
+								msg.reply('você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!').then((b) => b.delete({
+									timeout: 5000
+								}));
+							}
+
 							const userAuthor = await this.client.database.users.findOne({
 								userId: user2.id,
 								guildId: msg.guild.id

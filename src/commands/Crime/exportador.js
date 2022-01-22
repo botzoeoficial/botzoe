@@ -1,3 +1,4 @@
+/* eslint-disable max-nested-callbacks */
 /* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
@@ -49,6 +50,8 @@ module.exports = class Exportador extends Command {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
+
+		if (server.cidade.donoFabricadeDrogas.find((a) => a.id === author.id)) return message.reply('você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!');
 
 		const irEmbora = 600000;
 		const faltamHora = ms(irEmbora - (Date.now() - server.exportador.irEmbora));

@@ -50,6 +50,23 @@ module.exports = class Mercadonegro extends Command {
 		message,
 		author
 	}) {
+		const userAuthor = await this.client.database.users.findOne({
+			userId: author.id,
+			guildId: message.guild.id
+		});
+
+		if (userAuthor.inventory.length > 0) {
+			if (userAuthor.inventory.find((a) => a.item === 'Bolso')) {
+				if (userAuthor.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 400) {
+					return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!');
+				}
+			} else if (!userAuthor.inventory.find((a) => a.item === 'Bolso')) {
+				if (userAuthor.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
+					return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!');
+				}
+			}
+		}
+
 		const confirm = new ClientEmbed(author)
 			.setTitle('🏴‍☠️ | Mercado Negro')
 			.setDescription(`Você deseja **realmente** ver o Mercado Negro?`);

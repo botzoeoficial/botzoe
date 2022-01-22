@@ -49,7 +49,7 @@ module.exports = class Roubar extends Command {
 		prefix,
 		args
 	}) {
-		const user = await this.client.database.users.findOne({
+		let user = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
@@ -294,24 +294,24 @@ module.exports = class Roubar extends Command {
 			return;
 		}
 
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+
+		if (member.id === author.id) return message.reply('você não pode roubar você mesmo.');
+
+		let user2 = await this.client.database.users.findOne({
+			userId: member.id,
+			guildId: message.guild.id
+		});
+
+		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+
+		if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+
+		if (user2.saldo < 100) return message.reply(`esse usuário não possui nem **R$100,00** de dinheiro na carteira. Vá roubar outro!`);
+
 		if (user.mochila.find((a) => a.item === 'Máscara')) {
-			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
-
-			if (member.id === author.id) return message.reply('você não pode roubar você mesmo.');
-
-			const user2 = await this.client.database.users.findOne({
-				userId: member.id,
-				guildId: message.guild.id
-			});
-
-			if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-			if (user2.saldo < 100) return message.reply(`esse usuário não possui nem **R$100,00** de dinheiro na carteira. Vá roubar outro!`);
-
 			const embed = new ClientEmbed(author)
 				.setTitle('🔫 | Roubo');
 
@@ -319,6 +319,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -367,6 +372,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -405,7 +411,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -432,12 +437,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -447,7 +463,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -465,6 +481,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -513,6 +534,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -551,7 +573,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -576,12 +597,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -591,7 +623,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -609,6 +641,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -657,6 +694,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -695,7 +733,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -720,12 +757,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -735,7 +783,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -753,6 +801,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -801,6 +854,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -839,7 +893,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -864,12 +917,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -879,7 +943,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -897,6 +961,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição KNT')) {
 					return message.reply('antes de roubar, você precisa ter **Munição KNT** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -945,6 +1014,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -983,7 +1053,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -1008,12 +1077,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -1023,7 +1103,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -1041,6 +1121,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -1089,6 +1174,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -1127,7 +1213,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -1152,12 +1237,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -1167,7 +1263,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -1185,6 +1281,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -1233,6 +1334,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -1271,7 +1373,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -1296,12 +1397,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -1311,7 +1423,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -1329,6 +1441,11 @@ module.exports = class Roubar extends Command {
 				if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
 					return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
 				} else {
+					user2 = await this.client.database.users.findOne({
+						userId: member.id,
+						guildId: message.guild.id
+					});
+
 					const random = Math.floor(Math.random() * 101);
 					const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -1377,6 +1494,7 @@ module.exports = class Roubar extends Command {
 							collectorBotoes.on('collect', async (b) => {
 								if (b.id === 'prender') {
 									b.reply.defer();
+									collectorBotoes.stop();
 
 									const userPolicia = await this.client.database.users.findOne({
 										userId: b.clicker.id,
@@ -1415,7 +1533,6 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												'cooldown.roubar': Date.now(),
 												'prisao.isPreso': true,
 												'prisao.tempo': Date.now(),
 												'prisao.prender': true
@@ -1440,12 +1557,23 @@ module.exports = class Roubar extends Command {
 
 							collectorBotoes.on('end', async (collected, reason) => {
 								if (reason === 'time') {
+									collectorBotoes.stop();
+
+									user = await this.client.database.users.findOne({
+										userId: author.id,
+										guildId: message.guild.id
+									});
+
+									user2 = await this.client.database.users.findOne({
+										userId: member.id,
+										guildId: message.guild.id
+									});
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
 										$set: {
-											'cooldown.roubar': Date.now(),
 											saldo: user.saldo += Number(dindin)
 										}
 									});
@@ -1455,7 +1583,7 @@ module.exports = class Roubar extends Command {
 										guildId: message.guild.id
 									}, {
 										$set: {
-											saldo: user2.saldo - Number(dindin)
+											saldo: user2.saldo -= Number(dindin)
 										}
 									});
 
@@ -1504,23 +1632,6 @@ module.exports = class Roubar extends Command {
 
 				return message.channel.send(author, embed);
 			} else {
-				const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-				if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
-
-				if (member.id === author.id) return message.reply('você não pode roubar você mesmo.');
-
-				const user2 = await this.client.database.users.findOne({
-					userId: member.id,
-					guildId: message.guild.id
-				});
-
-				if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-				if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-				if (user2.saldo < 100) return message.reply(`esse usuário não possui nem **R$100,00** de dinheiro na carteira. Vá roubar outro!`);
-
 				const embed = new ClientEmbed(author)
 					.setTitle('🔫 | Roubo');
 
@@ -1528,6 +1639,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -1576,6 +1692,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -1640,6 +1757,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -1655,7 +1784,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -1673,6 +1802,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -1721,6 +1855,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -1785,6 +1920,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -1800,7 +1947,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -1818,6 +1965,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -1866,6 +2018,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -1930,6 +2083,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -1945,7 +2110,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -1963,6 +2128,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Metralhadora** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -2011,6 +2181,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -2075,6 +2246,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -2090,7 +2273,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -2108,6 +2291,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição KNT')) {
 						return message.reply('antes de roubar, você precisa ter **Munição KNT** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -2156,6 +2344,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -2220,6 +2409,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -2235,7 +2436,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -2253,6 +2454,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -2301,6 +2507,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -2365,6 +2572,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -2380,7 +2599,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -2398,6 +2617,11 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
 					} else {
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
 						const random = Math.floor(Math.random() * 101);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
@@ -2446,6 +2670,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -2510,6 +2735,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -2525,7 +2762,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 
@@ -2543,10 +2780,15 @@ module.exports = class Roubar extends Command {
 					if (!user.mochila.find((a) => a.item === 'Munição Pistola')) {
 						return message.reply('antes de roubar, você precisa ter **Munição Pistola** na sua mochila!');
 					} else {
-						const random = Math.floor(Math.random() * 101);
+						user2 = await this.client.database.users.findOne({
+							userId: member.id,
+							guildId: message.guild.id
+						});
+
+						const random = Math.floor(Math.random() * 5);
 						const dindin = Math.floor(Math.random() * user2.saldo);
 
-						if (random >= 0 && random < 11) {
+						if (random >= 0 && random < 101) {
 							embed.setDescription(`✅ | Você roubou **R$${Utils.numberFormat(Number(dindin))},00** do usuário ${member}.`);
 
 							const buttonPrisao = new MessageButton().setStyle('blurple').setEmoji('👮‍♂️').setID('prender');
@@ -2591,6 +2833,7 @@ module.exports = class Roubar extends Command {
 								collectorBotoes.on('collect', async (b) => {
 									if (b.id === 'prender') {
 										b.reply.defer();
+										collectorBotoes.stop();
 
 										const userPolicia = await this.client.database.users.findOne({
 											userId: b.clicker.id,
@@ -2655,6 +2898,18 @@ module.exports = class Roubar extends Command {
 
 								collectorBotoes.on('end', async (collected, reason) => {
 									if (reason === 'time') {
+										collectorBotoes.stop();
+
+										user = await this.client.database.users.findOne({
+											userId: author.id,
+											guildId: message.guild.id
+										});
+
+										user2 = await this.client.database.users.findOne({
+											userId: member.id,
+											guildId: message.guild.id
+										});
+
 										await this.client.database.users.findOneAndUpdate({
 											userId: author.id,
 											guildId: message.guild.id
@@ -2670,7 +2925,7 @@ module.exports = class Roubar extends Command {
 											guildId: message.guild.id
 										}, {
 											$set: {
-												saldo: user2.saldo - Number(dindin)
+												saldo: user2.saldo -= Number(dindin)
 											}
 										});
 

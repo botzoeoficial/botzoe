@@ -50,6 +50,8 @@ module.exports = class Addcarcereiro extends Command {
 
 		if (member.user.bot) return message.reply(`você não pode dar função de Carcereiro para um bot.`);
 
+		if (member.id === server.cidade.delegado) return message.reply('você não pode setar o Delegado como **Carcereiro**.');
+
 		if (server.cidade.carcereiro.length === 3) return message.reply('esse servidor já possui o máximo de Carcereiros.');
 
 		if (server.cidade.carcereiro.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Carcereiro do servidor.');

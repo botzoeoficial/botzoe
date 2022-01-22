@@ -57,6 +57,15 @@ module.exports = class Fabricardroga extends Command {
 			guildId: message.guild.id
 		});
 
+		await this.client.database.users.findOneAndUpdate({
+			userId: author.id,
+			guildId: message.guild.id
+		}, {
+			$set: {
+				fabricando: true
+			}
+		});
+
 		if (userAuthor.fabricagem.fabricandoDroga) return message.reply(`você já está fabricando uma **droga**. Use o comando \`${prefix}fabricando\` para ver qual a **droga** que está sendo fabricada!`);
 
 		const drogas = require('../../json/drogas.json');
@@ -120,6 +129,16 @@ module.exports = class Fabricardroga extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							fabricando: false
+						}
+					});
+
 					return message.reply(`seleção cancelada com sucesso!`);
 				} else {
 					const selected = Number(ce.content - 1);
@@ -135,6 +154,15 @@ module.exports = class Fabricardroga extends Command {
 						msg.delete();
 						ce.delete();
 
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								fabricando: false
+							}
+						});
+
 						return message.reply('número não encontrado. Por favor, envie o comando novamente!').then(ba => ba.delete({
 							timeout: 6000
 						}));
@@ -142,6 +170,15 @@ module.exports = class Fabricardroga extends Command {
 						sim.stop();
 						msg.delete();
 						ce.delete();
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								fabricando: false
+							}
+						});
 
 						return message.reply('você não possui **Alumínio** suficiente para fabricar essa droga!').then(ba => ba.delete({
 							timeout: 6000
@@ -151,6 +188,15 @@ module.exports = class Fabricardroga extends Command {
 						msg.delete();
 						ce.delete();
 
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								fabricando: false
+							}
+						});
+
 						return message.reply('você não possui **Borracha** suficiente para fabricar essa droga!').then(ba => ba.delete({
 							timeout: 6000
 						}));
@@ -158,6 +204,15 @@ module.exports = class Fabricardroga extends Command {
 						sim.stop();
 						msg.delete();
 						ce.delete();
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								fabricando: false
+							}
+						});
 
 						return message.reply('você não possui **Plástico** suficiente para fabricar essa droga!').then(ba => ba.delete({
 							timeout: 6000
@@ -179,11 +234,30 @@ module.exports = class Fabricardroga extends Command {
 									sim2.stop();
 									sim.stop();
 									msg2.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											fabricando: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else if (parseInt(ce2.content) && parseInt(ce2.content) < 0) {
 									sim2.stop();
 									sim.stop();
 									msg2.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											fabricando: false
+										}
+									});
 
 									return message.reply('coloque uma quantia válida. Por favor, envie o comando novamente!').then(ba => ba.delete({
 										timeout: 6000
@@ -200,6 +274,15 @@ module.exports = class Fabricardroga extends Command {
 										msg.delete();
 										ce2.delete();
 
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												fabricando: false
+											}
+										});
+
 										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha * Number(ce2.content)) {
 										sim2.stop();
@@ -207,12 +290,30 @@ module.exports = class Fabricardroga extends Command {
 										msg.delete();
 										ce2.delete();
 
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												fabricando: false
+											}
+										});
+
 										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Plástico').quantia < findSelectedEvento.plastico * Number(ce2.content)) {
 										sim2.stop();
 										sim.stop();
 										msg.delete();
 										ce2.delete();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												fabricando: false
+											}
+										});
 
 										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
 									} else {
@@ -239,9 +340,27 @@ module.exports = class Fabricardroga extends Command {
 												if (b.id === 'negar') {
 													b.reply.defer();
 
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															fabricando: false
+														}
+													});
+
 													return msg3.delete();
 												} else if (b.id === 'aceitar') {
 													b.reply.defer();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															fabricando: false
+														}
+													});
 
 													let time = 0;
 
@@ -2830,7 +2949,17 @@ module.exports = class Fabricardroga extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg2.delete();
-									return message.reply('você demorou de mais para escolher a arma. Use o comando novamente!');
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											fabricando: false
+										}
+									});
+
+									return message.reply('você demorou de mais para escolher a droga. Use o comando novamente!');
 								}
 							});
 						});
@@ -2842,6 +2971,16 @@ module.exports = class Fabricardroga extends Command {
 				if (reason === 'time') {
 					sim.stop();
 					msg.delete();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							fabricando: false
+						}
+					});
+
 					return message.reply('você demorou demais para responder. Use o comando novamente!');
 				}
 			});

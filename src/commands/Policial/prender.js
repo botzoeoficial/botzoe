@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');

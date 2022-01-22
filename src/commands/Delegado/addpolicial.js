@@ -51,6 +51,8 @@ module.exports = class Addpolicial extends Command {
 
 		if (member.user.bot) return message.reply(`você não pode dar função de Policial para um bot.`);
 
+		if (member.id === server.cidade.delegado) return message.reply('você não pode setar o Delegado como **Policial**.');
+
 		const user2 = await this.client.database.users.findOne({
 			userId: member.id,
 			guildId: message.guild.id

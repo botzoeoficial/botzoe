@@ -190,7 +190,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja2.bebidas[0].preco
+													bank: server.bank += loja2.bebidas[0].preco
 												}
 											});
 
@@ -201,7 +201,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja2.bebidas[0].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[0].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[0].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja2.bebidas[0].preco * Number(ce.content)
 													}
 												});
@@ -303,7 +303,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja2.bebidas[1].preco
+													bank: server.bank += loja2.bebidas[1].preco
 												}
 											});
 
@@ -314,7 +314,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja2.bebidas[1].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[1].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[1].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja2.bebidas[1].preco * Number(ce.content)
 													}
 												});
@@ -416,7 +416,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja2.bebidas[2].preco
+													bank: server.bank += loja2.bebidas[2].preco
 												}
 											});
 
@@ -427,7 +427,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja2.bebidas[2].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[2].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[2].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja2.bebidas[2].preco * Number(ce.content)
 													}
 												});
@@ -529,7 +529,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja2.bebidas[3].preco
+													bank: server.bank += loja2.bebidas[3].preco
 												}
 											});
 
@@ -540,7 +540,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja2.bebidas[3].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[3].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[3].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja2.bebidas[3].preco * Number(ce.content)
 													}
 												});
@@ -642,7 +642,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja2.bebidas[4].preco
+													bank: server.bank += loja2.bebidas[4].preco
 												}
 											});
 
@@ -653,7 +653,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja2.bebidas[4].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[4].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[4].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja2.bebidas[4].preco * Number(ce.content)
 													}
 												});
@@ -755,7 +755,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja2.bebidas[5].preco
+													bank: server.bank += loja2.bebidas[5].preco
 												}
 											});
 
@@ -766,7 +766,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja2.bebidas[5].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[5].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.bebidas[5].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja2.bebidas[5].preco * Number(ce.content)
 													}
 												});
@@ -939,7 +939,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[0].preco
+													bank: server.bank += loja3.comidas[0].preco
 												}
 											});
 
@@ -950,7 +950,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[0].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[0].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[0].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[0].preco * Number(ce.content)
 													}
 												});
@@ -1052,7 +1052,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[1].preco
+													bank: server.bank += loja3.comidas[1].preco
 												}
 											});
 
@@ -1063,7 +1063,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[1].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[1].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[1].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[1].preco * Number(ce.content)
 													}
 												});
@@ -1165,7 +1165,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[2].preco
+													bank: server.bank += loja3.comidas[2].preco
 												}
 											});
 
@@ -1176,7 +1176,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[2].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[2].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[2].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[2].preco * Number(ce.content)
 													}
 												});
@@ -1278,7 +1278,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[3].preco
+													bank: server.bank += loja3.comidas[3].preco
 												}
 											});
 
@@ -1289,7 +1289,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[3].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[3].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[3].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[3].preco * Number(ce.content)
 													}
 												});
@@ -1391,7 +1391,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[4].preco
+													bank: server.bank += loja3.comidas[4].preco
 												}
 											});
 
@@ -1402,7 +1402,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[4].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[4].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[4].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[4].preco * Number(ce.content)
 													}
 												});
@@ -1504,7 +1504,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[5].preco
+													bank: server.bank += loja3.comidas[5].preco
 												}
 											});
 
@@ -1515,7 +1515,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[5].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[5].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[5].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[5].preco * Number(ce.content)
 													}
 												});
@@ -1617,7 +1617,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja3.comidas[6].preco
+													bank: server.bank += loja3.comidas[6].preco
 												}
 											});
 
@@ -1628,7 +1628,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja3.comidas[6].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[6].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.comidas[6].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja3.comidas[6].preco * Number(ce.content)
 													}
 												});
@@ -1799,7 +1799,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja4.doces[0].preco
+													bank: server.bank += loja4.doces[0].preco
 												}
 											});
 
@@ -1810,7 +1810,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja4.doces[0].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[0].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[0].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja4.doces[0].preco * Number(ce.content)
 													}
 												});
@@ -1912,7 +1912,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja4.doces[1].preco
+													bank: server.bank += loja4.doces[1].preco
 												}
 											});
 
@@ -1923,7 +1923,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja4.doces[1].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[1].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[1].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja4.doces[1].preco * Number(ce.content)
 													}
 												});
@@ -2025,7 +2025,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja4.doces[2].preco
+													bank: server.bank += loja4.doces[2].preco
 												}
 											});
 
@@ -2036,7 +2036,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja4.doces[2].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[2].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[2].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja4.doces[2].preco * Number(ce.content)
 													}
 												});
@@ -2138,7 +2138,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja4.doces[3].preco
+													bank: server.bank += loja4.doces[3].preco
 												}
 											});
 
@@ -2149,7 +2149,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja4.doces[3].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[3].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[3].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja4.doces[3].preco * Number(ce.content)
 													}
 												});
@@ -2251,7 +2251,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja4.doces[4].preco
+													bank: server.bank += loja4.doces[4].preco
 												}
 											});
 
@@ -2262,7 +2262,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja4.doces[4].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[4].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja4.doces[4].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja4.doces[4].preco * Number(ce.content)
 													}
 												});
@@ -2446,7 +2446,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja5.utilidades[0].preco
+													bank: server.bank += loja5.utilidades[0].preco
 												}
 											});
 
@@ -2457,7 +2457,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja5.utilidades[0].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja5.utilidades[0].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja5.utilidades[0].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja5.utilidades[0].preco * Number(ce.content)
 													}
 												});
@@ -2573,7 +2573,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja5.utilidades[1].preco
+													bank: server.bank += loja5.utilidades[1].preco
 												}
 											});
 
@@ -2584,7 +2584,7 @@ module.exports = class Loja extends Command {
 													'inventory.item': loja5.utilidades[1].item
 												}, {
 													$set: {
-														'inventory.$.quantia': user.inventory.find((a) => a.item === loja5.utilidades[1].item).quantia + Number(ce.content),
+														'inventory.$.quantia': user.inventory.find((a) => a.item === loja5.utilidades[1].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja5.utilidades[1].preco * Number(ce.content)
 													}
 												});
@@ -2680,7 +2680,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja5.utilidades[2].preco
+													bank: server.bank += loja5.utilidades[2].preco
 												}
 											});
 
@@ -2691,7 +2691,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja5.utilidades[2].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[2].item).quantia + Number(ce.content),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[2].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja5.utilidades[2].preco * Number(ce.content)
 													}
 												});
@@ -2752,7 +2752,7 @@ module.exports = class Loja extends Command {
 										_id: message.guild.id
 									}, {
 										$set: {
-											bank: server.bank + loja5.utilidades[3].preco
+											bank: server.bank += loja5.utilidades[3].preco
 										}
 									});
 
@@ -2840,7 +2840,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja5.utilidades[4].preco
+													bank: server.bank += loja5.utilidades[4].preco
 												}
 											});
 
@@ -2851,7 +2851,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja5.utilidades[4].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[4].item).quantia + Number(ce.content),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[4].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja5.utilidades[4].preco * Number(ce.content)
 													}
 												});
@@ -2956,7 +2956,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja5.utilidades[5].preco
+													bank: server.bank += loja5.utilidades[5].preco
 												}
 											});
 
@@ -2967,7 +2967,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja5.utilidades[5].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[5].item).quantia + Number(ce.content),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja5.utilidades[5].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja5.utilidades[5].preco * Number(ce.content)
 													}
 												});
@@ -3138,7 +3138,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja6.pm[0].preco
+													bank: server.bank += loja6.pm[0].preco
 												}
 											});
 
@@ -3149,7 +3149,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja6.pm[0].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[0].item).quantia + Number(ce.content),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[0].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja6.pm[0].preco * Number(ce.content)
 													}
 												});
@@ -3263,7 +3263,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja6.pm[1].preco
+													bank: server.bank += loja6.pm[1].preco
 												}
 											});
 
@@ -3274,7 +3274,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja6.pm[1].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[1].item).quantia + Number(ce.content),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[1].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja6.pm[1].preco * Number(ce.content)
 													}
 												});
@@ -3388,7 +3388,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja6.pm[2].preco
+													bank: server.bank += loja6.pm[2].preco
 												}
 											});
 
@@ -3399,7 +3399,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja6.pm[2].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[2].item).quantia + Number(ce.content),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[2].item).quantia += Number(ce.content),
 														saldo: user.saldo -= loja6.pm[2].preco * Number(ce.content)
 													}
 												});
@@ -3501,7 +3501,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja6.pm[3].preco
+													bank: server.bank += loja6.pm[3].preco
 												}
 											});
 
@@ -3512,7 +3512,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja6.pm[3].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[3].item).quantia + Number(ce.content * 5),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[3].item).quantia += Number(ce.content * 5),
 														saldo: user.saldo -= loja6.pm[3].preco * Number(ce.content)
 													}
 												});
@@ -3614,7 +3614,7 @@ module.exports = class Loja extends Command {
 												_id: message.guild.id
 											}, {
 												$set: {
-													bank: server.bank + loja6.pm[4].preco
+													bank: server.bank += loja6.pm[4].preco
 												}
 											});
 
@@ -3625,7 +3625,7 @@ module.exports = class Loja extends Command {
 													'mochila.item': loja6.pm[4].item
 												}, {
 													$set: {
-														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[4].item).quantia + Number(ce.content * 5),
+														'mochila.$.quantia': user.mochila.find((a) => a.item === loja6.pm[4].item).quantia += Number(ce.content * 5),
 														saldo: user.saldo -= loja6.pm[4].preco * Number(ce.content)
 													}
 												});
@@ -3757,7 +3757,7 @@ module.exports = class Loja extends Command {
 										_id: message.guild.id
 									}, {
 										$set: {
-											bank: server.bank + loja7.bitcoin[0].preco
+											bank: server.bank += loja7.bitcoin[0].preco
 										}
 									});
 
@@ -3801,7 +3801,7 @@ module.exports = class Loja extends Command {
 								} else if (user.bitcoin < loja7.bitcoin[1].preco) {
 									return message.reply('você não tem BitCoin suficiente para comprar este item! ||"SEU(A) POBRE!!!!!"||');
 								} else {
-									message.reply(`você comprou \`x${Number(ce.content)}\` **${loja7.bitcoin[1].preco}(s)** com sucesso!`);
+									message.reply(`você comprou \`x1\` **${loja7.bitcoin[1].preco}(s)** com sucesso!`);
 
 									const server = await this.client.database.guilds.findOne({
 										_id: message.guild.id
@@ -3811,7 +3811,7 @@ module.exports = class Loja extends Command {
 										_id: message.guild.id
 									}, {
 										$set: {
-											bank: server.bank + loja7.bitcoin[1].preco
+											bank: server.bank += loja7.bitcoin[1].preco
 										}
 									});
 
@@ -4008,7 +4008,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[0].preco
+												bank: server.bank += loja2.sementes[0].preco
 											}
 										});
 
@@ -4019,7 +4019,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[0].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[0].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[0].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[0].preco * Number(ce.content)
 												}
 											});
@@ -4117,7 +4117,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[1].preco
+												bank: server.bank += loja2.sementes[1].preco
 											}
 										});
 
@@ -4128,7 +4128,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[1].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[1].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[1].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[1].preco * Number(ce.content)
 												}
 											});
@@ -4226,7 +4226,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[2].preco
+												bank: server.bank += loja2.sementes[2].preco
 											}
 										});
 
@@ -4237,7 +4237,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[2].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[2].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[2].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[2].preco * Number(ce.content)
 												}
 											});
@@ -4335,7 +4335,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[3].preco
+												bank: server.bank += loja2.sementes[3].preco
 											}
 										});
 
@@ -4346,7 +4346,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[3].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[3].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[3].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[3].preco * Number(ce.content)
 												}
 											});
@@ -4444,7 +4444,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[4].preco
+												bank: server.bank += loja2.sementes[4].preco
 											}
 										});
 
@@ -4455,7 +4455,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[4].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[4].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[4].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[4].preco * Number(ce.content)
 												}
 											});
@@ -4553,7 +4553,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[5].preco
+												bank: server.bank += loja2.sementes[5].preco
 											}
 										});
 
@@ -4564,7 +4564,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[5].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[5].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[5].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[5].preco * Number(ce.content)
 												}
 											});
@@ -4662,7 +4662,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[6].preco
+												bank: server.bank += loja2.sementes[6].preco
 											}
 										});
 
@@ -4673,7 +4673,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[6].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[6].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[6].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[6].preco * Number(ce.content)
 												}
 											});
@@ -4771,7 +4771,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[7].preco
+												bank: server.bank += loja2.sementes[7].preco
 											}
 										});
 
@@ -4782,7 +4782,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[7].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[7].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[7].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[7].preco * Number(ce.content)
 												}
 											});
@@ -4930,7 +4930,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[8].preco
+												bank: server.bank += loja2.sementes[8].preco
 											}
 										});
 
@@ -4941,7 +4941,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[8].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[8].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[8].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[8].preco * Number(ce.content)
 												}
 											});
@@ -5039,7 +5039,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[9].preco
+												bank: server.bank += loja2.sementes[9].preco
 											}
 										});
 
@@ -5050,7 +5050,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[9].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[9].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[9].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[9].preco * Number(ce.content)
 												}
 											});
@@ -5148,7 +5148,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[10].preco
+												bank: server.bank += loja2.sementes[10].preco
 											}
 										});
 
@@ -5159,7 +5159,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[10].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[10].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[10].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[10].preco * Number(ce.content)
 												}
 											});
@@ -5257,7 +5257,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[11].preco
+												bank: server.bank += loja2.sementes[11].preco
 											}
 										});
 
@@ -5268,7 +5268,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[11].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[11].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[11].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[11].preco * Number(ce.content)
 												}
 											});
@@ -5366,7 +5366,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[12].preco
+												bank: server.bank += loja2.sementes[12].preco
 											}
 										});
 
@@ -5377,7 +5377,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[12].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[12].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[12].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[12].preco * Number(ce.content)
 												}
 											});
@@ -5475,7 +5475,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[13].preco
+												bank: server.bank += loja2.sementes[13].preco
 											}
 										});
 
@@ -5486,7 +5486,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[13].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[13].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[13].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[13].preco * Number(ce.content)
 												}
 											});
@@ -5584,7 +5584,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[14].preco
+												bank: server.bank += loja2.sementes[14].preco
 											}
 										});
 
@@ -5595,7 +5595,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[14].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[14].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[14].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[14].preco * Number(ce.content)
 												}
 											});
@@ -5693,7 +5693,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja2.sementes[15].preco
+												bank: server.bank += loja2.sementes[15].preco
 											}
 										});
 
@@ -5704,7 +5704,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja2.sementes[15].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[15].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja2.sementes[15].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja2.sementes[15].preco * Number(ce.content)
 												}
 											});
@@ -5867,7 +5867,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja3.utilidadesAgro[0].preco
+												bank: server.bank += loja3.utilidadesAgro[0].preco
 											}
 										});
 
@@ -5878,7 +5878,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja3.utilidadesAgro[0].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[0].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[0].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja3.utilidadesAgro[0].preco * Number(ce.content)
 												}
 											});
@@ -5976,7 +5976,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja3.utilidadesAgro[1].preco
+												bank: server.bank += loja3.utilidadesAgro[1].preco
 											}
 										});
 
@@ -5987,7 +5987,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja3.utilidadesAgro[1].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[1].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[1].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja3.utilidadesAgro[1].preco * Number(ce.content)
 												}
 											});
@@ -6085,7 +6085,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja3.utilidadesAgro[2].preco
+												bank: server.bank += loja3.utilidadesAgro[2].preco
 											}
 										});
 
@@ -6096,7 +6096,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja3.utilidadesAgro[2].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[2].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[2].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja3.utilidadesAgro[2].preco * Number(ce.content)
 												}
 											});
@@ -6194,7 +6194,7 @@ module.exports = class Loja extends Command {
 											_id: message.guild.id
 										}, {
 											$set: {
-												bank: server.bank + loja3.utilidadesAgro[3].preco
+												bank: server.bank += loja3.utilidadesAgro[3].preco
 											}
 										});
 
@@ -6205,7 +6205,7 @@ module.exports = class Loja extends Command {
 												'inventory.item': loja3.utilidadesAgro[3].item
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[3].item).quantia + Number(ce.content),
+													'inventory.$.quantia': user.inventory.find((a) => a.item === loja3.utilidadesAgro[3].item).quantia += Number(ce.content),
 													saldo: user.saldo -= loja3.utilidadesAgro[3].preco * Number(ce.content)
 												}
 											});
@@ -6262,7 +6262,7 @@ module.exports = class Loja extends Command {
 							// 		_id: message.guild.id
 							// 	}, {
 							// 		$set: {
-							// 			bank: server.bank + loja3.utilidadesAgro[4].preco
+							// 			bank: server.bank += loja3.utilidadesAgro[4].preco
 							// 		}
 							// 	});
 
@@ -6404,7 +6404,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia * loja4.sementes[0].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[0].item.replace('Semente de ', '')).quantia * loja4.sementes[0].venda
 									}
 								});
 
@@ -6437,7 +6437,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia * loja4.sementes[1].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[1].item.replace('Semente de ', '')).quantia * loja4.sementes[1].venda
 									}
 								});
 
@@ -6470,7 +6470,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia * loja4.sementes[2].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[2].item.replace('Semente de ', '')).quantia * loja4.sementes[2].venda
 									}
 								});
 
@@ -6503,7 +6503,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia * loja4.sementes[3].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[3].item.replace('Semente de ', '')).quantia * loja4.sementes[3].venda
 									}
 								});
 
@@ -6536,7 +6536,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia * loja4.sementes[4].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[4].item.replace('Semente de ', '')).quantia * loja4.sementes[4].venda
 									}
 								});
 
@@ -6569,7 +6569,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia * loja4.sementes[5].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[5].item.replace('Semente de ', '')).quantia * loja4.sementes[5].venda
 									}
 								});
 
@@ -6602,7 +6602,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia * loja4.sementes[6].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[6].item.replace('Semente de ', '')).quantia * loja4.sementes[6].venda
 									}
 								});
 
@@ -6635,7 +6635,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia * loja4.sementes[7].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[7].item.replace('Semente de ', '')).quantia * loja4.sementes[7].venda
 									}
 								});
 
@@ -6718,7 +6718,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia * loja4.sementes[8].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[8].item.replace('Semente de ', '')).quantia * loja4.sementes[8].venda
 									}
 								});
 
@@ -6751,7 +6751,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia * loja4.sementes[9].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[9].item.replace('Semente de ', '')).quantia * loja4.sementes[9].venda
 									}
 								});
 
@@ -6784,7 +6784,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia * loja4.sementes[10].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[10].item.replace('Semente de ', '')).quantia * loja4.sementes[10].venda
 									}
 								});
 
@@ -6817,7 +6817,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia * loja4.sementes[11].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[11].item.replace('Semente de ', '')).quantia * loja4.sementes[11].venda
 									}
 								});
 
@@ -6850,7 +6850,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia * loja4.sementes[12].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[12].item.replace('Semente de ', '')).quantia * loja4.sementes[12].venda
 									}
 								});
 
@@ -6883,7 +6883,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia * loja4.sementes[13].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[13].item.replace('Semente de ', '')).quantia * loja4.sementes[13].venda
 									}
 								});
 
@@ -6916,7 +6916,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia * loja4.sementes[14].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[14].item.replace('Semente de ', '')).quantia * loja4.sementes[14].venda
 									}
 								});
 
@@ -6949,7 +6949,7 @@ module.exports = class Loja extends Command {
 									guildId: message.guild.id
 								}, {
 									$set: {
-										saldo: user.saldo + user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia * loja4.sementes[15].venda
+										saldo: user.saldo += user.caixote.find((a) => a.item === loja4.sementes[15].item.replace('Semente de ', '')).quantia * loja4.sementes[15].venda
 									}
 								});
 

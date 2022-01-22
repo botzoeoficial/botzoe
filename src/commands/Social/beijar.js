@@ -106,20 +106,11 @@ module.exports = class Beijar extends Command {
 					if (b.id === 'aceitar') {
 						b.reply.defer();
 
-						const apikey = 'LUU697F9Y5BI';
-						const lmt = 50;
-
-						const search_term = 'anime kiss';
-
-						const search_url = `https://g.tenor.com/v1/search?q=${search_term}&key=${apikey}&limit=${lmt}&contentfilter=off`;
-
-						const body = await fetch(search_url).then((res) => res.json());
-
-						const random = Math.floor(Math.random() * body.results.length);
+						const body = await fetch('https://purrbot.site/api/img/sfw/kiss/gif').then((res) => res.json());
 
 						const embedSim = new ClientEmbed(author)
 							.setDescription(`**${author} beijou ${member}!**`)
-							.setImage(body.results[random].media[0].gif.url);
+							.setImage(body.link);
 
 						message.channel.send(`${author} e ${member}`, embedSim);
 

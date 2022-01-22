@@ -52,6 +52,10 @@ module.exports = class Removerpolicial extends Command {
 
 		if (!member) return message.reply('você precisa mencionar o usuário que é Policial.');
 
+		if (member.user.bot) return message.reply('um Bot nunca será **Policial** do servidor.');
+
+		if (member.id === server.cidade.delegado) return message.reply('um Delegado nunca será **Policial** do servidor.');
+
 		const user2 = await this.client.database.users.findOne({
 			userId: member.id,
 			guildId: message.guild.id

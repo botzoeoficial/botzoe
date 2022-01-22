@@ -57,6 +57,15 @@ module.exports = class Fabricarmunicao extends Command {
 			guildId: message.guild.id
 		});
 
+		await this.client.database.users.findOneAndUpdate({
+			userId: author.id,
+			guildId: message.guild.id
+		}, {
+			$set: {
+				fabricando: true
+			}
+		});
+
 		if (userAuthor.fabricagem.fabricandoMunicao) return message.reply(`você já está fabricando algumas **munições**. Use o comando \`${prefix}fabricando\` para ver qual a **munição** que está sendo fabricada!`);
 
 		const municoes = require('../../json/municoes.json');
@@ -120,6 +129,16 @@ module.exports = class Fabricarmunicao extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							fabricando: false
+						}
+					});
+
 					return message.reply(`seleção cancelada com sucesso!`);
 				} else {
 					const selected = Number(ce.content - 1);
@@ -179,11 +198,30 @@ module.exports = class Fabricarmunicao extends Command {
 									sim.stop();
 									sim2.stop();
 									msg2.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											fabricando: false
+										}
+									});
+
 									return message.reply(`seleção cancelada com sucesso!`);
 								} else if (parseInt(ce2.content) && parseInt(ce2.content) < 0) {
 									sim2.stop();
 									sim.stop();
 									msg2.delete();
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											fabricando: false
+										}
+									});
 
 									return message.reply('coloque uma quantia válida. Por favor, envie o comando novamente!').then(ba => ba.delete({
 										timeout: 6000
@@ -200,6 +238,15 @@ module.exports = class Fabricarmunicao extends Command {
 										msg.delete();
 										ce2.delete();
 
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												fabricando: false
+											}
+										});
+
 										return message.reply(`para fabricar essa munição \`${ce2.content}\` vezes, você irá precisar de:\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nCobre: \`x${findSelectedEvento.cobre * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Cobre').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha * Number(ce2.content)) {
 										sim.stop();
@@ -207,12 +254,30 @@ module.exports = class Fabricarmunicao extends Command {
 										msg.delete();
 										ce2.delete();
 
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												fabricando: false
+											}
+										});
+
 										return message.reply(`para fabricar essa munição \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nCobre: \`x${findSelectedEvento.cobre * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Cobre').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
 									} else if (user3.inventory.find((a) => a.item === 'Cobre').quantia < findSelectedEvento.cobre * Number(ce2.content)) {
 										sim.stop();
 										sim2.stop();
 										msg.delete();
 										ce2.delete();
+
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$set: {
+												fabricando: false
+											}
+										});
 
 										return message.reply(`para fabricar essa munição \`${ce2.content}\` vezes, você irá precisar de:\nCobre: \`x${findSelectedEvento.cobre * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Cobre').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
 									} else {
@@ -238,6 +303,15 @@ module.exports = class Fabricarmunicao extends Command {
 											collectorBotoes.on('collect', async (b) => {
 												if (b.id === 'aceitar') {
 													b.reply.defer();
+
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															fabricando: false
+														}
+													});
 
 													let time = 0;
 
@@ -2176,6 +2250,15 @@ module.exports = class Fabricarmunicao extends Command {
 												} else if (b.id === 'negar') {
 													b.reply.defer();
 
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															fabricando: false
+														}
+													});
+
 													return msg.delete();
 												}
 											});
@@ -2188,7 +2271,17 @@ module.exports = class Fabricarmunicao extends Command {
 								if (reason === 'time') {
 									sim2.stop();
 									msg2.delete();
-									return message.reply('você demorou de mais para escolher a arma. Use o comando novamente!');
+
+									await this.client.database.users.findOneAndUpdate({
+										userId: author.id,
+										guildId: message.guild.id
+									}, {
+										$set: {
+											fabricando: false
+										}
+									});
+
+									return message.reply('você demorou de mais para escolher a munição. Use o comando novamente!');
 								}
 							});
 						});
@@ -2200,6 +2293,16 @@ module.exports = class Fabricarmunicao extends Command {
 				if (reason === 'time') {
 					sim.stop();
 					msg.delete();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							fabricando: false
+						}
+					});
+
 					return message.reply('você demorou demais para responder. Use o comando novamente!');
 				}
 			});

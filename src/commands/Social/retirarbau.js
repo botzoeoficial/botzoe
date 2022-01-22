@@ -48,6 +48,8 @@ module.exports = class Retirarbau extends Command {
 			guildId: message.guild.id
 		});
 
+		if (user.fabricando) return message.reply('você está fabricando algo, por tanto, não é possível retirar algum item do baú!');
+
 		if (user.casas.tipo === '') return message.reply(`você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`);
 
 		const embed = new ClientEmbed(author)
@@ -73,13 +75,15 @@ module.exports = class Retirarbau extends Command {
 						guildId: message.guild.id
 					});
 
-					const itensInvFilter = user2.casas.bau.filter((a) => ['Água', 'Suco', 'Refrigerante', 'Café', 'Energético', 'Cerveja', 'Sanduíche', 'Pizza', 'Batata Frita', 'Misto Quente', 'Carne', 'Tacos', 'Miojo', 'Rosquinha', 'Chocolate', 'Pipoca', 'Bolo', 'Cookie', 'Remédio', 'Vara de Pesca', 'Transferir', 'Semente de Maçã', 'Semente de Banana', 'Semente de Laranja', 'Semente de Limão', 'Semente de Pêra', 'Semente de Morango', 'Semente de Tomate', 'Semente de Abacaxi', 'Semente de Melão', 'Semente de Manga', 'Semente de Pêssego', 'Semente de Cereja', 'Semente de Melancia', 'Semente de Café', 'Semente de Milho', 'Semente de Arroz', 'Adubo', 'Fertilizante', 'Irrigação', 'Aluguel Trator', 'Agricultor', 'Alumínio', 'Borracha', 'Caulim', 'Cobre', 'Ferro', 'Plástico', 'Prata'].includes(a.item));
+					const itensInvFilter = user2.casas.bau.filter((a) => ['Água', 'Suco', 'Refrigerante', 'Café', 'Energético', 'Cerveja', 'Sanduíche', 'Pizza', 'Batata Frita', 'Misto Quente', 'Carne', 'Tacos', 'Miojo', 'Rosquinha', 'Chocolate', 'Pipoca', 'Bolo', 'Cookie', 'Remédio', 'Vara de Pesca', 'Transferir', 'Semente de Maçã', 'Semente de Banana', 'Semente de Laranja', 'Semente de Limão', 'Semente de Pêra', 'Semente de Morango', 'Semente de Tomate', 'Semente de Abacaxi', 'Semente de Melão', 'Semente de Manga', 'Semente de Pêssego', 'Semente de Cereja', 'Semente de Melancia', 'Semente de Café', 'Semente de Milho', 'Semente de Arroz', 'Adubo', 'Fertilizante', 'Irrigação', 'Aluguel Trator', 'Agricultor', 'Alumínio', 'Borracha', 'Caulim', 'Cobre', 'Ferro', 'Plástico', 'Prata', 'Colete à Prova de Balas'].includes(a.item));
 
 					const itensMap = itensInvFilter.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
 					embed.setDescription(`Qual item você deseja colocar no Inventário?\n\n${itensMap || '**Você não possui item de Inventário no baú.**'}`);
 
 					msg.edit(author, embed).then(async (msg1) => {
+						if (!itensMap) return;
+
 						for (const emoji of itensInvFilter.map((es) => es.id)) await msg1.react(emoji);
 
 						const sim = msg1.createReactionCollector((reaction, user3) => itensInvFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id, {
@@ -87,57 +91,7 @@ module.exports = class Retirarbau extends Command {
 							max: 1
 						});
 
-						const objeto = {
-							'897849546409906228': 'Água',
-							'897849547294916638': 'Suco',
-							'891034945085120572': 'Refrigerante',
-							'897849547244593162': 'Café',
-							'891035343262990366': 'Energético',
-							'897849547085217822': 'Cerveja',
-							'897849546695147551': 'Sanduíche',
-							'897849547089399848': 'Pizza',
-							'897849547957612574': 'Batata Frita',
-							'897849547143913472': 'Misto Quente',
-							'897849547538186300': 'Carne',
-							'897849547206840410': 'Tacos',
-							'897849546783223829': 'Miojo',
-							'897849546992930867': 'Rosquinha',
-							'897849546804174848': 'Chocolate',
-							'897849547215212584': 'Pipoca',
-							'897849546913247292': 'Bolo',
-							'897849546720305175': 'Cookie',
-							'897849546862919740': 'Remédio',
-							'891297733774819328': 'Vara de Pesca',
-							'900544627097108531': 'Transferir',
-							'911706991783735306': 'Semente de Maçã',
-							'911706991297187851': 'Semente de Banana',
-							'911706992056365176': 'Semente de Laranja',
-							'911706991217496075': 'Semente de Limão',
-							'911706991796301874': 'Semente de Pêra',
-							'911706991280410755': 'Semente de Morango',
-							'911706991599173653': 'Semente de Tomate',
-							'911706991804678144': 'Semente de Abacaxi',
-							'911706991766933574': 'Semente de Melão',
-							'911706991594995732': 'Semente de Manga',
-							'911706991632736316': 'Semente de Pêssego',
-							'911706991934734406': 'Semente de Cereja',
-							'911706991808884776': 'Semente de Melancia',
-							'911706991615950898': 'Semente de Café',
-							'911706992400298056': 'Semente de Milho',
-							'911706991670493214': 'Semente de Arroz',
-							'898326104782299166': 'Adubo',
-							'898326105126215701': 'Fertilizante',
-							'898326105361113099': 'Irrigação',
-							'911776845144416287': 'Aluguel Trator',
-							'911776844724969532': 'Agricultor',
-							'918835445780074507': 'Alumínio',
-							'918835444794400799': 'Borracha',
-							'918835445700378684': 'Caulim',
-							'918835446040133652': 'Cobre',
-							'918835445746532412': 'Ferro',
-							'918835445838774322': 'Plástico',
-							'918835445939458088': 'Prata'
-						};
+						const objeto = require('../../json/inventario.json');
 
 						sim.on('collect', async (collected) => {
 							sim.stop();
@@ -169,44 +123,109 @@ module.exports = class Retirarbau extends Command {
 								}
 							}
 
-							msg1.delete();
-							message.reply(`item **${itemEmoji}** enviado com sucesso para seu Inventário!`);
+							embed.setDescription(`Qual a quantidade de **${itemEmoji}** você deseja enviar para o Inventário?`);
 
-							if (user4.inventory.find((a) => a.item === itemEmoji)) {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id,
-									'inventory.item': itemEmoji
-								}, {
-									$set: {
-										'inventory.$.quantia': user4.inventory.find((a) => a.item === itemEmoji).quantia + user4.casas.bau.find((a) => a.item === itemEmoji).quantia
-									}
+							msg.edit(author, embed).then(async (msg2) => {
+								const resposta = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+									time: 120000
 								});
-							} else {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$push: {
-										inventory: {
-											item: itemEmoji,
-											emoji: user4.casas.bau.find((a) => a.item === itemEmoji).emoji,
-											id: user4.casas.bau.find((a) => a.item === itemEmoji).id,
-											quantia: user4.casas.bau.find((a) => a.item === itemEmoji).quantia
+
+								resposta.on('collect', async (ce2) => {
+									if (Number(ce2.content) <= 0) {
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply('você precisa enviar uma quantia válida maior que **0*. Por favor, use o comando novamente!');
+									} else if (Number(ce2.content) > user4.casas.bau.find((a) => a.item === itemEmoji).quantia) {
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, use o comando novamente!`);
+									} else {
+										resposta.stop();
+										sim.stop();
+										msg.delete();
+
+										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para seu Inventário com sucesso!`);
+
+										if (Number(ce2.content) === user4.casas.bau.find((a) => a.item === itemEmoji).quantia) {
+											if (user4.inventory.find((a) => a.item === itemEmoji)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'inventory.item': itemEmoji
+												}, {
+													$set: {
+														'inventory.$.quantia': user4.inventory.find((a) => a.item === itemEmoji).quantia += user4.casas.bau.find((a) => a.item === itemEmoji).quantia
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														inventory: {
+															item: itemEmoji,
+															emoji: user4.casas.bau.find((a) => a.item === itemEmoji).emoji,
+															id: user4.casas.bau.find((a) => a.item === itemEmoji).id,
+															quantia: user4.casas.bau.find((a) => a.item === itemEmoji).quantia
+														}
+													}
+												});
+											}
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$pull: {
+													'casas.bau': {
+														item: itemEmoji
+													}
+												}
+											});
+										} else {
+											if (user4.inventory.find((a) => a.item === itemEmoji)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'inventory.item': itemEmoji
+												}, {
+													$set: {
+														'inventory.$.quantia': user4.inventory.find((a) => a.item === itemEmoji).quantia += Number(ce2.content)
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														inventory: {
+															item: itemEmoji,
+															emoji: user4.casas.bau.find((a) => a.item === itemEmoji).emoji,
+															id: user4.casas.bau.find((a) => a.item === itemEmoji).id,
+															quantia: Number(ce2.content)
+														}
+													}
+												});
+											}
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id,
+												'casas.bau.item': itemEmoji
+											}, {
+												$set: {
+													'casas.bau.$.quantia': user4.casas.bau.find((a) => a.item === itemEmoji).quantia -= Number(ce2.content)
+												}
+											});
 										}
 									}
-								});
-							}
-
-							return await this.client.database.users.findOneAndUpdate({
-								userId: author.id,
-								guildId: message.guild.id
-							}, {
-								$pull: {
-									'casas.bau': {
-										item: itemEmoji
-									}
-								}
+								})
 							});
 						});
 					});
@@ -219,6 +238,12 @@ module.exports = class Retirarbau extends Command {
 						guildId: message.guild.id
 					});
 
+					if (!user2.isMochila) {
+						collector.stop();
+						msg.delete();
+						return message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e Compre uma!');
+					}
+
 					const itensMochilaFilter = user2.casas.bau.filter((a) => ['Máscara', 'Porte de Armas', 'Algemas', 'MP5', 'G18', 'Munição Pistola', 'Munição Metralhadora', 'Ak-47', 'UMP', 'ACR', 'KNT-308', 'Desert Eagle', 'Revolver 38', 'Chave Micha', 'Maconha', 'Cocaína', 'LSD', 'Metanfetamina', 'Munição KNT'].includes(a.item));
 
 					const itensMap = itensMochilaFilter.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
@@ -226,6 +251,8 @@ module.exports = class Retirarbau extends Command {
 					embed.setDescription(`Qual item você deseja colocar na Mochila?\n\n${itensMap || '**Você não possui item de Mochila no baú.**'}`);
 
 					msg.edit(author, embed).then(async (msg1) => {
+						if (!itensMap) return;
+
 						for (const emoji of itensMochilaFilter.map((es) => es.id)) await msg1.react(emoji);
 
 						const sim = msg1.createReactionCollector((reaction, user3) => itensMochilaFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id, {
@@ -233,27 +260,7 @@ module.exports = class Retirarbau extends Command {
 							max: 1
 						});
 
-						const objeto = {
-							'898324362279669851': 'Máscara',
-							'899766443757928489': 'Porte de Armas',
-							'898326104413188157': 'Algemas',
-							'901117948180168724': 'MP5',
-							'901117282003075072': 'G18',
-							'905653668643241985': 'Munição Pistola',
-							'905653521846784080': 'Munição Metralhadora',
-							'901118225520136243': 'Ak-47',
-							'901117871764144200': 'UMP',
-							'901118143735402536': 'ACR',
-							'901118040245149736': 'KNT-308',
-							'901117192110739516': 'Desert Eagle',
-							'901117447065702501': 'Revolver 38',
-							'900544510365405214': 'Chave Micha',
-							'898326104866177084': 'Maconha',
-							'901118422774071326': 'Cocaína',
-							'901118376951304262': 'LSD',
-							'901118279530217552': 'Metanfetamina',
-							'905653583171706980': 'Munição KNT'
-						};
+						const objeto = require('../../json/mochila.json');
 
 						sim.on('collect', async (collected) => {
 							sim.stop();
@@ -265,13 +272,6 @@ module.exports = class Retirarbau extends Command {
 								guildId: message.guild.id
 							});
 
-							if (!user5.isMochila) {
-								collector.stop();
-								ce.delete();
-								msg1.delete();
-								return message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e Compre uma!');
-							}
-
 							if (user5.mochila.length > 0) {
 								if (user5.mochila.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
 									msg1.delete();
@@ -282,44 +282,109 @@ module.exports = class Retirarbau extends Command {
 								}
 							}
 
-							msg1.delete();
-							message.reply(`item **${itemEmoji2}** enviado com sucesso para sua Mochila!`);
+							embed.setDescription(`Qual a quantidade de **${itemEmoji2}** você deseja enviar para a Mochila?`);
 
-							if (user5.mochila.find((a) => a.item === itemEmoji2)) {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id,
-									'mochila.item': itemEmoji2
-								}, {
-									$set: {
-										'mochila.$.quantia': user5.mochila.find((a) => a.item === itemEmoji2).quantia + user5.casas.bau.find((a) => a.item === itemEmoji2).quantia
-									}
+							msg.edit(author, embed).then(async (msg2) => {
+								const resposta = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+									time: 120000
 								});
-							} else {
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$push: {
-										mochila: {
-											item: itemEmoji2,
-											emoji: user5.casas.bau.find((a) => a.item === itemEmoji2).emoji,
-											id: user5.casas.bau.find((a) => a.item === itemEmoji2).id,
-											quantia: user5.casas.bau.find((a) => a.item === itemEmoji2).quantia
+
+								resposta.on('collect', async (ce2) => {
+									if (Number(ce2.content) <= 0) {
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply('você precisa enviar uma quantia válida maior que **0*. Por favor, use o comando novamente!');
+									} else if (Number(ce2.content) > user5.casas.bau.find((a) => a.item === itemEmoji2).quantia) {
+										ce2.delete();
+										resposta.stop();
+										msg.delete();
+
+										return message.reply(`você não possui tudo isso de \`${itemEmoji2}\`. Por favor, use o comando novamente!`);
+									} else {
+										resposta.stop();
+										sim.stop();
+										msg.delete();
+
+										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji2}\` para sua Mochila com sucesso!`);
+
+										if (Number(ce2.content) === user5.casas.bau.find((a) => a.item === itemEmoji2).quantia) {
+											if (user5.mochila.find((a) => a.item === itemEmoji2)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'mochila.item': itemEmoji2
+												}, {
+													$set: {
+														'mochila.$.quantia': user5.mochila.find((a) => a.item === itemEmoji2).quantia += user5.casas.bau.find((a) => a.item === itemEmoji2).quantia
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														mochila: {
+															item: itemEmoji2,
+															emoji: user5.casas.bau.find((a) => a.item === itemEmoji2).emoji,
+															id: user5.casas.bau.find((a) => a.item === itemEmoji2).id,
+															quantia: user5.casas.bau.find((a) => a.item === itemEmoji2).quantia
+														}
+													}
+												});
+											}
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id
+											}, {
+												$pull: {
+													'casas.bau': {
+														item: itemEmoji2
+													}
+												}
+											});
+										} else {
+											if (user5.mochila.find((a) => a.item === itemEmoji2)) {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id,
+													'mochila.item': itemEmoji2
+												}, {
+													$set: {
+														'mochila.$.quantia': user5.mochila.find((a) => a.item === itemEmoji2).quantia += Number(ce2.content)
+													}
+												});
+											} else {
+												await this.client.database.users.findOneAndUpdate({
+													userId: author.id,
+													guildId: message.guild.id
+												}, {
+													$push: {
+														mochila: {
+															item: itemEmoji2,
+															emoji: user5.casas.bau.find((a) => a.item === itemEmoji2).emoji,
+															id: user5.casas.bau.find((a) => a.item === itemEmoji2).id,
+															quantia: Number(ce2.content)
+														}
+													}
+												});
+											}
+
+											await this.client.database.users.findOneAndUpdate({
+												userId: author.id,
+												guildId: message.guild.id,
+												'casas.bau.item': itemEmoji2
+											}, {
+												$set: {
+													'casas.bau.$.quantia': user5.casas.bau.find((a) => a.item === itemEmoji2).quantia -= Number(ce2.content)
+												}
+											});
 										}
 									}
-								});
-							}
-
-							return await this.client.database.users.findOneAndUpdate({
-								userId: author.id,
-								guildId: message.guild.id
-							}, {
-								$pull: {
-									'casas.bau': {
-										item: itemEmoji2
-									}
-								}
+								})
 							});
 						});
 					});

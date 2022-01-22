@@ -56,7 +56,7 @@ module.exports = class Mochila extends Command {
 			arma2 = '';
 		}
 
-		const itens = user.mochila.filter((a) => a.item === user.armaEquipada).map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\` ${arma2}`).join('\n');
+		const itens = user.mochila.filter((a) => a.item === user.armaEquipada).map((as) => `\n**${as.emoji} | ${as.item}:** \`x${as.quantia}\` ${arma2}`).join('\n');
 		const itens2 = user.mochila.filter((a) => a.item !== user.armaEquipada).map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
 		const total = !user.mochila.length ? 0 : user.mochila.map((a) => a.quantia).reduce((a, b) => a + b);
@@ -67,7 +67,7 @@ module.exports = class Mochila extends Command {
 				dynamic: true,
 				format: 'png'
 			}))
-			.setDescription(`***Total de Itens na Mochila:*** \`${total}\`\n\n${`${itens}\n${itens2}` || 'Mochila Vazia.'}`);
+			.setDescription(`***Total de Itens na Mochila:*** \`${total}\`\n${`${itens}\n${itens2}` || 'Mochila Vazia.'}`);
 
 		message.channel.send(author, embed);
 	}

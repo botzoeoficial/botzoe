@@ -77,7 +77,7 @@ module.exports = class Cancelarvenda extends Command {
 						mochila: {
 							item: item.nome,
 							emoji: item.emoji.emoji,
-							id: item.emoji.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+							id: item.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 							quantia: Number(item.quantia)
 						}
 					}
@@ -92,7 +92,7 @@ module.exports = class Cancelarvenda extends Command {
 					mochila: {
 						item: item.nome,
 						emoji: item.emoji.emoji,
-						id: item.emoji.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+						id: item.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 						quantia: Number(item.quantia)
 					}
 				}

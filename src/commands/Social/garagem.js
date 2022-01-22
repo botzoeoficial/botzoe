@@ -123,8 +123,8 @@ module.exports = class Garagem extends Command {
 				} else if (b.id === 'ir') {
 					b.reply.defer();
 
-					if (pagina >= user.garagem.length) {
-						pagina = user.garagem.length;
+					if (pagina >= (user.garagem.length - 1)) {
+						pagina = (user.garagem.length - 1);
 					} else {
 						pagina++;
 					}
@@ -151,6 +151,15 @@ module.exports = class Garagem extends Command {
 					});
 				}
 			});
+
+			collectorEscolhas.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					return escolha.edit(author, {
+						embed: embed,
+						components: []
+					});
+				}
+			})
 		}
 	}
 

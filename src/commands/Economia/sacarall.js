@@ -41,7 +41,7 @@ module.exports = class Sacarall extends Command {
 		prefix,
 		author
 	}) {
-		let user = await this.client.database.users.findOne({
+		const user = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
@@ -51,11 +51,6 @@ module.exports = class Sacarall extends Command {
 		const embed = new ClientEmbed(author);
 
 		if (user.banco <= 0) return message.reply('você não tem dinheiro para sacar do banco.');
-
-		user = await this.client.database.users.findOne({
-			userId: author.id,
-			guildId: message.guild.id
-		});
 
 		embed.setDescription(`💵 | Você sacou **R$${Utils.numberFormat(Number(user.banco))},00** do banco com sucesso.`);
 

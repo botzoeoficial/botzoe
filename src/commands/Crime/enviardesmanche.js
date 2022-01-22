@@ -329,7 +329,7 @@ module.exports = class Enviardesmanche extends Command {
 			}, {
 				$pull: {
 					garagem: {
-						nome: carro.nome
+						placa: carro.placa
 					}
 				}
 			});

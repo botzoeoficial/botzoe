@@ -463,6 +463,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				embed.fields = [];
+
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.droga}**`, true);
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
@@ -1002,6 +1004,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				embed.fields = [];
+
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.arma}**`, true);
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
@@ -1524,6 +1528,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				embed.fields = [];
+
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.municao}**`, true);
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
@@ -2040,6 +2046,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				embed.fields = [];
+
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.chave}**`, true);
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
@@ -2578,6 +2586,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				embed.fields = [];
+
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.minerio}**`, true);
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);
@@ -3095,6 +3105,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				embed.fields = [];
+
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
 																				embed.addField(`Produto:`, `**${findSelectedEvento2.item}**`, true);
 																				embed.addField(`Quantia:`, `\`x${ce3.content}\``, true);

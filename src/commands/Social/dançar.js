@@ -4,6 +4,7 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
+const fetch = require('node-fetch');
 const {
 	MessageButton,
 	MessageActionRow
@@ -105,13 +106,11 @@ module.exports = class Dançar extends Command {
 					if (b.id === 'aceitar') {
 						b.reply.defer();
 
-						const dancas = require('../../json/dancar.json');
-
-						const random = Math.floor(Math.random() * dancas.length);
+						const body = await fetch('https://purrbot.site/api/img/sfw/dance/gif').then((res) => res.json());
 
 						const embedSim = new ClientEmbed(author)
 							.setDescription(`**${author} dançou com ${member}!**`)
-							.setImage(dancas[random]);
+							.setImage(body.link);
 
 						message.channel.send(`${author} e ${member}`, embedSim);
 

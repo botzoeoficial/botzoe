@@ -303,7 +303,7 @@ module.exports = class Roubarveículo extends Command {
 
 				return message.channel.send(author, embed);
 			} else {
-				const randomChance = Math.floor(Math.random() * 101);
+				const randomChance = author.id === '463421520686088192' ? Math.floor(Math.random() * 200) : Math.floor(Math.random() * 101);
 
 				if (randomChance >= 0 && randomChance < 51) {
 					const randomFrases = [
