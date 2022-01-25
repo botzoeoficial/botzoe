@@ -2870,11 +2870,22 @@ module.exports = class Loja extends Command {
 													},
 													$set: {
 														saldo: user.saldo -= loja5.utilidades[4].preco * Number(ce.content),
-														porteDeArmas: Date.now()
+														porteDeArmas: 0
 													}
 												});
 
 												user.save();
+
+												setTimeout(async () => {
+													await this.client.database.users.findOneAndUpdate({
+														userId: author.id,
+														guildId: message.guild.id
+													}, {
+														$set: {
+															porteDeArmas: Date.now()
+														}
+													});
+												}, 1000 * 60);
 											}
 										}
 									});

@@ -107,7 +107,7 @@ module.exports = class Prender extends Command {
 			}, {
 				$set: {
 					'prisao.isPreso': true,
-					'prisao.tempo': user2.prisao.tempo + Date.now(),
+					'prisao.tempo': Date.now(),
 					'prisao.prenderCmd': true,
 					'prisao.prenderMili': tempo
 				}

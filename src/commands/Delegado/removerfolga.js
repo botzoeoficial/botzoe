@@ -75,6 +75,9 @@ module.exports = class Removerfolga extends Command {
 				if (a.policia.isPolice) {
 					a.policia.prender = 0;
 					a.policia.revistar = 0;
+					a.policia.prenderRoubar = 0;
+					a.policia.prenderExportador = 0;
+					a.policia.isFolga = false;
 
 					a.save();
 				}

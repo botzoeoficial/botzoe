@@ -552,6 +552,8 @@ module.exports = class Cadastraritem extends Command {
 
 																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.droga);
 
+																					if (!findProduto) return;
+
 																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
@@ -1093,6 +1095,8 @@ module.exports = class Cadastraritem extends Command {
 
 																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.arma);
 
+																					if (!findProduto) return;
+
 																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
@@ -1617,6 +1621,8 @@ module.exports = class Cadastraritem extends Command {
 
 																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.municao);
 
+																					if (!findProduto) return;
+
 																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
@@ -2134,6 +2140,8 @@ module.exports = class Cadastraritem extends Command {
 																					});
 
 																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.chave);
+
+																					if (!findProduto) return;
 
 																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
@@ -2675,6 +2683,8 @@ module.exports = class Cadastraritem extends Command {
 
 																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.minerio);
 
+																					if (!findProduto) return;
+
 																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({
 																							userId: author.id,
@@ -3193,6 +3203,8 @@ module.exports = class Cadastraritem extends Command {
 																					});
 
 																					const findProduto = produto.mercadoNegro.find((a) => a.nome === findSelectedEvento2.item);
+
+																					if (!findProduto) return;
 
 																					if (!findProduto.comprado) {
 																						const user5 = await this.client.database.users.findOne({

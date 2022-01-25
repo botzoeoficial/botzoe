@@ -137,13 +137,13 @@ module.exports = class Transferiritem extends Command {
 
 										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para ${member} com sucesso!`);
 
-										if (user.inventory.find((a) => a.item === 'Transferir').quantia <= 1) {
+										if (user.mochila.find((a) => a.item === 'Transferir').quantia <= 1) {
 											await this.client.database.users.findOneAndUpdate({
 												userId: author.id,
 												guildId: message.guild.id
 											}, {
 												$pull: {
-													inventory: {
+													mochila: {
 														item: 'Transferir'
 													}
 												}
@@ -152,10 +152,10 @@ module.exports = class Transferiritem extends Command {
 											await this.client.database.users.findOneAndUpdate({
 												userId: author.id,
 												guildId: message.guild.id,
-												'inventory.item': 'Transferir'
+												'mochila.item': 'Transferir'
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === 'Transferir').quantia -= 1
+													'mochila.$.quantia': user.mochila.find((a) => a.item === 'Transferir').quantia -= 1
 												}
 											});
 										}
@@ -295,13 +295,13 @@ module.exports = class Transferiritem extends Command {
 
 										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para ${member} com sucesso!`);
 
-										if (user.inventory.find((a) => a.item === 'Transferir').quantia <= 1) {
+										if (user.mochila.find((a) => a.item === 'Transferir').quantia <= 1) {
 											await this.client.database.users.findOneAndUpdate({
 												userId: author.id,
 												guildId: message.guild.id
 											}, {
 												$pull: {
-													inventory: {
+													mochila: {
 														item: 'Transferir'
 													}
 												}
@@ -310,10 +310,10 @@ module.exports = class Transferiritem extends Command {
 											await this.client.database.users.findOneAndUpdate({
 												userId: author.id,
 												guildId: message.guild.id,
-												'inventory.item': 'Transferir'
+												'mochila.item': 'Transferir'
 											}, {
 												$set: {
-													'inventory.$.quantia': user.inventory.find((a) => a.item === 'Transferir').quantia -= 1
+													'mochila.$.quantia': user.mochila.find((a) => a.item === 'Transferir').quantia -= 1
 												}
 											});
 										}
