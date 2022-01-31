@@ -125,7 +125,7 @@ module.exports = class Revistar extends Command {
 			} else if (!temPorte && retiradosArmas.length) {
 				embedVerificacao.setTitle('🚨 | Itens Encontrados!');
 				embedVerificacao.setDescription(`Lista de Itens que foram retirados abaixo:\n\nOBS: Use agora o comando \`${prefix}prender ${member.id} <tempo>\``);
-				embedVerificacao.addField('Armas Retiradas:', retiradosArmas.map((a) => `**${a.emoji} | ${a.item}:** \`x${a.quantia}\``).join('\n'));
+				embedVerificacao.addField('Armas/Munições Retiradas:', retiradosArmas.map((a) => `**${a.emoji} | ${a.item}:** \`x${a.quantia}\``).join('\n'));
 
 				await this.client.database.users.findOneAndUpdate({
 					userId: member.id,

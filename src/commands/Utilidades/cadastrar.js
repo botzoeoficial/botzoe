@@ -311,6 +311,22 @@ module.exports = class Cadastrar extends Command {
 																													if (message.guild.id === '885645282614861854') {
 																														message.member.setNickname(String(msg20));
 																														message.member.roles.add('885645282660995086');
+
+																														await this.client.database.users.findOneAndUpdate({
+																															userId: author.id,
+																															guildId: message.guild.id
+																														}, {
+																															$set: {
+																																saldo: Number(150000)
+																															}
+																														});
+
+																														const allAuthor = await this.client.database.users.find({ userId: author.id });
+
+																														allAuthor.forEach(async (e) => {
+																															e.bitcoin += 20;
+																															await e.save();
+																														});
 																													}
 
 																													embed.fields = [];

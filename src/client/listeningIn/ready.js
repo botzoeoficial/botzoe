@@ -68,6 +68,7 @@ module.exports = class Ready {
 			allGuilds.forEach(async (e) => {
 				e.bolsa.valor = random;
 				e.bolsa.tempo = Date.now();
+
 				await e.save();
 			});
 
@@ -610,6 +611,7 @@ module.exports = class Ready {
 								user.prisao.prenderCmd = false;
 								user.prisao.tempo = 0;
 								user.prisao.isPreso = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.traficoDrogas) {
@@ -619,6 +621,7 @@ module.exports = class Ready {
 								user.prisao.tempo = 0;
 								user.prisao.isPreso = false;
 								user.prisao.traficoDrogas = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.prender) {
@@ -628,6 +631,7 @@ module.exports = class Ready {
 								user.prisao.tempo = 0;
 								user.prisao.isPreso = false;
 								user.prisao.prender = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.revistar) {
@@ -637,6 +641,7 @@ module.exports = class Ready {
 								user.prisao.tempo = 0;
 								user.prisao.isPreso = false;
 								user.prisao.revistar = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.roubarVeiculo) {
@@ -646,6 +651,7 @@ module.exports = class Ready {
 								user.prisao.tempo = 0;
 								user.prisao.isPreso = false;
 								user.prisao.roubarVeiculo = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.velha) {
@@ -656,6 +662,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.velha = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.frentista) {
@@ -666,6 +673,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.frentista = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.joalheria) {
@@ -676,6 +684,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.joalheria = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.agiota) {
@@ -686,6 +695,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.agiota = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.casaLoterica) {
@@ -696,6 +706,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.casaLoterica = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.brazino) {
@@ -706,6 +717,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.brazino = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.facebook) {
@@ -716,6 +728,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.facebook = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.bancoCentral) {
@@ -726,6 +739,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.bancoCentral = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.shopping) {
@@ -736,6 +750,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.shopping = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						} else if (user.prisao.crime && user.prisao.banco) {
@@ -746,6 +761,7 @@ module.exports = class Ready {
 								user.prisao.isPreso = false;
 								user.prisao.banco = false;
 								user.prisao.crime = false;
+
 								await user.save();
 							}
 						}
@@ -4047,16 +4063,9 @@ module.exports = class Ready {
 							guildId: e.guildId
 						}, {
 							$set: {
-								saldo: e.banco
-							}
-						});
-
-						await this.client.database.users.findOneAndUpdate({
-							userId: e.userId,
-							guildId: e.guildId
-						}, {
-							$set: {
+								saldo: e.banco,
 								banco: 0,
+								'payBank.cooldown': 0,
 								'payBank.sucess': false
 							}
 						});
@@ -4206,7 +4215,7 @@ module.exports = class Ready {
 								_id: msg.guild.id
 							});
 
-							if (serverDroga.cidade.donoFabricadeDrogas.find((a) => a.id === author.id)) {
+							if (serverDroga.cidade.donoFabricadeDrogas.find((a) => a.id === user2.id)) {
 								msg.reply('você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!').then((b) => b.delete({
 									timeout: 5000
 								}));
@@ -4453,7 +4462,7 @@ module.exports = class Ready {
 							embed.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
 
 							await msg.edit(embed);
-						}, 60000);
+						}, 5000 * 60);
 					});
 				} catch (error) {
 					return;

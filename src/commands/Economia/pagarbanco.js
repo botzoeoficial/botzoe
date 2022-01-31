@@ -62,7 +62,7 @@ module.exports = class Pagarbanco extends Command {
 					guildId: message.guild.id
 				}, {
 					$set: {
-						banco: user.banco - 0,
+						banco: user.banco -= 0,
 						'payBank.cooldown': Date.now(),
 						'payBank.sucess': true
 					}
@@ -72,7 +72,7 @@ module.exports = class Pagarbanco extends Command {
 					_id: message.guild.id
 				}, {
 					$set: {
-						bank: server.bank + 0
+						bank: server.bank += 0
 					}
 				});
 
@@ -83,7 +83,9 @@ module.exports = class Pagarbanco extends Command {
 					}, {
 						$set: {
 							'payBank.sucess': false,
-							'payBank.cooldown': 0
+							'payBank.cooldown': 0,
+							saldo: user.banco,
+							banco: 0
 						}
 					});
 				}, timeout);
@@ -101,7 +103,7 @@ module.exports = class Pagarbanco extends Command {
 					guildId: message.guild.id
 				}, {
 					$set: {
-						banco: user.banco - porcentagem,
+						banco: user.banco -= porcentagem,
 						'payBank.cooldown': Date.now(),
 						'payBank.sucess': true
 					}
@@ -111,7 +113,7 @@ module.exports = class Pagarbanco extends Command {
 					_id: message.guild.id
 				}, {
 					$set: {
-						bank: server.bank + porcentagem
+						bank: server.bank += porcentagem
 					}
 				});
 
@@ -122,7 +124,9 @@ module.exports = class Pagarbanco extends Command {
 					}, {
 						$set: {
 							'payBank.sucess': false,
-							'payBank.cooldown': 0
+							'payBank.cooldown': 0,
+							saldo: user.banco,
+							banco: 0
 						}
 					});
 				}, timeout);
@@ -140,7 +144,7 @@ module.exports = class Pagarbanco extends Command {
 					guildId: message.guild.id
 				}, {
 					$set: {
-						banco: user.banco - porcentagem,
+						banco: user.banco -= porcentagem,
 						'payBank.cooldown': Date.now(),
 						'payBank.sucess': true
 					}
@@ -150,7 +154,7 @@ module.exports = class Pagarbanco extends Command {
 					_id: message.guild.id
 				}, {
 					$set: {
-						bank: server.bank + porcentagem
+						bank: server.bank += porcentagem
 					}
 				});
 
@@ -161,7 +165,9 @@ module.exports = class Pagarbanco extends Command {
 					}, {
 						$set: {
 							'payBank.sucess': false,
-							'payBank.cooldown': 0
+							'payBank.cooldown': 0,
+							saldo: user.banco,
+							banco: 0
 						}
 					});
 				}, timeout);
@@ -179,7 +185,7 @@ module.exports = class Pagarbanco extends Command {
 					guildId: message.guild.id
 				}, {
 					$set: {
-						banco: user.banco - porcentagem,
+						banco: user.banco -= porcentagem,
 						'payBank.cooldown': Date.now(),
 						'payBank.sucess': true
 					}
@@ -189,7 +195,7 @@ module.exports = class Pagarbanco extends Command {
 					_id: message.guild.id
 				}, {
 					$set: {
-						bank: server.bank + porcentagem
+						bank: server.bank += porcentagem
 					}
 				});
 
@@ -200,7 +206,9 @@ module.exports = class Pagarbanco extends Command {
 					}, {
 						$set: {
 							'payBank.sucess': false,
-							'payBank.cooldown': 0
+							'payBank.cooldown': 0,
+							saldo: user.banco,
+							banco: 0
 						}
 					});
 				}, timeout);

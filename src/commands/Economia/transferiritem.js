@@ -48,7 +48,7 @@ module.exports = class Transferiritem extends Command {
 			guildId: message.guild.id
 		});
 
-		const hasItem = user.inventory.find((xs) => xs.item === 'Transferir');
+		const hasItem = user.mochila.find((xs) => xs.item === 'Transferir');
 
 		if (!hasItem) {
 			return message.reply('você não possui um **Transferir** no seu inventário!');

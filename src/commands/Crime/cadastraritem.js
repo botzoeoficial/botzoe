@@ -277,10 +277,11 @@ module.exports = class Cadastraritem extends Command {
 									} else {
 										ce2.delete();
 										sim2.stop();
+										msg.delete();
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.droga}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										msg.edit(author, embed).then(async (msg2) => {
+										message.channel.send(author, embed).then(async (msg2) => {
 											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
 												time: 60000
 											});
@@ -289,7 +290,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -306,7 +307,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -320,7 +321,7 @@ module.exports = class Cadastraritem extends Command {
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.droga).quantia < Number(ce3.content)) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 													ce3.delete();
 
 													await this.client.database.users.findOneAndUpdate({
@@ -336,10 +337,11 @@ module.exports = class Cadastraritem extends Command {
 												} else {
 													ce3.delete();
 													collector.stop();
+													msg2.delete();
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													msg.edit(author, embed).then(async (msg3) => {
+													message.channel.send(author, embed).then(async (msg3) => {
 														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
 															time: 60000
 														});
@@ -348,7 +350,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -365,7 +367,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) <= 0 || isNaN(ce4.content)) {
 																collector.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -380,6 +382,7 @@ module.exports = class Cadastraritem extends Command {
 															} else {
 																collector2.stop();
 																ce4.delete();
+																msg3.delete();
 
 																const tempoArray = [{
 																	tempo: '5 minutos',
@@ -421,7 +424,7 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																msg.edit(author, embed).then(async (msg4) => {
+																message.channel.send(author, embed).then(async (msg4) => {
 																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 																		time: 300000
 																	});
@@ -429,7 +432,7 @@ module.exports = class Cadastraritem extends Command {
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
-																			msg.delete();
+																			msg4.delete();
 																			ce5.delete();
 																			sim3.stop();
 
@@ -448,7 +451,7 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				msg.delete();
+																				msg4.delete();
 																				ce5.delete();
 																				sim3.stop();
 
@@ -463,6 +466,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				msg4.delete();
+
 																				embed.fields = [];
 
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
@@ -480,7 +485,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				msg.edit(author, embed);
+																				message.channel.send(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -622,7 +627,7 @@ module.exports = class Cadastraritem extends Command {
 																			sim3.stop();
 																			sim2.stop();
 																			sim.stop();
-																			msg.delete();
+																			msg4.delete();
 
 																			await this.client.database.users.findOneAndUpdate({
 																				userId: author.id,
@@ -643,7 +648,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('end', async (collected, reason) => {
 															if (reason === 'time') {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -664,7 +669,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('end', async (collected, reason) => {
 												if (reason === 'time') {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -823,10 +828,11 @@ module.exports = class Cadastraritem extends Command {
 									} else {
 										ce2.delete();
 										sim2.stop();
+										msg.delete();
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.arma}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										msg.edit(author, embed).then(async (msg2) => {
+										message.channel.send(author, embed).then(async (msg2) => {
 											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
 												time: 60000
 											});
@@ -834,7 +840,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('collect', async (ce3) => {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -851,7 +857,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -865,7 +871,7 @@ module.exports = class Cadastraritem extends Command {
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.arma).quantia < Number(ce3.content)) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 													ce3.delete();
 
 													await this.client.database.users.findOneAndUpdate({
@@ -881,10 +887,11 @@ module.exports = class Cadastraritem extends Command {
 												} else {
 													ce3.delete();
 													collector.stop();
+													msg2.delete();
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													msg.edit(author, embed).then(async (msg3) => {
+													message.channel.send(author, embed).then(async (msg3) => {
 														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
 															time: 60000
 														});
@@ -892,7 +899,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('collect', async (ce4) => {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -909,7 +916,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
 																collector.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -924,6 +931,7 @@ module.exports = class Cadastraritem extends Command {
 															} else {
 																collector2.stop();
 																ce4.delete();
+																msg3.delete();
 
 																const tempoArray = [{
 																	tempo: '5 minutos',
@@ -965,7 +973,7 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																msg.edit(author, embed).then(async (msg4) => {
+																message.channel.send(author, embed).then(async (msg4) => {
 																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 																		time: 300000
 																	});
@@ -973,7 +981,7 @@ module.exports = class Cadastraritem extends Command {
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
-																			msg.delete();
+																			msg4.delete();
 																			sim3.stop();
 
 																			await this.client.database.users.findOneAndUpdate({
@@ -991,7 +999,7 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				msg.delete();
+																				msg4.delete();
 																				ce5.delete();
 																				sim3.stop();
 
@@ -1006,6 +1014,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				msg4.delete();
+
 																				embed.fields = [];
 
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
@@ -1023,7 +1033,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				msg.edit(author, embed);
+																				message.channel.send(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -1163,7 +1173,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('end', async (collected, reason) => {
 																		if (reason === 'time') {
 																			sim3.stop();
-																			msg.delete();
+																			msg4.delete();
 
 																			await this.client.database.users.findOneAndUpdate({
 																				userId: author.id,
@@ -1184,7 +1194,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('end', async (collected, reason) => {
 															if (reason === 'time') {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -1205,7 +1215,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('end', async (collected, reason) => {
 												if (reason === 'time') {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -1349,10 +1359,11 @@ module.exports = class Cadastraritem extends Command {
 									} else {
 										ce2.delete();
 										sim2.stop();
+										msg.delete();
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.municao}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										msg.edit(author, embed).then(async (msg2) => {
+										message.channel.send(author, embed).then(async (msg2) => {
 											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
 												time: 60000
 											});
@@ -1360,7 +1371,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('collect', async (ce3) => {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -1377,7 +1388,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -1391,7 +1402,7 @@ module.exports = class Cadastraritem extends Command {
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.municao).quantia < Number(ce3.content)) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 													ce3.delete();
 
 													await this.client.database.users.findOneAndUpdate({
@@ -1407,10 +1418,11 @@ module.exports = class Cadastraritem extends Command {
 												} else {
 													ce3.delete();
 													collector.stop();
+													msg2.delete();
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													msg.edit(author, embed).then(async (msg3) => {
+													message.channel.send(author, embed).then(async (msg3) => {
 														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
 															time: 60000
 														});
@@ -1418,7 +1430,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('collect', async (ce4) => {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -1435,7 +1447,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
 																collector.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -1450,6 +1462,7 @@ module.exports = class Cadastraritem extends Command {
 															} else {
 																collector2.stop();
 																ce4.delete();
+																msg3.delete();
 
 																const tempoArray = [{
 																	tempo: '5 minutos',
@@ -1491,7 +1504,7 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																msg.edit(author, embed).then(async (msg4) => {
+																message.channel.send(author, embed).then(async (msg4) => {
 																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 																		time: 300000
 																	});
@@ -1499,7 +1512,7 @@ module.exports = class Cadastraritem extends Command {
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
-																			msg.delete();
+																			msg4.delete();
 																			sim3.stop();
 
 																			await this.client.database.users.findOneAndUpdate({
@@ -1517,7 +1530,7 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				msg.delete();
+																				msg4.delete();
 																				ce5.delete();
 																				sim3.stop();
 
@@ -1532,6 +1545,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				msg4.delete();
+
 																				embed.fields = [];
 
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
@@ -1549,7 +1564,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				msg.edit(author, embed);
+																				message.channel.send(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -1689,7 +1704,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('end', async (collected, reason) => {
 																		if (reason === 'time') {
 																			sim3.stop();
-																			msg.delete();
+																			msg4.delete();
 
 																			await this.client.database.users.findOneAndUpdate({
 																				userId: author.id,
@@ -1710,7 +1725,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('end', async (collected, reason) => {
 															if (reason === 'time') {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -1731,7 +1746,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('end', async (collected, reason) => {
 												if (reason === 'time') {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -1869,10 +1884,11 @@ module.exports = class Cadastraritem extends Command {
 									} else {
 										ce2.delete();
 										sim2.stop();
+										msg.delete();
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.chave}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										msg.edit(author, embed).then(async (msg2) => {
+										message.channel.send(author, embed).then(async (msg2) => {
 											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
 												time: 60000
 											});
@@ -1880,7 +1896,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('collect', async (ce3) => {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -1897,7 +1913,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -1911,7 +1927,7 @@ module.exports = class Cadastraritem extends Command {
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.chave).quantia < Number(ce3.content)) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 													ce3.delete();
 
 													await this.client.database.users.findOneAndUpdate({
@@ -1927,10 +1943,11 @@ module.exports = class Cadastraritem extends Command {
 												} else {
 													ce3.delete();
 													collector.stop();
+													msg2.delete();
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													msg.edit(author, embed).then(async (msg3) => {
+													message.channel.send(author, embed).then(async (msg3) => {
 														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
 															time: 60000
 														});
@@ -1938,7 +1955,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('collect', async (ce4) => {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -1955,7 +1972,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
 																collector.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -1970,6 +1987,7 @@ module.exports = class Cadastraritem extends Command {
 															} else {
 																collector2.stop();
 																ce4.delete();
+																msg3.delete();
 
 																const tempoArray = [{
 																	tempo: '5 minutos',
@@ -2011,7 +2029,7 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																msg.edit(author, embed).then(async (msg4) => {
+																message.channel.send(author, embed).then(async (msg4) => {
 																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 																		time: 300000
 																	});
@@ -2019,7 +2037,7 @@ module.exports = class Cadastraritem extends Command {
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
-																			msg.delete();
+																			msg4.delete();
 																			sim3.stop();
 
 																			await this.client.database.users.findOneAndUpdate({
@@ -2037,7 +2055,7 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				msg.delete();
+																				msg4.delete();
 																				ce5.delete();
 																				sim3.stop();
 
@@ -2052,6 +2070,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				msg4.delete();
+
 																				embed.fields = [];
 
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
@@ -2069,7 +2089,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				msg.edit(author, embed);
+																				message.channel.send(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -2209,7 +2229,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('end', async (collected, reason) => {
 																		if (reason === 'time') {
 																			sim3.stop();
-																			msg.delete();
+																			msg4.delete();
 
 																			await this.client.database.users.findOneAndUpdate({
 																				userId: author.id,
@@ -2230,7 +2250,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('end', async (collected, reason) => {
 															if (reason === 'time') {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -2251,7 +2271,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('end', async (collected, reason) => {
 												if (reason === 'time') {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -2408,10 +2428,11 @@ module.exports = class Cadastraritem extends Command {
 									} else {
 										ce2.delete();
 										sim2.stop();
+										msg.delete();
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.minerio}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										msg.edit(author, embed).then(async (msg2) => {
+										message.channel.send(author, embed).then(async (msg2) => {
 											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
 												time: 60000
 											});
@@ -2420,7 +2441,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -2437,7 +2458,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -2451,7 +2472,7 @@ module.exports = class Cadastraritem extends Command {
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.inventory.find((a) => a.item === findSelectedEvento2.minerio).quantia < Number(ce3.content)) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 													ce3.delete();
 
 													await this.client.database.users.findOneAndUpdate({
@@ -2467,10 +2488,11 @@ module.exports = class Cadastraritem extends Command {
 												} else {
 													ce3.delete();
 													collector.stop();
+													msg2.delete();
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													msg.edit(author, embed).then(async (msg3) => {
+													message.channel.send(author, embed).then(async (msg3) => {
 														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
 															time: 60000
 														});
@@ -2479,7 +2501,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -2496,7 +2518,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
 																collector.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -2511,6 +2533,7 @@ module.exports = class Cadastraritem extends Command {
 															} else {
 																collector2.stop();
 																ce4.delete();
+																msg3.delete();
 
 																const tempoArray = [{
 																	tempo: '5 minutos',
@@ -2552,7 +2575,7 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																msg.edit(author, embed).then(async (msg4) => {
+																message.channel.send(author, embed).then(async (msg4) => {
 																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 																		time: 300000
 																	});
@@ -2560,7 +2583,7 @@ module.exports = class Cadastraritem extends Command {
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
-																			msg.delete();
+																			msg4.delete();
 																			ce5.delete();
 																			sim3.stop();
 
@@ -2579,7 +2602,7 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				msg.delete();
+																				msg4.delete();
 																				ce5.delete();
 																				sim3.stop();
 
@@ -2594,6 +2617,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				msg4.delete();
+
 																				embed.fields = [];
 
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
@@ -2611,7 +2636,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				msg.edit(author, embed);
+																				message.channel.send(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -2751,7 +2776,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('end', async (collected, reason) => {
 																		if (reason === 'time') {
 																			sim3.stop();
-																			msg.delete();
+																			msg4.delete();
 
 																			await this.client.database.users.findOneAndUpdate({
 																				userId: author.id,
@@ -2772,7 +2797,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('end', async (collected, reason) => {
 															if (reason === 'time') {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -2793,7 +2818,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('end', async (collected, reason) => {
 												if (reason === 'time') {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -2932,10 +2957,11 @@ module.exports = class Cadastraritem extends Command {
 									} else {
 										ce2.delete();
 										sim2.stop();
+										msg.delete();
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.item}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										msg.edit(author, embed).then(async (msg2) => {
+										message.channel.send(author, embed).then(async (msg2) => {
 											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
 												time: 60000
 											});
@@ -2943,7 +2969,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('collect', async (ce3) => {
 												if (Number(ce3.content) === 0) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -2960,7 +2986,7 @@ module.exports = class Cadastraritem extends Command {
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
 													collector.stop();
 													ce3.delete();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -2974,7 +3000,7 @@ module.exports = class Cadastraritem extends Command {
 													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.item).quantia < Number(ce3.content)) {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 													ce3.delete();
 
 													await this.client.database.users.findOneAndUpdate({
@@ -2990,10 +3016,11 @@ module.exports = class Cadastraritem extends Command {
 												} else {
 													ce3.delete();
 													collector.stop();
+													msg2.delete();
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													msg.edit(author, embed).then(async (msg3) => {
+													message.channel.send(author, embed).then(async (msg3) => {
 														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
 															time: 60000
 														});
@@ -3001,7 +3028,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('collect', async (ce4) => {
 															if (Number(ce4.content) === 0) {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -3018,7 +3045,7 @@ module.exports = class Cadastraritem extends Command {
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
 																collector.stop();
 																ce4.delete();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -3033,6 +3060,7 @@ module.exports = class Cadastraritem extends Command {
 															} else {
 																collector2.stop();
 																ce4.delete();
+																msg3.delete();
 
 																const tempoArray = [{
 																	tempo: '5 minutos',
@@ -3074,7 +3102,7 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																msg.edit(author, embed).then(async (msg4) => {
+																message.channel.send(author, embed).then(async (msg4) => {
 																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
 																		time: 300000
 																	});
@@ -3082,7 +3110,7 @@ module.exports = class Cadastraritem extends Command {
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
-																			msg.delete();
+																			msg4.delete();
 																			sim3.stop();
 
 																			await this.client.database.users.findOneAndUpdate({
@@ -3100,7 +3128,7 @@ module.exports = class Cadastraritem extends Command {
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
 
 																			if (!findSelectedEvento3) {
-																				msg.delete();
+																				msg4.delete();
 																				ce5.delete();
 																				sim3.stop();
 
@@ -3115,6 +3143,8 @@ module.exports = class Cadastraritem extends Command {
 
 																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
 																			} else {
+																				msg4.delete();
+
 																				embed.fields = [];
 
 																				embed.setDescription(`✅ | Seu produto foi cadastrado com sucesso!\n\nDigite \`${prefix}mercadonegro\` para conferir seu produto.`);
@@ -3132,7 +3162,7 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				msg.edit(author, embed);
+																				message.channel.send(author, embed);
 																				sim3.stop();
 																				ce5.delete();
 
@@ -3272,7 +3302,7 @@ module.exports = class Cadastraritem extends Command {
 																	sim3.on('end', async (collected, reason) => {
 																		if (reason === 'time') {
 																			sim3.stop();
-																			msg.delete();
+																			msg4.delete();
 
 																			await this.client.database.users.findOneAndUpdate({
 																				userId: author.id,
@@ -3293,7 +3323,7 @@ module.exports = class Cadastraritem extends Command {
 														collector2.on('end', async (collected, reason) => {
 															if (reason === 'time') {
 																collector2.stop();
-																msg.delete();
+																msg3.delete();
 
 																await this.client.database.users.findOneAndUpdate({
 																	userId: author.id,
@@ -3314,7 +3344,7 @@ module.exports = class Cadastraritem extends Command {
 											collector.on('end', async (collected, reason) => {
 												if (reason === 'time') {
 													collector.stop();
-													msg.delete();
+													msg2.delete();
 
 													await this.client.database.users.findOneAndUpdate({
 														userId: author.id,
@@ -3356,11 +3386,33 @@ module.exports = class Cadastraritem extends Command {
 						sim.stop();
 						embed.setDescription(`**EM BREVE!**`);
 						msg.edit(author, embed);
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								cadastrandoItem: false
+							}
+						});
+
+						return;
 					} else if (findSelectedEvento.position === 3) { // em breve carros
 						ce.delete();
 						sim.stop();
 						embed.setDescription(`**EM BREVE!**`);
 						msg.edit(author, embed);
+
+						await this.client.database.users.findOneAndUpdate({
+							userId: author.id,
+							guildId: message.guild.id
+						}, {
+							$set: {
+								cadastrandoItem: false
+							}
+						});
+
+						return;
 					}
 				}
 			});

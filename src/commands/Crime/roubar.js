@@ -58,13 +58,17 @@ module.exports = class Roubar extends Command {
 			_id: message.guild.id
 		});
 
-		if (user.policia.isPolice) return message.reply('você não pode usar esse comando pois você é Policial do servidor!');
+		if (server2.cidade.governador === author.id) return message.reply('você não pode roubar pois você é Governador do servidor!');
 
 		if (server2.cidade.delegado === author.id) return message.reply('você não pode usar esse comando pois você é Delegado do servidor!');
 
+		if (user.policia.isPolice) return message.reply('você não pode usar esse comando pois você é Policial do servidor!');
+
 		if (server2.cidade.carcereiro.find((a) => a.id === author.id)) return message.reply('você não pode usar esse comando pois você é Carcereiro do servidor!');
 
-		if (server2.cidade.governador === author.id) return message.reply('você não pode roubar pois você é Governador do servidor!');
+		if (server2.cidade.diretorHP === author.id) return message.reply('você não pode usar esse comando pois você é Diretor do Hospital do servidor!');
+
+		if (server2.cidade.medicos.find((a) => a.id === author.id)) return message.reply('você não pode usar esse comando pois você é Médico do servidor!');
 
 		if (user.armaEquipada === 'Nenhuma arma equipada.') return message.reply('você precisa equipar uma arma antes de roubar alguém!');
 

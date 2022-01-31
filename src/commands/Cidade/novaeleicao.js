@@ -147,11 +147,17 @@ module.exports = class Novaeleicao extends Command {
 							});
 
 							collector.on('collect', async (ce) => {
-								const mention = ce.mentions.members.first() || message.guild.members.cache.get(ce.content);
+								const mention = ce.mentions.members.first();
 
-								if (!mention) message.reply('você precisa mencionar um usuário. Por favor, tente novamente!');
+								if (!mention) {
+									message.reply('você precisa mencionar um usuário. Por favor, use o comando novamente!');
+									return msg.delete();
+								}
 
-								if (mention.user.bot) message.reply('você não pode mandar um bot para ser **Candidato**.');
+								if (mention.user.bot) {
+									message.reply('você não pode mandar um bot para ser **Candidato**. Por favor, use o comando novamente!');
+									return msg.delete();
+								}
 
 								candidatos.push({
 									id: mention.id,
@@ -169,13 +175,22 @@ module.exports = class Novaeleicao extends Command {
 									});
 
 									collector2.on('collect', async (ce2) => {
-										const mention2 = ce2.mentions.members.first() || message.guild.members.cache.get(ce2.content);
+										const mention2 = ce2.mentions.members.first();
 
-										if (!mention2) message.reply('você precisa mencionar um usuário. Por favor, tente novamente!');
+										if (!mention2) {
+											message.reply('você precisa mencionar um usuário. Por favor, use o comando novamente!');
+											return msg.delete();
+										}
 
-										if (mention2.user.bot) message.reply('você não pode mandar um bot para ser **Candidato**.');
+										if (mention2.user.bot) {
+											message.reply('você não pode mandar um bot para ser **Candidato**. Por favor, use o comando novamente!');
+											return msg.delete();
+										}
 
-										if (candidatos.includes(mention2.id)) message.reply('você já colocou esse usuário como candidato a **Prefeito**.');
+										if (candidatos.includes(mention2.id)) {
+											message.reply('você já colocou esse usuário como candidato a **Prefeito**. Por favor, use o comando novamente!');
+											return msg.delete();
+										}
 
 										candidatos.push({
 											id: mention2.id,
@@ -194,13 +209,22 @@ module.exports = class Novaeleicao extends Command {
 											});
 
 											collector3.on('collect', async (ce3) => {
-												const mention3 = ce3.mentions.members.first() || message.guild.members.cache.get(ce3.content);
+												const mention3 = ce3.mentions.members.first();
 
-												if (!mention3) message.reply('você precisa mencionar um usuário. Por favor, tente novamente!');
+												if (!mention3) {
+													message.reply('você precisa mencionar um usuário. Por favor, use o comando novamente!');
+													return msg.delete();
+												}
 
-												if (mention3.user.bot) message.reply('você não pode mandar um bot para ser **Candidato**.');
+												if (mention3.user.bot) {
+													message.reply('você não pode mandar um bot para ser **Candidato**. Por favor, use o comando novamente!');
+													return msg.delete();
+												}
 
-												if (candidatos.includes(mention3.id)) message.reply('você já colocou esse usuário como candidato a **Prefeito**.');
+												if (candidatos.includes(mention3.id)) {
+													message.reply('você já colocou esse usuário como candidato a **Prefeito**. Por favor, use o comando novamente!');
+													return msg.delete();
+												}
 
 												candidatos.push({
 													id: mention3.id,

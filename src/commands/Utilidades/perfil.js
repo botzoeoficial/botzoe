@@ -113,7 +113,7 @@ module.exports = class Perfil extends Command {
 			.addField('💼 Função na FAC:', !user.fac.isFac && !user.fac.createFac ? 'Não é Dono ou não pertence a nenhuma Facção.' : user.fac.createFac ? 'Dono de Facção' : user.fac.isFac && !user.fac.createFac ? user.fac.emprego.nome : 'Sem Função na Facção', true)
 			.addField('\u2800', '\u2800', true)
 			.addField('🧑‍💼 Emprego:', user.emprego, true)
-			.addField('🕰️ Tempo na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : `${moment(user.fac.tempo).format('ll')} [${moment().diff(user.fac.tempo, 'days')} dias atrás.]`, true)
+			.addField('🕰️ Tempo na FAC:', !user.fac.isFac ? 'Não pertence a nenhuma Facção.' : `${moment(user.fac.tempo).format('ll')} [${moment(user.fac.tempo).fromNow()}]`, true)
 			.addField('\u2800', '\u2800', true)
 			.addField('🔫 Arma', user.armaEquipada === '' ? 'Nenhuma arma equipada.' : user.armaEquipada, true)
 			.addField('⭐ Estrelas:', !user.estrelas.length ? 'Nenhuma Estrela.' : user.estrelas.join(''), true)
