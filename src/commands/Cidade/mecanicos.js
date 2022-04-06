@@ -47,7 +47,10 @@ module.exports = class Mecanicos extends Command {
 			.setTitle('🧑‍🔧 | Mecânicos da Cidade!')
 			.setDescription(`Aqui você verá todos os **Mecânicos** da cidade!\n\n${!server.cidade.mecanico.length ? 'Este servidor não possui nenhum **Mecânico** ainda!' : server.cidade.mecanico.map((a, i) => `\`${i + 1}º)\` <@${a.id}>`).join('\n')}`);
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

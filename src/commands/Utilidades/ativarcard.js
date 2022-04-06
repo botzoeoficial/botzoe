@@ -42,8 +42,8 @@ module.exports = class Ativarcard extends Command {
 		args,
 		author
 	}) {
-		const server = await this.client.database.guilds.findOne({
-			userId: message.guild.id
+		const client = await this.client.database.clientUtils.findOne({
+			_id: this.client.user.id
 		});
 
 		const user = await this.client.database.users.findOne({
@@ -51,21 +51,32 @@ module.exports = class Ativarcard extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!server.card.length) return message.reply('não há cards cadastrados no momento.');
+		if (!client.card.length) {
+			return message.reply({
+				content: 'Não há cards cadastrados no momento.'
+			});
+		}
 
 		const nome = args.slice(0).join(' ');
 
-		if (!nome) return message.reply('você precisa colocar o código do card.');
+		if (!nome) {
+			return message.reply({
+				content: 'Você precisa colocar o código do card.'
+			});
+		}
 
 		const embed = new ClientEmbed(author);
 
-		if (!server.card.find((fa) => fa.codigo === nome)) {
+		if (!client.card.find((fa) => fa.codigo === nome)) {
 			embed.setTitle('💳 Não Autorizado');
 			embed.setDescription('❌ | Não existe nenhum Card cadastrado com esse Código.');
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
-			const cardsArray = server.card.map((value, index) => ({
+			const cardsArray = client.card.map((value, index) => ({
 				codigo: value.codigo,
 				valorZoe: value.valorZoe,
 				valorBtc: value.valorBtc,
@@ -77,12 +88,19 @@ module.exports = class Ativarcard extends Command {
 			const selected = nome;
 			const findSelectedCard = cardsArray.find((xis) => xis.codigo === selected);
 
-			if (findSelectedCard.ativado) return message.reply(`esse card já foi usado pelo usuário: \`${await this.client.users.fetch(findSelectedCard.ativadoPor).then(xa => xa.tag)}\``);
+			if (findSelectedCard.ativado) {
+				return message.reply({
+					content: `Esse card já foi usado pelo usuário: \`${await this.client.users.fetch(findSelectedCard.ativadoPor).then(xa => xa.tag)}\``
+				});
+			}
 
 			embed.setTitle('🎉 PARABÉNS');
 			embed.setDescription(`💳 | Você adicionou:\n\n💵 R$${Utils.numberFormat(findSelectedCard.valorZoe)},00 - Com sucesso a sua conta Zoe\n\n<:btc:908786996535787551> ${findSelectedCard.valorBtc} bitcoin - Com sucesso a sua conta Zoe.`);
 
-			message.channel.send(author, embed);
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -94,8 +112,8 @@ module.exports = class Ativarcard extends Command {
 				}
 			});
 
-			await this.client.database.guilds.findOneAndUpdate({
-				userId: message.guild.id,
+			await this.client.database.clientUtils.findOneAndUpdate({
+				_id: this.client.user.id,
 				'card.codigo': findSelectedCard.codigo
 			}, {
 				$set: {
@@ -103,6 +121,8 @@ module.exports = class Ativarcard extends Command {
 					'card.$.ativadoPor': author.id
 				}
 			});
+
+			return;
 		}
 	}
 

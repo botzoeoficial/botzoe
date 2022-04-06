@@ -46,11 +46,19 @@ module.exports = class Depall extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Cadastre-se usando o comando: \`${prefix}cadastrar\`.`);
+		// if (518400000 - (Date.now() - user.payBank.cooldown) < 0) {
+		// 	return message.reply({
+		// 		content: `Você precisa pagar o **Banco** antes de fazer isso! Use o comando \`${prefix}pagarbanco\`.`
+		// 	});
+		// }
 
 		const embed = new ClientEmbed(author);
 
-		if (user.saldo <= 0) return message.reply('você não tem dinheiro para depositar no banco.');
+		if (user.saldo <= 0) {
+			return message.reply({
+				content: 'Você não tem dinheiro para depositar no banco.'
+			});
+		}
 
 		user = await this.client.database.users.findOne({
 			userId: author.id,
@@ -59,7 +67,10 @@ module.exports = class Depall extends Command {
 
 		embed.setDescription(`💵 | Você depositou **R$${Utils.numberFormat(Number(user.saldo))},00** no banco com sucesso.`);
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -70,6 +81,8 @@ module.exports = class Depall extends Command {
 				saldo: user.saldo = 0
 			}
 		});
+
+		return;
 	}
 
 };

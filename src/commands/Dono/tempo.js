@@ -38,8 +38,15 @@ module.exports = class Tempo extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
+		if (!['463421520686088192', '707677540583735338'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
 		if (args[0] === 'todos') {
 			const allUsers = await this.client.database.users.find({
 				guildId: message.guild.id
@@ -97,21 +104,35 @@ module.exports = class Tempo extends Command {
 				es.fabricagem.municoes.nome = '',
 				es.fabricagem.municoes.emoji = '';
 
-				es.save();
+				await es.save();
 			});
 
-			return message.reply('pronto!');
+			return message.reply({
+				content: 'Pronto!'
+			});
 		} else {
-			if (!args[0]) return message.reply('coloque o **ID** de um usuário!');
+			if (!args[0]) {
+				return message.reply({
+					content: 'Coloque o **ID** de um usuário!'
+				});
+			}
 
 			const user = await this.client.database.users.findOne({
 				userId: args[0],
 				guildId: message.guild.id
 			});
 
-			if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor!');
+			if (!user) {
+				return message.reply({
+					content: 'Não achei esse usuário no **banco de dados** desse servidor!'
+				});
+			}
 
-			if (!args[1]) return message.reply('coloque: **cooldown**/**crime**/**prisao**/**policia**/**estudos**/**usos**/**bitcoin**/**fabricagem**/**banco**');
+			if (!args[1]) {
+				return message.reply({
+					content: 'Coloque: **cooldown**/**crime**/**prisao**/**policia**/**estudos**/**usos**/**bitcoin**/**fabricagem**/**banco**'
+				});
+			}
 
 			if (args[1] === 'cooldown') {
 				await this.client.database.users.findOneAndUpdate({
@@ -269,7 +290,9 @@ module.exports = class Tempo extends Command {
 				});
 			}
 
-			return message.reply('pronto!');
+			return message.reply({
+				content: 'Pronto!'
+			});
 		}
 	}
 

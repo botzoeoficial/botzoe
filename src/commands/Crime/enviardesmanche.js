@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable max-len */
 /* eslint-disable complexity */
 /* eslint-disable consistent-return */
@@ -5,9 +6,9 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Enviardesmanche extends Command {
 
@@ -181,100 +182,111 @@ module.exports = class Enviardesmanche extends Command {
 				}
 			}
 
-			const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+			const buttonPreso = new MessageButton().setCustomId('preso').setEmoji('900544510365405214').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonPreso]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embedPreso,
+			const escolha = await message.reply({
+				content: author.toString(),
+				embeds: [embedPreso],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
-				max: 1,
+			const filter = (interaction) => interaction.isButton() && ['preso'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
 				time: 60000
 			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'preso') {
-					b.reply.defer();
+				switch (b.customId) {
+					case 'preso':
+						await b.deferUpdate();
 
-					const userMochila = await this.client.database.users.findOne({
-						userId: author.id,
-						guildId: message.guild.id
-					});
-
-					if (!userMochila.isMochila) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
-					}
-
-					if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
-					}
-
-					if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
-						await this.client.database.users.findOneAndUpdate({
+						const userMochila = await this.client.database.users.findOne({
 							userId: author.id,
-							guildId: message.guild.id,
-							'mochila.item': 'Chave Micha'
-						}, {
-							$set: {
-								'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
-							}
+							guildId: message.guild.id
 						});
-					} else {
+
+						if (!userMochila.isMochila) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!'
+							});
+						}
+
+						if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **Chave Micha** na sua Mochila!'
+							});
+						}
+
+						if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id,
+								'mochila.item': 'Chave Micha'
+							}, {
+								$set: {
+									'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+								}
+							});
+						} else {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$pull: {
+									mochila: {
+										item: 'Chave Micha'
+									}
+								}
+							});
+						}
+
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
 						}, {
-							$pull: {
-								mochila: {
-									item: 'Chave Micha'
-								}
+							$set: {
+								'prisao.isPreso': false,
+								'prisao.tempo': 0,
+								'prisao.prenderCmd': false,
+								'prisao.prenderMili': 0,
+								'prisao.traficoDrogas': false,
+								'prisao.crime': false,
+								'prisao.prender': false,
+								'prisao.revistar': false,
+								'prisao.roubarVeiculo': false,
+								'prisao.atirarPrisao': false,
+								'prisao.velha': false,
+								'prisao.frentista': false,
+								'prisao.joalheria': false,
+								'prisao.agiota': false,
+								'prisao.casaLoterica': false,
+								'prisao.brazino': false,
+								'prisao.facebook': false,
+								'prisao.bancoCentral': false,
+								'prisao.shopping': false,
+								'prisao.banco': false
 							}
 						});
-					}
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'prisao.isPreso': false,
-							'prisao.tempo': 0,
-							'prisao.prenderCmd': false,
-							'prisao.prenderMili': 0,
-							'prisao.traficoDrogas': false,
-							'prisao.crime': false,
-							'prisao.prender': false,
-							'prisao.revistar': false,
-							'prisao.roubarVeiculo': false,
-							'prisao.atirarPrisao': false,
-							'prisao.velha': false,
-							'prisao.frentista': false,
-							'prisao.joalheria': false,
-							'prisao.agiota': false,
-							'prisao.casaLoterica': false,
-							'prisao.brazino': false,
-							'prisao.facebook': false,
-							'prisao.bancoCentral': false,
-							'prisao.shopping': false,
-							'prisao.banco': false
-						}
-					});
-
-					escolha.delete();
-					return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+						escolha.delete();
+						return message.reply({
+							content: `Você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`
+						});
 				}
 			});
 
 			collectorEscolhas.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					return escolha.edit(author, {
-						embed: embedPreso,
+					return escolha.edit({
+						content: author.toString(),
+						embeds: [embedPreso],
 						components: []
 					});
 				}
@@ -282,22 +294,41 @@ module.exports = class Enviardesmanche extends Command {
 
 			return;
 		} else {
-			if (!user.garagem.length) return message.reply(`você não possui nenhum carro na **garagem**. Use o comando \`${prefix}roubarcarro\`.`);
+			if (!user.garagem.length) {
+				return message.reply({
+					content: `Você não possui nenhum carro na **garagem**. Use o comando \`${prefix}roubarcarro\`.`
+				});
+			}
 
 			const placa = args.slice(0).join(' ');
-			if (!placa) return message.reply('você precisa colocar a placa de um carro seu para ser enviado para o **Desmanche**!');
+			if (!placa) {
+				return message.reply({
+					content: 'Você precisa colocar a placa de um carro seu para ser enviado para o **Desmanche**!'
+				});
+			}
 
-			if (!user.garagem.find((a) => a.placa === placa)) return message.reply(`não achei nenhum carro seu com essa placa. Use \`${prefix}garagem\` para ver a placa de um!`);
+			if (!user.garagem.find((a) => a.placa === placa)) {
+				return message.reply({
+					content: `Não achei nenhum carro seu com essa placa. Use \`${prefix}garagem\` para ver a placa de um!`
+				});
+			}
 
 			const carro = user.garagem.find((a) => a.placa === placa);
 
-			if (carro.mecanica) return message.reply('esse carro está na **Oficina**. Retire ele de lá, e use esse comando novamente!');
+			if (carro.mecanica) {
+				return message.reply({
+					content: 'Esse carro está na **Oficina**. Retire ele de lá, e use esse comando novamente!'
+				});
+			}
 
 			const embed = new ClientEmbed(author)
 				.setTitle('🧑‍🔧 | Enviar para Desmanche')
 				.setDescription(`✅ | Você enviou seu veículo **${carro.nome}** com sucesso para o Desmanche!`);
 
-			message.channel.send(author, embed);
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 
 			await this.client.database.guilds.findOneAndUpdate({
 				_id: message.guild.id

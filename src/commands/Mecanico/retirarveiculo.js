@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
 /* eslint-disable consistent-return */
@@ -106,10 +108,18 @@ module.exports = class Retirarveiculo extends Command {
 		mecanicaArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 		embed.setDescription(!server.mecanica.length ? 'Não há carros na **Oficina** no momento.' : `**Qual veículo você deseja retirar?**\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
 
-		message.channel.send(author, embed).then((msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
 			if (!server.mecanica.length) return;
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const filterSim = m => {
+				return m.author.id === author.id;
+			};
+
+			const sim = msg.channel.createMessageCollector({
+				filter: filterSim,
 				time: 300000
 			});
 
@@ -117,15 +127,17 @@ module.exports = class Retirarveiculo extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
-					return message.reply(`seleção cancelada com sucesso!`);
+					return message.reply({
+						content: 'Seleção cancelada com sucesso!'
+					});
 				} else {
 					const selected = Number(ce.content - 1);
 					const findSelectedEvento = mecanicaArray.find((xis) => xis.position === selected);
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-							timeout: 5000
-						}));
+						message.reply({
+							content: 'Número não encontrado. Por favor, envie o número novamente!'
+						}).then((a) => a.delete(), 6000);
 						ce.delete();
 					}
 
@@ -134,7 +146,9 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`esse veículo não é seu. Escolha outro veículo por favor!`);
+						return message.reply({
+							content: 'Esse veículo não é seu. Escolha outro veículo por favor!'
+						});
 					}
 
 					if (!findSelectedEvento.arrumado) {
@@ -142,7 +156,9 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`seu veículo não está arrumado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}arrumarveiculo\`!`);
+						return message.reply({
+							content: `Seu veículo não está arrumado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}arrumarveiculo\`!`
+						});
 					}
 
 					if (!findSelectedEvento.emplacado) {
@@ -150,7 +166,9 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`seu veículo não está emplacado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}emplacarveiculo\`!`);
+						return message.reply({
+							content: `Seu veículo não está emplacado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}emplacarveiculo\`!`
+						});
 					}
 
 					if (!findSelectedEvento.liberado) {
@@ -158,7 +176,9 @@ module.exports = class Retirarveiculo extends Command {
 						ce.delete();
 						msg.delete();
 
-						return message.reply(`seu veículo não está liberado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}liberarveiculo\`!`);
+						return message.reply({
+							content: `Seu veículo não está liberado ainda. Peça para o Mecânico do servidor usar o comando \`${prefix}liberarveiculo\`!`
+						});
 					}
 
 					sim.stop();
@@ -166,7 +186,10 @@ module.exports = class Retirarveiculo extends Command {
 
 					embed.setDescription(`**✅ | Você retirou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível na sua garagem.`);
 
-					msg.edit(author, embed);
+					msg.edit({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: findSelectedEvento.dono,
@@ -199,7 +222,7 @@ module.exports = class Retirarveiculo extends Command {
 					}, {
 						$pull: {
 							mecanica: {
-								nome: findSelectedEvento.nome
+								placa: findSelectedEvento.placa
 							}
 						}
 					});
@@ -211,7 +234,9 @@ module.exports = class Retirarveiculo extends Command {
 			sim.on('end', (collected, reason) => {
 				if (reason === 'time') {
 					msg.delete();
-					message.reply(`você demorou demais para escolher o carro. Use o comando novamente!`);
+					message.reply({
+						content: 'Você demorou demais para escolher o carro. Use o comando novamente!'
+					});
 					sim.stop();
 					return;
 				}

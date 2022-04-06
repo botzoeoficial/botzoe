@@ -98,7 +98,10 @@ module.exports = class Cidade extends Command {
 			embed.addField('Alterar Bolsa:', `Pronto Para Uso! (\`${prefix}alterarbolsa\`)`);
 		}
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

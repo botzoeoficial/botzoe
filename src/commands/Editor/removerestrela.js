@@ -36,23 +36,43 @@ module.exports = class Removerestrela extends Command {
 	}
 	async run({
 		message,
-		prefix,
-		args
+		args,
+		author
 	}) {
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
 		const user = await this.client.database.users.findOne({
 			userId: member.id,
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-		if (!user.estrelas.length) return message.reply('esse usuário não possui nenhuma estrela para ser retirada.');
+		if (!user.estrelas.length) {
+			return message.reply({
+				content: 'Esse usuário não possui nenhuma estrela para ser retirada.'
+			});
+		}
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: member.id,
@@ -63,7 +83,9 @@ module.exports = class Removerestrela extends Command {
 			}
 		});
 
-		message.reply(`estrela retirada com sucesso do usuário ${member}.`);
+		return message.reply({
+			content: `Estrela retirada com sucesso do usuário ${member}.`
+		});
 	}
 
 };

@@ -1,7 +1,6 @@
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
-const Shop = require('../../database/Schemas/Shop');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
 
@@ -47,6 +46,12 @@ module.exports = class Alterarbolsa extends Command {
 			_id: message.guild.id
 		});
 
+		if (server.cidade.governador !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
 		const timeout = 43200000;
 
 		if (timeout - (Date.now() - server.cidade.alterarBolsa) > 0) {
@@ -55,42 +60,60 @@ module.exports = class Alterarbolsa extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const xp = args[0];
 
-			if (!xp) return message.reply('você precisa colocar um valor.');
+			if (!xp) {
+				return message.reply({
+					content: 'Você precisa colocar um valor.'
+				});
+			}
 
-			if (parseInt(xp) < 0 || parseInt(xp) > 90) return message.reply('o valor da bolsa precisa ser **maior que 0** e **menor que 91**.');
+			if (isNaN(xp)) {
+				return message.reply({
+					content: 'Você precisa colocar um valor válido.'
+				});
+			}
 
-			server.bolsa.valor = Number(xp);
-			server.bolsa.tempo = Date.now();
+			if (!Number.isInteger(Number(xp))) {
+				return message.reply({
+					content: 'Você precisa colocar um valor de **número inteiro**.'
+				});
+			}
+
+			if (parseInt(xp) < 0 || parseInt(xp) > 90) {
+				return message.reply({
+					content: 'O valor da bolsa precisa ser **maior que 0** e **menor que 91**.'
+				});
+			}
 
 			await this.client.database.guilds.findOneAndUpdate({
 				_id: message.guild.id
 			}, {
 				$set: {
-					'cidade.alterarBolsa': Date.now()
+					'cidade.alterarBolsa': Date.now(),
+					'bolsa.valor': Number(xp),
+					'bolsa.tempo': Date.now()
 				}
 			});
 
-			server.save();
+			message.reply({
+				content: `Valor da Bolsa de Valores alterada para **${xp}.0%**`
+			});
 
-			message.reply(`valor da bolsa de valores alterada para **${server.bolsa.valor}.0%**`);
+			const porcentagem = Number(xp) / 100;
 
-			const {
-				bolsa
-			} = server;
-
-			const porcentagem = bolsa.valor / 100;
-
-			const allItens = await Shop.find({
-				_id: message.guild.id
+			const allItens = await this.client.database.clientUtils.find({
+				_id: this.client.user.id
 			});
 
 			allItens.forEach(async (e) => {
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.bebidas': e.loja.bebidas[0]
 				}, {
 					$set: {
@@ -98,8 +121,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.bebidas': e.loja.bebidas[1]
 				}, {
 					$set: {
@@ -107,8 +130,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.bebidas': e.loja.bebidas[2]
 				}, {
 					$set: {
@@ -116,8 +139,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.bebidas': e.loja.bebidas[3]
 				}, {
 					$set: {
@@ -125,8 +148,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.bebidas': e.loja.bebidas[4]
 				}, {
 					$set: {
@@ -134,8 +157,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.bebidas': e.loja.bebidas[5]
 				}, {
 					$set: {
@@ -143,8 +166,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[0]
 				}, {
 					$set: {
@@ -152,8 +175,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[1]
 				}, {
 					$set: {
@@ -161,8 +184,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[2]
 				}, {
 					$set: {
@@ -170,8 +193,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[3]
 				}, {
 					$set: {
@@ -179,8 +202,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[4]
 				}, {
 					$set: {
@@ -188,8 +211,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[5]
 				}, {
 					$set: {
@@ -197,8 +220,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.comidas': e.loja.comidas[6]
 				}, {
 					$set: {
@@ -206,8 +229,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.doces': e.loja.doces[0]
 				}, {
 					$set: {
@@ -215,8 +238,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.doces': e.loja.doces[1]
 				}, {
 					$set: {
@@ -224,8 +247,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.doces': e.loja.doces[2]
 				}, {
 					$set: {
@@ -233,8 +256,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.doces': e.loja.doces[3]
 				}, {
 					$set: {
@@ -242,8 +265,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.doces': e.loja.doces[4]
 				}, {
 					$set: {
@@ -251,8 +274,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidades': e.loja.utilidades[0]
 				}, {
 					$set: {
@@ -260,8 +283,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidades': e.loja.utilidades[1]
 				}, {
 					$set: {
@@ -269,8 +292,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidades': e.loja.utilidades[2]
 				}, {
 					$set: {
@@ -278,8 +301,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidades': e.loja.utilidades[3]
 				}, {
 					$set: {
@@ -287,8 +310,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidades': e.loja.utilidades[4]
 				}, {
 					$set: {
@@ -296,8 +319,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidades': e.loja.utilidades[5]
 				}, {
 					$set: {
@@ -305,8 +328,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.pm': e.loja.pm[0]
 				}, {
 					$set: {
@@ -314,8 +337,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.pm': e.loja.pm[1]
 				}, {
 					$set: {
@@ -323,8 +346,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.pm': e.loja.pm[2]
 				}, {
 					$set: {
@@ -332,8 +355,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.pm': e.loja.pm[3]
 				}, {
 					$set: {
@@ -341,8 +364,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.pm': e.loja.pm[4]
 				}, {
 					$set: {
@@ -350,8 +373,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[0]
 				}, {
 					$set: {
@@ -360,8 +383,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[1]
 				}, {
 					$set: {
@@ -370,8 +393,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[2]
 				}, {
 					$set: {
@@ -380,8 +403,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[3]
 				}, {
 					$set: {
@@ -390,8 +413,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[4]
 				}, {
 					$set: {
@@ -400,8 +423,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[5]
 				}, {
 					$set: {
@@ -410,8 +433,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[6]
 				}, {
 					$set: {
@@ -420,8 +443,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[7]
 				}, {
 					$set: {
@@ -430,8 +453,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[8]
 				}, {
 					$set: {
@@ -440,8 +463,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[9]
 				}, {
 					$set: {
@@ -450,8 +473,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[10]
 				}, {
 					$set: {
@@ -460,8 +483,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[11]
 				}, {
 					$set: {
@@ -470,8 +493,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[12]
 				}, {
 					$set: {
@@ -480,8 +503,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[13]
 				}, {
 					$set: {
@@ -490,8 +513,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[14]
 				}, {
 					$set: {
@@ -500,8 +523,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.sementes': e.loja.sementes[15]
 				}, {
 					$set: {
@@ -510,8 +533,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidadesAgro': e.loja.utilidadesAgro[0]
 				}, {
 					$set: {
@@ -519,8 +542,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidadesAgro': e.loja.utilidadesAgro[1]
 				}, {
 					$set: {
@@ -528,8 +551,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidadesAgro': e.loja.utilidadesAgro[2]
 				}, {
 					$set: {
@@ -537,8 +560,8 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 
-				await Shop.findOneAndUpdate({
-					_id: e._id,
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id,
 					'loja.utilidadesAgro': e.loja.utilidadesAgro[3]
 				}, {
 					$set: {
@@ -546,6 +569,17 @@ module.exports = class Alterarbolsa extends Command {
 					}
 				});
 			});
+
+			return setTimeout(async () => {
+				await this.client.database.clientUtils.findOneAndUpdate({
+					_id: this.client.user.id
+				}, {
+					$set: {
+						'comandoAlterarBolsa.ativado': false,
+						'comandoAlterarBolsa.tempo': 0
+					}
+				});
+			}, 900000);
 		}
 	}
 

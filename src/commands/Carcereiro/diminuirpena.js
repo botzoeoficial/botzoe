@@ -51,7 +51,11 @@ module.exports = class Diminuirpena extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.carcereiro.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Carcereiro** da Cidade para diminuir a pena de alguém!');
+		if (!server.cidade.carcereiro.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: 'Você precisa ser um **Carcereiro** da Cidade para diminuir a pena de alguém!'
+			});
+		}
 
 		const user = await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -66,26 +70,49 @@ module.exports = class Diminuirpena extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+			if (!member) {
+				return message.reply({
+					content: 'Você precisa mencionar um usuário junto com o comando.'
+				});
+			}
 
 			const user2 = await this.client.database.users.findOne({
 				userId: member.id,
 				guildId: message.guild.id
 			});
 
-			if (!user2.prisao.isPreso) return message.reply('este usuário não está preso.');
+			if (!user2.prisao.isPreso) {
+				return message.reply({
+					content: 'Este usuário não está preso.'
+				});
+			}
 
-			if (!args.slice(1).join(' ')) return message.reply('por favor, coloque um tempo.');
+			if (!args.slice(1).join(' ')) {
+				return message.reply({
+					content: 'Por favor, coloque um tempo.'
+				});
+			}
 
 			const tempo = msTime(args.slice(1).join(' '));
 
-			if (!tempo) return message.reply('por favor, coloque um tempo válido. Ex: **1d** ou **1h**');
+			if (!tempo) {
+				return message.reply({
+					content: 'Por favor, coloque um tempo válido. Ex: **1d** ou **1h**'
+				});
+			}
 
-			if (tempo > 7200000) return message.reply('o tempo precisa ser abaixo de **2 horas**.');
+			if (tempo > 7200000) {
+				return message.reply({
+					content: 'O tempo precisa ser abaixo de **2 horas**.'
+				});
+			}
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -105,7 +132,9 @@ module.exports = class Diminuirpena extends Command {
 				}
 			});
 
-			return message.reply(`tempo de prisão diminuido com sucesso.`);
+			return message.reply({
+				content: 'Tempo de prisão diminuido com sucesso.'
+			});
 		}
 	}
 

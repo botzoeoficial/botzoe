@@ -41,7 +41,6 @@ module.exports = class Prender extends Command {
 	async run({
 		message,
 		author,
-		prefix,
 		args
 	}) {
 		const user = await this.client.database.users.findOne({
@@ -53,12 +52,22 @@ module.exports = class Prender extends Command {
 			_id: message.guild.id
 		});
 
-		if (!user.policia.isPolice && server2.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado da Cidade para prender alguém!');
+		if (!user.policia.isPolice && server2.cidade.delegado !== author.id) {
+			return message.reply({
+				content: 'Você não é Policial ou Delegado da Cidade para prender alguém!'
+			});
+		}
 
-		if (user.policia.isFolga) return message.reply('o Delegado da Cidade deu uma folga para todos os **Policiais** da Cidade, portanto, você não pode prender ninguém ainda!');
+		if (user.policia.isFolga) {
+			return message.reply({
+				content: 'O Delegado da Cidade deu uma folga para todos os **Policiais** da Cidade, portanto, você não pode prender ninguém ainda!'
+			});
+		}
 
 		if (!user.mochila.find((a) => a.item === 'Algemas') && user.armaEquipada !== 'MP5' && user.armaEquipada !== 'G18') {
-			return message.reply('você precisa ter 1 **Algema** na mochila e uma **MP5** ou **G18** equipada para prender alguém!');
+			return message.reply({
+				content: 'Você precisa ter 1 **Algema** na mochila e uma **MP5** ou **G18** equipada para prender alguém!'
+			});
 		}
 
 		const timeout = 3600000;
@@ -69,28 +78,49 @@ module.exports = class Prender extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+			if (!member) {
+				return message.reply({
+					content: 'Você precisa mencionar um usuário junto com o comando.'
+				});
+			}
 
-			if (member.id === author.id) return message.reply('você não pode prender você mesmo.');
+			if (member.id === author.id) {
+				return message.reply({
+					content: 'Você não pode prender você mesmo.'
+				});
+			}
 
 			const user2 = await this.client.database.users.findOne({
 				userId: member.id,
 				guildId: message.guild.id
 			});
 
-			if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+			if (!user2) {
+				return message.reply({
+					content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+				});
+			}
 
-			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-			if (!args.slice(1).join(' ')) return message.reply('por favor, coloque um tempo.');
+			if (!args.slice(1).join(' ')) {
+				return message.reply({
+					content: 'Por favor, coloque um tempo.'
+				});
+			}
 
 			const tempo = msTime(args.slice(1).join(' '));
 
-			if (!tempo) return message.reply('por favor, coloque um tempo válido. Ex: **1d** ou **1h**');
+			if (!tempo) {
+				return message.reply({
+					content: 'Por favor, coloque um tempo válido. Ex: **1d** ou **1h**'
+				});
+			}
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -113,7 +143,9 @@ module.exports = class Prender extends Command {
 				}
 			});
 
-			message.reply(`usuário ${member} preso por ${Utils.convertMS(tempo)}.`);
+			message.reply({
+				content: `Usuário ${member} preso por ${Utils.convertMS(tempo)} com sucesso.`
+			});
 
 			setTimeout(async () => {
 				await this.client.database.users.findOneAndUpdate({

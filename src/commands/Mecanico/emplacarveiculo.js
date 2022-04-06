@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
 /* eslint-disable consistent-return */
@@ -47,7 +49,11 @@ module.exports = class Emplacarveiculo extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.mecanico.find((a) => a.id === author.id)) return message.reply('você precisa ser um **Mecânico** na Cidade para emplacar algum veículo!');
+		if (!server.cidade.mecanico.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: 'Você precisa ser um **Mecânico** na Cidade para emplacar algum veículo!'
+			});
+		}
 
 		const userAuthor = await this.client.database.users.findOne({
 			userId: author.id,
@@ -62,7 +68,10 @@ module.exports = class Emplacarveiculo extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const mecanicaArray = server.mecanica.map((value, index) => ({
 				nome: value.nome,
@@ -124,10 +133,18 @@ module.exports = class Emplacarveiculo extends Command {
 			mecanicaArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 			embed.setDescription(!server.mecanica.length ? 'Não há carros na **Oficina** no momento.' : `**Qual veículo você deseja emplacar?**\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
 
-			message.channel.send(author, embed).then((msg) => {
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			}).then((msg) => {
 				if (!server.mecanica.length) return;
 
-				const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+				const filterSim = m => {
+					return m.author.id === author.id;
+				};
+
+				const sim = msg.channel.createMessageCollector({
+					filter: filterSim,
 					time: 300000
 				});
 
@@ -135,15 +152,17 @@ module.exports = class Emplacarveiculo extends Command {
 					if (Number(ce.content) === 0) {
 						msg.delete();
 						sim.stop();
-						return message.reply(`seleção cancelada com sucesso!`);
+						return message.reply({
+							content: 'Seleção cancelada com sucesso!'
+						});
 					} else {
 						const selected = Number(ce.content - 1);
 						const findSelectedEvento = mecanicaArray.find((xis) => xis.position === selected);
 
 						if (!findSelectedEvento) {
-							message.reply('número não encontrado. Por favor, envie o número novamente!').then(ba => ba.delete({
-								timeout: 5000
-							}));
+							message.reply({
+								content: 'Número não encontrado. Por favor, envie o número novamente!'
+							}).then((a) => a.delete(), 6000);
 							ce.delete();
 						}
 
@@ -152,7 +171,9 @@ module.exports = class Emplacarveiculo extends Command {
 							ce.delete();
 							msg.delete();
 
-							return message.reply(`esse carro não está arrumado. Você precisa arrumar ele antes de emplacar usando o comando \`${prefix}arrumarveiculo\`!`);
+							return message.reply({
+								content: `Esse carro não está arrumado. Você precisa arrumar ele antes de emplacar usando o comando \`${prefix}arrumarveiculo\`!`
+							});
 						}
 
 						if (findSelectedEvento.emplacado) {
@@ -160,7 +181,9 @@ module.exports = class Emplacarveiculo extends Command {
 							ce.delete();
 							msg.delete();
 
-							return message.reply(`esse carro já está emplacado. Você precisa liberar ele usando o comando \`${prefix}liberarveiculo\`!`);
+							return message.reply({
+								content: `Esse carro já está emplacado. Você precisa liberar ele usando o comando \`${prefix}liberarveiculo\`!`
+							});
 						}
 
 						sim.stop();
@@ -168,7 +191,10 @@ module.exports = class Emplacarveiculo extends Command {
 
 						embed.setDescription(`**✅ | Você emplacou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>\n\nEle já está disponível para liberação, acerte o valor e libere o veículo.`);
 
-						msg.edit(author, embed);
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
@@ -196,7 +222,9 @@ module.exports = class Emplacarveiculo extends Command {
 				sim.on('end', (collected, reason) => {
 					if (reason === 'time') {
 						msg.delete();
-						message.reply(`você demorou demais para escolher o carro. Use o comando novamente!`);
+						message.reply({
+							content: 'Você demorou demais para escolher o carro. Use o comando novamente!'
+						});
 						sim.stop();
 						return;
 					}

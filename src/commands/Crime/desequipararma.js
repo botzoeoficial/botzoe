@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
@@ -44,7 +45,11 @@ module.exports = class Desequipararma extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.armaEquipada === 'Nenhuma arma equipada.') return message.reply('você não possui nenhuma arma equipada ainda.');
+		if (user.armaEquipada === 'Nenhuma arma equipada.') {
+			return message.reply({
+				content: 'Você não possui nenhuma arma equipada ainda.'
+			});
+		}
 
 		const itensFilter = user.mochila.filter((a) => ['Ak-47', 'UMP', 'MP5', 'ACR', 'KNT-308', 'Desert Eagle', 'Revolver 38', 'G18'].includes(a.item));
 
@@ -57,12 +62,18 @@ module.exports = class Desequipararma extends Command {
 			}))
 			.setDescription(itensMap || '**Você não possui nenhuma Arma na sua mochila ainda.**');
 
-		message.channel.send(author, embed).then(async (msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
 			for (const emoji of itensFilter.map((es) => es.id)) await msg.react(emoji);
 
-			const filter = (reaction, user3) => itensFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+			const filter = (reaction, user2) => {
+				return itensFilter.map((es) => es.id).includes(reaction.emoji.id) && user2.id === author.id;
+			};
 
-			const sim = msg.createReactionCollector(filter, {
+			const sim = msg.createReactionCollector({
+				filter,
 				time: 60000,
 				max: 1
 			});
@@ -83,7 +94,9 @@ module.exports = class Desequipararma extends Command {
 
 				if (user.armaEquipada !== itemEmoji) {
 					msg.delete();
-					return message.reply('você não está com essa arma equipada. Por favor, escolha outra!');
+					return message.reply({
+						content: 'Você não está com essa arma equipada. Por favor, escolha outra!'
+					});
 				} else {
 					sim.stop();
 					msg.delete();
@@ -97,7 +110,9 @@ module.exports = class Desequipararma extends Command {
 						}
 					});
 
-					return message.reply(`você desequipou a arma **${itemEmoji}** com sucesso!`);
+					return message.reply({
+						content: `Você desequipou a arma **${itemEmoji}** com sucesso!`
+					});
 				}
 			});
 
@@ -105,6 +120,7 @@ module.exports = class Desequipararma extends Command {
 				if (reason === 'time') {
 					sim.stop();
 					msg.delete();
+					return;
 				}
 			});
 		});

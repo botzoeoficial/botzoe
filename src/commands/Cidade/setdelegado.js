@@ -45,7 +45,17 @@ module.exports = class Setdelegado extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.governador !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
 
 		const timeout = 259200000;
 
@@ -55,15 +65,30 @@ module.exports = class Setdelegado extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author,
+				embeds: [embed]
+			});
 		} else {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+			if (!member) {
+				return message.reply({
+					content: 'Você precisa mencionar um usuário junto com o comando.'
+				});
+			}
 
-			if (member.user.bot) return message.reply(`você não pode dar função de Delegado para um bot.`);
+			if (member.user.bot) {
+				return message.reply({
+					content: 'Um bot nunca poderá ser Delegado desse servidor.'
+				});
+			}
 
-			if (server.cidade.delegado === member.id) return message.reply('esse usuário já é Delegado desse servidor.');
+			if (server.cidade.delegado === member.id) {
+				return message.reply({
+					content: 'Esse usuário já é Delegado desse servidor.'
+				});
+			}
 
 			await this.client.database.guilds.findOneAndUpdate({
 				_id: message.guild.id
@@ -74,7 +99,9 @@ module.exports = class Setdelegado extends Command {
 				}
 			});
 
-			message.reply(`o usuário ${member} virou Delegado desse servidor agora.`);
+			return message.reply({
+				content: `O usuário ${member} entrou no cargo de Delegado desse servidor com sucesso.`
+			});
 		}
 	}
 

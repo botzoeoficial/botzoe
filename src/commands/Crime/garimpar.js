@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable max-depth */
 /* eslint-disable complexity */
 /* eslint-disable max-len */
@@ -7,9 +8,9 @@ const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
 const Utils = require('../../utils/Util');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Garimpar extends Command {
 
@@ -46,12 +47,24 @@ module.exports = class Garimpar extends Command {
 	}
 	async run({
 		message,
-		author
+		author,
+		prefix
 	}) {
 		const user = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
+
+		if (user.hp.vida < 50) {
+			const embedVida = new ClientEmbed(author)
+				.setTitle('😨 | Você está ferido!')
+				.setDescription(`Você se feriu, e não consegue realizar esta ação.\nVá até o **Hospital ${message.guild.name}** para se recuperar e receber **tratamento**.\n\nUse o comando \`${prefix}entradahospital\` para um Médico iniciar seu **tratamento**.`);
+
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedVida]
+			});
+		}
 
 		if (user.prisao.isPreso) {
 			let presoTime = 0;
@@ -93,6 +106,14 @@ module.exports = class Garimpar extends Command {
 				}
 			} else if (user.prisao.roubarVeiculo) {
 				presoTime = 180000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.atirarPrisao) {
+				presoTime = 129600000;
 
 				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
@@ -181,100 +202,111 @@ module.exports = class Garimpar extends Command {
 				}
 			}
 
-			const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+			const buttonPreso = new MessageButton().setCustomId('preso').setEmoji('900544510365405214').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonPreso]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embedPreso,
+			const escolha = await message.reply({
+				content: author.toString(),
+				embeds: [embedPreso],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
-				max: 1,
+			const filter = (interaction) => interaction.isButton() && ['preso'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
 				time: 60000
 			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'preso') {
-					b.reply.defer();
+				switch (b.customId) {
+					case 'preso':
+						await b.deferUpdate();
 
-					const userMochila = await this.client.database.users.findOne({
-						userId: author.id,
-						guildId: message.guild.id
-					});
-
-					if (!userMochila.isMochila) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
-					}
-
-					if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
-					}
-
-					if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
-						await this.client.database.users.findOneAndUpdate({
+						const userMochila = await this.client.database.users.findOne({
 							userId: author.id,
-							guildId: message.guild.id,
-							'mochila.item': 'Chave Micha'
-						}, {
-							$set: {
-								'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
-							}
+							guildId: message.guild.id
 						});
-					} else {
+
+						if (!userMochila.isMochila) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!'
+							});
+						}
+
+						if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **Chave Micha** na sua Mochila!'
+							});
+						}
+
+						if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id,
+								'mochila.item': 'Chave Micha'
+							}, {
+								$set: {
+									'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+								}
+							});
+						} else {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$pull: {
+									mochila: {
+										item: 'Chave Micha'
+									}
+								}
+							});
+						}
+
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
 						}, {
-							$pull: {
-								mochila: {
-									item: 'Chave Micha'
-								}
+							$set: {
+								'prisao.isPreso': false,
+								'prisao.tempo': 0,
+								'prisao.prenderCmd': false,
+								'prisao.prenderMili': 0,
+								'prisao.traficoDrogas': false,
+								'prisao.crime': false,
+								'prisao.prender': false,
+								'prisao.revistar': false,
+								'prisao.roubarVeiculo': false,
+								'prisao.atirarPrisao': false,
+								'prisao.velha': false,
+								'prisao.frentista': false,
+								'prisao.joalheria': false,
+								'prisao.agiota': false,
+								'prisao.casaLoterica': false,
+								'prisao.brazino': false,
+								'prisao.facebook': false,
+								'prisao.bancoCentral': false,
+								'prisao.shopping': false,
+								'prisao.banco': false
 							}
 						});
-					}
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'prisao.isPreso': false,
-							'prisao.tempo': 0,
-							'prisao.prenderCmd': false,
-							'prisao.prenderMili': 0,
-							'prisao.traficoDrogas': false,
-							'prisao.crime': false,
-							'prisao.prender': false,
-							'prisao.revistar': false,
-							'prisao.roubarVeiculo': false,
-							'prisao.atirarPrisao': false,
-							'prisao.velha': false,
-							'prisao.frentista': false,
-							'prisao.joalheria': false,
-							'prisao.agiota': false,
-							'prisao.casaLoterica': false,
-							'prisao.brazino': false,
-							'prisao.facebook': false,
-							'prisao.bancoCentral': false,
-							'prisao.shopping': false,
-							'prisao.banco': false
-						}
-					});
-
-					escolha.delete();
-					return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+						escolha.delete();
+						return message.reply({
+							content: `Você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`
+						});
 				}
 			});
 
 			collectorEscolhas.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					return escolha.edit(author, {
-						embed: embedPreso,
+					return escolha.edit({
+						content: author.toString(),
+						embeds: [embedPreso],
 						components: []
 					});
 				}
@@ -285,11 +317,15 @@ module.exports = class Garimpar extends Command {
 			if (user.inventory.length > 0) {
 				if (user.inventory.find((a) => a.item === 'Bolso')) {
 					if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 400) {
-						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!');
+						return message.reply({
+							content: 'Seu **inventário** está cheio. Use algum item, para liberar espaço!'
+						});
 					}
 				} else if (!user.inventory.find((a) => a.item === 'Bolso')) {
 					if (user.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
-						return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!');
+						return message.reply({
+							content: 'Seu **inventário** está cheio. Use algum item, para liberar espaço!'
+						});
 					}
 				}
 			}
@@ -302,7 +338,10 @@ module.exports = class Garimpar extends Command {
 				const embed = new ClientEmbed(author)
 					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				});
 			} else {
 				const itens = ['Ferro', 'Caulim', 'Plástico', 'Cobre', 'Prata'];
 				const itensEspeciais = ['Alumínio', 'Borracha'];
@@ -315,10 +354,13 @@ module.exports = class Garimpar extends Command {
 				if (randomEspecial === 'Alumínio') {
 					if (randomItens[0] === 'Ferro' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -407,13 +449,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -502,13 +547,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -597,13 +645,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -692,13 +743,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -787,13 +841,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -882,13 +939,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -977,13 +1037,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1072,13 +1135,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1167,13 +1233,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1262,13 +1331,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1357,13 +1429,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1452,13 +1527,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1547,13 +1625,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1642,13 +1723,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1737,13 +1821,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1832,13 +1919,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -1927,13 +2017,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2022,13 +2115,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2117,13 +2213,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:aluminiumpaper:918835445780074507> | Alumínio: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Alumínio')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2212,15 +2311,18 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					}
 				} else if (randomEspecial === 'Borracha') {
 					if (randomItens[0] === 'Ferro' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2309,13 +2411,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2404,13 +2509,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2499,13 +2607,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Ferro' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2594,13 +2705,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2689,13 +2803,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2784,13 +2901,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2879,13 +2999,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Caulim' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -2974,13 +3097,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3069,13 +3195,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3164,13 +3293,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3259,13 +3391,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Plástico' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3354,13 +3489,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3449,13 +3587,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3544,13 +3685,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3639,13 +3783,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Cobre' && randomItens[1] === 'Prata') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia2}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3734,13 +3881,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Ferro') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:beam:918835445746532412> | Ferro: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3829,13 +3979,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Caulim') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:landslide:918835445700378684> | Caulim: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -3924,13 +4077,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Plástico') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:plasticbag:918835445838774322> | Plástico: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -4019,13 +4175,16 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					} else if (randomItens[0] === 'Prata' && randomItens[1] === 'Cobre') {
 						const embed = new ClientEmbed(author)
-							.setTitle('Garimpo')
+							.setTitle('<:garimpar:957700475556339802> | Garimpo')
 							.setDescription(`Você garimpou:\n\n<:eraser:918835444794400799> | Borracha: \`${randomQuantia}\`\n\n<:silver:918835445939458088> | Prata: \`${randomQuantia2}\`\n\n<:copperwire:918835446040133652> | Cobre: \`${randomQuantia3}\``);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						if (user.inventory.find((a) => a.item === 'Borracha')) {
 							await this.client.database.users.findOneAndUpdate({
@@ -4114,7 +4273,7 @@ module.exports = class Garimpar extends Command {
 							}
 						});
 
-						user.save();
+						return user.save();
 					}
 				}
 			}

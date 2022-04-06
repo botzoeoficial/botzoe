@@ -45,18 +45,27 @@ module.exports = class Remedio extends Command {
 			guildId: message.guild.id
 		});
 
-		if (Object.values(user.humores).filter(humor => humor > 0).length >= 5) return message.reply('você não está doente!');
+		if (Object.values(user.humores).filter(humor => humor > 0).length >= 5) {
+			return message.reply({
+				content: 'Você não está doente!'
+			});
+		}
 
 		const hasItem = user.inventory.find((xa) => xa.item.includes('Remédio'));
 
 		if (!hasItem) {
-			return message.reply('você não possui um **Remédio** no seu inventário!');
+			return message.reply({
+				content: 'Você não possui um **Remédio** no seu inventário!'
+			});
 		} else {
 			const embed = new ClientEmbed(author)
 				.setTitle('💊 | CURADO')
 				.setDescription(`💊 | Você tomou um **Remédio** e conseguiu melhorar todos os seus humores em 150%:\n\n🍽️ **Fome:** 150%\n🥤 **Sede:** 150%\n😡 **Bravo:** 150%\n😭 **Triste:** 150%\n😰 **Cansado:** 150%\n🥺 **Solitário:** 150%\n🤯 **Estressado:** 150%\n😵‍💫 **Desanimado:** 150%`);
 
-			message.channel.send(author, embed);
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 
 			const findRemedio = user.inventory.findIndex(({
 				item
@@ -81,6 +90,7 @@ module.exports = class Remedio extends Command {
 			});
 
 			user.save();
+			return;
 		}
 	}
 

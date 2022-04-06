@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
@@ -37,34 +38,66 @@ module.exports = class Addpolicial extends Command {
 	async run({
 		message,
 		args,
-		prefix
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.governador !== author.id && server.cidade.delegado !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` ou \`Delegado\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
-		if (member.user.bot) return message.reply(`você não pode dar função de Policial para um bot.`);
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca poderá ser Policial desse servidor.'
+			});
+		}
 
-		if (member.id === server.cidade.delegado) return message.reply('você não pode setar o Delegado como **Policial**.');
+		if (member.id === server.cidade.delegado) {
+			return message.reply({
+				content: 'Você não pode setar o Delegado como **Policial**.'
+			});
+		}
 
 		const user2 = await this.client.database.users.findOne({
 			userId: member.id,
 			guildId: message.guild.id
 		});
 
-		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+		if (!user2) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
-		if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (server.cidade.policiais.length === 10) {
+			return message.reply({
+				content: 'Esse servidor já possui o máximo de Policiais.'
+			});
+		}
 
-		if (server.cidade.policiais.length === 10) return message.reply('esse servidor já possui o máximo de Policiais.');
-
-		if (server.cidade.policiais.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Policial do servidor.');
+		if (server.cidade.policiais.map(a => a.id).includes(member.id)) {
+			return message.reply({
+				content: 'Esse usuário já é Policial do servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -85,7 +118,9 @@ module.exports = class Addpolicial extends Command {
 			}
 		});
 
-		message.reply(`o usuário ${member} virou Policial desse servidor agora.`);
+		return message.reply({
+			content: `O usuário ${member} entrou no cargo de Policial desse servidor com sucesso.`
+		});
 	}
 
 };

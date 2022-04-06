@@ -42,9 +42,17 @@ module.exports = class Sobremim extends Command {
 	}) {
 		const mensagem = args.slice(0).join(' ');
 
-		if (!mensagem) return message.reply(`use \`${prefix}sobremim <mensagem>\` para alterar sua descrição.`);
+		if (!mensagem) {
+			return message.reply({
+				content: `Use \`${prefix}sobremim <mensagem>\` para alterar sua descrição.`
+			});
+		}
 
-		if (mensagem.length > 1024) return message.reply('a mensagem do SOBREMIM só pode ter no máximo **1024** letras.');
+		if (mensagem.length > 1024) {
+			return message.reply({
+				content: 'A mensagem do SOBREMIM só pode ter no máximo **1024** letras.'
+			});
+		}
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -55,7 +63,9 @@ module.exports = class Sobremim extends Command {
 			}
 		});
 
-		message.reply(`sobremim alterado com sucesso! Use o comando \`${prefix}perfil\` para ver como ficou.`);
+		return message.reply({
+			content: `Sobremim alterado com sucesso! Use o comando \`${prefix}perfil\` para ver como ficou.`
+		});
 	}
 
 };

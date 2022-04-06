@@ -59,7 +59,10 @@ module.exports = class Impostobancario extends Command {
 			embed.addField('Próximo Pagamento:', `Use o comando: \`${prefix}pagarbanco\`.`);
 		}
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

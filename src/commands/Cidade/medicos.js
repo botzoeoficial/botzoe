@@ -50,7 +50,10 @@ module.exports = class Medicos extends Command {
 			.addField('👨‍⚕️ | Diretor do HP:', server.cidade.diretorHP === '' ? `Essa cidade não possui **Diretor do Hospital** ainda! Use o comando \`${prefix}setdiretorhp\`.` : `<@${server.cidade.diretorHP}>`)
 			.addField('🩺 | Médicos:', !server.cidade.medicos.length ? `Essa cidade não possui **médicos** ainda! Use o comando \`${prefix}addmedico\`.` : server.cidade.medicos.map((a) => `<@${a.id}>`).join('\n'));
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

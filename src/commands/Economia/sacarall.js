@@ -46,15 +46,26 @@ module.exports = class Sacarall extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Cadastre-se usando o comando: \`${prefix}cadastrar\`.`);
+		// if (518400000 - (Date.now() - user.payBank.cooldown) < 0) {
+		// 	return message.reply({
+		// 		content: `Você precisa pagar o **Banco** antes de fazer isso! Use o comando \`${prefix}pagarbanco\`.`
+		// 	});
+		// }
 
 		const embed = new ClientEmbed(author);
 
-		if (user.banco <= 0) return message.reply('você não tem dinheiro para sacar do banco.');
+		if (user.banco <= 0) {
+			return message.reply({
+				content: 'Você não tem dinheiro para sacar do banco.'
+			});
+		}
 
 		embed.setDescription(`💵 | Você sacou **R$${Utils.numberFormat(Number(user.banco))},00** do banco com sucesso.`);
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -65,6 +76,8 @@ module.exports = class Sacarall extends Command {
 				banco: user.banco = 0
 			}
 		});
+
+		return;
 	}
 
 };

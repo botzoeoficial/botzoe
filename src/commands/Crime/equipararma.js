@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
@@ -55,12 +56,18 @@ module.exports = class Equipararma extends Command {
 			}))
 			.setDescription(itensMap || '**Você não possui nenhuma Arma na sua mochila ainda.**');
 
-		message.channel.send(author, embed).then(async (msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
 			for (const emoji of itensFilter.map((es) => es.id)) await msg.react(emoji);
 
-			const filter = (reaction, user3) => itensFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+			const filter = (reaction, user2) => {
+				return itensFilter.map((es) => es.id).includes(reaction.emoji.id) && user2.id === author.id;
+			};
 
-			const sim = msg.createReactionCollector(filter, {
+			const sim = msg.createReactionCollector({
+				filter,
 				time: 60000,
 				max: 1
 			});
@@ -91,13 +98,16 @@ module.exports = class Equipararma extends Command {
 					}
 				});
 
-				return message.reply(`você equipou a arma **${itemEmoji}** com sucesso!`);
+				return message.reply({
+					content: `Você equipou a arma **${itemEmoji}** com sucesso!`
+				});
 			});
 
 			sim.on('end', async (collected, reason) => {
 				if (reason === 'time') {
 					sim.stop();
 					msg.delete();
+					return;
 				}
 			});
 		});

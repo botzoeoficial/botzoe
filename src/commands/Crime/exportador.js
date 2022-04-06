@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-case-declarations */
 /* eslint-disable max-nested-callbacks */
 /* eslint-disable max-len */
 /* eslint-disable consistent-return */
@@ -6,9 +8,9 @@ const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Exportador extends Command {
 
@@ -51,7 +53,11 @@ module.exports = class Exportador extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.donoFabricadeDrogas.find((a) => a.id === author.id)) return message.reply('você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!');
+		if (server.cidade.donoFabricadeDrogas.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: 'Você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!'
+			});
+		}
 
 		const irEmbora = 600000;
 		const faltamHora = ms(irEmbora - (Date.now() - server.exportador.irEmbora));
@@ -62,12 +68,20 @@ module.exports = class Exportador extends Command {
 			.addField('Tempo para ir embora:', irEmbora - (Date.now() - server.exportador.irEmbora) > 0 ? `\`${faltamHora.days}\`d \`${faltamHora.hours}\`h \`${faltamHora.minutes}\`m \`${faltamHora.seconds}\`s` : `\`0\`d \`0\`h \`0\`m \`0\`s`)
 			.addField('Quantidade que falta para a exportação:', `${server.exportador.quantiaQueFalta}/${server.exportador.precisandoQuantia}`);
 
-		message.channel.send(author, embed).then(async (msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
 			if (server.exportador.precisandoDroga === 'Nenhuma Droga') return;
 
 			await msg.react('📦');
 
-			const coletor = msg.createReactionCollector((reaction, user) => reaction.emoji.name === '📦' && user.id === author.id, {
+			const filter = (reactionFilter, userFilter) => {
+				return reactionFilter.emoji.name === '📦' && userFilter.id === author.id;
+			};
+
+			const coletor = msg.createReactionCollector({
+				filter,
 				time: 600000,
 				max: 1
 			});
@@ -90,109 +104,128 @@ module.exports = class Exportador extends Command {
 							.setTitle('👮 | Preso')
 							.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-						const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+						const buttonPreso = new MessageButton().setCustomId('preso').setEmoji('900544510365405214').setStyle('PRIMARY');
 						const botoes = new MessageActionRow().addComponents([buttonPreso]);
 
-						const escolha = await message.channel.send(author, {
-							embed: embedPreso,
+						const escolha = await message.reply({
+							content: author.toString(),
+							embeds: [embedPreso],
 							components: [botoes]
 						});
 
-						const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
-							max: 1,
+						const filter2 = (interaction) => interaction.isButton() && ['preso'].includes(interaction.customId) && interaction.user.id === author.id;
+
+						const collectorEscolhas = escolha.createMessageComponentCollector({
+							filter: filter2,
 							time: 60000
 						});
 
 						collectorEscolhas.on('collect', async (b) => {
-							if (b.id === 'preso') {
-								b.reply.defer();
+							switch (b.customId) {
+								case 'preso':
+									await b.deferUpdate();
 
-								const userMochila = await this.client.database.users.findOne({
-									userId: author.id,
-									guildId: message.guild.id
-								});
-
-								if (!userMochila.isMochila) {
-									escolha.delete();
-
-									return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
-								}
-
-								if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
-									escolha.delete();
-
-									return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
-								}
-
-								if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
-									await this.client.database.users.findOneAndUpdate({
+									const userMochila = await this.client.database.users.findOne({
 										userId: author.id,
-										guildId: message.guild.id,
-										'mochila.item': 'Chave Micha'
-									}, {
-										$set: {
-											'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
-										}
+										guildId: message.guild.id
 									});
-								} else {
+
+									if (!userMochila.isMochila) {
+										escolha.delete();
+
+										return message.reply({
+											content: 'Você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!'
+										});
+									}
+
+									if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+										escolha.delete();
+
+										return message.reply({
+											content: 'Você não tem uma **Chave Micha** na sua Mochila!'
+										});
+									}
+
+									if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id,
+											'mochila.item': 'Chave Micha'
+										}, {
+											$set: {
+												'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+											}
+										});
+									} else {
+										await this.client.database.users.findOneAndUpdate({
+											userId: author.id,
+											guildId: message.guild.id
+										}, {
+											$pull: {
+												mochila: {
+													item: 'Chave Micha'
+												}
+											}
+										});
+									}
+
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
 										guildId: message.guild.id
 									}, {
-										$pull: {
-											mochila: {
-												item: 'Chave Micha'
-											}
+										$set: {
+											'prisao.isPreso': false,
+											'prisao.tempo': 0,
+											'prisao.prenderCmd': false,
+											'prisao.prenderMili': 0,
+											'prisao.traficoDrogas': false,
+											'prisao.crime': false,
+											'prisao.prender': false,
+											'prisao.revistar': false,
+											'prisao.roubarVeiculo': false,
+											'prisao.atirarPrisao': false,
+											'prisao.velha': false,
+											'prisao.frentista': false,
+											'prisao.joalheria': false,
+											'prisao.agiota': false,
+											'prisao.casaLoterica': false,
+											'prisao.brazino': false,
+											'prisao.facebook': false,
+											'prisao.bancoCentral': false,
+											'prisao.shopping': false,
+											'prisao.banco': false
 										}
 									});
-								}
 
-								await this.client.database.users.findOneAndUpdate({
-									userId: author.id,
-									guildId: message.guild.id
-								}, {
-									$set: {
-										'prisao.isPreso': false,
-										'prisao.tempo': 0,
-										'prisao.prenderCmd': false,
-										'prisao.prenderMili': 0,
-										'prisao.traficoDrogas': false,
-										'prisao.crime': false,
-										'prisao.prender': false,
-										'prisao.revistar': false,
-										'prisao.roubarVeiculo': false,
-										'prisao.atirarPrisao': false,
-										'prisao.velha': false,
-										'prisao.frentista': false,
-										'prisao.joalheria': false,
-										'prisao.agiota': false,
-										'prisao.casaLoterica': false,
-										'prisao.brazino': false,
-										'prisao.facebook': false,
-										'prisao.bancoCentral': false,
-										'prisao.shopping': false,
-										'prisao.banco': false
-									}
-								});
-
-								escolha.delete();
-								return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+									escolha.delete();
+									return message.reply({
+										content: `Você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`
+									});
 							}
 						});
 
 						collectorEscolhas.on('end', async (collected, reason) => {
 							if (reason === 'time') {
-								return escolha.edit(author, {
-									embed: embedPreso,
+								return escolha.edit({
+									content: author.toString(),
+									embeds: [embedPreso],
 									components: []
 								});
 							}
 						});
+
+						return;
 					}
 				} else if (!userAuthor.isMochila) {
-					return message.channel.send(`${author}, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`);
+					msg.delete();
+					return message.reply({
+						content: `Você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`
+					});
 				} else if (!userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga)) {
-					return message.channel.send(`${author}, você não possui **${server.exportador.precisandoDroga}** na sua mochila para vender ela.`);
+					msg.delete();
+					return message.reply({
+						content: `Você não possui **${server.exportador.precisandoDroga}** na sua mochila para vender ela.`
+					});
 				} else {
 					const randomDrogaUser = userAuthor.mochila.find((a) => a.item === server.exportador.precisandoDroga).quantia;
 
@@ -214,7 +247,10 @@ module.exports = class Exportador extends Command {
 						embed.addField('Tempo para o exportador ir embora:', `\`0\`d \`0\`h \`0\`m \`0\`s`);
 						embed.addField('Quantidade que falta para a exportação:', `${server.exportador.precisandoQuantia}/${server.exportador.precisandoQuantia}`);
 
-						await msg.edit(embed);
+						await msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						await this.client.database.guilds.findOneAndUpdate({
 							_id: message.guild.id
@@ -233,7 +269,10 @@ module.exports = class Exportador extends Command {
 							.setTitle('Exportando Drogas')
 							.setDescription(`O exportador de drogas encheu seu lote de drogas para levar a Europa. Ele só irá voltar daqui a ${Utils.convertMS(17280000)}!`);
 
-						return message.channel.send(embedTchau);
+						return message.reply({
+							content: author.toString(),
+							embeds: [embedTchau]
+						});
 					}
 
 					let valor = 0;
@@ -252,10 +291,18 @@ module.exports = class Exportador extends Command {
 						.setTitle('Exportando Drogas')
 						.setDescription(`${author}, você repassou **${randomDrogaUser}KG** de **${server.exportador.precisandoDroga}** para o exportador, e recebeu **R$${Utils.numberFormat(valor)},00**.`);
 
-					message.channel.send(author, embedExportada).then(async (msg1) => {
+					message.reply({
+						content: author.toString(),
+						embeds: [embedExportada]
+					}).then(async (msg1) => {
 						await msg1.react('👮');
 
-						const coletor2 = msg1.createReactionCollector((reaction3, user3) => reaction3.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(user3.id) || server.cidade.delegado === user3.id), {
+						const filterPolice = (reactionFilter, userFilter) => {
+							return reactionFilter.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(userFilter.id) || server.cidade.delegado === userFilter.id);
+						};
+
+						const coletor2 = msg1.createReactionCollector({
+							filter: filterPolice,
 							time: 4000,
 							max: 1
 						});
@@ -266,7 +313,11 @@ module.exports = class Exportador extends Command {
 								guildId: message.guild.id
 							});
 
-							if (userPolicia.policia.isFolga) return message.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, portanto, você não pode prender ninguém ainda!');
+							if (userPolicia.policia.isFolga) {
+								return message.reply({
+									content: 'O Delegado do servidor deu uma folga para todos os **Policiais** do servidor, portanto, você não pode prender ninguém ainda!'
+								});
+							}
 
 							const timeoutRoubar = 300000;
 
@@ -276,13 +327,19 @@ module.exports = class Exportador extends Command {
 								const embedRoubar = new ClientEmbed(this.client.user)
 									.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-								return message.channel.send(`<@${user.id}>`, embedRoubar);
+								return message.reply({
+									content: user.toString(),
+									embeds: [embedRoubar]
+								});
 							} else {
 								const embedPolicia = new ClientEmbed(this.client.user)
 									.setTitle('Prisão')
 									.setDescription(`${author}, você foi preso em flagrante por <@${user.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
 
-								message.channel.send(author, embedPolicia);
+								message.reply({
+									content: author.toString(),
+									embeds: [embedPolicia]
+								});
 
 								server.exportador.quantiaQueFalta -= randomDrogaUser;
 
@@ -376,7 +433,9 @@ module.exports = class Exportador extends Command {
 			coletor.on('end', async (collected, reason) => {
 				if (reason === 'time') {
 					coletor.stop();
-					return message.reply('você demorou demais para enviar suas drogas. Use o comando novamente!');
+					return message.reply({
+						content: 'Você demorou demais para enviar suas drogas. Use o comando novamente!'
+					});
 				}
 			});
 		});

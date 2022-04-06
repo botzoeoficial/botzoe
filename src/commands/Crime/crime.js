@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-assign */
 /* eslint-disable max-len */
@@ -9,9 +10,9 @@ const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Crime extends Command {
 
@@ -61,10 +62,6 @@ module.exports = class Crime extends Command {
 			_id: message.guild.id
 		});
 
-		if (userAuthor.policia.isPolice) return message.reply('você não pode usar esse comando pois você é Policial do servidor!');
-
-		if (server.cidade.delegado === author.id) return message.reply('você não pode usar esse comando pois você é Delegado do servidor!');
-
 		if (args[0] && ['estatisticas', 'estatistica', 'estatísticas'].includes(args[0].toLowerCase())) {
 			const CRIMES = await require('mongoose')
 				.connection.collection('users')
@@ -92,7 +89,46 @@ module.exports = class Crime extends Command {
 				.setTitle('Crime Estatísticas')
 				.setDescription(crimesMap.map((x, f) => `\`${f + 1}º\`) **${x.user}** - **${x.feito}**`).join('\n\n'));
 
-			return message.channel.send(author, EMBED);
+			return message.reply({
+				content: author.toString(),
+				embeds: [EMBED]
+			});
+		}
+
+		if (server.cidade.governador === author.id) {
+			return message.reply({
+				content: 'Você não pode usar esse comando pois você é Prefeito do servidor!'
+			});
+		}
+
+		if (server.cidade.delegado === author.id) {
+			return message.reply({
+				content: 'Você não pode usar esse comando pois você é Delegado do servidor!'
+			});
+		}
+
+		if (userAuthor.policia.isPolice) {
+			return message.reply({
+				content: 'Você não pode usar esse comando pois você é Policial do servidor!'
+			});
+		}
+
+		if (server.cidade.carcereiro.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: 'Você não pode usar esse comando pois você é Carcereiro do servidor!'
+			});
+		}
+
+		if (server.cidade.diretorHP === author.id) {
+			return message.reply({
+				content: 'Você não pode usar esse comando pois você é Diretor do Hospital do servidor!'
+			});
+		}
+
+		if (server.cidade.medicos.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: 'Você não pode usar esse comando pois você é Médico do servidor!'
+			});
 		}
 
 		if (userAuthor.prisao.isPreso) {
@@ -135,6 +171,14 @@ module.exports = class Crime extends Command {
 				}
 			} else if (userAuthor.prisao.roubarVeiculo) {
 				presoTime = 180000;
+
+				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (userAuthor.prisao.atirarPrisao) {
+				presoTime = 129600000;
 
 				if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
@@ -223,100 +267,111 @@ module.exports = class Crime extends Command {
 				}
 			}
 
-			const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+			const buttonPreso = new MessageButton().setCustomId('preso').setEmoji('900544510365405214').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonPreso]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embedPreso,
+			const escolha = await message.reply({
+				content: author.toString(),
+				embeds: [embedPreso],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
-				max: 1,
+			const filter = (interaction) => interaction.isButton() && ['preso'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
 				time: 60000
 			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'preso') {
-					b.reply.defer();
+				switch (b.customId) {
+					case 'preso':
+						await b.deferUpdate();
 
-					const userMochila = await this.client.database.users.findOne({
-						userId: author.id,
-						guildId: message.guild.id
-					});
-
-					if (!userMochila.isMochila) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
-					}
-
-					if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
-					}
-
-					if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
-						await this.client.database.users.findOneAndUpdate({
+						const userMochila = await this.client.database.users.findOne({
 							userId: author.id,
-							guildId: message.guild.id,
-							'mochila.item': 'Chave Micha'
-						}, {
-							$set: {
-								'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
-							}
+							guildId: message.guild.id
 						});
-					} else {
+
+						if (!userMochila.isMochila) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!'
+							});
+						}
+
+						if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **Chave Micha** na sua Mochila!'
+							});
+						}
+
+						if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id,
+								'mochila.item': 'Chave Micha'
+							}, {
+								$set: {
+									'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+								}
+							});
+						} else {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$pull: {
+									mochila: {
+										item: 'Chave Micha'
+									}
+								}
+							});
+						}
+
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
 						}, {
-							$pull: {
-								mochila: {
-									item: 'Chave Micha'
-								}
+							$set: {
+								'prisao.isPreso': false,
+								'prisao.tempo': 0,
+								'prisao.prenderCmd': false,
+								'prisao.prenderMili': 0,
+								'prisao.traficoDrogas': false,
+								'prisao.crime': false,
+								'prisao.prender': false,
+								'prisao.revistar': false,
+								'prisao.roubarVeiculo': false,
+								'prisao.atirarPrisao': false,
+								'prisao.velha': false,
+								'prisao.frentista': false,
+								'prisao.joalheria': false,
+								'prisao.agiota': false,
+								'prisao.casaLoterica': false,
+								'prisao.brazino': false,
+								'prisao.facebook': false,
+								'prisao.bancoCentral': false,
+								'prisao.shopping': false,
+								'prisao.banco': false
 							}
 						});
-					}
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'prisao.isPreso': false,
-							'prisao.tempo': 0,
-							'prisao.prenderCmd': false,
-							'prisao.prenderMili': 0,
-							'prisao.traficoDrogas': false,
-							'prisao.crime': false,
-							'prisao.prender': false,
-							'prisao.revistar': false,
-							'prisao.roubarVeiculo': false,
-							'prisao.atirarPrisao': false,
-							'prisao.velha': false,
-							'prisao.frentista': false,
-							'prisao.joalheria': false,
-							'prisao.agiota': false,
-							'prisao.casaLoterica': false,
-							'prisao.brazino': false,
-							'prisao.facebook': false,
-							'prisao.bancoCentral': false,
-							'prisao.shopping': false,
-							'prisao.banco': false
-						}
-					});
-
-					escolha.delete();
-					return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+						escolha.delete();
+						return message.reply({
+							content: `Você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`
+						});
 				}
 			});
 
 			collectorEscolhas.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					return escolha.edit(author, {
-						embed: embedPreso,
+					return escolha.edit({
+						content: author.toString(),
+						embeds: [embedPreso],
 						components: []
 					});
 				}
@@ -326,13 +381,27 @@ module.exports = class Crime extends Command {
 		} else {
 			const timeout = 600000;
 
+			if (userAuthor.hp.vida < 50) {
+				const embedVida = new ClientEmbed(author)
+					.setTitle('😨 | Você está ferido!')
+					.setDescription(`Você se feriu, e não consegue realizar esta ação.\nVá até o **Hospital ${message.guild.name}** para se recuperar e receber **tratamento**.\n\nUse o comando \`${prefix}entradahospital\` para um Médico iniciar seu **tratamento**.`);
+
+				return message.reply({
+					content: author.toString(),
+					embeds: [embedVida]
+				});
+			}
+
 			if (timeout - (Date.now() - userAuthor.cooldown.crime) > 0) {
 				const faltam = ms(timeout - (Date.now() - userAuthor.cooldown.crime));
 
 				const embed = new ClientEmbed(author)
 					.setDescription(`🕐 | Você ainda está cansado da última vez! Você pode tentar novamente em: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				});
 			} else if (!args[0]) {
 				const array = [{
 					roubo: '**Roubar uma Velhinha**',
@@ -423,7 +492,10 @@ module.exports = class Crime extends Command {
 				crimesArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - ${eu.roubo} - REP: ${eu.rep}\n`);
 				embed2.setDescription(`*Lista de Crimes que você pode cometer:* Use (\`${prefix}crime <número do crime>\`)\n\n${embedMessage}`);
 
-				return message.channel.send(author, embed2);
+				return message.reply({
+					content: author.toString(),
+					embeds: [embed2]
+				});
 			} else if (args[0] === '1') {
 				// velhinha - 5 minutos preso
 				const randomValor = Utils.randomNumber(500, 2000);
@@ -452,7 +524,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -492,7 +567,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -532,7 +610,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -572,7 +653,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -612,7 +696,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -652,7 +739,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -692,7 +782,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -732,7 +825,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -772,7 +868,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -812,7 +911,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -852,7 +954,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -892,7 +997,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -932,7 +1040,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -972,7 +1083,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1012,7 +1126,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1052,7 +1169,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1092,7 +1212,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1132,7 +1255,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1172,7 +1298,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgLose[Math.floor(Math.random() * msgLose.length)].replace('{{author}}', `${author}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1212,7 +1341,10 @@ module.exports = class Crime extends Command {
 						.setTitle('Crime Cometido')
 						.setDescription(msgSucess[Math.floor(Math.random() * msgSucess.length)].replace('{{author}}', `${author}`).replace('{{random}}', `${Utils.numberFormat(randomValor)}`));
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1227,7 +1359,9 @@ module.exports = class Crime extends Command {
 					});
 				}
 			} else {
-				return message.reply('número não encontrado. Use o comando novamente!');
+				return message.reply({
+					content: 'Número não encontrado. Use o comando novamente!'
+				});
 			}
 		}
 	}

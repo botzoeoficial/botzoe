@@ -40,8 +40,15 @@ module.exports = class Eval extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
+		if (!['463421520686088192', '707677540583735338', '804677047959027714'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
 		let code = args.join(' ');
 
 		const user = (id) =>
@@ -64,8 +71,8 @@ module.exports = class Eval extends Command {
 
 		result = result.replace(/_user\((\d{16,18})\)/g, '<@$1>');
 
-		message.channel.send(result, {
-			code: 'js'
+		return message.reply({
+			content: `\`\`\`js\n${result}\`\`\``
 		});
 	}
 

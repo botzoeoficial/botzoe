@@ -6,9 +6,9 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Familia extends Command {
 
@@ -53,7 +53,11 @@ module.exports = class Familia extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.marry.has) return message.reply(`você não está casado! Use o comando \`${prefix}casar\`.`);
+		if (!user.marry.has) {
+			return message.reply({
+				content: `Você não está casado! Use o comando \`${prefix}casar\`.`
+			});
+		}
 
 		let pagina = 0;
 
@@ -62,28 +66,42 @@ module.exports = class Familia extends Command {
 
 		if (user.familia.length <= 0) {
 			embed.setDescription('Família sem filhos.');
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			user.familia.slice(pagina * 12, pagina * 12 + 12).forEach((est) => {
 				embed.addField(`Nome: ${est.nome}`, `Idade: ${est.idade}\nGênero: ${est.genero}`, true);
 			});
 
-			embed.setFooter(`Página: ${pagina}/${~~(user.familia.length / 12)}`, author.displayAvatarURL({ dynamic: true, format: 'png' }));
+			embed.setFooter({
+				text: `Página: ${pagina}/${~~(user.familia.length / 12)}`,
+				iconURL: author.displayAvatarURL({
+					dynamic: true,
+					format: 'png'
+				})
+			});
 
-			const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
-			const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
+			const buttonVoltar = new MessageButton().setCustomId('voltar').setEmoji('⬅️').setStyle('PRIMARY');
+			const buttonIr = new MessageButton().setCustomId('ir').setEmoji('➡️').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embed,
+			const escolha = await message.reply({
+				embeds: [embed],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+			const filter = (interaction) => interaction.isButton() && ['ir', 'voltar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
+				time: 60000
+			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'voltar') {
-					b.reply.defer();
+				if (b.customId === 'voltar') {
+					await b.deferUpdate();
 
 					if (pagina <= 0) {
 						pagina = 0;
@@ -98,13 +116,20 @@ module.exports = class Familia extends Command {
 						embed2.addField(`Nome: ${est.nome}`, `Idade: ${est.idade}\nGênero: ${est.genero}`, true);
 					});
 
-					embed2.setFooter(`Página: ${pagina}/${~~(user.familia.length / 12)}`, author.displayAvatarURL({ dynamic: true, format: 'png' }));
-
-					b.message.edit(author, {
-						embed: embed2
+					embed2.setFooter({
+						text: `Página: ${pagina}/${~~(user.familia.length / 12)}`,
+						iconURL: author.displayAvatarURL({
+							dynamic: true,
+							format: 'png'
+						})
 					});
-				} else if (b.id === 'ir') {
-					b.reply.defer();
+
+					escolha.edit({
+						content: author.toString(),
+						embeds: [embed2]
+					});
+				} else if (b.customId === 'ir') {
+					await b.deferUpdate();
 
 					if (pagina !== ~~(user.familia.length / 12)) {
 						pagina++;
@@ -117,10 +142,17 @@ module.exports = class Familia extends Command {
 						embed2.addField(`Nome: ${est.nome}`, `Idade: ${est.idade}\nGênero: ${est.genero}`, true);
 					});
 
-					embed2.setFooter(`Página: ${pagina}/${~~(user.familia.length / 12)}`, author.displayAvatarURL({ dynamic: true, format: 'png' }));
+					embed2.setFooter({
+						text: `Página: ${pagina}/${~~(user.familia.length / 12)}`,
+						iconURL: author.displayAvatarURL({
+							dynamic: true,
+							format: 'png'
+						})
+					});
 
-					b.message.edit(author, {
-						embed: embed2
+					escolha.edit({
+						content: author.toString(),
+						embeds: [embed2]
 					});
 				}
 			});

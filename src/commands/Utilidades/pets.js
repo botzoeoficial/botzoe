@@ -4,9 +4,9 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Pets extends Command {
 
@@ -58,26 +58,34 @@ module.exports = class Pets extends Command {
 
 		if (user.pets.length <= 0) {
 			embed.setDescription(`${author}, você não tem pets! Use o comando \`${prefix}adotar\`.`);
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			user.pets.slice(pagina * 6, pagina * 6 + 6).forEach((est) => {
 				embed.addField(`Nome: ${est.nome}`, `Animal: ${est.animal}\nForça: ${est.forca}\nIdade: ${est.idade}`, true);
 			});
 
-			const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
-			const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
+			const buttonVoltar = new MessageButton().setCustomId('voltar').setEmoji('⬅️').setStyle('PRIMARY');
+			const buttonIr = new MessageButton().setCustomId('ir').setEmoji('➡️').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embed,
+			const escolha = await message.reply({
+				embeds: [embed],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+			const filter = (interaction) => interaction.isButton() && ['ir', 'voltar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
+				time: 60000
+			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'voltar') {
-					b.reply.defer();
+				if (b.customId === 'voltar') {
+					await b.deferUpdate();
 
 					if (pagina <= 0) {
 						pagina = 0;
@@ -92,11 +100,12 @@ module.exports = class Pets extends Command {
 						embed2.addField(`Nome: ${est.nome}`, `Animal: ${est.animal}\nForça: ${est.forca}\nIdade: ${est.idade}`, true);
 					});
 
-					b.message.edit(author, {
-						embed: embed2
+					escolha.edit({
+						content: author.toString(),
+						embeds: [embed2]
 					});
-				} else if (b.id === 'ir') {
-					b.reply.defer();
+				} else if (b.customId === 'ir') {
+					await b.deferUpdate();
 
 					if (pagina !== ~~(user.pets.length / 6)) {
 						pagina++;
@@ -109,8 +118,9 @@ module.exports = class Pets extends Command {
 						embed2.addField(`Nome: ${est.nome}`, `Animal: ${est.animal}\nForça: ${est.forca}\nIdade: ${est.idade}`, true);
 					});
 
-					b.message.edit(author, {
-						embed: embed2
+					escolha.edit({
+						content: author.toString(),
+						embeds: [embed2]
 					});
 				}
 			});

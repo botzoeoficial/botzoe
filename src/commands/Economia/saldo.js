@@ -48,7 +48,11 @@ module.exports = class Saldo extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setThumbnail(member.user.displayAvatarURL({
@@ -59,7 +63,10 @@ module.exports = class Saldo extends Command {
 			.addField('💵 | Carteira:', `R$${Utils.numberFormat(user.saldo)},00`)
 			.addField('🏦 | Banco:', `R$${Utils.numberFormat(user.banco)},00`);
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable id-length */
 /* eslint-disable max-len */
 /* eslint-disable consistent-return */
@@ -50,15 +51,27 @@ module.exports = class Golpedeestado extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.level < 2) return message.reply('você precisa ser level **2** para iniciar um Golpe de Estado!');
+		if (user.level < 2) {
+			return message.reply({
+				content: 'Você precisa ser level **2** para iniciar um Golpe de Estado!'
+			});
+		}
 
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
 
-		if (server.cidade.governador === '') return message.reply(`essa Cidade não possui Prefeito ainda. Use o comando \`${prefix}addprefeito\`!`);
+		if (server.cidade.governador === '') {
+			return message.reply({
+				content: `Essa Cidade não possui Prefeito ainda. Use o comando \`${prefix}addprefeito\`!`
+			});
+		}
 
 		const {
 			channel
@@ -70,7 +83,10 @@ module.exports = class Golpedeestado extends Command {
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
 				.setDescription(`${author}, não é possível abrir um Golpe de Estado pois está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const channel2 = server.cidade.eleicao.channel;
@@ -81,7 +97,10 @@ module.exports = class Golpedeestado extends Command {
 				.setTitle('<:Urna:895779255491911740> | Eleição')
 				.setDescription(`${author}, não é possível abrir um Golpe de Estado pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const channel3 = server.cidade.golpeEstado.channel;
@@ -92,7 +111,10 @@ module.exports = class Golpedeestado extends Command {
 				.setTitle('🕵️ | Golpe de Estado')
 				.setDescription(`${author}, já está rolando um **Golpe de Estado** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel3}/${msg3})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const timeout = 604800000;
@@ -103,13 +125,22 @@ module.exports = class Golpedeestado extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const canal = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
 
-			if (!canal) return message.reply('você precisa mencionar um canal onde será iniciado o Golpe de Estado!');
+			if (!canal) {
+				return message.reply({
+					content: 'Você precisa mencionar um canal onde será iniciado o Golpe de Estado!'
+				});
+			}
 
-			message.reply(`**Golpe de Estado** iniciado com sucesso no canal: <#${canal.id}>.`);
+			message.reply({
+				content: `**Golpe de Estado** iniciado com sucesso no canal: <#${canal.id}>.`
+			});
 			message.delete();
 
 			let votos = 0;
@@ -119,7 +150,9 @@ module.exports = class Golpedeestado extends Command {
 				.setTitle('🕵️ | Golpe de Estado')
 				.setDescription(`Ao chegar em **30 votos**, a Cidade se tornará um caos por 5 horas.\n\nTodos da Cidade irão perder seus cargos: **Prefeito**, **Delegado**, **Policial**, **Carcereiro**, **Diretor Hospital** e **Médicos**.\n\nApós as 5 horas, o último **Delegado** se torna **Prefeito**, podendo eleger os novos cargos!\n\n**🕵️:** ${votos} voto(s)`);
 
-			canal.send(embed).then(async (msg) => {
+			canal.send({
+				embeds: [embed]
+			}).then(async (msg) => {
 				await this.client.database.guilds.findOneAndUpdate({
 					_id: message.guild.id
 				}, {
@@ -134,7 +167,12 @@ module.exports = class Golpedeestado extends Command {
 
 				await msg.react('🕵️');
 
-				const votacao = await msg.createReactionCollector((r, u) => r.emoji.name === '🕵️' && u.id !== this.client.user.id, {
+				const filter2 = (reaction, user3) => {
+					return reaction.emoji.name === '🕵️' && user3.id !== this.client.user.id;
+				};
+
+				const votacao = msg.createReactionCollector({
+					filter: filter2,
 					time: 18000000
 				});
 
@@ -156,7 +194,10 @@ module.exports = class Golpedeestado extends Command {
 							.setTitle('🕵️ | Golpe de Estado Finalizado!')
 							.setDescription(`O Golpe de Estado foi terminado com êxito, e por isso agora a Cidade está em **caos** por 5 horas!\n\nCargos na Cidade:\n**Prefeito:** ${server.cidade.delegado === '' ? 'Ninguém ainda. Espere terminar o **caos** para um novo Prefeito.' : `<@${server.cidade.delegado}>`}\n**Delegado:** Ninguém\n**Policiais:** Nenhum\n**Carcereiros:** Nenhum\n**Diretor do Hospital:** Ninguém\n**Médicos:** Nenhum`);
 
-						await msg.edit(author, embed);
+						await msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						await msg.reactions.removeAll();
 
@@ -219,8 +260,12 @@ module.exports = class Golpedeestado extends Command {
 					embed
 						.setDescription(`Ao chegar em **30 votos**, a Cidade se tornará um caos por 5 horas.\n\nTodos da Cidade irão perder seus cargos: **Prefeito**, **Delegado**, **Policial**, **Carcereiro**, **Diretor Hospital** e **Médicos**.\n\nApós as 5 horas, o último **Delegado** se torna **Prefeito**, podendo eleger os novos cargos!\n\n**🕵️:** ${votos} voto(s)`);
 
-					await msg.edit(author, embed);
-					reaction.users.remove(user2.id);
+					await msg.edit({
+						content: author.toString(),
+						embeds: [embed]
+					});
+
+					return reaction.users.remove(user2.id);
 				});
 			});
 		}

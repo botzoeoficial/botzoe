@@ -43,12 +43,24 @@ module.exports = class Cancelarvenda extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.mercadoNegro.find((a) => a.dono === author.id)) return message.reply('você não possui um item cadastrado no **Mercado Negro**!');
+		if (!server.mercadoNegro.find((a) => a.dono === author.id)) {
+			return message.reply({
+				content: 'Você não possui um item cadastrado no **Mercado Negro**!'
+			});
+		}
 
 		const nome = args.slice(0).join(' ');
-		if (!nome) return message.reply('você precisa colocar o nome do produto que você deseja retirar do **Mercado Negro**!');
+		if (!nome) {
+			return message.reply({
+				content: 'Você precisa colocar o nome do produto que você deseja retirar do **Mercado Negro**!'
+			});
+		}
 
-		if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome !== nome)) return message.reply('você não possui um produto com este nome do **Mercado Negro**!');
+		if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome !== nome)) {
+			return message.reply({
+				content: 'Você não possui um produto com este nome do **Mercado Negro**!'
+			});
+		}
 
 		const item = server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === nome);
 
@@ -76,7 +88,7 @@ module.exports = class Cancelarvenda extends Command {
 					$push: {
 						mochila: {
 							item: item.nome,
-							emoji: item.emoji.emoji,
+							emoji: item.emoji,
 							id: item.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 							quantia: Number(item.quantia)
 						}
@@ -91,7 +103,7 @@ module.exports = class Cancelarvenda extends Command {
 				$push: {
 					mochila: {
 						item: item.nome,
-						emoji: item.emoji.emoji,
+						emoji: item.emoji,
 						id: item.emoji.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
 						quantia: Number(item.quantia)
 					}
@@ -109,7 +121,9 @@ module.exports = class Cancelarvenda extends Command {
 			}
 		});
 
-		return message.reply('produto retirado com sucesso do **Mercado Negro**!');
+		return message.reply({
+			content: 'Produto retirado com sucesso do **Mercado Negro**!'
+		});
 	}
 
 };

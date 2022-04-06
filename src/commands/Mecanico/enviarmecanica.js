@@ -48,22 +48,41 @@ module.exports = class Enviarmecanica extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.garagem.length) return message.reply(`você não possui nenhum carro na **garagem**. Use o comando \`${prefix}roubarcarro\`.`);
+		if (!user.garagem.length) {
+			return message.reply({
+				content: `Você não possui nenhum carro na **garagem**. Use o comando \`${prefix}roubarcarro\`.`
+			});
+		}
 
 		const placa = args.slice(0).join(' ');
-		if (!placa) return message.reply('você precisa colocar a placa de um carro seu para ser enviado para a **Oficina**!');
+		if (!placa) {
+			return message.reply({
+				content: 'Você precisa colocar a placa de um carro seu para ser enviado para a **Oficina**!'
+			});
+		}
 
-		if (!user.garagem.find((a) => a.placa === placa)) return message.reply(`não achei nenhum carro seu com essa placa. Use \`${prefix}garagem\` para ver a placa de um!`);
+		if (!user.garagem.find((a) => a.placa === placa)) {
+			return message.reply({
+				content: `Não achei nenhum carro seu com essa placa. Use \`${prefix}garagem\` para ver a placa de um!`
+			});
+		}
 
 		const carro = user.garagem.find((a) => a.placa === placa);
 
-		if (carro.arrumado) return message.reply('esse carro já está **arrumado**. Por favor, use o comando novamente caso você tenha outro carro!');
+		if (carro.arrumado) {
+			return message.reply({
+				content: 'Esse carro já está **arrumado**. Por favor, use o comando novamente caso você tenha outro carro!'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🧑‍🔧 | Enviar para Mecânica')
 			.setDescription(`✅ | Você enviou seu veículo **${carro.nome}** com sucesso para a Mecânica!`);
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,

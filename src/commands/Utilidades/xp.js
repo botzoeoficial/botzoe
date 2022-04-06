@@ -38,7 +38,6 @@ module.exports = class Xp extends Command {
 	async run({
 		message,
 		args,
-		prefix,
 		author
 	}) {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
@@ -48,9 +47,11 @@ module.exports = class Xp extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setThumbnail(member.user.displayAvatarURL({
@@ -60,7 +61,10 @@ module.exports = class Xp extends Command {
 			.setTitle(`Level do(a) ${member.user.tag}`)
 			.setDescription(`📈 **Level:** ${user.level}\n🆙 **XP:** ${user.xp}/${(user.level + 1) * 6000} XP\n❌ **Faltam:** ${((user.level + 1) * 6000) - user.xp} XP para o próximo level`);
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

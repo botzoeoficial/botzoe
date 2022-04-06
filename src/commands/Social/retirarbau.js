@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-shadow */
 /* eslint-disable max-len */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
@@ -48,24 +50,42 @@ module.exports = class Retirarbau extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.fabricando) return message.reply('você está fabricando algo, por tanto, não é possível retirar algum item do baú!');
+		if (user.fabricando) {
+			return message.reply({
+				content: 'Você está fabricando algo, por tanto, não é possível retirar algum item do baú!'
+			});
+		}
 
-		if (user.casas.tipo === '') return message.reply(`você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`);
+		if (user.casas.tipo === '') {
+			return message.reply({
+				content: `Você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('Retirar do Baú')
 			.setDescription(`Você deseja retirar e adicionar o item aonde:\n\n1️⃣ - Inventário\n2️⃣ - Mochila\n\nDigite \`0\` para sair.`);
 
-		message.channel.send(author, embed).then(async (msg) => {
-			const collector = msg.channel.createMessageCollector((m) => m.author.id === author.id, {
-				time: 60000
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
+			const filter = (m) => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
+				time: 30000
 			});
 
 			collector.on('collect', async (ce) => {
 				if (ce.content === '0') {
 					collector.stop();
 					msg.delete();
-					return message.reply('cancelado com sucesso.');
+					return message.reply({
+						content: 'Cancelado com sucesso.'
+					});
 				} else if (ce.content === '1') {
 					ce.delete();
 					collector.stop();
@@ -81,12 +101,20 @@ module.exports = class Retirarbau extends Command {
 
 					embed.setDescription(`Qual item você deseja colocar no Inventário?\n\n${itensMap || '**Você não possui item de Inventário no baú.**'}`);
 
-					msg.edit(author, embed).then(async (msg1) => {
+					msg.edit({
+						content: author.toString(),
+						embeds: [embed]
+					}).then(async (msg1) => {
 						if (!itensMap) return;
 
 						for (const emoji of itensInvFilter.map((es) => es.id)) await msg1.react(emoji);
 
-						const sim = msg1.createReactionCollector((reaction, user3) => itensInvFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id, {
+						const filter = (reaction, user3) => {
+							return itensInvFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+						};
+
+						const sim = msg1.createReactionCollector({
+							filter,
 							time: 60000,
 							max: 1
 						});
@@ -108,25 +136,33 @@ module.exports = class Retirarbau extends Command {
 									if (user4.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 400) {
 										msg1.delete();
 
-										return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-											timeout: 5000
-										}));
+										return message.reply({
+											content: 'Seu **inventário** está cheio. Use algum item, para liberar espaço!'
+										});
 									}
 								} else if (!user4.inventory.find((a) => a.item === 'Bolso')) {
 									if (user4.inventory.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
 										msg1.delete();
 
-										return message.reply('seu **inventário** está cheio. Use algum item, para liberar espaço!').then((b) => b.delete({
-											timeout: 5000
-										}));
+										return message.reply({
+											content: 'Seu **inventário** está cheio. Use algum item, para liberar espaço!'
+										});
 									}
 								}
 							}
 
 							embed.setDescription(`Qual a quantidade de **${itemEmoji}** você deseja enviar para o Inventário?`);
 
-							msg.edit(author, embed).then(async (msg2) => {
-								const resposta = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+							msg.edit({
+								content: author.toString(),
+								embeds: [embed]
+							}).then(async (msg2) => {
+								const filter2 = (m) => {
+									return m.author.id === author.id && !isNaN(m.content);
+								};
+
+								const resposta = msg2.channel.createMessageCollector({
+									filter: filter2,
 									time: 120000
 								});
 
@@ -136,19 +172,25 @@ module.exports = class Retirarbau extends Command {
 										resposta.stop();
 										msg.delete();
 
-										return message.reply('você precisa enviar uma quantia válida maior que **0*. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você precisa enviar uma quantia válida maior que **0**. Por favor, use o comando novamente!'
+										});
 									} else if (Number(ce2.content) > user4.casas.bau.find((a) => a.item === itemEmoji).quantia) {
 										ce2.delete();
 										resposta.stop();
 										msg.delete();
 
-										return message.reply(`você não possui tudo isso de \`${itemEmoji}\`. Por favor, use o comando novamente!`);
+										return message.reply({
+											content: `Você não possui tudo isso de \`${itemEmoji}\`. Por favor, use o comando novamente!`
+										});
 									} else {
 										resposta.stop();
 										sim.stop();
 										msg.delete();
 
-										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para seu Inventário com sucesso!`);
+										message.reply({
+											content: `Você enviou **x${Number(ce2.content)}** \`${itemEmoji}\` para seu Inventário com sucesso!`
+										});
 
 										if (Number(ce2.content) === user4.casas.bau.find((a) => a.item === itemEmoji).quantia) {
 											if (user4.inventory.find((a) => a.item === itemEmoji)) {
@@ -223,10 +265,30 @@ module.exports = class Retirarbau extends Command {
 													'casas.bau.$.quantia': user4.casas.bau.find((a) => a.item === itemEmoji).quantia -= Number(ce2.content)
 												}
 											});
+
+											return;
 										}
 									}
-								})
+								});
+
+								resposta.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										msg.delete();
+										return message.reply({
+											content: 'Você demorou demais para responder. Use o comando novamente!'
+										});
+									}
+								});
 							});
+						});
+
+						sim.on('end', async (collected, reason) => {
+							if (reason === 'time') {
+								msg.delete();
+								return message.reply({
+									content: 'Você demorou demais para escolher. Use o comando novamente!'
+								});
+							}
 						});
 					});
 				} else if (ce.content === '2') {
@@ -241,7 +303,9 @@ module.exports = class Retirarbau extends Command {
 					if (!user2.isMochila) {
 						collector.stop();
 						msg.delete();
-						return message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e Compre uma!');
+						return message.reply({
+							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e Compre uma!'
+						});
 					}
 
 					const itensMochilaFilter = user2.casas.bau.filter((a) => ['Máscara', 'Porte de Armas', 'Algemas', 'MP5', 'G18', 'Munição Pistola', 'Munição Metralhadora', 'Ak-47', 'UMP', 'ACR', 'KNT-308', 'Desert Eagle', 'Revolver 38', 'Chave Micha', 'Maconha', 'Cocaína', 'LSD', 'Metanfetamina', 'Munição KNT'].includes(a.item));
@@ -250,12 +314,20 @@ module.exports = class Retirarbau extends Command {
 
 					embed.setDescription(`Qual item você deseja colocar na Mochila?\n\n${itensMap || '**Você não possui item de Mochila no baú.**'}`);
 
-					msg.edit(author, embed).then(async (msg1) => {
+					msg.edit({
+						content: author.toString(),
+						embeds: [embed]
+					}).then(async (msg1) => {
 						if (!itensMap) return;
 
 						for (const emoji of itensMochilaFilter.map((es) => es.id)) await msg1.react(emoji);
 
-						const sim = msg1.createReactionCollector((reaction, user3) => itensMochilaFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id, {
+						const filter = (reaction, user3) => {
+							return itensMochilaFilter.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+						};
+
+						const sim = msg1.createReactionCollector({
+							filter,
 							time: 60000,
 							max: 1
 						});
@@ -276,16 +348,24 @@ module.exports = class Retirarbau extends Command {
 								if (user5.mochila.map((a) => a.quantia).reduce((a, b) => a + b) >= 200) {
 									msg1.delete();
 
-									return message.reply('sua **mochila** está cheia. Use algum item, para liberar espaço!').then((b) => b.delete({
-										timeout: 5000
-									}));
+									return message.reply({
+										content: 'Sua **mochila** está cheia. Use algum item, para liberar espaço!'
+									});
 								}
 							}
 
 							embed.setDescription(`Qual a quantidade de **${itemEmoji2}** você deseja enviar para a Mochila?`);
 
-							msg.edit(author, embed).then(async (msg2) => {
-								const resposta = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+							msg.edit({
+								content: author.toString(),
+								embeds: [embed]
+							}).then(async (msg2) => {
+								const filter3 = (m) => {
+									return m.author.id === author.id && !isNaN(m.content);
+								};
+
+								const resposta = msg2.channel.createMessageCollector({
+									filter: filter3,
 									time: 120000
 								});
 
@@ -295,19 +375,25 @@ module.exports = class Retirarbau extends Command {
 										resposta.stop();
 										msg.delete();
 
-										return message.reply('você precisa enviar uma quantia válida maior que **0*. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você precisa enviar uma quantia válida maior que **0**. Por favor, use o comando novamente!'
+										});
 									} else if (Number(ce2.content) > user5.casas.bau.find((a) => a.item === itemEmoji2).quantia) {
 										ce2.delete();
 										resposta.stop();
 										msg.delete();
 
-										return message.reply(`você não possui tudo isso de \`${itemEmoji2}\`. Por favor, use o comando novamente!`);
+										return message.reply({
+											content: `Você não possui tudo isso de \`${itemEmoji2}\`. Por favor, use o comando novamente!`
+										});
 									} else {
 										resposta.stop();
 										sim.stop();
 										msg.delete();
 
-										message.reply(`você enviou **x${Number(ce2.content)}** \`${itemEmoji2}\` para sua Mochila com sucesso!`);
+										message.reply({
+											content: `Você enviou **x${Number(ce2.content)}** \`${itemEmoji2}\` para sua Mochila com sucesso!`
+										});
 
 										if (Number(ce2.content) === user5.casas.bau.find((a) => a.item === itemEmoji2).quantia) {
 											if (user5.mochila.find((a) => a.item === itemEmoji2)) {
@@ -382,11 +468,40 @@ module.exports = class Retirarbau extends Command {
 													'casas.bau.$.quantia': user5.casas.bau.find((a) => a.item === itemEmoji2).quantia -= Number(ce2.content)
 												}
 											});
+
+											return;
 										}
 									}
-								})
+								});
+
+								resposta.on('end', async (collected, reason) => {
+									if (reason === 'time') {
+										msg.delete();
+										return message.reply({
+											content: 'Você demorou demais para responder. Use o comando novamente!'
+										});
+									}
+								});
 							});
 						});
+
+						sim.on('end', async (collected, reason) => {
+							if (reason === 'time') {
+								msg.delete();
+								return message.reply({
+									content: 'Você demorou demais para escolher. Use o comando novamente!'
+								});
+							}
+						});
+					});
+				}
+			});
+
+			collector.on('end', async (collected, reason) => {
+				if (reason === 'time') {
+					msg.delete();
+					return message.reply({
+						content: 'Você demorou demais para responder. Use o comando novamente!'
 					});
 				}
 			});

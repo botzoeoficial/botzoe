@@ -124,42 +124,6 @@ const guildSchema = new Schema({
 			default: Date.now()
 		}
 	},
-	card: {
-		type: Array,
-		default: [],
-		codigo: {
-			type: String,
-			default: ''
-		},
-		valorZoe: {
-			type: Number,
-			default: 0
-		},
-		valorBtc: {
-			type: Number,
-			default: 0
-		},
-		ativado: {
-			type: Boolean,
-			default: false
-		},
-		ativadoPor: {
-			type: String,
-			default: ''
-		}
-	},
-	vip: {
-		type: Array,
-		default: [],
-		id: {
-			type: String,
-			default: ''
-		},
-		tempo: {
-			type: Number,
-			default: 0
-		}
-	},
 	cidade: {
 		governador: {
 			type: String,
@@ -563,7 +527,19 @@ const guildSchema = new Schema({
 		},
 		entrada: {
 			type: Number,
-			default: Date.now()
+			default: 0
+		}
+	},
+	vip: {
+		type: Array,
+		default: [],
+		id: {
+			type: String,
+			default: ''
+		},
+		tempo: {
+			type: Number,
+			default: 0
 		}
 	}
 });

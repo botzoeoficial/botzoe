@@ -7,40 +7,45 @@ module.exports = class {
 	}
 
 	async run(member) {
-		const {
-			guild
-		} = member;
+		try {
+			const {
+				guild
+			} = member;
 
-		const user = await User.findOne({
-			userId: member.id,
-			guildId: guild.id
-		});
-
-		if (!user) return;
-
-		if (user.marry.has) {
-			await User.findOneAndUpdate({
-				userId: user.marry.user,
+			const user = await User.findOne({
+				userId: member.id,
 				guildId: guild.id
-			}, {
-				$set: {
-					'marry.user': 'Ninguém.',
-					'marry.has': false,
-					'cooldown.gf': 0,
-					'cooldown.fe': 0
-				}
 			});
-		}
 
-		if (user.familia.length >= 0) {
-			await User.findOneAndUpdate({
-				userId: user.marry.user,
-				guildId: guild.id
-			}, {
-				$set: {
-					familia: []
-				}
-			});
+			if (!user) return;
+
+			if (user.marry.has) {
+				await User.findOneAndUpdate({
+					userId: user.marry.user,
+					guildId: guild.id
+				}, {
+					$set: {
+						'marry.user': 'Ninguém.',
+						'marry.has': false,
+						'cooldown.gf': 0,
+						'cooldown.fe': 0
+					}
+				});
+			}
+
+			if (user.familia.length >= 0) {
+				await User.findOneAndUpdate({
+					userId: user.marry.user,
+					guildId: guild.id
+				}, {
+					$set: {
+						familia: []
+					}
+				});
+			}
+		} catch (err) {
+			console.log(err);
+			console.error(`ERRO NO GUILD-MEMBER-REMOVE: ${err}`);
 		}
 	}
 

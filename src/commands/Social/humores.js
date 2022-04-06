@@ -75,9 +75,12 @@ module.exports = class Humores extends Command {
 			.setTitle(`Humores de ${author.tag}`)
 			.setDescription(`🍽️ **Fome:** ${filledBar(150, user.humores.fome, 10)[0]} ${user.humores.fome} de 150% 😋\n🥤 **Sede:** ${filledBar(150, user.humores.sede, 10)[0]} ${user.humores.sede} de 150% 🤤\n😡 **Bravo:** ${filledBar(150, user.humores.bravo, 10)[0]} ${user.humores.bravo} de 150% 😌\n😭 **Triste:** ${filledBar(150, user.humores.triste, 10)[0]} ${user.humores.triste} de 150% 😁\n😰 **Cansado:** ${filledBar(150, user.humores.cansado, 10)[0]} ${user.humores.cansado} de 150% 🤪\n🥺 **Solitário:** ${filledBar(150, user.humores.solitario, 10)[0]} ${user.humores.solitario} de 150% 🤣\n🤯 **Estressado:** ${filledBar(150, user.humores.estressado, 10)[0]} ${user.humores.estressado} de 150% 🥳\n😵‍💫 **Desanimado:** ${filledBar(150, user.humores.desanimado, 10)[0]} ${user.humores.desanimado} de 150% 🙃`);
 
-		message.channel.send(author, embed);
-
 		console.log(`Usuário: ${message.author.tag}`, user.humores);
+
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

@@ -79,25 +79,41 @@ module.exports = class Calcular extends Command {
 
 		let result;
 
-		if (!expr.length) return message.reply(`❌ | Expressão inválida!`);
+		if (!expr.length) {
+			return message.reply({
+				content: '❌ | Expressão inválida!'
+			});
+		}
 
 		try {
 			result = limitedEvaluate && limitedEvaluate(expr);
 		} catch (err) {
-			return message.reply(`❌ | Expressão inválida!`);
+			return message.reply({
+				content: '❌ | Expressão inválida!'
+			});
 		}
 
-		if (result === undefined || result === null || typeof result === 'function') return message.reply(`❌ | Expressão inválida!`);
+		if (result === undefined || result === null || typeof result === 'function') {
+			return message.reply({
+				content: '❌ | Expressão inválida!'
+			});
+		}
 
 		if (result === Infinity || result === -Infinity || result.toString() === 'NaN') result = 'Impossível Determinar!';
 
 		const embed = new ClientEmbed(author)
-			.setAuthor(`${this.client.user.username}'s Calculadora`, this.client.user.displayAvatarURL())
+			.setAuthor({
+				name: `${this.client.user.username}'s Calculadora`,
+				iconURL: this.client.user.displayAvatarURL()
+			})
 			.setTitle(`Calculadora - ${this.client.user.username}`)
 			.addField('Expressão', `\`\`\`js\n${args.join(' ')}\`\`\``)
 			.addField('Resultado', `\`\`\`js\n${result}\`\`\``);
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

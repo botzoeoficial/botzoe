@@ -82,7 +82,10 @@ module.exports = class Reputações extends Command {
 				value: `Rep. - de \`9001 até 10000\``
 			});
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

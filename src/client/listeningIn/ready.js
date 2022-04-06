@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-undef */
 /* eslint-disable max-nested-callbacks */
 /* eslint-disable complexity */
@@ -22,545 +23,540 @@ module.exports = class Ready {
 	}
 
 	async run() {
-		this.client.database.users = User;
-		this.client.database.guilds = Guild;
-		this.client.database.clientUtils = Client;
-		this.client.database.commands = Commands;
-		this.client.database.shop = Shop;
+		try {
+			this.client.database.users = User;
+			this.client.database.guilds = Guild;
+			this.client.database.clientUtils = Client;
+			this.client.database.commands = Commands;
+			this.client.database.shop = Shop;
 
-		console.log(c.green('[BOT] - Conectado a API do Discord.'));
+			console.log(c.green('[BOT] - Conectado a API do Discord.'));
 
-		await this.client.user.setActivity(`com ${this.client.users.cache.size} usuários na Zoe City!`, {
-			type: 'PLAYING'
-		});
-
-		const channelServers = await this.client.channels.cache.get('885645282673590298');
-		const channelUsers = await this.client.channels.cache.get('910156012353363998');
-
-		channelServers.setName(`Servidores: ${this.client.guilds.cache.size}`);
-		channelUsers.setName(`Usuários: ${this.client.users.cache.size}`);
-
-		const allUsers = await User.find({});
-		const allGuilds = await Guild.find({});
-		const allItens = await Shop.find({});
-
-		allGuilds.forEach(async (a) => {
-			a.vip.forEach(async (_, index2) => {
-				if ((30 * 24 * 60 * 60 * 1000) - (Date.now() - a.vip[index2].tempo) < 0) {
-					this.client.users.cache.get(a.vip[index2].id).roles.remove('885645282644213812');
-
-					await this.client.database.guilds.findOneAndUpdate({
-						_id: a._id
-					}, {
-						$pull: {
-							vip: {
-								id: a.vip[index2].id
-							}
-						}
-					});
-				}
-			});
-		});
-
-		cron.schedule('*/20 * * * *', async () => {
-			const random = Math.floor(Math.random() * 91);
-
-			allGuilds.forEach(async (e) => {
-				e.bolsa.valor = random;
-				e.bolsa.tempo = Date.now();
-
-				await e.save();
+			await this.client.user.setActivity(`com ${this.client.users.cache.size} usuários na Zoe City!`, {
+				type: 'PLAYING'
 			});
 
-			const server = await Guild.findOne({
-				_id: '885645282614861854'
+			const channelServers = await this.client.channels.cache.get('885645282673590298');
+			const channelUsers = await this.client.channels.cache.get('910156012353363998');
+
+			channelServers.setName(`Servidores: ${this.client.guilds.cache.size}`);
+			channelUsers.setName(`Usuários: ${this.client.users.cache.size}`);
+
+			const allUsers = await User.find({});
+			const allGuilds = await Guild.find({});
+			const allClients = await Client.findOne({
+				_id: this.client.user.id
 			});
 
-			const embed = new ClientEmbed(this.client.users.cache.get('887455458967826523'))
-				.setThumbnail('https://media.discordapp.net/attachments/887089600726720512/891826029415510056/gettyimages-1186283017-1-1.jpg?width=905&height=603')
-				.setTitle('📈 | **Bolsa de Valores - Zoe Investing**')
-				.addField('📉 | Valor da Bolsa', `\`${server.bolsa.valor}.0%\``)
-				.setColor('#1cfc03')
-				.addField('🕑 | Tempo para Atualização da Bolsa', `20m 0s\n\n***Faça um Bom Investimento!***`);
+			allGuilds.forEach(async (i) => {
+				i.vip.forEach(async (b) => {
+					setInterval(async () => {
+						if ((30 * 24 * 60 * 60 * 1000) - (Date.now() - b.tempo) < 0) {
+							this.client.channels.cache.get('954795056202670091').send({
+								content: `**💎 | Um VIP Acabou! | 💎**\n\n👤 | Usuário: ${await this.client.users.fetch(b.id).then((x) => x.tag)} (\`${b.id}\`)\n🆔 | Servidor: ${await this.client.guilds.fetch(i._id).then((x) => x.name)} (\`${i._id}\`)`
+							});
 
-			await this.client.channels.cache.get('915649663208661062').send(embed);
-
-			allItens.forEach(async (e) => {
-				allGuilds.forEach(async (i) => {
-					const server3 = await Guild.findOne({
-						_id: i._id
-					});
-
-					const {
-						bolsa
-					} = server3;
-
-					const porcentagem = bolsa.valor / 100;
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.bebidas': e.loja.bebidas[0]
-					}, {
-						$set: {
-							'loja.bebidas.$.preco': 1500 - (porcentagem * 1500)
+							await this.client.database.guilds.updateOne({
+								_id: i._id
+							}, {
+								$pull: {
+									vip: {
+										id: b.id
+									}
+								}
+							});
 						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.bebidas': e.loja.bebidas[1]
-					}, {
-						$set: {
-							'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.bebidas': e.loja.bebidas[2]
-					}, {
-						$set: {
-							'loja.bebidas.$.preco': 1800 - (porcentagem * 1800)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.bebidas': e.loja.bebidas[3]
-					}, {
-						$set: {
-							'loja.bebidas.$.preco': 800 - (porcentagem * 800)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.bebidas': e.loja.bebidas[4]
-					}, {
-						$set: {
-							'loja.bebidas.$.preco': 1200 - (porcentagem * 1200)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.bebidas': e.loja.bebidas[5]
-					}, {
-						$set: {
-							'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[0]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 2000 - (porcentagem * 2000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[1]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 1500 - (porcentagem * 1500)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[2]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 900 - (porcentagem * 900)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[3]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 600 - (porcentagem * 600)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[4]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 1000 - (porcentagem * 1000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[5]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 1200 - (porcentagem * 1200)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.comidas': e.loja.comidas[6]
-					}, {
-						$set: {
-							'loja.comidas.$.preco': 500 - (porcentagem * 500)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.doces': e.loja.doces[0]
-					}, {
-						$set: {
-							'loja.doces.$.preco': 300 - (porcentagem * 300)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.doces': e.loja.doces[1]
-					}, {
-						$set: {
-							'loja.doces.$.preco': 750 - (porcentagem * 750)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.doces': e.loja.doces[2]
-					}, {
-						$set: {
-							'loja.doces.$.preco': 450 - (porcentagem * 450)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.doces': e.loja.doces[3]
-					}, {
-						$set: {
-							'loja.doces.$.preco': 700 - (porcentagem * 700)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.doces': e.loja.doces[4]
-					}, {
-						$set: {
-							'loja.doces.$.preco': 550 - (porcentagem * 550)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidades': e.loja.utilidades[0]
-					}, {
-						$set: {
-							'loja.utilidades.$.preco': 50000 - (porcentagem * 50000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidades': e.loja.utilidades[1]
-					}, {
-						$set: {
-							'loja.utilidades.$.preco': 2000 - (porcentagem * 2000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidades': e.loja.utilidades[2]
-					}, {
-						$set: {
-							'loja.utilidades.$.preco': 5000 - (porcentagem * 5000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidades': e.loja.utilidades[3]
-					}, {
-						$set: {
-							'loja.utilidades.$.preco': 150000 - (porcentagem * 150000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidades': e.loja.utilidades[4]
-					}, {
-						$set: {
-							'loja.utilidades.$.preco': 20000 - (porcentagem * 20000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidades': e.loja.utilidades[5]
-					}, {
-						$set: {
-							'loja.utilidades.$.preco': 10000 - (porcentagem * 10000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.pm': e.loja.pm[0]
-					}, {
-						$set: {
-							'loja.pm.$.preco': 20000 - (porcentagem * 20000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.pm': e.loja.pm[1]
-					}, {
-						$set: {
-							'loja.pm.$.preco': 350000 - (porcentagem * 350000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.pm': e.loja.pm[2]
-					}, {
-						$set: {
-							'loja.pm.$.preco': 200000 - (porcentagem * 200000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.pm': e.loja.pm[3]
-					}, {
-						$set: {
-							'loja.pm.$.preco': 15000 - (porcentagem * 15000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.pm': e.loja.pm[4]
-					}, {
-						$set: {
-							'loja.pm.$.preco': 25000 - (porcentagem * 25000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[0]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 800 - (porcentagem * 800),
-							'loja.sementes.$.venda': 421 + (porcentagem * 421)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[1]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 900 - (porcentagem * 900),
-							'loja.sementes.$.venda': 685 + (porcentagem * 685)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[2]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 1100 - (porcentagem * 1100),
-							'loja.sementes.$.venda': 790 + (porcentagem * 790)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[3]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 750 - (porcentagem * 750),
-							'loja.sementes.$.venda': 1000 + (porcentagem * 1000)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[4]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 1500 - (porcentagem * 1500),
-							'loja.sementes.$.venda': 948 + (porcentagem * 948)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[5]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 1800 - (porcentagem * 1800),
-							'loja.sementes.$.venda': 1369 + (porcentagem * 1369)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[6]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 2100 - (porcentagem * 2100),
-							'loja.sementes.$.venda': 2106 + (porcentagem * 2106)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[7]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 2500 - (porcentagem * 2500),
-							'loja.sementes.$.venda': 1632 + (porcentagem * 1632)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[8]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 2900 - (porcentagem * 2900),
-							'loja.sementes.$.venda': 1790 + (porcentagem * 1790)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[9]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 3300 - (porcentagem * 3300),
-							'loja.sementes.$.venda': 2790 + (porcentagem * 2790)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[10]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
-							'loja.sementes.$.venda': 3105 + (porcentagem * 3105)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[11]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
-							'loja.sementes.$.venda': 2211 + (porcentagem * 2211)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[12]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
-							'loja.sementes.$.venda': 2579 + (porcentagem * 2579)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[13]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
-							'loja.sementes.$.venda': 4100 + (porcentagem * 4100)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[14]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
-							'loja.sementes.$.venda': 3237 + (porcentagem * 3237)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.sementes': e.loja.sementes[15]
-					}, {
-						$set: {
-							'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
-							'loja.sementes.$.venda': 5263 + (porcentagem * 5263)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidadesAgro': e.loja.utilidadesAgro[0]
-					}, {
-						$set: {
-							'loja.utilidadesAgro.$.preco': 100 - (porcentagem * 100)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidadesAgro': e.loja.utilidadesAgro[1]
-					}, {
-						$set: {
-							'loja.utilidadesAgro.$.preco': 150 - (porcentagem * 150)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidadesAgro': e.loja.utilidadesAgro[2]
-					}, {
-						$set: {
-							'loja.utilidadesAgro.$.preco': 130 - (porcentagem * 130)
-						}
-					});
-
-					await Shop.findOneAndUpdate({
-						_id: i._id,
-						'loja.utilidadesAgro': e.loja.utilidadesAgro[3]
-					}, {
-						$set: {
-							'loja.utilidadesAgro.$.preco': 300 - (porcentagem * 300)
-						}
-					});
+					}, 1000 * 60);
 				});
-			});
-		});
 
-		allUsers.forEach(async (e) => {
-			if (e.cadastrado) {
+				setInterval(async () => {
+					if (1200000 - (Date.now() - i.bolsa.tempo) < 0) {
+						const random = Math.floor(Math.random() * 91);
+
+						await this.client.database.guilds.updateOne({
+							_id: i._id
+						}, {
+							$set: {
+								'bolsa.valor': random,
+								'bolsa.tempo': Date.now()
+							}
+						});
+
+						const server3 = await this.client.database.guilds.findOne({
+							_id: '885645282614861854'
+						});
+
+						await server3.save();
+
+						const {
+							bolsa
+						} = server3;
+
+						const porcentagem = bolsa.valor / 100;
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.bebidas': allClients.loja.bebidas[0]
+						}, {
+							$set: {
+								'loja.bebidas.$.preco': 1500 - (porcentagem * 1500)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.bebidas': allClients.loja.bebidas[1]
+						}, {
+							$set: {
+								'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.bebidas': allClients.loja.bebidas[2]
+						}, {
+							$set: {
+								'loja.bebidas.$.preco': 1800 - (porcentagem * 1800)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.bebidas': allClients.loja.bebidas[3]
+						}, {
+							$set: {
+								'loja.bebidas.$.preco': 800 - (porcentagem * 800)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.bebidas': allClients.loja.bebidas[4]
+						}, {
+							$set: {
+								'loja.bebidas.$.preco': 1200 - (porcentagem * 1200)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.bebidas': allClients.loja.bebidas[5]
+						}, {
+							$set: {
+								'loja.bebidas.$.preco': 2000 - (porcentagem * 2000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[0]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 2000 - (porcentagem * 2000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[1]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 1500 - (porcentagem * 1500)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[2]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 900 - (porcentagem * 900)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[3]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 600 - (porcentagem * 600)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[4]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 1000 - (porcentagem * 1000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[5]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 1200 - (porcentagem * 1200)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.comidas': allClients.loja.comidas[6]
+						}, {
+							$set: {
+								'loja.comidas.$.preco': 500 - (porcentagem * 500)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.doces': allClients.loja.doces[0]
+						}, {
+							$set: {
+								'loja.doces.$.preco': 300 - (porcentagem * 300)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.doces': allClients.loja.doces[1]
+						}, {
+							$set: {
+								'loja.doces.$.preco': 750 - (porcentagem * 750)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.doces': allClients.loja.doces[2]
+						}, {
+							$set: {
+								'loja.doces.$.preco': 450 - (porcentagem * 450)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.doces': allClients.loja.doces[3]
+						}, {
+							$set: {
+								'loja.doces.$.preco': 700 - (porcentagem * 700)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.doces': allClients.loja.doces[4]
+						}, {
+							$set: {
+								'loja.doces.$.preco': 550 - (porcentagem * 550)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidades': allClients.loja.utilidades[0]
+						}, {
+							$set: {
+								'loja.utilidades.$.preco': 50000 - (porcentagem * 50000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidades': allClients.loja.utilidades[1]
+						}, {
+							$set: {
+								'loja.utilidades.$.preco': 2000 - (porcentagem * 2000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidades': allClients.loja.utilidades[2]
+						}, {
+							$set: {
+								'loja.utilidades.$.preco': 5000 - (porcentagem * 5000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidades': allClients.loja.utilidades[3]
+						}, {
+							$set: {
+								'loja.utilidades.$.preco': 150000 - (porcentagem * 150000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidades': allClients.loja.utilidades[4]
+						}, {
+							$set: {
+								'loja.utilidades.$.preco': 20000 - (porcentagem * 20000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidades': allClients.loja.utilidades[5]
+						}, {
+							$set: {
+								'loja.utilidades.$.preco': 10000 - (porcentagem * 10000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.pm': allClients.loja.pm[0]
+						}, {
+							$set: {
+								'loja.pm.$.preco': 20000 - (porcentagem * 20000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.pm': allClients.loja.pm[1]
+						}, {
+							$set: {
+								'loja.pm.$.preco': 350000 - (porcentagem * 350000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.pm': allClients.loja.pm[2]
+						}, {
+							$set: {
+								'loja.pm.$.preco': 200000 - (porcentagem * 200000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.pm': allClients.loja.pm[3]
+						}, {
+							$set: {
+								'loja.pm.$.preco': 15000 - (porcentagem * 15000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.pm': allClients.loja.pm[4]
+						}, {
+							$set: {
+								'loja.pm.$.preco': 25000 - (porcentagem * 25000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[0]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 800 - (porcentagem * 800),
+								'loja.sementes.$.venda': 421 + (porcentagem * 421)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[1]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 900 - (porcentagem * 900),
+								'loja.sementes.$.venda': 685 + (porcentagem * 685)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[2]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 1100 - (porcentagem * 1100),
+								'loja.sementes.$.venda': 790 + (porcentagem * 790)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[3]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 750 - (porcentagem * 750),
+								'loja.sementes.$.venda': 1000 + (porcentagem * 1000)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[4]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 1500 - (porcentagem * 1500),
+								'loja.sementes.$.venda': 948 + (porcentagem * 948)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[5]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 1800 - (porcentagem * 1800),
+								'loja.sementes.$.venda': 1369 + (porcentagem * 1369)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[6]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 2100 - (porcentagem * 2100),
+								'loja.sementes.$.venda': 2106 + (porcentagem * 2106)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[7]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 2500 - (porcentagem * 2500),
+								'loja.sementes.$.venda': 1632 + (porcentagem * 1632)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[8]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 2900 - (porcentagem * 2900),
+								'loja.sementes.$.venda': 1790 + (porcentagem * 1790)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[9]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 3300 - (porcentagem * 3300),
+								'loja.sementes.$.venda': 2790 + (porcentagem * 2790)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[10]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
+								'loja.sementes.$.venda': 3105 + (porcentagem * 3105)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[11]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
+								'loja.sementes.$.venda': 2211 + (porcentagem * 2211)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[12]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
+								'loja.sementes.$.venda': 2579 + (porcentagem * 2579)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[13]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 3900 - (porcentagem * 3900),
+								'loja.sementes.$.venda': 4100 + (porcentagem * 4100)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[14]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 4400 - (porcentagem * 4400),
+								'loja.sementes.$.venda': 3237 + (porcentagem * 3237)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.sementes': allClients.loja.sementes[15]
+						}, {
+							$set: {
+								'loja.sementes.$.preco': 5000 - (porcentagem * 5000),
+								'loja.sementes.$.venda': 5263 + (porcentagem * 5263)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidadesAgro': allClients.loja.utilidadesAgro[0]
+						}, {
+							$set: {
+								'loja.utilidadesAgro.$.preco': 100 - (porcentagem * 100)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidadesAgro': allClients.loja.utilidadesAgro[1]
+						}, {
+							$set: {
+								'loja.utilidadesAgro.$.preco': 150 - (porcentagem * 150)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidadesAgro': allClients.loja.utilidadesAgro[2]
+						}, {
+							$set: {
+								'loja.utilidadesAgro.$.preco': 130 - (porcentagem * 130)
+							}
+						});
+
+						await Client.updateOne({
+							_id: this.client.user.id,
+							'loja.utilidadesAgro': allClients.loja.utilidadesAgro[3]
+						}, {
+							$set: {
+								'loja.utilidadesAgro.$.preco': 300 - (porcentagem * 300)
+							}
+						});
+					}
+				}, 1000 * 60);
+			});
+
+			allUsers.forEach(async (e) => {
 				if (e.fabricando) {
-					await this.client.database.users.findOneAndUpdate({
+					await this.client.database.users.updateOne({
 						userId: e.userId,
 						guildId: e.guildId
 					}, {
@@ -571,7 +567,7 @@ module.exports = class Ready {
 				}
 
 				if (e.cadastrandoItem) {
-					await this.client.database.users.findOneAndUpdate({
+					await this.client.database.users.updateOne({
 						userId: e.userId,
 						guildId: e.guildId
 					}, {
@@ -579,6 +575,137 @@ module.exports = class Ready {
 							cadastrandoItem: false
 						}
 					});
+				}
+
+				if (e.loja.aberta) {
+					await this.client.database.users.updateOne({
+						userId: e.userId,
+						guildId: e.guildId
+					}, {
+						$set: {
+							'loja.aberta': false
+						}
+					});
+				}
+
+				if (e.apostaAberta) {
+					await this.client.database.users.updateOne({
+						userId: e.userId,
+						guildId: e.guildId
+					}, {
+						$set: {
+							apostaAberta: false
+						}
+					});
+				}
+
+				setInterval(async () => {
+					const userFullLife = await this.client.database.users.findOne({
+						userId: e.userId,
+						guildId: e.guildId
+					});
+
+					if (userFullLife.hp.vida > 100) {
+						await this.client.database.users.updateOne({
+							userId: userFullLife.userId,
+							guildId: userFullLife.guildId
+						}, {
+							$set: {
+								'hp.vida': 100
+							}
+						});
+					}
+				}, 1000 * 60);
+
+				setInterval(async () => {
+					if (e.hp.tratamento && e.hp.vida > 100) {
+						await this.client.database.users.updateOne({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'hp.tratamento': false,
+								'hp.vida': 100,
+								'hp.saiu': Date.now()
+							}
+						});
+
+						this.client.channels.cache.get('954795056202670091').send({
+							content: `**🏥 | Tratamento Terminado! | 🏥**\n\n👤 | Paciente: ${await this.client.users.fetch(e.userId).then((x) => x.tag)} (\`${e.userId}\`)\n💓 | Vida: 100\n🆔 | Servidor: ${await this.client.guilds.fetch(e.guildId).then((x) => x.name)} (\`${e.guildId}\`)`
+						});
+
+						const serverHospital = await this.client.database.guilds.findOne({
+							_id: e.guildId
+						});
+
+						if (serverHospital.hospital.find((a) => a.usuario === e.userId)) {
+							await this.client.database.guilds.updateOne({
+								_id: e.guildId
+							}, {
+								$pull: {
+									hospital: {
+										usuario: e.userId
+									}
+								}
+							});
+						}
+					}
+				}, 1000 * 60);
+
+				let userLife = await this.client.database.users.findOne({
+					userId: e.userId,
+					guildId: e.guildId
+				});
+
+				if (e.hp.tratamento && e.hp.vida < 100) {
+					userLife = await this.client.database.users.findOne({
+						userId: e.userId,
+						guildId: e.guildId
+					});
+
+					setInterval(async () => {
+						await this.client.database.users.updateOne({
+							userId: e.userId,
+							guildId: e.guildId
+						}, {
+							$set: {
+								'hp.vida': userLife.hp.vida += 1
+							}
+						});
+
+						if (userLife.hp.vida === 100) {
+							await this.client.database.users.updateOne({
+								userId: e.userId,
+								guildId: e.guildId
+							}, {
+								$set: {
+									'hp.tratamento': false,
+									'hp.vida': 100,
+									'hp.saiu': Date.now()
+								}
+							});
+
+							const serverHospital = await this.client.database.guilds.findOne({
+								_id: e.guildId
+							});
+
+							if (serverHospital.hospital.find((a) => a.usuario === e.userId)) {
+								await this.client.database.guilds.updateOne({
+									_id: e.guildId
+								}, {
+									$pull: {
+										hospital: {
+											usuario: e.userId
+										}
+									}
+								});
+							}
+
+							this.client.channels.cache.get('954795056202670091').send({
+								content: `**🏥 | Tratamento Terminado! | 🏥**\n\n👤 | Paciente: ${await this.client.users.fetch(e.userId).then((x) => x.tag)} (\`${e.userId}\`)\n💓 | Vida: 100\n🆔 | Servidor: ${await this.client.guilds.fetch(e.guildId).then((x) => x.name)} (\`${e.guildId}\`)`
+							});
+						}
+					}, 30000);
 				}
 
 				setInterval(async () => {
@@ -774,7 +901,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Ak-47')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Ak-47'
@@ -784,7 +911,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -797,7 +924,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -824,7 +951,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Ak-47')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Ak-47'
@@ -834,7 +961,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -847,7 +974,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -874,7 +1001,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Ak-47')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Ak-47'
@@ -884,7 +1011,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -897,7 +1024,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -924,7 +1051,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Ak-47')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Ak-47'
@@ -934,7 +1061,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -947,7 +1074,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -976,7 +1103,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'UMP')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'UMP'
@@ -986,7 +1113,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -999,7 +1126,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1026,7 +1153,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'UMP')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'UMP'
@@ -1036,7 +1163,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1049,7 +1176,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1076,7 +1203,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'UMP')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'UMP'
@@ -1086,7 +1213,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1099,7 +1226,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1126,7 +1253,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'UMP')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'UMP'
@@ -1136,7 +1263,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1149,7 +1276,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1178,7 +1305,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'MP5')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'MP5'
@@ -1188,7 +1315,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1201,7 +1328,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1228,7 +1355,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'MP5')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'MP5'
@@ -1238,7 +1365,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1251,7 +1378,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1278,7 +1405,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'MP5')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'MP5'
@@ -1288,7 +1415,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1301,7 +1428,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1328,7 +1455,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'MP5')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'MP5'
@@ -1338,7 +1465,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1351,7 +1478,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1380,7 +1507,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'ACR')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'ACR'
@@ -1390,7 +1517,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1403,7 +1530,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1430,7 +1557,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'ACR')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'ACR'
@@ -1440,7 +1567,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1453,7 +1580,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1480,7 +1607,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'ACR')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'ACR'
@@ -1490,7 +1617,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1503,7 +1630,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1530,7 +1657,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'ACR')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'ACR'
@@ -1540,7 +1667,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1553,7 +1680,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1582,7 +1709,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'KNT-308')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'KNT-308'
@@ -1592,7 +1719,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1605,7 +1732,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1632,7 +1759,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'KNT-308')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'KNT-308'
@@ -1642,7 +1769,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1655,7 +1782,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1682,7 +1809,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'KNT-308')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'KNT-308'
@@ -1692,7 +1819,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1705,7 +1832,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1732,7 +1859,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'KNT-308')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'KNT-308'
@@ -1742,7 +1869,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1755,7 +1882,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1784,7 +1911,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Desert Eagle')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Desert Eagle'
@@ -1794,7 +1921,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1807,7 +1934,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1834,7 +1961,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Desert Eagle')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Desert Eagle'
@@ -1844,7 +1971,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1857,7 +1984,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1884,7 +2011,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Desert Eagle')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Desert Eagle'
@@ -1894,7 +2021,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1907,7 +2034,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1934,7 +2061,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Desert Eagle')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Desert Eagle'
@@ -1944,7 +2071,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1957,7 +2084,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -1986,7 +2113,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Revolver 38')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Revolver 38'
@@ -1996,7 +2123,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2009,7 +2136,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2036,7 +2163,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Revolver 38')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Revolver 38'
@@ -2046,7 +2173,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2059,7 +2186,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2086,7 +2213,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Revolver 38')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Revolver 38'
@@ -2096,7 +2223,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2109,7 +2236,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2136,7 +2263,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Revolver 38')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Revolver 38'
@@ -2146,7 +2273,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2159,7 +2286,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2188,7 +2315,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'G18')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'G18'
@@ -2198,7 +2325,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2211,7 +2338,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2238,7 +2365,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'G18')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'G18'
@@ -2248,7 +2375,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2261,7 +2388,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2288,7 +2415,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'G18')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'G18'
@@ -2298,7 +2425,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2311,7 +2438,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2338,7 +2465,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.armas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'G18')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'G18'
@@ -2348,7 +2475,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2361,7 +2488,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2394,7 +2521,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Maconha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Maconha'
@@ -2404,7 +2531,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2417,7 +2544,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2444,7 +2571,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Maconha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Maconha'
@@ -2454,7 +2581,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2467,7 +2594,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2494,7 +2621,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Maconha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Maconha'
@@ -2504,7 +2631,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2517,7 +2644,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2544,7 +2671,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Maconha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Maconha'
@@ -2554,7 +2681,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2567,7 +2694,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2596,7 +2723,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Cocaína')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Cocaína'
@@ -2606,7 +2733,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2619,7 +2746,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2646,7 +2773,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Cocaína')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Cocaína'
@@ -2656,7 +2783,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2669,7 +2796,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2696,7 +2823,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Cocaína')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Cocaína'
@@ -2706,7 +2833,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2719,7 +2846,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2746,7 +2873,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Cocaína')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Cocaína'
@@ -2756,7 +2883,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2769,7 +2896,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2798,7 +2925,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'LSD')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'LSD'
@@ -2808,7 +2935,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2821,7 +2948,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2848,7 +2975,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'LSD')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'LSD'
@@ -2858,7 +2985,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2871,7 +2998,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2898,7 +3025,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'LSD')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'LSD'
@@ -2908,7 +3035,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2921,7 +3048,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2948,7 +3075,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'LSD')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'LSD'
@@ -2958,7 +3085,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -2971,7 +3098,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3000,7 +3127,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Metanfetamina')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Metanfetamina'
@@ -3010,7 +3137,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3023,7 +3150,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3050,7 +3177,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Metanfetamina')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Metanfetamina'
@@ -3060,7 +3187,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3073,7 +3200,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3100,7 +3227,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Metanfetamina')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Metanfetamina'
@@ -3110,7 +3237,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3123,7 +3250,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3150,7 +3277,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.drogas.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Metanfetamina')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Metanfetamina'
@@ -3160,7 +3287,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3173,7 +3300,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3206,7 +3333,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.chaves.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Chave Micha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Chave Micha'
@@ -3216,7 +3343,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3229,7 +3356,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3256,7 +3383,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.chaves.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Chave Micha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Chave Micha'
@@ -3266,7 +3393,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3279,7 +3406,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3306,7 +3433,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.chaves.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Chave Micha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Chave Micha'
@@ -3316,7 +3443,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3329,7 +3456,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3356,7 +3483,7 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.chaves.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Chave Micha')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Chave Micha'
@@ -3366,7 +3493,7 @@ module.exports = class Ready {
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3379,7 +3506,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3412,17 +3539,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Metralhadora'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3435,7 +3562,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3444,7 +3571,7 @@ module.exports = class Ready {
 													item: 'Munição Metralhadora',
 													emoji: '<:balaassalto:905653521846784080>',
 													id: '<:balaassalto:905653521846784080>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3462,17 +3589,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Metralhadora'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3485,7 +3612,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3494,7 +3621,7 @@ module.exports = class Ready {
 													item: 'Munição Metralhadora',
 													emoji: '<:balaassalto:905653521846784080>',
 													id: '<:balaassalto:905653521846784080>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3512,17 +3639,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Metralhadora'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3535,7 +3662,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3544,7 +3671,7 @@ module.exports = class Ready {
 													item: 'Munição Metralhadora',
 													emoji: '<:balaassalto:905653521846784080>',
 													id: '<:balaassalto:905653521846784080>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3562,17 +3689,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Metralhadora')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Metralhadora'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Metralhadora').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3585,7 +3712,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3594,7 +3721,7 @@ module.exports = class Ready {
 													item: 'Munição Metralhadora',
 													emoji: '<:balaassalto:905653521846784080>',
 													id: '<:balaassalto:905653521846784080>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3614,17 +3741,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Pistola')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Pistola'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3637,7 +3764,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3646,7 +3773,7 @@ module.exports = class Ready {
 													item: 'Munição Pistola',
 													emoji: '<:bala:905653668643241985>',
 													id: '<:bala:905653668643241985>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3664,17 +3791,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Pistola')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Pistola'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3687,7 +3814,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3696,7 +3823,7 @@ module.exports = class Ready {
 													item: 'Munição Pistola',
 													emoji: '<:bala:905653668643241985>',
 													id: '<:bala:905653668643241985>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3714,17 +3841,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Pistola')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Pistola'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3737,7 +3864,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3746,7 +3873,7 @@ module.exports = class Ready {
 													item: 'Munição Pistola',
 													emoji: '<:bala:905653668643241985>',
 													id: '<:bala:905653668643241985>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3764,17 +3891,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição Pistola')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição Pistola'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição Pistola').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3787,7 +3914,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3796,7 +3923,7 @@ module.exports = class Ready {
 													item: 'Munição Pistola',
 													emoji: '<:bala:905653668643241985>',
 													id: '<:bala:905653668643241985>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3816,17 +3943,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição KNT')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição KNT'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3839,7 +3966,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3848,7 +3975,7 @@ module.exports = class Ready {
 													item: 'Munição KNT',
 													emoji: '<:balasniper:905653583171706980>',
 													id: '<:balasniper:905653583171706980>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3866,17 +3993,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição KNT')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição KNT'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3889,7 +4016,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3898,7 +4025,7 @@ module.exports = class Ready {
 													item: 'Munição KNT',
 													emoji: '<:balasniper:905653583171706980>',
 													id: '<:balasniper:905653583171706980>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3916,17 +4043,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição KNT')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição KNT'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3939,7 +4066,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3948,7 +4075,7 @@ module.exports = class Ready {
 													item: 'Munição KNT',
 													emoji: '<:balasniper:905653583171706980>',
 													id: '<:balasniper:905653583171706980>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -3966,17 +4093,17 @@ module.exports = class Ready {
 
 								if (timeout - (Date.now() - user.fabricagem.municoes.tempo) < 0) {
 									if (user.mochila.find((a) => a.item === 'Munição KNT')) {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId,
 											'mochila.item': 'Munição KNT'
 										}, {
 											$set: {
-												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += user.fabricagem.municoes.quantia
+												'mochila.$.quantia': user.mochila.find((a) => a.item === 'Munição KNT').quantia += (user.fabricagem.municoes.quantia * 5)
 											}
 										});
 
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3989,7 +4116,7 @@ module.exports = class Ready {
 											}
 										});
 									} else {
-										await this.client.database.users.findOneAndUpdate({
+										await this.client.database.users.updateOne({
 											userId: user.userId,
 											guildId: user.guildId
 										}, {
@@ -3998,7 +4125,7 @@ module.exports = class Ready {
 													item: 'Munição KNT',
 													emoji: '<:balasniper:905653583171706980>',
 													id: '<:balasniper:905653583171706980>'.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-													quantia: user.fabricagem.municoes.quantia
+													quantia: user.fabricagem.municoes.quantia * 5
 												}
 											},
 											$set: {
@@ -4017,9 +4144,14 @@ module.exports = class Ready {
 				}, 1000 * 60);
 
 				setInterval(async () => {
-					if (864000000 - (Date.now() - e.porteDeArmas) < 0) {
+					const userPorteDeArmas = await this.client.database.users.findOne({
+						userId: e.userId,
+						guildId: e.guildId
+					});
+
+					if (userPorteDeArmas.porteDeArmas !== 0 && 864000000 - (Date.now() - userPorteDeArmas.porteDeArmas) < 0) {
 						if (e.mochila.find((a) => a.item === 'Porte de Armas')) {
-							await this.client.database.users.findOneAndUpdate({
+							await this.client.database.users.updateOne({
 								userId: e.userId,
 								guildId: e.guildId
 							}, {
@@ -4040,7 +4172,7 @@ module.exports = class Ready {
 					if (e.garagem.length) {
 						for (var i = 0; i < e.garagem.length; i++) {
 							if (!e.garagem[i].emplacado) {
-								await this.client.database.users.findOneAndUpdate({
+								await this.client.database.users.updateOne({
 									userId: e.userId,
 									guildId: e.guildId,
 									'garagem.nome': e.garagem[i].nome
@@ -4056,221 +4188,365 @@ module.exports = class Ready {
 					}
 				}, 86400000);
 
+				// setInterval(async () => {
+				// 	const userBank = await this.client.database.users.findOne({
+				// 		userId: e.userId,
+				// 		guildId: e.guildId
+				// 	});
+
+				// 	if (userBank.payBank.cooldown !== 0 && 518400000 - (Date.now() - userBank.payBank.cooldown) < 0) {
+				// 		await this.client.database.users.updateOne({
+				// 			userId: e.userId,
+				// 			guildId: e.guildId
+				// 		}, {
+				// 			$set: {
+				// 				saldo: e.saldo + e.banco,
+				// 				banco: 0,
+				// 				'payBank.cooldown': 0
+				// 			}
+				// 		});
+
+				// 		this.client.channels.cache.get('954795056202670091').send({
+				// 			content: `**🏦 | Um Banco Acabou! | 🏦**\n\n👤 | Usuário: ${await this.client.users.fetch(e.userId).then((x) => x.tag)} (\`${e.userId}\`)\n💸 | Carteira: R$0,00\n🏦 | Banco: R$${Utils.numberFormat(e.banco)},00\n🆔 | Servidor: ${await this.client.guilds.fetch(e.guildId).then((x) => x.name)} (\`${e.guildId}\`)`
+				// 		});
+				// 	}
+				// }, 1000 * 60);
+
 				setInterval(async () => {
-					if (e.payBank.sucess && 518400000 - (Date.now() - e.payBank.cooldown) < 0) {
-						await this.client.database.users.findOneAndUpdate({
+					const userBtc = await this.client.database.users.findOne({
+						userId: e.userId,
+						guildId: e.guildId
+					});
+
+					if (userBtc.cooldown.bitcoin !== 0 && 864000000 - (Date.now() - userBtc.cooldown.bitcoin) < 0) {
+						const valor = userBtc.bitcoin += Number(userBtc.investimento.investido);
+
+						await this.client.database.users.updateOne({
 							userId: e.userId,
 							guildId: e.guildId
 						}, {
 							$set: {
-								saldo: e.banco,
-								banco: 0,
-								'payBank.cooldown': 0,
-								'payBank.sucess': false
+								bitcoin: (valor * 0.25) + Number(userBtc.investimento.investido),
+								'investimento.investido': 0,
+								'cooldown.bitcoin': 0
 							}
 						});
-					}
-				}, 1000 * 60);
-
-				setInterval(async () => {
-					if (864000000 - (Date.now() - e.cooldown.bitcoin) < 0) {
-						const user2 = await this.client.database.users.findOne({
-							userId: e.userId,
-							guildId: e.guildId
-						});
-
-						let valor = user2.bitcoin += Number(user2.investimento.investido);
-
-						user2.bitcoin = valor *= 2;
-						user2.investimento.investido = 0;
-						user2.cooldown.bitcoin = 0;
-						await e.save();
 					}
 				}, 1000 * 60);
 
 				setInterval(async () => {
 					try {
 						e.humores.fome -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 7200000);
-
-				setInterval(async () => {
-					try {
 						e.humores.sede -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 3600000);
-
-				setInterval(async () => {
-					try {
 						e.humores.bravo -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 3000000);
-
-				setInterval(async () => {
-					try {
 						e.humores.triste -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 10800000);
-
-				setInterval(async () => {
-					try {
 						e.humores.cansado -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 2400000);
-
-				setInterval(async () => {
-					try {
 						e.humores.solitario -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 4800000);
-
-				setInterval(async () => {
-					try {
 						e.humores.desanimado -= 1;
-						await e.save();
-					} catch (err) {
-						return;
-					}
-				}, 6000000);
-
-				setInterval(async () => {
-					try {
 						e.humores.estressado -= 1;
 						await e.save();
 					} catch (err) {
 						return;
 					}
-				}, 5400000);
-			}
-		});
+				}, 7200000);
+			});
 
-		const hasDocGuild = await Guild.find({
-			'exportador.canal': {
-				$exists: true
-			}
-		});
+			const hasDocGuild = await Guild.find({
+				'exportador.canal': {
+					$exists: true
+				}
+			});
 
-		if (!hasDocGuild) return;
+			if (!hasDocGuild) return;
 
-		const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
-		if (!arrayCanais) return;
+			const arrayCanais = await hasDocGuild.map((ce) => ce.exportador.canal);
+			if (!arrayCanais) return;
 
-		const filtroCanais = arrayCanais.filter((item) => item.length !== 0);
-		if (!filtroCanais) return;
+			const filtroCanais = arrayCanais.filter((item) => item.length !== 0);
+			if (!filtroCanais) return;
 
-		cron.schedule('48 */4 * * *', async () => {
-			const randomQuantia = Utils.randomNumber(50, 100);
-			const mapDroga = ['Maconha', 'Cocaína', 'LSD', 'Metanfetamina'];
-			const randomDroga = mapDroga[Math.floor(Math.random() * mapDroga.length)];
-			let tempo = 600000;
-			let atualDroga = 0;
+			cron.schedule('48 */4 * * *', async () => {
+				const randomQuantia = Utils.randomNumber(50, 100);
+				const mapDroga = ['Maconha', 'Cocaína', 'LSD', 'Metanfetamina'];
+				const randomDroga = mapDroga[Math.floor(Math.random() * mapDroga.length)];
+				let tempo = 600000;
+				let atualDroga = 0;
 
-			const embed = new ClientEmbed(this.client.user)
-				.setTitle('Exportando Drogas')
-				.setDescription(`O Exportador de Drogas está precisando de **${randomQuantia}KG** de **${randomDroga}**, para levar a Europa.\n\nClique na reação 📦 para Exportar e Vender a sua Droga.`)
-				.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo))
-				.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+				const embed = new ClientEmbed(this.client.user)
+					.setTitle('Exportando Drogas')
+					.setDescription(`O Exportador de Drogas está precisando de **${randomQuantia}KG** de **${randomDroga}**, para levar a Europa.\n\nClique na reação 📦 para Exportar e Vender a sua Droga.`)
+					.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo))
+					.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
 
-			for (let i = 0; i < arrayCanais.length; i++) {
-				try {
-					await this.client.channels.cache.get(filtroCanais[i]).send(embed).then(async (msg) => {
-						await msg.react('📦');
+				for (let i = 0; i < arrayCanais.length; i++) {
+					try {
+						await this.client.channels.cache.get(filtroCanais[i]).send({
+							embeds: [embed]
+						}).then(async (msg) => {
+							await msg.react('📦');
 
-						await this.client.database.guilds.findOneAndUpdate({
-							_id: msg.guild.id
-						}, {
-							$set: {
-								'exportador.precisandoQuantia': randomQuantia,
-								'exportador.precisandoDroga': randomDroga,
-								'exportador.irEmbora': tempo,
-								'exportador.quantiaQueFalta': atualDroga
-							}
-						});
-
-						const coletor = msg.createReactionCollector((reaction, user) => reaction.emoji.name === '📦' && user.id !== this.client.user.id, {
-							time: 600000,
-							max: 10
-						});
-
-						coletor.on('collect', async (reaction2, user2) => {
-							const serverDroga = await this.client.database.guilds.findOne({
+							await this.client.database.guilds.updateOne({
 								_id: msg.guild.id
-							});
-
-							if (serverDroga.cidade.donoFabricadeDrogas.find((a) => a.id === user2.id)) {
-								msg.reply('você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!').then((b) => b.delete({
-									timeout: 5000
-								}));
-							}
-
-							const userAuthor = await this.client.database.users.findOne({
-								userId: user2.id,
-								guildId: msg.guild.id
-							});
-
-							let presoTime = 0;
-
-							if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
-								presoTime = 36000000;
-
-								if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
-									const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
-
-									const embedPreso = new ClientEmbed(this.client.user)
-										.setTitle('👮 | Preso')
-										.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-									return msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedPreso);
+							}, {
+								$set: {
+									'exportador.precisandoQuantia': randomQuantia,
+									'exportador.precisandoDroga': randomDroga,
+									'exportador.irEmbora': tempo,
+									'exportador.quantiaQueFalta': atualDroga
 								}
-							} else if (!userAuthor.isMochila) {
-								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`).then((b) => b.delete({
-									timeout: 5000
-								}));
-							} else if (!userAuthor.mochila.find((a) => a.item === randomDroga)) {
-								msg.channel.send(`<@${reaction2.users.cache.last().id}>, você não possui **${randomDroga}** na sua mochila para vender ela.`).then((b) => b.delete({
-									timeout: 5000
-								}));
-							} else {
-								const randomDrogaUser = userAuthor.mochila.find((a) => a.item === randomDroga).quantia;
+							});
 
-								atualDroga += randomDrogaUser;
+							const filter = (reactionFilter, userFilter) => {
+								return reactionFilter.emoji.name === '📦' && userFilter.id !== this.client.user.id;
+							};
 
-								await this.client.database.guilds.findOneAndUpdate({
+							const coletor = msg.createReactionCollector({
+								filter,
+								time: 600000,
+								max: 10
+							});
+
+							coletor.on('collect', async (reaction2, user2) => {
+								const serverDroga = await this.client.database.guilds.findOne({
 									_id: msg.guild.id
-								}, {
-									$set: {
-										'exportador.quantiaQueFalta': atualDroga
-									}
 								});
 
-								if (atualDroga >= randomQuantia) {
-									atualDroga = randomQuantia;
+								if (serverDroga.cidade.donoFabricadeDrogas.find((a) => a.id === user2.id)) {
+									msg.reply('você não pode transportar suas drogas para o Exportador, pois você é Fabricante de Drogas desse servidor!').then((b) => setTimeout(() => b.delete(), 5000));
+								}
 
-									embed.fields = [];
-									embed.addField('Tempo para o exportador ir embora:', `\`0\`d \`0\`h \`0\`m \`0\`s`);
-									embed.addField('Quantidade que falta para a exportação:', `${randomQuantia}/${randomQuantia}`);
+								const userAuthor = await this.client.database.users.findOne({
+									userId: user2.id,
+									guildId: msg.guild.id
+								});
 
-									await msg.edit(embed);
+								let presoTime = 0;
 
-									await this.client.database.guilds.findOneAndUpdate({
+								if (userAuthor.prisao.isPreso && userAuthor.prisao.traficoDrogas) {
+									presoTime = 36000000;
+
+									if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+										const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+										const embedPreso = new ClientEmbed(this.client.user)
+											.setTitle('👮 | Preso')
+											.setDescription(`<:algema:898326104413188157> | Você está preso por tentativa de tráfico de drogas.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+										return msg.channel.send({
+											content: `<@${reaction2.users.cache.last().id}>`,
+											embeds: [embedPreso]
+										});
+									}
+								} else if (!userAuthor.isMochila) {
+									msg.channel.send({
+										content: `<@${reaction2.users.cache.last().id}>, você não possui uma **Mochila**. Vá até Loja > Utilidades e Compre uma!`
+									}).then((b) => setTimeout(() => b.delete(), 5000));
+								} else if (!userAuthor.mochila.find((a) => a.item === randomDroga)) {
+									msg.channel.send({
+										content: `<@${reaction2.users.cache.last().id}>, você não possui **${randomDroga}** na sua mochila para vender ela.`
+									}).then((b) => setTimeout(() => b.delete(), 5000));
+								} else {
+									const randomDrogaUser = userAuthor.mochila.find((a) => a.item === randomDroga).quantia;
+
+									atualDroga += randomDrogaUser;
+
+									await this.client.database.guilds.updateOne({
+										_id: msg.guild.id
+									}, {
+										$set: {
+											'exportador.quantiaQueFalta': atualDroga
+										}
+									});
+
+									if (atualDroga >= randomQuantia) {
+										atualDroga = randomQuantia;
+
+										embed.fields = [];
+										embed.addField('Tempo para o exportador ir embora:', `\`0\`d \`0\`h \`0\`m \`0\`s`);
+										embed.addField('Quantidade que falta para a exportação:', `${randomQuantia}/${randomQuantia}`);
+
+										await msg.edit({
+											embeds: [embed]
+										});
+
+										await this.client.database.guilds.updateOne({
+											_id: msg.guild.id
+										}, {
+											$set: {
+												'exportador.precisandoQuantia': 0,
+												'exportador.precisandoDroga': 'Nenhuma Droga',
+												'exportador.irEmbora': 0,
+												'exportador.quantiaQueFalta': 0
+											}
+										});
+
+										coletor.stop();
+
+										const embedTchau = new ClientEmbed(this.client.user)
+											.setTitle('Exportando Drogas')
+											.setDescription(`O exportador de drogas encheu seu lote de drogas para levar a Europa. Ele só irá voltar daqui a ${Utils.convertMS(17280000)}!`);
+
+										return msg.channel.send({
+											embeds: [embedTchau]
+										});
+									}
+
+									let valor = 0;
+
+									if (randomDroga === 'Maconha') {
+										valor = randomDrogaUser * 30000;
+									} else if (randomDroga === 'Cocaína') {
+										valor = randomDrogaUser * 50000;
+									} else if (randomDroga === 'LSD') {
+										valor = randomDrogaUser * 70000;
+									} else if (randomDroga === 'Metanfetamina') {
+										valor = randomDrogaUser * 90000;
+									}
+
+									const embedExportada = new ClientEmbed(this.client.user)
+										.setTitle('Exportando Drogas')
+										.setDescription(`<@${reaction2.users.cache.last().id}>, você repassou **${randomDrogaUser}KG** de **${randomDroga}** para o exportador, e recebeu **R$${Utils.numberFormat(valor)},00**.`);
+
+									msg.channel.send({
+										content: `<@${reaction2.users.cache.last().id}>`,
+										embeds: [embedExportada]
+									}).then(async (msg1) => {
+										await msg1.react('👮');
+
+										const server = await this.client.database.guilds.findOne({
+											_id: msg.guild.id
+										});
+
+										const filterCollector = (reactionFilter2, userFilter2) => {
+											return reactionFilter2.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(userFilter2.id) || server.cidade.delegado === userFilter2.id);
+										};
+
+										const coletor2 = msg1.createReactionCollector({
+											filter: filterCollector,
+											time: 4000,
+											max: 1
+										});
+
+										coletor2.on('collect', async (reaction4, user4) => {
+											const userPolicia = await this.client.database.users.findOne({
+												userId: user4.id,
+												guildId: msg.guild.id
+											});
+
+											if (userPolicia.policia.isFolga) return msg.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, portanto, você não pode prender ninguém ainda!');
+
+											const timeoutRoubar = 300000;
+
+											if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador) > 0) {
+												const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador));
+
+												const embedRoubar = new ClientEmbed(this.client.user)
+													.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+
+												return msg.channel.send({
+													content: `<@${user4.id}>`,
+													embeds: [embedRoubar]
+												});
+											} else {
+												const embedPolicia = new ClientEmbed(this.client.user)
+													.setTitle('Prisão')
+													.setDescription(`<@${user2.id}>, você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
+
+												msg.channel.send({
+													content: `<@${user2.id}>`,
+													embeds: [embedPolicia]
+												});
+
+												atualDroga -= randomDrogaUser;
+
+												await this.client.database.users.updateOne({
+													userId: user4.id,
+													guildId: msg.guild.id
+												}, {
+													$set: {
+														'policia.prenderExportador': Date.now()
+													}
+												});
+
+												await this.client.database.guilds.updateOne({
+													_id: msg.guild.id
+												}, {
+													$set: {
+														'exportador.quantiaQueFalta': atualDroga
+													}
+												});
+
+												await this.client.database.users.updateOne({
+													userId: user2.id,
+													guildId: msg.guild.id
+												}, {
+													$set: {
+														'prisao.isPreso': true,
+														'prisao.tempo': Date.now(),
+														'prisao.traficoDrogas': true
+													}
+												});
+
+												await this.client.database.users.updateOne({
+													userId: user2.id,
+													guildId: msg.guild.id
+												}, {
+													$pull: {
+														mochila: {
+															item: randomDroga
+														}
+													}
+												});
+
+												setTimeout(async () => {
+													await this.client.database.users.updateOne({
+														userId: user2.id,
+														guildId: msg.guild.id
+													}, {
+														$set: {
+															'prisao.isPreso': false,
+															'prisao.tempo': 0,
+															'prisao.traficoDrogas': false
+														}
+													});
+												}, 36000000);
+											}
+										});
+
+										coletor2.on('end', async (collected, reason) => {
+											if (reason === 'time') {
+												coletor2.stop();
+
+												await this.client.database.users.updateOne({
+													userId: user2.id,
+													guildId: msg.guild.id
+												}, {
+													$set: {
+														saldo: userAuthor.saldo + valor
+													}
+												});
+
+												await this.client.database.users.updateOne({
+													userId: user2.id,
+													guildId: msg.guild.id
+												}, {
+													$pull: {
+														mochila: {
+															item: randomDroga
+														}
+													}
+												});
+											}
+										});
+									});
+								}
+							});
+
+							coletor.on('end', async (collected, reason) => {
+								if (reason === 'time') {
+									coletor.stop();
+
+									await this.client.database.guilds.updateOne({
 										_id: msg.guild.id
 									}, {
 										$set: {
@@ -4281,194 +4557,39 @@ module.exports = class Ready {
 										}
 									});
 
-									coletor.stop();
-
-									const embedTchau = new ClientEmbed(this.client.user)
-										.setTitle('Exportando Drogas')
-										.setDescription(`O exportador de drogas encheu seu lote de drogas para levar a Europa. Ele só irá voltar daqui a ${Utils.convertMS(17280000)}!`);
-
-									return msg.channel.send(embedTchau);
-								}
-
-								let valor = 0;
-
-								if (randomDroga === 'Maconha') {
-									valor = randomDrogaUser * 30000;
-								} else if (randomDroga === 'Cocaína') {
-									valor = randomDrogaUser * 50000;
-								} else if (randomDroga === 'LSD') {
-									valor = randomDrogaUser * 70000;
-								} else if (randomDroga === 'Metanfetamina') {
-									valor = randomDrogaUser * 90000;
-								}
-
-								const embedExportada = new ClientEmbed(this.client.user)
-									.setTitle('Exportando Drogas')
-									.setDescription(`<@${reaction2.users.cache.last().id}>, você repassou **${randomDrogaUser}KG** de **${randomDroga}** para o exportador, e recebeu **R$${Utils.numberFormat(valor)},00**.`);
-
-								msg.channel.send(`<@${reaction2.users.cache.last().id}>`, embedExportada).then(async (msg1) => {
-									await msg1.react('👮');
-
-									const server = await this.client.database.guilds.findOne({
-										_id: msg.guild.id
-									});
-
-									const coletor2 = msg1.createReactionCollector((reaction3, user3) => reaction3.emoji.name === '👮' && (server.cidade.policiais.map(a => a.id).includes(user3.id) || server.cidade.delegado === user3.id), {
-										time: 4000,
-										max: 1
-									});
-
-									coletor2.on('collect', async (reaction4, user4) => {
-										const userPolicia = await this.client.database.users.findOne({
-											userId: user4.id,
-											guildId: msg.guild.id
-										});
-
-										if (userPolicia.policia.isFolga) return msg.reply('o Delegado do servidor deu uma folga para todos os **Policiais** do servidor, portanto, você não pode prender ninguém ainda!');
-
-										const timeoutRoubar = 300000;
-
-										if (timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador) > 0) {
-											const faltam = ms(timeoutRoubar - (Date.now() - userPolicia.policia.prenderExportador));
-
-											const embedRoubar = new ClientEmbed(this.client.user)
-												.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
-
-											return msg.channel.send(`<@${user4.id}>`, embedRoubar);
-										} else {
-											const embedPolicia = new ClientEmbed(this.client.user)
-												.setTitle('Prisão')
-												.setDescription(`<@${user2.id}>, você foi preso em flagrante por <@${user4.id}>, ao traficar drogas. Todo o dinheiro e drogas foram confiscados. Agora você passará um tempinho na Cadeia.`);
-
-											msg.channel.send(`<@${user2.id}>`, embedPolicia);
-
-											atualDroga -= randomDrogaUser;
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user4.id,
-												guildId: msg.guild.id
-											}, {
-												$set: {
-													'policia.prenderExportador': Date.now()
-												}
-											});
-
-											await this.client.database.guilds.findOneAndUpdate({
-												_id: msg.guild.id
-											}, {
-												$set: {
-													'exportador.quantiaQueFalta': atualDroga
-												}
-											});
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg.guild.id
-											}, {
-												$set: {
-													'prisao.isPreso': true,
-													'prisao.tempo': Date.now(),
-													'prisao.traficoDrogas': true
-												}
-											});
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg.guild.id
-											}, {
-												$pull: {
-													mochila: {
-														item: randomDroga
-													}
-												}
-											});
-
-											setTimeout(async () => {
-												await this.client.database.users.findOneAndUpdate({
-													userId: user2.id,
-													guildId: msg.guild.id
-												}, {
-													$set: {
-														'prisao.isPreso': false,
-														'prisao.tempo': 0,
-														'prisao.traficoDrogas': false
-													}
-												});
-											}, 36000000);
-										}
-									});
-
-									coletor2.on('end', async (collected, reason) => {
-										if (reason === 'time') {
-											coletor2.stop();
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg.guild.id
-											}, {
-												$set: {
-													saldo: userAuthor.saldo + valor
-												}
-											});
-
-											await this.client.database.users.findOneAndUpdate({
-												userId: user2.id,
-												guildId: msg.guild.id
-											}, {
-												$pull: {
-													mochila: {
-														item: randomDroga
-													}
-												}
-											});
-										}
-									});
-								});
-							}
-						});
-
-						coletor.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								coletor.stop();
-
-								await this.client.database.guilds.findOneAndUpdate({
-									_id: msg.guild.id
-								}, {
-									$set: {
-										'exportador.precisandoQuantia': 0,
-										'exportador.precisandoDroga': 'Nenhuma Droga',
-										'exportador.irEmbora': 0,
-										'exportador.quantiaQueFalta': 0
-									}
-								});
-
-								return;
-							}
-						});
-
-						setInterval(async () => {
-							tempo--;
-
-							await this.client.database.guilds.findOneAndUpdate({
-								_id: msg.guild.id
-							}, {
-								$set: {
-									'exportador.irEmbora': tempo
+									return;
 								}
 							});
 
-							embed.fields = [];
-							embed.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo));
-							embed.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+							setInterval(async () => {
+								tempo--;
 
-							await msg.edit(embed);
-						}, 5000 * 60);
-					});
-				} catch (error) {
-					return;
+								await this.client.database.guilds.updateOne({
+									_id: msg.guild.id
+								}, {
+									$set: {
+										'exportador.irEmbora': tempo
+									}
+								});
+
+								embed.fields = [];
+								embed.addField('Tempo para o exportador ir embora:', Utils.convertMS(tempo));
+								embed.addField('Quantidade que falta para a exportação:', `${atualDroga}/${randomQuantia}`);
+
+								await msg.edit({
+									embeds: [embed]
+								});
+							}, 5000 * 60);
+						});
+					} catch (error) {
+						return;
+					}
 				}
-			}
-		});
+			});
+		} catch (err) {
+			console.log(err);
+			console.error(`ERRO NO READY: ${err}`);
+		}
 	}
 
 	extendedSetTimeout(callback, ms2) {

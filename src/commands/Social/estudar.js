@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable consistent-return */
@@ -5,9 +6,9 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Estudar extends Command {
 
@@ -53,7 +54,11 @@ module.exports = class Estudar extends Command {
 			guildId: message.guild.id
 		});
 
-		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
+		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) {
+			return message.reply({
+				content: `Você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`
+			});
+		}
 
 		if (user.prisao.isPreso) {
 			let presoTime = 0;
@@ -95,6 +100,14 @@ module.exports = class Estudar extends Command {
 				}
 			} else if (user.prisao.roubarVeiculo) {
 				presoTime = 180000;
+
+				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
+					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+
+					embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+				}
+			} else if (user.prisao.atirarPrisao) {
+				presoTime = 129600000;
 
 				if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
 					const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
@@ -183,100 +196,111 @@ module.exports = class Estudar extends Command {
 				}
 			}
 
-			const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+			const buttonPreso = new MessageButton().setCustomId('preso').setEmoji('900544510365405214').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonPreso]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embedPreso,
+			const escolha = await message.reply({
+				content: author.toString(),
+				embeds: [embedPreso],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
-				max: 1,
+			const filter = (interaction) => interaction.isButton() && ['preso'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
 				time: 60000
 			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'preso') {
-					b.reply.defer();
+				switch (b.customId) {
+					case 'preso':
+						await b.deferUpdate();
 
-					const userMochila = await this.client.database.users.findOne({
-						userId: author.id,
-						guildId: message.guild.id
-					});
-
-					if (!userMochila.isMochila) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
-					}
-
-					if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
-						escolha.delete();
-
-						return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
-					}
-
-					if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
-						await this.client.database.users.findOneAndUpdate({
+						const userMochila = await this.client.database.users.findOne({
 							userId: author.id,
-							guildId: message.guild.id,
-							'mochila.item': 'Chave Micha'
-						}, {
-							$set: {
-								'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
-							}
+							guildId: message.guild.id
 						});
-					} else {
+
+						if (!userMochila.isMochila) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!'
+							});
+						}
+
+						if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+							escolha.delete();
+
+							return message.reply({
+								content: 'Você não tem uma **Chave Micha** na sua Mochila!'
+							});
+						}
+
+						if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id,
+								'mochila.item': 'Chave Micha'
+							}, {
+								$set: {
+									'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+								}
+							});
+						} else {
+							await this.client.database.users.findOneAndUpdate({
+								userId: author.id,
+								guildId: message.guild.id
+							}, {
+								$pull: {
+									mochila: {
+										item: 'Chave Micha'
+									}
+								}
+							});
+						}
+
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
 							guildId: message.guild.id
 						}, {
-							$pull: {
-								mochila: {
-									item: 'Chave Micha'
-								}
+							$set: {
+								'prisao.isPreso': false,
+								'prisao.tempo': 0,
+								'prisao.prenderCmd': false,
+								'prisao.prenderMili': 0,
+								'prisao.traficoDrogas': false,
+								'prisao.crime': false,
+								'prisao.prender': false,
+								'prisao.revistar': false,
+								'prisao.roubarVeiculo': false,
+								'prisao.atirarPrisao': false,
+								'prisao.velha': false,
+								'prisao.frentista': false,
+								'prisao.joalheria': false,
+								'prisao.agiota': false,
+								'prisao.casaLoterica': false,
+								'prisao.brazino': false,
+								'prisao.facebook': false,
+								'prisao.bancoCentral': false,
+								'prisao.shopping': false,
+								'prisao.banco': false
 							}
 						});
-					}
 
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'prisao.isPreso': false,
-							'prisao.tempo': 0,
-							'prisao.prenderCmd': false,
-							'prisao.prenderMili': 0,
-							'prisao.traficoDrogas': false,
-							'prisao.crime': false,
-							'prisao.prender': false,
-							'prisao.revistar': false,
-							'prisao.roubarVeiculo': false,
-							'prisao.atirarPrisao': false,
-							'prisao.velha': false,
-							'prisao.frentista': false,
-							'prisao.joalheria': false,
-							'prisao.agiota': false,
-							'prisao.casaLoterica': false,
-							'prisao.brazino': false,
-							'prisao.facebook': false,
-							'prisao.bancoCentral': false,
-							'prisao.shopping': false,
-							'prisao.banco': false
-						}
-					});
-
-					escolha.delete();
-					return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+						escolha.delete();
+						return message.reply({
+							content: `Você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`
+						});
 				}
 			});
 
 			collectorEscolhas.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					return escolha.edit(author, {
-						embed: embedPreso,
+					return escolha.edit({
+						content: author.toString(),
+						embeds: [embedPreso],
 						components: []
 					});
 				}
@@ -292,9 +316,14 @@ module.exports = class Estudar extends Command {
 				const embed = new ClientEmbed(author)
 					.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-				return message.channel.send(author, embed);
+				return message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				});
 			} else if (!args.slice(0).join(' ')) {
-				return message.reply('você precisa colocar alguma matéria para estudar!\nAs matérias disponíveis para estudos são: **Matemática**, **Português**, **Química**, **Física**, **Biologia**, **História** e **Geografia**.');
+				return message.reply({
+					content: 'Você precisa colocar alguma matéria para estudar!\nAs matérias disponíveis para estudos são: **Matemática**, **Português**, **Química**, **Física**, **Biologia**, **História** e **Geografia**.'
+				});
 			} else if (args[0].toLowerCase() === 'matemática' || args[0].toLowerCase() === 'matematica') {
 				const timeout2 = 3600000;
 
@@ -304,7 +333,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`📐 | Para estudar Matemática, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -340,7 +372,10 @@ module.exports = class Estudar extends Command {
 						.setTitle('📐 | MATEMÁTICA')
 						.setDescription(`📚 | Você estudou \`Matemática\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+100\`\n🍽️ Fome: \`-30\`\n🥤 Sede: \`-20\`\n🤯 Estressado: \`-10\`\n😰 Cansado: \`-20\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
@@ -353,7 +388,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`🔤 | Para estudar Português, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -389,7 +427,10 @@ module.exports = class Estudar extends Command {
 						.setTitle('🔤 | PORTUGUÊS')
 						.setDescription(`📚 | Você estudou \`Português\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+100\`\n🍽️ Fome: \`-30\`\n🥤 Sede: \`-20\`\n🤯 Estressado: \`-10\`\n😰 Cansado: \`-20\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
@@ -402,7 +443,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`🧑‍🔬 | Para estudar Química, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -438,7 +482,10 @@ module.exports = class Estudar extends Command {
 						.setTitle('🧑‍🔬 | QUÍMICA')
 						.setDescription(`📚 | Você estudou \`Química\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+250\`\n🍽️ Fome: \`-20\`\n🥤 Sede: \`-30\`\n🤯 Estressado: \`-20\`\n😰 Cansado: \`-30\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
@@ -451,7 +498,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`🌌 | Para estudar Física, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -487,7 +537,10 @@ module.exports = class Estudar extends Command {
 						.setTitle('🌌 | FÍSICA')
 						.setDescription(`📚 | Você estudou \`Física\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+350\`\n🍽️ Fome: \`-40\`\n🥤 Sede: \`-20\`\n🤯 Estressado: \`-30\`\n😰 Cansado: \`-30\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
@@ -500,7 +553,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`🐸 | Para estudar Biologia, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -536,7 +592,10 @@ module.exports = class Estudar extends Command {
 						.setTitle('🐸 | BIOLOGIA')
 						.setDescription(`📚 | Você estudou \`Biologia\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+500\`\n🍽️ Fome: \`-30\`\n🥤 Sede: \`-40\`\n🤯 Estressado: \`-25\`\n😰 Cansado: \`-20\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
@@ -549,7 +608,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`🦖 | Para estudar História, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -585,7 +647,10 @@ module.exports = class Estudar extends Command {
 						.setTitle('🦖 | HISTÓRIA')
 						.setDescription(`📚 | Você estudou \`História\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+600\`\n🍽️ Fome: \`-45\`\n🥤 Sede: \`-50\`\n🤯 Estressado: \`-30\`\n😰 Cansado: \`-40\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
@@ -598,7 +663,10 @@ module.exports = class Estudar extends Command {
 					const embed = new ClientEmbed(author)
 						.setDescription(`🌱 | Para estudar Geografia, você precisa esperar: \`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-					return message.channel.send(author, embed);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				} else {
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -634,12 +702,17 @@ module.exports = class Estudar extends Command {
 						.setTitle('🌱 | GEOGRAFIA')
 						.setDescription(`📚 | Você estudou \`Geografia\` e aconteceu as seguintes coisas:\n\n🆙 XP: \`+300\`\n🍽️ Fome: \`-40\`\n🥤 Sede: \`-10\`\n🤯 Estressado: \`-10\`\n😰 Cansado: \`-20\``);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return;
 				}
 			} else {
-				return message.reply('as matérias disponíveis para estudos são: **Matemática**, **Português**, **Química**, **Física**, **Biologia**, **História** e **Geografia**.');
+				return message.reply({
+					content: 'As matérias disponíveis para estudos são: **Matemática**, **Português**, **Química**, **Física**, **Biologia**, **História** e **Geografia**.'
+				});
 			}
 		}
 	}

@@ -1,8 +1,8 @@
+/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
-const User = require('../../database/Schemas/User');
 
 module.exports = class Removerfolga extends Command {
 
@@ -45,9 +45,23 @@ module.exports = class Removerfolga extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.governador !== author.id && server.cidade.delegado !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` ou \`Delegado\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
-		if (!server.cidade.policiais.length) return message.reply('esse servidor não possui Policiais para remover folga.');
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
+
+		if (!server.cidade.policiais.length) {
+			return message.reply({
+				content: 'Esse servidor não possui Policiais para remover folga.'
+			});
+		}
 
 		const timeout = 86400000;
 
@@ -57,7 +71,10 @@ module.exports = class Removerfolga extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			await this.client.database.guilds.findOneAndUpdate({
 				_id: message.guild.id
@@ -67,23 +84,27 @@ module.exports = class Removerfolga extends Command {
 				}
 			});
 
-			const allUsers = await User.find({
+			const allUsers = await this.client.database.users.find({
+				'policia.isPolice': true,
 				guildId: message.guild.id
 			});
 
 			allUsers.forEach(async (a) => {
-				if (a.policia.isPolice) {
-					a.policia.prender = 0;
-					a.policia.revistar = 0;
-					a.policia.prenderRoubar = 0;
-					a.policia.prenderExportador = 0;
-					a.policia.isFolga = false;
-
-					a.save();
-				}
+				await this.client.database.users.updateOne({
+					userId: a.userId,
+					guildId: message.guild.id
+				}, {
+					'policia.prender': 0,
+					'policia.revistar': 0,
+					'policia.prenderRoubar': 0,
+					'policia.prenderExportador': 0,
+					'policia.isFolga': false
+				});
 			});
 
-			message.reply('todos os Policiais do servidor voltaram a **ativa** para prenderem e revistarem!');
+			message.reply({
+				content: 'Todos os Policiais do servidor voltaram a **ativa** para prenderem e revistarem com sucesso!'
+			});
 		}
 	}
 

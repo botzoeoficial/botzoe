@@ -47,16 +47,26 @@ module.exports = class Revistar extends Command {
 			guildId: message.guild.id
 		});
 
-		const server = await this.client.database.guilds.findOne({
+		const server2 = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!user.policia.isPolice && server.cidade.delegado !== author.id) return message.reply('você não é Policial ou Delegado da Cidade para revistar alguém!');
+		if (!user.policia.isPolice && server2.cidade.delegado !== author.id) {
+			return message.reply({
+				content: 'Você não é Policial ou Delegado da Cidade para revistar alguém!'
+			});
+		}
 
-		if (user.policia.isFolga) return message.reply('o Delegado da Cidade deu uma folga para todos os **Policiais** da Cidade, portanto, você não pode revistar ninguém ainda!');
+		if (user.policia.isFolga) {
+			return message.reply({
+				content: 'O Delegado da Cidade deu uma folga para todos os **Policiais** da Cidade, portanto, você não pode revistar ninguém ainda!'
+			});
+		}
 
 		if (!user.mochila.find((a) => a.item === 'Algemas') && user.armaEquipada !== 'MP5' && user.armaEquipada !== 'G18') {
-			return message.reply('você precisa ter 1 **Algema** na mochila e uma **MP5** ou **G18** equipada para revistar alguém!');
+			return message.reply({
+				content: 'Você precisa ter 1 **Algema** na mochila e uma **MP5** ou **G18** equipada para revistar alguém!'
+			});
 		}
 
 		const timeout = 3600000;
@@ -67,30 +77,41 @@ module.exports = class Revistar extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-			if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+			if (!member) {
+				return message.reply({
+					content: 'Você precisa mencionar um usuário junto com o comando.'
+				});
+			}
 
-			if (member.id === author.id) return message.reply('você não pode revistar você mesmo.');
+			if (member.id === author.id) {
+				return message.reply({
+					content: 'Você não pode revistar você mesmo.'
+				});
+			}
 
 			const user2 = await this.client.database.users.findOne({
 				userId: member.id,
 				guildId: message.guild.id
 			});
 
-			if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+			if (!user2) {
+				return message.reply({
+					content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+				});
+			}
 
-			if (!user2.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-			if (!user2.isMochila) return message.reply('esse usuário não possui uma **Mochila** para ser revistada!');
-
-			const server2 = await this.client.database.guilds.findOne({
-				_id: message.guild.id
-			});
-
-			if (user2.policia.isPolice || server2.cidade.policiais.find((a) => a.id === member.id)) return message.reply('você não pode revistar um Policial/Delegado.');
+			if (!user2.isMochila) {
+				return message.reply({
+					content: 'Esse usuário não possui uma **Mochila** para ser revistada!'
+				});
+			}
 
 			const embedVerificacao = new ClientEmbed(author)
 				.setTitle('👮 | Revistando...')
@@ -105,12 +126,15 @@ module.exports = class Revistar extends Command {
 			const retiradosDrogas = user2.mochila.filter((a) => drogas.includes(a.item));
 			const tudoFilter = user2.mochila.filter((a) => !armas.includes(a.item) && !drogas.includes(a.item));
 
-			const msgVerificacao = await message.channel.send(author, embedVerificacao);
+			const msgVerificacao = await message.reply({
+				content: author.toString(),
+				embeds: [embedVerificacao]
+			});
 
 			if (!temPorte && retiradosArmas.length && retiradosDrogas.length) {
 				embedVerificacao.setTitle('🚨 | Itens Encontrados!');
 				embedVerificacao.setDescription(`Lista de Itens que foram retirados abaixo:\n\nOBS: Use agora o comando \`${prefix}prender ${member.id} <tempo>\``);
-				embedVerificacao.addField('Armas Retiradas:', retiradosArmas.map((a) => `**${a.emoji} | ${a.item}:** \`x${a.quantia}\``).join('\n'));
+				embedVerificacao.addField('Armas/Munições Retiradas:', retiradosArmas.map((a) => `**${a.emoji} | ${a.item}:** \`x${a.quantia}\``).join('\n'));
 				embedVerificacao.addField('Drogas Retiradas:', retiradosDrogas.map((a) => `**${a.emoji} | ${a.item}:** \`x${a.quantia}\``).join('\n'));
 
 				await this.client.database.users.findOneAndUpdate({
@@ -165,7 +189,10 @@ module.exports = class Revistar extends Command {
 			});
 
 			return setTimeout(async () => {
-				msgVerificacao.edit(author, embedVerificacao);
+				msgVerificacao.edit({
+					content: author.toString(),
+					embeds: [embedVerificacao]
+				});
 			}, 3000);
 		}
 	}

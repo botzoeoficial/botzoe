@@ -41,8 +41,7 @@ module.exports = class Inventario extends Command {
 	async run({
 		message,
 		author,
-		args,
-		prefix
+		args
 	}) {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
@@ -51,9 +50,11 @@ module.exports = class Inventario extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		const itens = user.inventory.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
@@ -72,7 +73,10 @@ module.exports = class Inventario extends Command {
 			embed.setDescription(`***Total de Itens:*** \`${total}\` **${filledBar(200, total || 0, 10)[0]}** (${Math.round(total / 200 * 100)}%)\n\n${itens || 'Inventário vazio.'}`);
 		}
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

@@ -37,20 +37,37 @@ module.exports = class Removebanco extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
+		if (!['463421520686088192', '707677540583735338'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!server.banco.length) return message.reply('não há usuários cadastrados no banco no momento para ser retirado.');
+		if (!server.banco.length) {
+			return message.reply({
+				content: 'Não há usuários cadastrados no banco no momento para ser retirado.'
+			});
+		}
 
 		const nome = args.slice(0).join(' ');
 
-		if (!nome) return message.reply('você precisa colocar o ID do usuário do banco.');
+		if (!nome) {
+			return message.reply({
+				content: 'Você precisa colocar o ID do usuário do banco.'
+			});
+		}
 
 		if (!server.banco.find((f) => f.id === nome)) {
-			return message.reply('não existe um usuário com ID no banco.');
+			return message.reply({
+				content: 'Não existe um usuário com ID no banco.'
+			});
 		}
 
 		await this.client.database.guilds.findOneAndUpdate({
@@ -63,7 +80,9 @@ module.exports = class Removebanco extends Command {
 			}
 		});
 
-		message.reply('usuário removido com sucesso.');
+		message.reply({
+			content: 'Usuário removido com sucesso.'
+		});
 	}
 
 };

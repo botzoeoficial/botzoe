@@ -48,7 +48,11 @@ module.exports = class Auxilio extends Command {
 			guildId: message.guild.id
 		});
 
-		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) return message.reply(`você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`);
+		if (Object.values(user.humores).filter(humor => +humor <= 0).length >= 5) {
+			return message.reply({
+				content: `Você está com **5 humores** zerados ou abaixo de 0, ou seja, está doente. Use o comando \`${prefix}remedio\` para curar-se.`
+			});
+		}
 
 		const timeout = 3600000;
 
@@ -58,7 +62,10 @@ module.exports = class Auxilio extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const random = Utils.randomNumber(200, 600);
 
@@ -66,7 +73,10 @@ module.exports = class Auxilio extends Command {
 				.setTitle('AUXÍLIO EMERGENCIAL')
 				.setDescription(`💵 | Você recebeu do Governo **R$${Utils.numberFormat(random)},00** do seu Auxílio Emergêncial.`);
 
-			message.channel.send(author, embed);
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -77,6 +87,8 @@ module.exports = class Auxilio extends Command {
 					'cooldown.auxilio': Date.now()
 				}
 			});
+
+			return;
 		}
 	}
 

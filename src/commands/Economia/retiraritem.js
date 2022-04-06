@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable max-nested-callbacks */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
@@ -46,14 +47,26 @@ module.exports = class Retiraritem extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.fabricando) return message.reply('você está fabricando algo, por tanto, não é possível retirar algum item do inventário!');
+		if (user.fabricando) {
+			return message.reply({
+				content: 'Você está fabricando algo, por tanto, não é possível retirar algum item do inventário!'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('Retirar Item')
 			.setDescription(`De onde você deseja retirar seu item?\n\n**1️⃣ - Inventário**\n**2️⃣ - Mochila**\n\nDigite \`0\` para sair.`);
 
-		message.channel.send(author, embed).then((msg) => {
-			const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
+			const filter = m => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
 				time: 60000
 			});
 
@@ -63,14 +76,14 @@ module.exports = class Retiraritem extends Command {
 					r.delete();
 					msg.delete();
 				} else if (isNaN(r.content)) {
-					message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite o número novamente!').then((a) => a.delete({
-						timeout: 6000
-					}));
+					message.reply({
+						content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite o número novamente!'
+					}).then((a) => setTimeout(() => a.delete(), 6000));
 					r.delete();
 				} else if (!parseInt(r.content)) {
-					message.reply('você precisa colocar um número válido. Digite o número novamente!').then((a) => a.delete({
-						timeout: 6000
-					}));
+					message.reply({
+						content: 'Você precisa colocar um número válido. Digite o número novamente!'
+					}).then((a) => setTimeout(() => a.delete(), 6000));
 					r.delete();
 				} else if (Number(r.content) === 1) {
 					collector.stop();
@@ -79,51 +92,63 @@ module.exports = class Retiraritem extends Command {
 
 					const embedInv = new ClientEmbed(author)
 						.setTitle(`Retirar Item do Inventário`)
-						.setThumbnail(author.displayAvatarURL({
-							dynamic: true
-						}))
 						.setDescription(itens || '**Inventário Vazio.**');
 
 					msg.delete();
-					message.channel.send(author, embedInv).then(async (msg2) => {
-						for (const emoji of user.inventory.map((es) => es.id)) await msg2.react(emoji);
+					message.reply({
+						content: author.toString(),
+						embeds: [embedInv]
+					}).then(async (msg2) => {
+						for (const emoji of user.inventory.filter((a) => !['Bolso', 'Colete à Prova de Balas'].includes(a.item)).map((es) => es.id)) await msg2.react(emoji);
 
-						const filter = (reaction, user3) => user.inventory.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+						const filter2 = (reaction, user3) => {
+							return user.inventory.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+						};
 
 						const objeto = require('../../json/inventario.json');
 
-						msg2.awaitReactions(filter, {
+						msg2.awaitReactions({
+							filter: filter2,
 							max: 1
 						}).then(async (collected) => {
 							const itemEmoji = objeto[collected.first().emoji.id];
 
 							if (user.inventory.find((x) => x.item === itemEmoji).quantia > 1) {
-								message.reply(`quanto(a)(s) **${itemEmoji}(s)** você deseja retirar do seu **Inventário**?`).then(async (msg3) => {
-									const collector2 = msg3.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+								message.reply({
+									content: `Quanto(a)(s) **${itemEmoji}(s)** você deseja retirar do seu **Inventário**?`
+								}).then(async (msg3) => {
+									const filter3 = m => {
+										return m.author.id === author.id;
+									};
+
+									const collector2 = msg3.channel.createMessageCollector({
+										filter: filter3,
 										time: 60000
 									});
 
 									collector2.on('collect', async (r2) => {
-										if (Number(r2.content) <= 0) {
-											message.reply('você precisa colocar uma quantia **maior** que 0. Digite a quantia novamente!').then((a) => a.delete({
-												timeout: 6000
-											}));
+										if (isNaN(r2.content)) {
+											message.reply({
+												content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!'
+											}).then((a) => setTimeout(() => a.delete(), 6000));
 											r2.delete();
-										} else if (isNaN(r2.content)) {
-											message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!').then((a) => a.delete({
-												timeout: 6000
-											}));
+										} else if (Number(r2.content) <= 0) {
+											message.reply({
+												content: 'Você precisa colocar uma quantia **maior** que 0. Digite a quantia novamente!'
+											}).then((a) => setTimeout(() => a.delete(), 6000));
 											r2.delete();
 										} else if (Number(r2.content) > user.inventory.find((a) => a.item === itemEmoji).quantia) {
-											message.reply('você não tem toda essa quantia para ser retirada. Digite a quantia novamente!').then((a) => a.delete({
-												timeout: 6000
-											}));
+											message.reply({
+												content: 'Você não tem toda essa quantia para ser retirada. Digite a quantia novamente!'
+											}).then((a) => setTimeout(() => a.delete(), 6000));
 											r2.delete();
 										} else {
 											collector2.stop();
 
 											msg2.delete();
-											message.channel.send(`${author}, você retirou **${Number(r2.content)}** \`${itemEmoji}(s)\` do seu Inventário com sucesso!`);
+											message.reply({
+												content: `Você retirou **${Number(r2.content)}** \`${itemEmoji}(s)\` do seu Inventário com sucesso!`
+											});
 
 											if (Number(r2.content) === user.inventory.find((a) => a.item === itemEmoji).quantia) {
 												await this.client.database.users.findOneAndUpdate({
@@ -149,6 +174,7 @@ module.exports = class Retiraritem extends Command {
 											}
 
 											user.save();
+											return;
 										}
 									});
 
@@ -156,13 +182,17 @@ module.exports = class Retiraritem extends Command {
 										if (reason === 'time') {
 											collector2.stop();
 											msg3.delete();
-											return message.reply('você demorou demais para responder. Use o comando novamente!');
+											return message.reply({
+												content: 'Você demorou demais para responder. Use o comando novamente!'
+											});
 										}
 									});
 								});
 							} else {
 								msg2.delete();
-								message.channel.send(`${author}, você retirou 1 \`${itemEmoji}\` do seu Inventário com sucesso!`);
+								message.reply({
+									content: `Você retirou 1 \`${itemEmoji}\` do seu Inventário com sucesso!`
+								});
 
 								await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -176,13 +206,16 @@ module.exports = class Retiraritem extends Command {
 								});
 
 								user.save();
+								return;
 							}
 						});
 					});
 				} else if (Number(r.content) === 2) {
 					if (!user.isMochila) {
 						collector.stop();
-						return message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
+						return message.reply({
+							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+						});
 					} else {
 						collector.stop();
 
@@ -190,53 +223,65 @@ module.exports = class Retiraritem extends Command {
 
 						const embedMochila = new ClientEmbed(author)
 							.setTitle(`Retirar Item da Mochila`)
-							.setThumbnail(author.displayAvatarURL({
-								dynamic: true
-							}))
 							.setDescription(itens || '**Mochila Vazia.**');
 
 						msg.delete();
-						message.channel.send(author, embedMochila).then(async (msg3) => {
-							for (const emoji of user.mochila.map((es) => es.id)) await msg3.react(emoji);
+						message.reply({
+							content: author.toString(),
+							embeds: [embedMochila]
+						}).then(async (msg3) => {
+							for (const emoji of user.mochila.filter((a) => !['Porte de Armas'].includes(a.item)).map((es) => es.id)) await msg3.react(emoji);
 
-							const filter = (reaction, user3) => user.mochila.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+							const filter4 = (reaction, user3) => {
+								return user.mochila.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id;
+							};
 
 							const objeto = require('../../json/mochila.json');
 
-							msg3.awaitReactions(filter, {
+							msg3.awaitReactions({
+								filter: filter4,
 								max: 1
 							}).then(async (collected) => {
 								const itemEmoji = objeto[collected.first().emoji.id];
 
 								if (user.mochila.find((x) => x.item === itemEmoji).quantia > 1) {
-									message.reply(`quanto(a)(s) **${itemEmoji}(s)** você deseja retirar da sua **Mochila**?`).then(async (msg4) => {
+									message.reply({
+										content: `Quanto(a)(s) **${itemEmoji}(s)** você deseja retirar da sua **Mochila**?`
+									}).then(async (msg4) => {
 										collector.stop();
 
-										const collector2 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+										const filter5 = m => {
+											return m.author.id === author.id && !isNaN(m.content);
+										};
+
+										const collector2 = msg4.channel.createMessageCollector({
+											filter: filter5,
 											time: 60000
 										});
 
 										collector2.on('collect', async (r2) => {
 											if (Number(r2.content) <= 0) {
-												message.reply('você precisa colocar uma quantia **maior** que 0. Digite a quantia novamente!').then((a) => a.delete({
-													timeout: 6000
-												}));
+												message.reply({
+													content: 'Você precisa colocar uma quantia **maior** que 0. Digite a quantia novamente!'
+												}).then((a) => setTimeout(() => a.delete(), 6000));
 												r2.delete();
 											} else if (isNaN(r2.content)) {
-												message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!').then((a) => a.delete({
-													timeout: 6000
-												}));
+												message.reply({
+													content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**. Digite a quantia novamente!'
+												}).then((a) => setTimeout(() => a.delete(), 6000));
 												r2.delete();
 											} else if (Number(r2.content) > user.mochila.find((a) => a.item === itemEmoji).quantia) {
-												message.reply('você não tem toda essa quantia para ser retirada. Digite a quantia novamente!').then((a) => a.delete({
-													timeout: 6000
-												}));
+												message.reply({
+													content: 'Você não tem toda essa quantia para ser retirada. Digite a quantia novamente!'
+												}).then((a) => setTimeout(() => a.delete(), 6000));
 												r2.delete();
 											} else {
 												collector2.stop();
 
 												msg3.delete();
-												message.channel.send(`${author}, você retirou **${Number(r2.content)}** \`${itemEmoji}(s)\` da sua Mochila com sucesso!`);
+												message.reply({
+													content: `Você retirou **${Number(r2.content)}** \`${itemEmoji}(s)\` da sua Mochila com sucesso!`
+												});
 
 												if (Number(r2.content) === user.mochila.find((a) => a.item === itemEmoji).quantia) {
 													await this.client.database.users.findOneAndUpdate({
@@ -262,6 +307,7 @@ module.exports = class Retiraritem extends Command {
 												}
 
 												user.save();
+												return;
 											}
 										});
 
@@ -269,12 +315,16 @@ module.exports = class Retiraritem extends Command {
 											if (reason === 'time') {
 												collector2.stop();
 												msg3.delete();
-												return message.reply('você demorou demais para responder. Use o comando novamente!');
+												return message.reply({
+													content: 'Você demorou demais para responder. Use o comando novamente!'
+												});
 											}
 										});
 									});
 								} else {
-									message.channel.send(`${author}, você retirou 1 \`${itemEmoji}\` da sua Mochila com sucesso!`);
+									message.reply({
+										content: `Você retirou 1 \`${itemEmoji}\` da sua Mochila com sucesso!`
+									});
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -288,13 +338,16 @@ module.exports = class Retiraritem extends Command {
 									});
 
 									user.save();
+									return;
 								}
 							});
 						});
 					}
 				} else if (Number(r.content) !== 1 && Number(r.content) !== 2) {
 					r.delete();
-					message.reply('número não encontrado. Digite o número novamente!');
+					message.reply({
+						content: 'Número não encontrado. Digite o número novamente!'
+					});
 				}
 			});
 
@@ -302,9 +355,9 @@ module.exports = class Retiraritem extends Command {
 				if (reason === 'time') {
 					msg.delete();
 					collector.stop();
-					return message.reply('você demorou demais para escolher de onde você deseja retirar seu item. Use o comando novamente!').then((a) => a.delete({
-						timeout: 6000
-					}));
+					return message.reply({
+						content: 'Você demorou demais para escolher de onde você deseja retirar seu item. Use o comando novamente!'
+					});
 				}
 			});
 		});

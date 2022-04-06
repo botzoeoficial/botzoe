@@ -37,19 +37,38 @@ module.exports = class Removerdonodesmanche extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
-		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
-
-		if (member.user.bot) return message.reply(`um bot não nunca irá ser Dono do Desmanche.`);
-
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.donoDesmanche !== member.id) return message.reply('esse usuário não é o Dono do Desmanche desse servidor.');
+		if (server.cidade.donoFavela !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Dono da Favela\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
+
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot não nunca irá ser Dono do Desmanche desse servidor.'
+			});
+		}
+
+		if (server.cidade.donoDesmanche !== member.id) {
+			return message.reply({
+				content: 'Esse usuário não é o Dono do Desmanche desse servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -59,7 +78,9 @@ module.exports = class Removerdonodesmanche extends Command {
 			}
 		});
 
-		message.reply('usuário removido do cargo Dono do Desmanche com sucesso.');
+		return message.reply({
+			content: `O usuário ${member} saiu do cargo de Dono do Desmanche desse servidor com sucesso.`
+		});
 	}
 
 };

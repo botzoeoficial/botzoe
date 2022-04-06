@@ -104,7 +104,10 @@ module.exports = class Desmanche extends Command {
 		desmancheArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 		embed.setDescription(!server.desmanche.length ? 'Não há carros no **Desmanche** no momento.' : `**Este são os carros que estão no Desmanche!**\n\n${embedMessage}`);
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

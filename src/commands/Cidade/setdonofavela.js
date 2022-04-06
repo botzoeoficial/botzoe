@@ -36,19 +36,38 @@ module.exports = class Setdonofavela extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
-		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
-
-		if (member.user.bot) return message.reply(`você não pode dar a função de Dono da Favela para um bot.`);
-
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.donoFavela === member.id) return message.reply('esse usuário já é Dono da Favela desse servidor.');
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
+
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca poderá ser Dono da Favela desse servidor.'
+			});
+		}
+
+		if (server.cidade.donoFavela === member.id) {
+			return message.reply({
+				content: 'Esse usuário já é Dono da Favela desse servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -58,7 +77,9 @@ module.exports = class Setdonofavela extends Command {
 			}
 		});
 
-		message.reply(`o usuário ${member} virou o Dono da Favela desse servidor agora.`);
+		return message.reply({
+			content: `O usuário ${member} entrou no cargo de Dono da Favela desse servidor com sucesso.`
+		});
 	}
 
 };

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
@@ -37,26 +38,55 @@ module.exports = class Removercarcereiro extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.governador !== author.id && server.cidade.delegado !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` ou \`Delegado\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
-		if (!server.cidade.carcereiro.length) return message.reply('não há mais Carcereiros nesse servidor para ser retirado.');
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
+
+		if (!server.cidade.carcereiro.length) {
+			return message.reply({
+				content: 'Não há mais Carcereiros nesse servidor para ser retirado.'
+			});
+		}
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar o usuário que é Carcereiro.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar o usuário que é Carcereiro.'
+			});
+		}
 
-		if (member.user.bot) return message.reply('um Bot nunca será Carcereiro do Servidor.');
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um Bot nunca será Carcereiro do Servidor.'
+			});
+		}
 
-		if (member.id === server.cidade.delegado) return message.reply('um Delegado nunca será **Carcereiro** do servidor.');
+		if (member.id === server.cidade.delegado) {
+			return message.reply({
+				content: 'Um Delegado nunca será **Carcereiro** do servidor.'
+			});
+		}
 
 		if (!server.cidade.carcereiro.find((f) => f.id === member.id)) {
-			return message.reply('esse usuário não está na lista de Carcereiros do servidor.');
+			return message.reply({
+				content: 'Esse usuário não está na lista de Carcereiros do servidor.'
+			});
 		}
 
 		await this.client.database.guilds.findOneAndUpdate({
@@ -69,7 +99,9 @@ module.exports = class Removercarcereiro extends Command {
 			}
 		});
 
-		message.reply('usuário removido com sucesso.');
+		return message.reply({
+			content: `O usuário ${member} saiu do cargo de Carcereiro desse servidor com sucesso.`
+		});
 	}
 
 };

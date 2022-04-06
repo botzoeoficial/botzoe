@@ -47,27 +47,58 @@ module.exports = class Sacar extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Cadastre-se usando o comando: \`${prefix}cadastrar\`.`);
+		// if (518400000 - (Date.now() - user.payBank.cooldown) < 0) {
+		// 	return message.reply({
+		// 		content: `Você precisa pagar o **Banco** antes de fazer isso! Use o comando \`${prefix}pagarbanco\`.`
+		// 	});
+		// }
 
 		const btc = args[0];
 
 		const embed = new ClientEmbed(author);
 
-		if (!btc) return message.reply('você precisa colocar uma quantia de dinheiro para sacar.');
+		if (!btc) {
+			return message.reply({
+				content: 'Você precisa colocar uma quantia de dinheiro para sacar.'
+			});
+		}
 
-		if (!parseInt(btc)) return message.reply('você precisa colocar uma quantia válida.');
+		if (!parseInt(btc)) {
+			return message.reply({
+				content: 'Você precisa colocar uma quantia válida.'
+			});
+		}
 
-		if (parseInt(btc) <= 0) return message.reply('a quantia a ser removida precisa ser maior que **0**.');
+		if (parseInt(btc) <= 0) {
+			return message.reply({
+				content: 'A quantia a ser removida precisa ser maior que **0**.'
+			});
+		}
 
-		if (isNaN(btc)) return message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) {
+			return message.reply({
+				content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**!'
+			});
+		}
 
-		if (user.banco <= 0) return message.reply('você não tem dinheiro para sacar do banco.');
+		if (user.banco <= 0) {
+			return message.reply({
+				content: 'Você não tem dinheiro para sacar do banco.'
+			});
+		}
 
-		if (parseInt(btc) > user.banco) return message.reply('você não tem essa quantia toda para ser retirada.');
+		if (parseInt(btc) > user.banco) {
+			return message.reply({
+				content: 'Você não tem essa quantia toda para ser retirada.'
+			});
+		}
 
 		embed.setDescription(`💵 | Você sacou **R$${Utils.numberFormat(Number(btc))},00** do banco com sucesso.`);
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -78,6 +109,8 @@ module.exports = class Sacar extends Command {
 				banco: user.banco -= Number(btc)
 			}
 		});
+
+		return;
 	}
 
 };

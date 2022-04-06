@@ -5,9 +5,9 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const fetch = require('node-fetch');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Casar extends Command {
 
@@ -45,32 +45,49 @@ module.exports = class Casar extends Command {
 	async run({
 		message,
 		args,
-		author,
-		prefix
+		author
 	}) {
 		const user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!user) return message.reply(`você deve mencionar com quem deseja casar.`);
+		if (!user) {
+			return message.reply({
+				content: 'Você deve mencionar com quem deseja casar.'
+			});
+		}
 
 		const doc = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
 
-		if (user.id === author.id) return message.reply(`você não pode casar com si mesmo.`);
+		if (user.id === author.id) {
+			return message.reply({
+				content: 'Você não pode casar com si mesmo.'
+			});
+		}
 
-		if (doc.marry.has) return message.reply(`você já está casado.`);
+		if (doc.marry.has) {
+			return message.reply({
+				content: 'Você já está casado.'
+			});
+		}
 
 		const target = await this.client.database.users.findOne({
 			userId: user.id,
 			guildId: message.guild.id
 		});
 
-		if (!target) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+		if (!target) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
-		if (!target.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
-
-		if (target.marry.has) return message.reply(`o(a) membro(a) já está casado com o(a) **\`${await this.client.users.fetch(target.marry.user).then((x) => x.tag)}\`**.`);
+		if (target.marry.has) {
+			return message.reply({
+				content: `O(a) membro(a) já está casado com o(a) **\`${await this.client.users.fetch(target.marry.user).then((x) => x.tag)}\`**.`
+			});
+		}
 
 		const casamentos = require('../../json/casamento.json');
 		const random = Math.floor(Math.random() * casamentos.length);
@@ -80,24 +97,26 @@ module.exports = class Casar extends Command {
 			.setImage(casamentos[random])
 			.setDescription(`${user}, você deseja se casar com o(a) ${author}?`);
 
-		const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+		const buttonSim = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+		const buttonNao = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-		message.channel.send(user, {
-			embed: embed,
+		message.reply({
+			content: user.toString(),
+			embeds: [embed],
 			components: [botoes]
 		}).then(async (msg) => {
-			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === user.id, {
+			const filter = (interaction) => interaction.isButton() && ['aceitar', 'negar'].includes(interaction.customId) && interaction.user.id === user.id;
+
+			const collectorBotoes = msg.createMessageComponentCollector({
+				filter,
 				time: 60000,
 				max: 1
 			});
 
 			collectorBotoes.on('collect', async (b) => {
-				if (b.id === 'aceitar') {
-					b.reply.defer();
-
-					msg.delete();
+				if (b.customId === 'aceitar') {
+					await b.deferUpdate();
 
 					const apikey = 'LUU697F9Y5BI';
 					const lmt = 50;
@@ -115,7 +134,10 @@ module.exports = class Casar extends Command {
 						.setImage(body.results[randomCasamento].url)
 						.setDescription(`${author}, ${user} aceitou seu pedido de casamento! :tada:`);
 
-					message.channel.send(`${author} 💕 ${user}`, embedFim);
+					message.reply({
+						content: `${author.toString()} 💕 ${user.toString()}`,
+						embeds: [embedFim]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -137,20 +159,24 @@ module.exports = class Casar extends Command {
 						}
 					});
 
-					return;
-				} else if (b.id === 'negar') {
-					b.reply.defer();
+					return msg.delete();
+				} else if (b.customId === 'negar') {
+					await b.deferUpdate();
 
-					msg.delete();
-					return message.reply(`${user} recusou seu pedido de casamento.`);
+					message.reply({
+						content: `O(a) usuário(a) ${user.toString()} recusou seu pedido de casamento.`
+					});
+					return msg.delete();
 				}
 			});
 
 			collectorBotoes.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					msg.delete();
+					message.reply({
+						content: `O(a) usuário(a) ${user.toString()} demorou para te responder.`
+					});
 
-					return message.reply(`o(a) ${user} demorou para te responder.`);
+					return msg.delete();
 				}
 			});
 		});

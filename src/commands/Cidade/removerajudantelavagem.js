@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
@@ -36,21 +37,44 @@ module.exports = class Removerajudantelavagem extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
-		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
-
-		if (member.user.bot) return message.reply(`um bot nunca irá ser Ajudante da Lavagem de Dinheiro.`);
-
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!server.cidade.ajudanteLavagem.length) return message.reply('este servidor não possui Ajudantes para a Lavagem de Dinheiro.');
+		if (server.cidade.donoFavela !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id) && server.cidade.donoLavagem !== author.id) {
+			return message.reply({
+				content: `Você precisa ser o \`Dono da Favela\` ou \`Dono da Lavagem de Dinheiro\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
-		if (!server.cidade.ajudanteLavagem.map(a => a.id).includes(member.id)) return message.reply('esse usuário não é Ajudante da Lavagem de Dinheiro do servidor.');
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
+
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca irá ser Ajudante da Lavagem de Dinheiro desse servidor.'
+			});
+		}
+
+		if (!server.cidade.ajudanteLavagem.length) {
+			return message.reply({
+				content: 'Este servidor não possui Ajudantes para a Lavagem de Dinheiro.'
+			});
+		}
+
+		if (!server.cidade.ajudanteLavagem.map(a => a.id).includes(member.id)) {
+			return message.reply({
+				content: 'Esse usuário não é Ajudante da Lavagem de Dinheiro do servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -62,7 +86,9 @@ module.exports = class Removerajudantelavagem extends Command {
 			}
 		});
 
-		message.reply(`o usuário ${member} não é mais Ajudante da Lavagem de Dinheiro desse servidor agora.`);
+		return message.reply({
+			content: `O usuário ${member} saiu do cargo de Ajudante da Lavagem de Dinheiro desse servidor com sucesso.`
+		});
 	}
 
 };

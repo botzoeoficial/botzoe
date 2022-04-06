@@ -36,17 +36,32 @@ module.exports = class Setchannelexportador extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
 		const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
 
-		if (!channel) return message.reply('você precisa mencionar um canal junto com o comando.');
+		if (!channel) {
+			return message.reply({
+				content: 'Você precisa mencionar um canal junto com o comando.'
+			});
+		}
 
-		if (server.exportador.canal === channel.id) return message.reply('esse canal já está setado como **drop do exportador de drogas**.');
+		if (server.exportador.canal === channel.id) {
+			return message.reply({
+				content: 'Esse canal já está setado para receber o **Drop do Exportador de Drogas**.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -56,7 +71,9 @@ module.exports = class Setchannelexportador extends Command {
 			}
 		});
 
-		message.reply(`o canal ${channel} foi setado para receber **drop** do exportador de drogas com sucesso.`);
+		return message.reply({
+			content: `O canal ${channel} foi setado para receber o **Drop do Exportador de Drogas** com sucesso.`
+		});
 	}
 
 };

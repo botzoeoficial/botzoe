@@ -44,14 +44,24 @@ module.exports = class Removerblacklist extends Command {
 			_id: message.guild.id
 		});
 
-		if (!server.blacklist.length) return message.reply('não há usuários cadastrados na blacklist no momento para retirar alguém.');
+		if (!server.blacklist.length) {
+			return message.reply({
+				content: 'Não há usuários cadastrados na blacklist no momento para retirar alguém.'
+			});
+		}
 
 		const id = args.slice(0).join(' ');
 
-		if (!id) return message.reply(`você precisa colocar o ID de um usuário da blacklist. Use o comando \`${prefix}blacklist\` para ver os IDS disponíveis.`);
+		if (!id) {
+			return message.reply({
+				content: `Você precisa colocar o ID de um usuário da blacklist. Use o comando \`${prefix}blacklist\` para ver os IDS disponíveis.`
+			});
+		}
 
 		if (!server.blacklist.find((f) => f.id === id)) {
-			return message.reply('não existe um usuário com com esse ID na **blacklist**.');
+			return message.reply({
+				content: 'Não existe um usuário com com esse ID na **blacklist**.'
+			});
 		}
 
 		await this.client.database.guilds.findOneAndUpdate({
@@ -64,7 +74,9 @@ module.exports = class Removerblacklist extends Command {
 			}
 		});
 
-		message.reply('usuário removido com sucesso.');
+		return message.reply({
+			content: 'Usuário removido com sucesso da **BlackList**.'
+		});
 	}
 
 };

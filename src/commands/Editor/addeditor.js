@@ -38,17 +38,35 @@ module.exports = class Addeditor extends Command {
 		message,
 		args
 	}) {
+		if (!message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
-		if (member.user.bot) return message.reply(`você não pode dar Editor para um bot.`);
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca será Editor do servidor.'
+			});
+		}
 
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.editor.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Editor do servidor.');
+		if (server.editor.map(a => a.id).includes(member.id)) {
+			return message.reply({
+				content: 'Esse usuário já é Editor do servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -60,7 +78,9 @@ module.exports = class Addeditor extends Command {
 			}
 		});
 
-		message.reply(`o usuário ${member} virou Editor desse servidor agora.`);
+		return message.reply({
+			content: `O usuário ${member} tornou-se Editor desse servidor com sucesso.`
+		});
 	}
 
 };

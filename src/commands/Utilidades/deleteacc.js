@@ -4,9 +4,9 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Deleteacc extends Command {
 
@@ -43,40 +43,42 @@ module.exports = class Deleteacc extends Command {
 	}
 	async run({
 		message,
-		author,
-		prefix
+		author
 	}) {
 		const user = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
 
-		if (!user.cadastrado) return message.reply(`você não está cadastrado no servidor! Use o comando: \`${prefix}cadastrar\`.`);
-
 		const embed = new ClientEmbed(author)
 			.setTitle('Deletar Conta')
 			.setDescription(`Você está prestes a deletar/resetar a sua conta de todos os Servidores em que possui acesso na Zoe.\n\nDepois que clicar na reação ✅, você terá todos os seus dados deletados/resetados, do Banco de Dados de nosso Bot como: Informações, Saldo, Bitcoins, Carros, Armas e todo o progresso que você conquistou em **TODOS** os Servidores que você joga.\n\nPara que o seu progresso seja Resetado apenas neste Servidor, peça para que um dos Adms ou Editor use o comando \`++deleteuser <@${author.id}>\`, aqui no servidor.\n\nVocê tem  certeza que deseja Deletar/Resetar, a sua conta agora?`);
 
-		const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+		const buttonSim = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+		const buttonNao = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-		message.channel.send(author, {
-			embed: embed,
+		message.reply({
+			content: author.toString(),
+			embeds: [embed],
 			components: [botoes]
 		}).then(async (msg) => {
-			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === author.id, {
-				time: 60000,
-				max: 1
+			const filter = (interaction) => interaction.isButton() && ['aceitar', 'negar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorBotoes = msg.createMessageComponentCollector({
+				filter,
+				time: 60000
 			});
 
 			collectorBotoes.on('collect', async (b) => {
-				if (b.id === 'aceitar') {
-					b.reply.defer();
+				if (b.customId === 'aceitar') {
+					await b.deferUpdate();
 
 					msg.delete();
 
-					message.reply(`sua conta no servidor ${message.guild.name} foi deletada com sucesso!`);
+					message.reply({
+						content: `Sua conta no servidor ${message.guild.name} foi deletada com sucesso!`
+					});
 
 					const server = await this.client.database.guilds.findOne({
 						_id: message.guild.id
@@ -262,44 +264,24 @@ module.exports = class Deleteacc extends Command {
 
 					if (user.fac.createFac) {
 						const fb = user?.fac;
-						const random = Math.floor(Math.random() * user.fac.membros.length);
 
-						const owner = await this.client.users.fetch(fb.dono);
-						const fd = await this.client.database.users
-							.findOne({
-								userId: owner.id,
+						for (var i = 0; i < fb.membros.length; i++) {
+							await this.client.database.users.findOneAndUpdate({
+								userId: fb.membros[i],
 								guildId: message.guild.id
-							})
-							.then((x) => x.fac);
-
-						await this.client.database.users.findOneAndUpdate({
-							userId: await this.client.users.fetch(fd.membros[random]).then((a) => a.id),
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'fac.dono': await this.client.users.fetch(fd.membros[random]).then((a) => a.id)
-							}
-						});
-
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'fac.dono': await this.client.users.fetch(fd.membros[random]).then((a) => a.id),
-								'fac.isFac': false,
-								'fac.createFac': false,
-								'fac.membros': [],
-								'fac.tempo': Date.now()
-							}
-						});
+							}, {
+								$set: {
+									'fac.isFac': false,
+									'fac.createFac': false
+								}
+							});
+						}
 
 						await this.client.database.guilds.findOneAndUpdate({
-							_id: message.guild.id,
-							'faccoes.nome': user.fac.nome
+							_id: message.guild.id
 						}, {
 							$pull: {
-								'faccoes.$.membros': author.id
+								'faccoes.nome': fb.nome
 							}
 						});
 					}
@@ -314,7 +296,7 @@ module.exports = class Deleteacc extends Command {
 						}, {
 							$set: {
 								'fac.isFac': false,
-								'fac.tempo': Date.now()
+								'fac.createFac': false
 							}
 						});
 
@@ -346,28 +328,20 @@ module.exports = class Deleteacc extends Command {
 								'marry.user': 'Ninguém.',
 								'marry.has': false,
 								'cooldown.gf': 0,
-								'cooldown.fe': 0
-							}
-						});
-					}
-
-					if (user.familia.length >= 0) {
-						await this.client.database.users.findOneAndUpdate({
-							userId: user.marry.user,
-							guildId: message.guild.id
-						}, {
-							$set: {
+								'cooldown.fe': 0,
 								familia: []
 							}
 						});
 					}
 
-					return await this.client.database.users.findOneAndDelete({
+					await this.client.database.users.findOneAndDelete({
 						userId: author.id,
 						guildId: message.guild.id
 					});
-				} else if (b.id === 'negar') {
-					b.reply.defer();
+
+					return;
+				} else if (b.customId === 'negar') {
+					await b.deferUpdate();
 
 					return msg.delete();
 				}
@@ -377,7 +351,9 @@ module.exports = class Deleteacc extends Command {
 				if (reason === 'time') {
 					msg.delete();
 
-					return message.reply('você demorou demais para responder. Use o comando novamente!');
+					return message.reply({
+						content: 'Você demorou demais para responder. Use o comando novamente!'
+					});
 				}
 			});
 		});

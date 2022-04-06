@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
@@ -37,22 +38,49 @@ module.exports = class Removermedico extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.governador !== author.id && server.cidade.diretorHP !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` ou \`Diretor do Hospital\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
-		if (!server.cidade.medicos.length) return message.reply('não há mais Médicos nesse servidor para ser retirado.');
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
+
+		if (!server.cidade.medicos.length) {
+			return message.reply({
+				content: 'Não há Médicos nesse servidor.'
+			});
+		}
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar o usuário que é Médico.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
+
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca irá ser Médico desse servidor.'
+			});
+		}
 
 		if (!server.cidade.medicos.find((f) => f.id === member.id)) {
-			return message.reply('esse usuário não está na equipe Médica do servidor.');
+			return message.reply({
+				content: 'Esse usuário não é um Médico do servidor.'
+			});
 		}
 
 		await this.client.database.guilds.findOneAndUpdate({
@@ -65,7 +93,9 @@ module.exports = class Removermedico extends Command {
 			}
 		});
 
-		message.reply('usuário removido com sucesso.');
+		return message.reply({
+			content: `O usuário ${member} saiu do cargo de Médico desse servidor com sucesso.`
+		});
 	}
 
 };

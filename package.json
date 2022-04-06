@@ -4,8 +4,7 @@
   "description": "Bot feito para a TD2CÚPULA",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ."
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "NathanDark#3530",
   "license": "ISC",
@@ -14,15 +13,17 @@
     "car-query": "^1.0.12",
     "colors": "^1.4.0",
     "discord-cars": "^3.0.1",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.6.0",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.4.0",
     "klaw": "^3.0.0",
+    "mathjs": "^10.0.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
-    "mongoose": "^5.13.3",
+    "mongodb": "^3.7.3",
+    "mongoose": "^5.13.14",
     "nekos.life": "^2.0.7",
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.2",
@@ -35,7 +36,6 @@
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-tesseract": "github:MenuDocs/eslint-config-tesseract",
-    "node": "^14.17.4"
-  },
-  "keywords": []
+    "nodemon": "^2.0.15"
+  }
 }

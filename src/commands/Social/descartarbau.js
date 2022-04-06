@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
@@ -45,9 +46,17 @@ module.exports = class Descartardobau extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.fabricando) return message.reply('você está fabricando algo, por tanto, não é possível descartar algum item do baú!');
+		if (user.fabricando) {
+			return message.reply({
+				content: 'Você está fabricando algo, por tanto, não é possível descartar algum item do baú!'
+			});
+		}
 
-		if (user.casas.tipo === '') return message.reply(`você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`);
+		if (user.casas.tipo === '') {
+			return message.reply({
+				content: `Você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`
+			});
+		}
 
 		const itens = user.casas.bau.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
@@ -55,12 +64,21 @@ module.exports = class Descartardobau extends Command {
 			.setTitle('Descartar do Baú')
 			.setDescription(`Qual item você deseja descartar do Baú?\n\n${itens || '**Baú Vazio.**'}`);
 
-		message.channel.send(author, embed).then(async (msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
 			if (!user.casas.bau.length) return;
 
 			for (const emoji of user.casas.bau.map((es) => es.id)) await msg.react(emoji);
 
-			const sim = msg.createReactionCollector((reaction, user3) => user.casas.bau.map((es) => es.id).includes(reaction.emoji.id) && user3.id === author.id);
+			const filter2 = (reactionFilter, userFilter) => {
+				return user.casas.bau.map((es) => es.id).includes(reactionFilter.emoji.id) && userFilter.id === author.id;
+			};
+
+			const sim = msg.createReactionCollector({
+				filter: filter2
+			});
 
 			const objeto = require('../../json/todos.json');
 
@@ -72,7 +90,10 @@ module.exports = class Descartardobau extends Command {
 				embed.setDescription(`${author}, você descartou o item **${itemEmoji}** com sucesso do seu Baú!`);
 
 				msg.reactions.removeAll();
-				msg.edit(author, embed);
+				msg.edit({
+					content: author.toString(),
+					embeds: [embed]
+				});
 
 				return await this.client.database.users.findOneAndUpdate({
 					userId: author.id,

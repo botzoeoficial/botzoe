@@ -40,15 +40,23 @@ module.exports = class Ping extends Command {
 		author
 	}) {
 		const pingEmbed = new ClientEmbed(author)
-			.setAuthor('🏓 | Pingando...');
+			.setAuthor({
+				name: '🏓 | Pingando...'
+			});
 
-		const msg = await message.channel.send(author, pingEmbed);
+		const msg = await message.reply({
+			content: author.toString(),
+			embeds: [pingEmbed]
+		});
 
 		const ping2 = new ClientEmbed(author)
 			.setTitle('🏓 | Pong!')
-			.setDescription(`**📡 | Shard:** \`${message.guild.shardID}\`\n**⏱️ | Latência do BOT:** \`${Math.round(this.client.ws.ping)}ms\`\n**⚡ | Latência da API:** \`${msg.createdTimestamp - message.createdTimestamp}ms\``);
+			.setDescription(`**⏱️ | Latência do BOT:** \`${Math.round(this.client.ws.ping)}ms\`\n**⚡ | Latência da API:** \`${msg.createdTimestamp - message.createdTimestamp}ms\``);
 
-		return msg.edit(author, ping2);
+		return msg.edit({
+			content: author.toString(),
+			embeds: [ping2]
+		});
 	}
 
 };

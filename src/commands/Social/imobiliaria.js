@@ -1,15 +1,16 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-self-assign */
-/* eslint-disable max-nested-callbacks */
-/* eslint-disable max-len */
-/* eslint-disable id-length */
 /* eslint-disable consistent-return */
+/* eslint-disable max-len */
+/* eslint-disable max-nested-callbacks */
+/* eslint-disable id-length */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Imobiliaria extends Command {
 
@@ -53,8 +54,16 @@ module.exports = class Imobiliaria extends Command {
 			.setTitle('Bem vindo a Imobiliária iCasaZoe')
 			.setDescription(`O que você deseja comprar?\n\n1️⃣ - Casas\n2️⃣ - Fazendas\n\nDigite \`0\` para sair.`);
 
-		message.channel.send(author, embed).then(async (msg) => {
-			const collector = msg.channel.createMessageCollector((m) => m.author.id === author.id, {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
+			const filter = (m) => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
 				time: 60000
 			});
 
@@ -62,7 +71,9 @@ module.exports = class Imobiliaria extends Command {
 				if (ce.content === '0') {
 					collector.stop();
 					msg.delete();
-					return message.reply('tentiva de compra de Imobiliária cancelada com sucesso.');
+					return message.reply({
+						content: 'Imobiliária fechada com sucesso!'
+					});
 				} else if (ce.content === '1') {
 					collector.stop();
 					msg.delete();
@@ -77,23 +88,27 @@ module.exports = class Imobiliaria extends Command {
 						.setDescription(`Qual Casa você deseja Comprar?\n\n**${casas[pg].nome}**\n\nValor: R$${Utils.numberFormat(casas[pg].valor)},00\nBaú: **${Utils.numberFormat(Number(casas[pg].bau))} espaço.**`)
 						.setImage(casas[pg].gif);
 
-					const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
-					const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
-					const buttonAceitar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-					const buttonNegar = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+					const buttonVoltar = new MessageButton().setCustomId('voltar').setEmoji('⬅️').setStyle('PRIMARY');
+					const buttonIr = new MessageButton().setCustomId('ir').setEmoji('➡️').setStyle('PRIMARY');
+					const buttonAceitar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+					const buttonNegar = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 					const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonAceitar, buttonNegar, buttonIr]);
 
-					message.channel.send(author, {
-						embed: embedCasas,
+					message.reply({
+						content: author.toString(),
+						embeds: [embedCasas],
 						components: [botoes]
 					}).then(async (msg1) => {
-						const collectorBotoes = msg1.createButtonCollector((button) => button.clicker.user.id === author.id, {
-							time: 600000
+						const filter2 = (interaction) => interaction.isButton() && ['aceitar', 'negar', 'ir', 'voltar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+						const collectorBotoes = msg1.createMessageComponentCollector({
+							filter: filter2,
+							time: 60000
 						});
 
 						collectorBotoes.on('collect', async (b) => {
-							if (b.id === 'voltar') {
-								b.reply.defer();
+							if (b.customId === 'voltar') {
+								await b.deferUpdate();
 
 								if (!casas[pg - 1]) {
 									pg = 0;
@@ -105,9 +120,12 @@ module.exports = class Imobiliaria extends Command {
 									.setDescription(`Qual Casa você deseja Comprar?\n\n**${casas[pg].nome}**\n\nValor: R$${Utils.numberFormat(casas[pg].valor)},00\nBaú: **${Utils.numberFormat(Number(casas[pg].bau))} espaço.**`)
 									.setImage(casas[pg].gif);
 
-								msg1.edit(author, embedCasas);
-							} else if (b.id === 'ir') {
-								b.reply.defer();
+								msg1.edit({
+									content: author.toString(),
+									embeds: [embedCasas]
+								});
+							} else if (b.customId === 'ir') {
+								await b.deferUpdate();
 
 								if (!casas[pg + 1]) {
 									pg = pg;
@@ -119,14 +137,19 @@ module.exports = class Imobiliaria extends Command {
 									.setDescription(`Qual Casa você deseja Comprar?\n\n**${casas[pg].nome}**\n\nValor: R$${Utils.numberFormat(casas[pg].valor)},00\nBaú: **${Utils.numberFormat(Number(casas[pg].bau))} espaço.**`)
 									.setImage(casas[pg].gif);
 
-								msg1.edit(author, embedCasas);
-							} else if (b.id === 'negar') {
-								b.reply.defer();
+								msg1.edit({
+									content: author.toString(),
+									embeds: [embedCasas]
+								});
+							} else if (b.customId === 'negar') {
+								await b.deferUpdate();
 
 								msg1.delete();
-								return message.reply('tentativa de compra cancelada com sucesso!');
-							} else if (b.id === 'aceitar') {
-								b.reply.defer();
+								return message.reply({
+									content: 'Tentativa de compra de **Casa** cancelada com sucesso!'
+								});
+							} else if (b.customId === 'aceitar') {
+								await b.deferUpdate();
 
 								const user = await this.client.database.users.findOne({
 									userId: author.id,
@@ -135,7 +158,9 @@ module.exports = class Imobiliaria extends Command {
 
 								if (user.casas.tipo === casas[pg].nome) {
 									msg1.delete();
-									return message.reply(`você já possui essa **Casa**! Use o comando \`${prefix}casa\`.`);
+									return message.reply({
+										content: `Você já possui essa **Casa**! Use o comando \`${prefix}casa\`.`
+									});
 								}
 
 								if (user.banco < casas[pg].valor) {
@@ -145,7 +170,10 @@ module.exports = class Imobiliaria extends Command {
 										.setTitle('Imobiliária iCasaZoe')
 										.setDescription(`Você não tem saldo suficiente para comprar essa **Casa**.\nVocê precisa de mais \`R$${Utils.numberFormat(casas[pg].valor - user.banco)},00\` no **banco** para comprar essa Casa!\n\n||Então vá trabalhar VAGABUNDO!!||`);
 
-									return message.channel.send(author, embedPobre);
+									return message.reply({
+										content: author.toString(),
+										embeds: [embedPobre]
+									});
 								} else {
 									collector.stop();
 									msg1.delete();
@@ -154,8 +182,16 @@ module.exports = class Imobiliaria extends Command {
 										.setTitle('Imobiliária iCasaZoe')
 										.setDescription(`**${casas[pg].nome}** Comprada com sucesso! 🎉\n\nQual nome você deseja dar para sua **${casas[pg].nome}**?`);
 
-									message.channel.send(author, embedComprada).then(async (msg2) => {
-										const collector3 = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+									message.reply({
+										content: author.toString(),
+										embeds: [embedComprada]
+									}).then(async (msg2) => {
+										const filter3 = (m) => {
+											return m.author.id === author.id;
+										};
+
+										const collector3 = msg2.channel.createMessageCollector({
+											filter: filter3,
 											max: 1
 										});
 
@@ -163,7 +199,9 @@ module.exports = class Imobiliaria extends Command {
 											collector3.stop();
 											msg2.delete();
 
-											message.reply(`**${casas[pg].nome}** nomeada com sucesso para \`${ce1.content}\`! Use o comando \`${prefix}casa\` para vê-la.`);
+											message.reply({
+												content: `**${casas[pg].nome}** nomeada com sucesso para \`${ce1.content}\`! Use o comando \`${prefix}casa\` para vê-la.`
+											});
 
 											await this.client.database.users.findOneAndUpdate({
 												userId: author.id,
@@ -206,23 +244,27 @@ module.exports = class Imobiliaria extends Command {
 						.setDescription(`Qual Fazenda você deseja Comprar?\n\n**${fazendas[pg].nome}**\n\nValor: R$${Utils.numberFormat(fazendas[pg].valor)},00\nDescrição: ${fazendas[pg].desc}`)
 						.setImage(fazendas[pg].gif);
 
-					const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
-					const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
-					const buttonAceitar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-					const buttonNegar = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+					const buttonVoltar = new MessageButton().setCustomId('voltar').setEmoji('⬅️').setStyle('PRIMARY');
+					const buttonIr = new MessageButton().setCustomId('ir').setEmoji('➡️').setStyle('PRIMARY');
+					const buttonAceitar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+					const buttonNegar = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 					const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonAceitar, buttonNegar, buttonIr]);
 
-					message.channel.send(author, {
-						embed: embedFazendas,
+					message.reply({
+						content: author.toString(),
+						embeds: [embedFazendas],
 						components: [botoes]
 					}).then(async (msg1) => {
-						const collectorBotoes = msg1.createButtonCollector((button) => button.clicker.user.id === author.id, {
-							time: 600000
+						const filter4 = (interaction) => interaction.isButton() && ['aceitar', 'negar', 'ir', 'voltar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+						const collectorBotoes = msg1.createMessageComponentCollector({
+							filter: filter4,
+							time: 60000
 						});
 
 						collectorBotoes.on('collect', async (b) => {
-							if (b.id === 'voltar') {
-								b.reply.defer();
+							if (b.customId === 'voltar') {
+								await b.deferUpdate();
 
 								if (!fazendas[pg - 1]) {
 									pg = 0;
@@ -234,9 +276,12 @@ module.exports = class Imobiliaria extends Command {
 									.setDescription(`Qual Fazenda você deseja Comprar?\n\n**${fazendas[pg].nome}**\n\nValor: R$${Utils.numberFormat(fazendas[pg].valor)},00\nDescrição: ${fazendas[pg].desc}`)
 									.setImage(fazendas[pg].gif);
 
-								msg1.edit(author, embedFazendas);
-							} else if (b.id === 'ir') {
-								b.reply.defer();
+								msg1.edit({
+									content: author.toString(),
+									embeds: [embedFazendas]
+								});
+							} else if (b.customId === 'ir') {
+								await b.deferUpdate();
 
 								if (!fazendas[pg + 1]) {
 									pg = pg;
@@ -248,14 +293,19 @@ module.exports = class Imobiliaria extends Command {
 									.setDescription(`Qual Fazenda você deseja Comprar?\n\n**${fazendas[pg].nome}**\n\nValor: R$${Utils.numberFormat(fazendas[pg].valor)},00\nDescrição: ${fazendas[pg].desc}`)
 									.setImage(fazendas[pg].gif);
 
-								msg1.edit(author, embedFazendas);
-							} else if (b.id === 'negar') {
-								b.reply.defer();
+								msg1.edit({
+									content: author.toString(),
+									embeds: [embedFazendas]
+								});
+							} else if (b.customId === 'negar') {
+								await b.deferUpdate();
 
 								msg1.delete();
-								return message.reply('tentativa de compra cancelada com sucesso!');
-							} else if (b.id === 'aceitar') {
-								b.reply.defer();
+								return message.reply({
+									content: 'Tentativa de compra cancelada com sucesso!'
+								});
+							} else if (b.customId === 'aceitar') {
+								await b.deferUpdate();
 
 								const user = await this.client.database.users.findOne({
 									userId: author.id,
@@ -265,7 +315,9 @@ module.exports = class Imobiliaria extends Command {
 								if (user.fazendas.map((a) => a.nome).includes(fazendas[pg].nome)) {
 									msg1.delete();
 
-									return message.reply('você já possui essa **Fazenda** comprada. Use o comando novamente para comprar outra!');
+									return message.reply({
+										content: 'Você já possui essa **Fazenda** comprada. Use o comando novamente para comprar outra!'
+									});
 								}
 
 								if (user.banco < fazendas[pg].valor) {
@@ -275,7 +327,10 @@ module.exports = class Imobiliaria extends Command {
 										.setTitle('Imobiliária iCasaZoe')
 										.setDescription(`Você não tem saldo suficiente para comprar essa **Fazenda**.\nVocê precisa de mais \`R$${Utils.numberFormat(fazendas[pg].valor - user.banco)},00\` no **banco** para comprar essa Fazenda!\n\n||Então vá trabalhar VAGABUNDO!!||`);
 
-									return message.channel.send(author, embedPobre);
+									return message.reply({
+										content: author.toString(),
+										embeds: [embedPobre]
+									});
 								} else {
 									collector.stop();
 									msg1.delete();
@@ -284,7 +339,10 @@ module.exports = class Imobiliaria extends Command {
 										.setTitle('Imobiliária iCasaZoe')
 										.setDescription(`**${fazendas[pg].nome}** Comprada com sucesso! 🎉\n\nDigite \`${prefix}fazenda\` para vê-la.`);
 
-									message.channel.send(author, embedComprada);
+									message.reply({
+										content: author.toString(),
+										embeds: [embedComprada]
+									});
 
 									await this.client.database.users.findOneAndUpdate({
 										userId: author.id,
@@ -370,7 +428,9 @@ module.exports = class Imobiliaria extends Command {
 					collector.stop();
 					msg.delete();
 					ce.delete();
-					return message.reply('número não encontrado. Por favor, use o comando novamente!');
+					return message.reply({
+						content: 'Número não encontrado. Por favor, use o comando novamente!'
+					});
 				}
 			});
 		});

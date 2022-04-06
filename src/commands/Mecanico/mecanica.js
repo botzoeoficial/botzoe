@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-assign */
 const Command = require('../../structures/Command');
@@ -105,10 +107,18 @@ module.exports = class Mecanica extends Command {
 		mecanicaArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 		embed.setDescription(!server.mecanica.length ? 'Não há carros na **Oficina** no momento.' : `**Este são os carros que estão na Oficina!**\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
 
-		message.channel.send(author, embed).then((msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
 			if (!server.mecanica.length) return;
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const filterSim = m => {
+				return m.author.id === author.id;
+			};
+
+			const sim = msg.channel.createMessageCollector({
+				filter: filterSim,
 				time: 300000
 			});
 
@@ -116,15 +126,17 @@ module.exports = class Mecanica extends Command {
 				if (Number(ce.content) === 0) {
 					msg.delete();
 					sim.stop();
-					return message.reply(`seleção cancelada com sucesso!`);
+					return message.reply({
+						content: 'Seleção cancelada com sucesso!'
+					});
 				} else {
 					const selected = Number(ce.content - 1);
 					const findSelectedEvento = mecanicaArray.find((xis) => xis.position === selected);
 
 					if (!findSelectedEvento) {
-						message.reply('número não encontrado! Por favor, envie o número novamente').then(ba => ba.delete({
-							timeout: 5000
-						}));
+						message.reply({
+							content: 'Número não encontrado. Por favor, envie o número novamente!'
+						}).then((a) => a.delete(), 6000);
 						ce.delete();
 					} else {
 						sim.stop();
@@ -138,7 +150,10 @@ module.exports = class Mecanica extends Command {
 							.addField('Emplacado:', !findSelectedEvento.emplacado ? 'Não.' : 'Sim.')
 							.addField('Liberado:', !findSelectedEvento.liberado ? 'Não.' : 'Sim.');
 
-						return msg.edit(author, embed);
+						return msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 					}
 				}
 			});
@@ -146,7 +161,9 @@ module.exports = class Mecanica extends Command {
 			sim.on('end', (collected, reason) => {
 				if (reason === 'time') {
 					msg.delete();
-					message.reply(`você demorou demais para escolher o carro. Use o comando novamente!`);
+					message.reply({
+						content: 'Você demorou demais para escolher o carro. Use o comando novamente!'
+					});
 					sim.stop();
 					return;
 				}

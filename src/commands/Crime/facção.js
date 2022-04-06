@@ -1,9 +1,13 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-bitwise */
+/* eslint-disable no-mixed-operators */
 /* eslint-disable no-return-assign */
-/* eslint-disable complexity */
+/* eslint-disable no-case-declarations */
 /* eslint-disable new-cap */
 /* eslint-disable max-len */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
+/* eslint-disable complexity */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const moment = require('moment');
@@ -11,9 +15,9 @@ require('moment-duration-format');
 const Utils = require('../../utils/Util');
 const ms = require('parse-ms');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Facção extends Command {
 
@@ -80,18 +84,33 @@ module.exports = class Facção extends Command {
 					`\`${prefix}facção\` **deletar** - Deleta a Facção.`
 				]);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else if (args[0].toLowerCase() === 'criar') {
 			if (user.fac.createFac) {
-				return message.reply(`você já é dono de uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`);
+				return message.reply({
+					content: `Você já é dono de uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`
+				});
 			} else if (user.fac.isFac) {
-				return message.reply(`você já está em uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`);
+				return message.reply({
+					content: `Você já está em uma Facção! Use o comando \`${prefix}facção info\` para ver informações da sua Facção!`
+				});
 			} else if (user.crime.reputacao <= 2000) {
-				return message.reply(`você precisa ser **Maloqueiro** para poder criar uma Facção! Use \`${prefix}reputacao\`.`);
+				return message.reply({
+					content: `Você precisa ser **Maloqueiro** para poder criar uma Facção! Use \`${prefix}reputacao\`.`
+				});
 			} else {
-				message.reply('qual nome você deseja dar a sua **Facção**? OBS: Digite no chat o nome dela!').then(async (msg) => {
-					const filter = (m) => m.author.id === author.id;
-					const collector = msg.channel.createMessageCollector(filter, {
+				message.reply({
+					content: 'Qual nome você deseja dar a sua **Facção**? OBS: Digite no chat o nome dela!'
+				}).then(async (msg) => {
+					const filter = m => {
+						return m.author.id === author.id;
+					};
+
+					const collector = msg.channel.createMessageCollector({
+						filter,
 						time: 60000
 					});
 
@@ -102,7 +121,10 @@ module.exports = class Facção extends Command {
 							.setTitle('🎭 | Facção')
 							.setDescription(`${author}\n> Parabéns! Você agora é Líder de uma Facção chamada: **${r.content}**`);
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
@@ -146,22 +168,24 @@ module.exports = class Facção extends Command {
 						if (reason === 'time') {
 							collector.stop();
 							msg.delete();
-							return message.reply('você demorou demais para dar a sua Facção. Use o comando novamente!');
+							return message.reply({
+								content: 'Você demorou demais para dar a sua Facção. Use o comando novamente!'
+							});
 						}
 					});
 				});
 			}
 		} else if (args[0].toLowerCase() === 'info') {
 			if (!user.fac.isFac) {
-				return message.reply(`você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`);
+				return message.reply({
+					content: `Você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`
+				});
 			} else {
 				const owner = await this.client.users.fetch(fb.dono);
-				const fd = await this.client.database.users
-					.findOne({
-						userId: owner.id,
-						guildId: message.guild.id
-					})
-					.then((x) => x.fac);
+				const fd = await this.client.database.users.findOne({
+					userId: owner.id,
+					guildId: message.guild.id
+				}).then((x) => x.fac);
 
 				const members = [];
 				const list = fd.membros;
@@ -188,231 +212,258 @@ module.exports = class Facção extends Command {
 							'Nenhum Membro no Momento.' : `${members.map((x) => `**${x.user}** **${x.emprego}** - ${1800000 - (Date.now() - x.lastWork) < 0 ? `\`Pode Trabalhar\`` : `\`${moment.duration(1800000 - (Date.now() - x.lastWork)).format('h[h] m[m] s[s]')}\``}`).join('\n')}`
 					});
 
-				return message.channel.send(author, EMBED);
+				return message.reply({
+					content: author.toString(),
+					embeds: [EMBED]
+				});
 			}
 		} else if (args[0].toLowerCase() === 'trabalhar') {
-			if (user.prisao.isPreso) {
+			const userAuthor = await this.client.database.users.findOne({
+				userId: author.id,
+				guildId: message.guild.id
+			});
+
+			if (userAuthor.prisao.isPreso) {
 				let presoTime = 0;
 
 				const embedPreso = new ClientEmbed(author)
 					.setTitle('👮 | Preso');
 
-				if (user.prisao.prenderCmd) {
-					presoTime = user.prisao.prenderMili;
+				if (userAuthor.prisao.prenderCmd) {
+					presoTime = userAuthor.prisao.prenderMili;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.traficoDrogas) {
+				} else if (userAuthor.prisao.traficoDrogas) {
 					presoTime = 36000000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.prender) {
+				} else if (userAuthor.prisao.prender) {
 					presoTime = 43200000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.revistar) {
+				} else if (userAuthor.prisao.revistar) {
 					presoTime = 21600000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.roubarVeiculo) {
+				} else if (userAuthor.prisao.roubarVeiculo) {
 					presoTime = 180000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.velha) {
+				} else if (userAuthor.prisao.atirarPrisao) {
+					presoTime = 129600000;
+
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
+
+						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
+					}
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.velha) {
 					presoTime = 300000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.frentista) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.frentista) {
 					presoTime = 600000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.joalheria) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.joalheria) {
 					presoTime = 900000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.agiota) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.agiota) {
 					presoTime = 1200000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.casaLoterica) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.casaLoterica) {
 					presoTime = 1200000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.brazino) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.brazino) {
 					presoTime = 2100000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.facebook) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.facebook) {
 					presoTime = 2700000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.bancoCentral) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.bancoCentral) {
 					presoTime = 3600000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.shopping) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.shopping) {
 					presoTime = 7200000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
-				} else if (user.prisao.crime && user.prisao.banco) {
+				} else if (userAuthor.prisao.crime && userAuthor.prisao.banco) {
 					presoTime = 14400000;
 
-					if (presoTime - (Date.now() - user.prisao.tempo) > 0) {
-						const faltam = ms(presoTime - (Date.now() - user.prisao.tempo));
+					if (presoTime - (Date.now() - userAuthor.prisao.tempo) > 0) {
+						const faltam = ms(presoTime - (Date.now() - userAuthor.prisao.tempo));
 
 						embedPreso.setDescription(`<:algema:898326104413188157> | Você não pode usar esse comando, pois você está preso.\nVocê sairá da prisão daqui a: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 					}
 				}
 
-				const buttonPreso = new MessageButton().setStyle('blurple').setEmoji('900544510365405214').setID('preso');
+				const buttonPreso = new MessageButton().setCustomId('preso').setEmoji('900544510365405214').setStyle('PRIMARY');
 				const botoes = new MessageActionRow().addComponents([buttonPreso]);
 
-				const escolha = await message.channel.send(author, {
-					embed: embedPreso,
+				const escolha = await message.reply({
+					content: author.toString(),
+					embeds: [embedPreso],
 					components: [botoes]
 				});
 
-				const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
-					max: 1,
+				const filter = (interaction) => interaction.isButton() && ['preso'].includes(interaction.customId) && interaction.user.id === author.id;
+
+				const collectorEscolhas = escolha.createMessageComponentCollector({
+					filter,
 					time: 60000
 				});
 
 				collectorEscolhas.on('collect', async (b) => {
-					if (b.id === 'preso') {
-						b.reply.defer();
+					switch (b.customId) {
+						case 'preso':
+							await b.deferUpdate();
 
-						const userMochila = await this.client.database.users.findOne({
-							userId: author.id,
-							guildId: message.guild.id
-						});
-
-						if (!userMochila.isMochila) {
-							escolha.delete();
-
-							return message.reply('você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!');
-						}
-
-						if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
-							escolha.delete();
-
-							return message.reply('você não tem uma **Chave Micha** na sua Mochila!');
-						}
-
-						if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
-							await this.client.database.users.findOneAndUpdate({
+							const userMochila = await this.client.database.users.findOne({
 								userId: author.id,
-								guildId: message.guild.id,
-								'mochila.item': 'Chave Micha'
-							}, {
-								$set: {
-									'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
-								}
+								guildId: message.guild.id
 							});
-						} else {
+
+							if (!userMochila.isMochila) {
+								escolha.delete();
+
+								return message.reply({
+									content: 'Você não tem uma **mochila**. Vá até a Loja > Utilidades e Compre uma!'
+								});
+							}
+
+							if (!userMochila.mochila.find((a) => a.item === 'Chave Micha')) {
+								escolha.delete();
+
+								return message.reply({
+									content: 'Você não tem uma **Chave Micha** na sua Mochila!'
+								});
+							}
+
+							if (userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia > 1) {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id,
+									'mochila.item': 'Chave Micha'
+								}, {
+									$set: {
+										'mochila.$.quantia': userMochila.mochila.find((a) => a.item === 'Chave Micha').quantia - 1
+									}
+								});
+							} else {
+								await this.client.database.users.findOneAndUpdate({
+									userId: author.id,
+									guildId: message.guild.id
+								}, {
+									$pull: {
+										mochila: {
+											item: 'Chave Micha'
+										}
+									}
+								});
+							}
+
 							await this.client.database.users.findOneAndUpdate({
 								userId: author.id,
 								guildId: message.guild.id
 							}, {
-								$pull: {
-									mochila: {
-										item: 'Chave Micha'
-									}
+								$set: {
+									'prisao.isPreso': false,
+									'prisao.tempo': 0,
+									'prisao.prenderCmd': false,
+									'prisao.prenderMili': 0,
+									'prisao.traficoDrogas': false,
+									'prisao.crime': false,
+									'prisao.prender': false,
+									'prisao.revistar': false,
+									'prisao.roubarVeiculo': false,
+									'prisao.atirarPrisao': false,
+									'prisao.velha': false,
+									'prisao.frentista': false,
+									'prisao.joalheria': false,
+									'prisao.agiota': false,
+									'prisao.casaLoterica': false,
+									'prisao.brazino': false,
+									'prisao.facebook': false,
+									'prisao.bancoCentral': false,
+									'prisao.shopping': false,
+									'prisao.banco': false
 								}
 							});
-						}
 
-						await this.client.database.users.findOneAndUpdate({
-							userId: author.id,
-							guildId: message.guild.id
-						}, {
-							$set: {
-								'prisao.isPreso': false,
-								'prisao.tempo': 0,
-								'prisao.prenderCmd': false,
-								'prisao.prenderMili': 0,
-								'prisao.traficoDrogas': false,
-								'prisao.crime': false,
-								'prisao.prender': false,
-								'prisao.revistar': false,
-								'prisao.roubarVeiculo': false,
-								'prisao.atirarPrisao': false,
-								'prisao.velha': false,
-								'prisao.frentista': false,
-								'prisao.joalheria': false,
-								'prisao.agiota': false,
-								'prisao.casaLoterica': false,
-								'prisao.brazino': false,
-								'prisao.facebook': false,
-								'prisao.bancoCentral': false,
-								'prisao.shopping': false,
-								'prisao.banco': false
-							}
-						});
-
-						escolha.delete();
-						return message.reply(`você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`);
+							escolha.delete();
+							return message.reply({
+								content: `Você usou \`x1\` **Chave Micha** e conseguiu sair da prisão com sucesso!`
+							});
 					}
 				});
 
 				collectorEscolhas.on('end', async (collected, reason) => {
 					if (reason === 'time') {
-						return escolha.edit(author, {
-							embed: embedPreso,
+						return escolha.edit({
+							content: author.toString(),
+							embeds: [embedPreso],
 							components: []
 						});
 					}
@@ -431,13 +482,19 @@ module.exports = class Facção extends Command {
 						.setTitle('🎭 | Facção')
 						.setDescription(`${author}, você deve aguardar **${moment.duration(cooldown).format('h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}** para poder trabalhar novamente.`);
 
-					return message.channel.send(author, embedWork);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embedWork]
+					});
 				} else {
 					const embed = new ClientEmbed(author)
 						.setTitle('🎭 | Facção')
 						.setDescription(`${author}, você trabalhou com sucesso para sua **Facção**!\nConseguiu as seguintes coisas:\n+**1 XP**\n**R$200,00**`);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					const owner = await this.client.users.fetch(fd.dono);
 					const fc = await this.client.database.users.findOne({
@@ -451,8 +508,8 @@ module.exports = class Facção extends Command {
 					}, {
 						$set: {
 							'fac.lastWork': Date.now(),
-							'fac.money': fc.money + 200,
-							'fac.xp': fc.xp + XP
+							'fac.money': fc.money += 200,
+							'fac.xp': fc.xp += XP
 						},
 						$push: {
 							'fac.registro': {
@@ -468,7 +525,7 @@ module.exports = class Facção extends Command {
 						guildId: message.guild.id
 					}, {
 						$set: {
-							'fac.money': fc.money + 200,
+							'fac.money': fc.money += 200,
 							'fac.xp': fc.xp + XP
 						}
 					});
@@ -478,7 +535,7 @@ module.exports = class Facção extends Command {
 						'faccoes.nome': user.fac.nome
 					}, {
 						$set: {
-							'faccoes.$.money': fc.money + 200
+							'faccoes.$.money': fc.money += 200
 						}
 					});
 
@@ -522,33 +579,57 @@ module.exports = class Facção extends Command {
 			}
 		} else if (args[0].toLowerCase() === 'convidar') {
 			if (!user.fac.createFac) {
-				return message.reply('você precisa ser Dono de uma Facção para convidar alguém!');
+				return message.reply({
+					content: 'Você precisa ser Dono de uma Facção para convidar alguém!'
+				});
 			} else {
 				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
 
-				if (!USER) return message.reply('mencione alguém para ser convidado para sua Facção!');
+				if (!USER) {
+					return message.reply({
+						content: 'Mencione alguém para ser convidado para sua Facção!'
+					});
+				}
 
-				if (USER.id === author.id) return message.reply('você não pode se autoconvidar para sua Facção!');
+				if (USER.id === author.id) {
+					return message.reply({
+						content: 'Você não pode se autoconvidar para sua Facção!'
+					});
+				}
 
-				if (USER.bot) return message.reply('você não pode convidar bots!');
+				if (USER.bot) {
+					return message.reply({
+						content: 'Você não pode convidar bots!'
+					});
+				}
 
 				const user2 = await this.client.database.users.findOne({
 					userId: USER.id,
 					guildId: message.guild.id
 				});
 
-				if (!user2.cadastrado) return message.reply('peça para esse usuário se cadastrar antes de entrar em uma Facção!');
-
-				if (user2.fac.isFac) return message.reply('este usuário já faz parte de outra Facção!');
+				if (user2.fac.isFac) {
+					return message.reply({
+						content: 'Este usuário já faz parte de outra Facção!'
+					});
+				}
 
 				const embed1 = new ClientEmbed(author)
 					.setTitle('🎭 | Facção')
 					.setDescription(`${USER}\n\n> Você está sendo convidado para entrar na Facção **${user.fac.nome}!**\n\n> Você aceita?\n\n> **SIM** - Aceita\n> **NÃO** - Recusa`);
 
-				message.channel.send(USER, embed1).then(async (msg) => {
-					const collector = msg.channel.createMessageCollector((m) => m.author.id === USER.id, {
-						max: 1,
-						time: 150000
+				message.reply({
+					content: USER.toString(),
+					embeds: [embed1]
+				}).then(async (msg) => {
+					const filter = m => {
+						return m.author.id === USER.id;
+					};
+
+					const collector = msg.channel.createMessageCollector({
+						filter,
+						time: 15000,
+						max: 1
 					});
 
 					collector.on('collect', async (collected) => {
@@ -557,7 +638,10 @@ module.exports = class Facção extends Command {
 								.setTitle('🎭 | Facção')
 								.setDescription(`${author}, você contratou o(a) usuário(a) ${USER} com sucesso.`);
 
-							message.channel.send(author, embed);
+							message.reply({
+								content: author.toString(),
+								embeds: [embed]
+							});
 
 							await this.client.database.users.findOneAndUpdate({
 								userId: author.id,
@@ -601,7 +685,10 @@ module.exports = class Facção extends Command {
 								.setTitle('🎭 | Facção')
 								.setDescription(`${author}, o(a) usuário(a) ${USER} recusou seu pedido.`);
 
-							message.channel.send(author, embed);
+							message.reply({
+								content: author.toString(),
+								embeds: [embed]
+							});
 
 							msg.delete();
 							collector.stop();
@@ -613,46 +700,58 @@ module.exports = class Facção extends Command {
 						if (reason === 'time') {
 							collector.stop();
 							msg.delete();
-							return message.reply(`o usuário ${USER} demorou demais para responder ao seu convite. Use o comando novamente!`);
+							return message.reply({
+								content: `O usuário ${USER} demorou demais para responder ao seu convite. Use o comando novamente!`
+							});
 						}
 					});
 				});
 			}
 		} else if (args[0].toLowerCase() === 'demitir') {
 			if (!user.fac.createFac) {
-				return message.reply('você precisa ser Dono de uma Facção para demitir alguém!');
+				return message.reply({
+					content: 'Você precisa ser Dono de uma Facção para demitir alguém!'
+				});
 			} else {
 				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
 
-				if (!USER) return message.reply('mencione alguém para ser demitido da sua Facção!');
+				if (!USER) {
+					return message.reply({
+						content: 'Mencione alguém para ser demitido da sua Facção!'
+					});
+				}
 
-				if (USER.id === author.id) return message.reply('você não pode demitir você mesmo!');
+				if (USER.id === author.id) {
+					return message.reply({
+						content: 'Você não pode demitir você mesmo!'
+					});
+				}
 
-				if (USER.bot) return message.reply('você não pode demitir bots!');
-
-				const user2 = await this.client.database.users.findOne({
-					userId: USER.id,
-					guildId: message.guild.id
-				});
-
-				if (!user2.cadastrado) return message.reply('peça para esse usuário se cadastrar antes de ser demitido de uma Facção!');
+				if (USER.bot) {
+					return message.reply({
+						content: 'Você não pode demitir bots!'
+					});
+				}
 
 				const owner = await this.client.users.fetch(fb.dono);
-				const fd = await this.client.database.users
-					.findOne({
-						userId: owner.id,
-						guildId: message.guild.id
-					})
-					.then((x) => x.fac);
+				const fd = await this.client.database.users.findOne({
+					userId: owner.id,
+					guildId: message.guild.id
+				}).then((x) => x.fac);
 
 				if (!fd.membros.some((x) => x === USER.id)) {
-					return message.reply(`este usuário não está contratado em sua Facção!`);
+					return message.reply({
+						content: 'Este usuário não está contratado em sua Facção!'
+					});
 				} else {
 					const embed = new ClientEmbed(author)
 						.setTitle('🎭 | Facção')
 						.setDescription(`${author}, usuário demitido com sucesso.`);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -668,9 +767,22 @@ module.exports = class Facção extends Command {
 						guildId: message.guild.id
 					}, {
 						$set: {
-							'fac.dono': '',
 							'fac.isFac': false,
-							'fac.tempo': Date.now()
+							'fac.createFac': false,
+							'fac.nome': '',
+							'fac.dono': '',
+							'fac.level': 1,
+							'fac.cargos': [],
+							'fac.membros': [],
+							'fac.money': 0,
+							'fac.xp': 0,
+							'fac.lastWork': 0,
+							'fac.emprego': {
+								nome: '',
+								numero: ''
+							},
+							'fac.registro': [],
+							'fac.tempo': 0
 						}
 					});
 
@@ -688,17 +800,30 @@ module.exports = class Facção extends Command {
 			}
 		} else if (args[0].toLowerCase() === 'sair') {
 			if (!user.fac.isFac) {
-				return message.reply(`você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`);
+				return message.reply({
+					content: `Você não está em uma Facção! Peça para alguém lhe chamar para uma, ou crie a sua própria usando o comando \`${prefix}facção criar\`.`
+				});
 			} else if (user.fac.createFac) {
-				if (!user.fac.membros.length) return message.reply(`sua Facção não possui nenhum membro. Use o comando \`${prefix}facção deletar\`!`);
+				if (!user.fac.membros.length) {
+					return message.reply({
+						content: `Sua Facção não possui nenhum membro. Use o comando \`${prefix}facção deletar\`!`
+					});
+				}
 
 				const embed = new ClientEmbed(author)
 					.setTitle('🎭 | Facção')
 					.setDescription(`${author}, tem certeza que deseja abandonar sua Facção?\n\n> **SIM** - Sair\n> **NÃO** - Ficar`);
 
-				message.channel.send(author, embed).then(async (msg) => {
-					const filter = (m) => m.author.id === author.id;
-					const collector = msg.channel.createMessageCollector(filter, {
+				message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				}).then(async (msg) => {
+					const filter = m => {
+						return m.author.id === author.id;
+					};
+
+					const collector = msg.channel.createMessageCollector({
+						filter,
 						time: 60000
 					});
 
@@ -706,20 +831,50 @@ module.exports = class Facção extends Command {
 						if (['sim', 'y', 'yes'].includes(collected.content.toLowerCase())) {
 							const random = Math.floor(Math.random() * user.fac.membros.length);
 
-							const owner = await this.client.users.fetch(fb.dono);
-							const fd = await this.client.database.users
-								.findOne({
-									userId: owner.id,
-									guildId: message.guild.id
-								})
-								.then((x) => x.fac);
+							const fd = await this.client.database.users.findOne({
+								userId: author.id,
+								guildId: message.guild.id
+							}).then((x) => x.fac);
 
 							await this.client.database.users.findOneAndUpdate({
 								userId: await this.client.users.fetch(fd.membros[random]).then((a) => a.id),
 								guildId: message.guild.id
 							}, {
 								$set: {
-									'fac.dono': await this.client.users.fetch(fd.membros[random]).then((a) => a.id)
+									'fac.isFac': false,
+									'fac.createFac': false,
+									'fac.nome': '',
+									'fac.dono': '',
+									'fac.level': 1,
+									'fac.cargos': [],
+									'fac.membros': [],
+									'fac.money': 0,
+									'fac.xp': 0,
+									'fac.lastWork': 0,
+									'fac.emprego': {
+										nome: '',
+										numero: ''
+									},
+									'fac.registro': [],
+									'fac.tempo': 0
+								}
+							});
+
+							await this.client.database.users.findOneAndUpdate({
+								userId: await this.client.users.fetch(fd.membros[random]).then((a) => a.id),
+								guildId: message.guild.id
+							}, {
+								$set: {
+									'fac.isFac': false,
+									'fac.createFac': true,
+									'fac.nome': fd.nome,
+									'fac.dono': await this.client.users.fetch(fd.membros[random]).then((a) => a.id),
+									'fac.level': fd.level,
+									'fac.cargos': fd.cargos,
+									'fac.membros': fd.membros,
+									'fac.money': fd.money,
+									'fac.xp': fd.xp,
+									'fac.emprego': fd.emprego
 								}
 							});
 
@@ -728,11 +883,22 @@ module.exports = class Facção extends Command {
 								guildId: message.guild.id
 							}, {
 								$set: {
-									'fac.dono': await this.client.users.fetch(fd.membros[random]).then((a) => a.id),
 									'fac.isFac': false,
 									'fac.createFac': false,
+									'fac.nome': '',
+									'fac.dono': '',
+									'fac.level': 1,
+									'fac.cargos': [],
 									'fac.membros': [],
-									'fac.tempo': Date.now()
+									'fac.money': 0,
+									'fac.xp': 0,
+									'fac.lastWork': 0,
+									'fac.emprego': {
+										nome: '',
+										numero: ''
+									},
+									'fac.registro': [],
+									'fac.tempo': 0
 								}
 							});
 
@@ -752,7 +918,10 @@ module.exports = class Facção extends Command {
 								.setTitle('🎭 | Facção')
 								.setDescription(`${author}, você saiu da sua Facção com sucesso! O novo dono dela agora é o(a): <@${await this.client.users.fetch(fd.membros[random]).then((a) => a.id)}>.`);
 
-							return message.channel.send(author, embed1);
+							return message.reply({
+								content: author.toString(),
+								embeds: [embed1]
+							});
 						}
 
 						if (['não', 'nao', 'no'].includes(collected.content.toLowerCase())) {
@@ -766,7 +935,9 @@ module.exports = class Facção extends Command {
 						if (reason === 'time') {
 							collector.stop();
 							msg.delete();
-							return message.reply(`você demorou demais para responder. Use o comando novamente!`);
+							return message.reply({
+								content: `Você demorou demais para responder. Use o comando novamente!`
+							});
 						}
 					});
 				});
@@ -775,9 +946,16 @@ module.exports = class Facção extends Command {
 					.setTitle('🎭 | Facção')
 					.setDescription(`${author}, tem certeza que deseja sair da sua Facção?\n\n> **SIM** - Sair\n> **NÃO** - Ficar`);
 
-				message.channel.send(author, embed).then(async (msg) => {
-					const filter = (m) => m.author.id === author.id;
-					const collector = msg.channel.createMessageCollector(filter, {
+				message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				}).then(async (msg) => {
+					const filter = m => {
+						return m.author.id === author.id;
+					};
+
+					const collector = msg.channel.createMessageCollector({
+						filter,
 						time: 60000
 					});
 
@@ -791,7 +969,21 @@ module.exports = class Facção extends Command {
 							}, {
 								$set: {
 									'fac.isFac': false,
-									'fac.tempo': Date.now()
+									'fac.createFac': false,
+									'fac.nome': '',
+									'fac.dono': '',
+									'fac.level': 1,
+									'fac.cargos': [],
+									'fac.membros': [],
+									'fac.money': 0,
+									'fac.xp': 0,
+									'fac.lastWork': 0,
+									'fac.emprego': {
+										nome: '',
+										numero: ''
+									},
+									'fac.registro': [],
+									'fac.tempo': 0
 								}
 							});
 
@@ -820,7 +1012,10 @@ module.exports = class Facção extends Command {
 								.setTitle('🎭 | Facção')
 								.setDescription(`${author}, você saiu da sua Facção com sucesso!`);
 
-							return message.channel.send(author, embed1);
+							return message.reply({
+								content: author.toString(),
+								embeds: [embed1]
+							});
 						}
 
 						if (['não', 'nao', 'no'].includes(collected.content.toLowerCase())) {
@@ -834,23 +1029,50 @@ module.exports = class Facção extends Command {
 						if (reason === 'time') {
 							collector.stop();
 							msg.delete();
-							return message.reply(`você demorou demais para responder. Use o comando novamente!`);
+							return message.reply({
+								content: `Você demorou demais para responder. Use o comando novamente!`
+							});
 						}
 					});
 				});
 			}
 		} else if (args[0].toLowerCase() === 'deletar') {
 			if (!user.fac.createFac) {
-				return message.reply('você precisa ter criado uma Facção para deletar uma!');
+				return message.reply({
+					content: 'Você precisa ter criado uma Facção para deletar uma!'
+				});
 			} else {
+				await this.client.database.guilds.findOneAndUpdate({
+					_id: message.guild.id
+				}, {
+					$pull: {
+						faccoes: {
+							nome: user.fac.nome
+						}
+					}
+				});
+
 				await this.client.database.users.findOneAndUpdate({
 					userId: author.id,
 					guildId: message.guild.id
 				}, {
 					$set: {
-						'fac.dono': '',
 						'fac.isFac': false,
-						'fac.createFac': false
+						'fac.createFac': false,
+						'fac.nome': '',
+						'fac.dono': '',
+						'fac.level': 1,
+						'fac.cargos': [],
+						'fac.membros': [],
+						'fac.money': 0,
+						'fac.xp': 0,
+						'fac.lastWork': 0,
+						'fac.emprego': {
+							nome: '',
+							numero: ''
+						},
+						'fac.registro': [],
+						'fac.tempo': 0
 					}
 				});
 
@@ -861,72 +1083,109 @@ module.exports = class Facção extends Command {
 							guildId: message.guild.id
 						}, {
 							$set: {
-								'fac.dono': '',
 								'fac.isFac': false,
-								'fac.createFac': false
+								'fac.createFac': false,
+								'fac.nome': '',
+								'fac.dono': '',
+								'fac.level': 1,
+								'fac.cargos': [],
+								'fac.membros': [],
+								'fac.money': 0,
+								'fac.xp': 0,
+								'fac.lastWork': 0,
+								'fac.emprego': {
+									nome: '',
+									numero: ''
+								},
+								'fac.registro': [],
+								'fac.tempo': 0
 							}
 						});
 					}
 				}
 
-				await this.client.database.guilds.findOneAndUpdate({
-					_id: message.guild.id,
-					'faccoes.nome': user.fac.nome
-				}, {
-					$set: {
-						faccoes: []
-					}
-				});
-
 				const embed1 = new ClientEmbed(author)
 					.setTitle('🎭 | Facção')
 					.setDescription(`${author}, Facção deletada com sucesso!`);
 
-				return message.channel.send(author, embed1);
+				return message.reply({
+					content: author.toString(),
+					embeds: [embed1]
+				});
 			}
 		} else if (args[0].toLowerCase() === 'valor') {
 			if (!args[1]) {
-				return message.reply(`você precisa colocar o que quer fazer com o valor. Ex: \`${prefix}facção valor transferir @usuario 1000\``);
+				return message.reply({
+					content: `Você precisa colocar o que quer fazer com o valor. Ex: \`${prefix}facção valor transferir @usuario 1000\``
+				});
 			} else if (args[1].toLowerCase() === 'transferir') {
 				if (user.fac.dono !== author.id) {
-					return message.reply('você precisa ser o dono da Facção para transferir dinheiro da FAC pra algum membro!');
+					return message.reply({
+						content: 'Você precisa ser o dono da Facção para transferir dinheiro da FAC pra algum membro!'
+					});
 				} else {
 					const USER = this.client.users.cache.get(args[2]) || message.mentions.users.first();
 
-					if (!USER) return message.reply('mencione alguém para transferir o dinheiro!');
+					if (!USER) {
+						return message.reply({
+							content: 'Mencione alguém para transferir o dinheiro!'
+						});
+					}
 
-					if (USER.bot) return message.reply('você não pode transferir dinheiro para bots!');
+					if (USER.bot) {
+						return message.reply({
+							content: 'Você não pode transferir dinheiro para bots!'
+						});
+					}
 
 					const user2 = await this.client.database.users.findOne({
 						userId: USER.id,
 						guildId: message.guild.id
 					});
 
-					if (!user2.cadastrado) return message.reply('peça para esse usuário se cadastrar antes de receber dinheiro de uma Facção!');
-
 					const owner = await this.client.users.fetch(fb.dono);
-					const fd = await this.client.database.users
-						.findOne({
-							userId: owner.id,
-							guildId: message.guild.id
-						})
-						.then((x) => x.fac);
+					const fd = await this.client.database.users.findOne({
+						userId: owner.id,
+						guildId: message.guild.id
+					}).then((x) => x.fac);
 
 					if (!fd.membros.some((x) => x === USER.id)) {
-						return message.reply(`este usuário não está contratado em sua Facção!`);
+						return message.reply({
+							content: 'Esse usuário não está contratado em sua Facção!'
+						});
 					}
 
 					const valor = args[3];
 
-					if (!valor) return message.reply('você precisa colocar o valor que deseja transferir!');
+					if (!valor) {
+						return message.reply({
+							content: 'Você precisa colocar o valor que deseja transferir!'
+						});
+					}
 
-					if (Number(valor) <= 0) return message.reply('você precisa colocar um valor acima de **0**!');
+					if (Number(valor) <= 0) {
+						return message.reply({
+							content: 'Você precisa colocar um valor acima de **0**!'
+						});
+					}
 
-					if (!parseInt(valor)) return message.reply('você precisa colocar um valor válido!');
+					if (!parseInt(valor)) {
+						return message.reply({
+							content: 'Você precisa colocar um valor válido!'
+						});
+					}
 
-					if (isNaN(valor)) return message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+					if (isNaN(valor)) {
+						return message.reply({
+							content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**!'
+						});
+					}
 
-					if (Number(valor) > fd.money) return message.reply('sua Facção não tem esse valor todo para ser transferido!');
+					if (Number(valor) > fd.money) {
+						return message.reply({
+							content: 'Sua Facção não tem esse valor todo para ser transferido!'
+						});
+					}
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: USER.id,
@@ -960,67 +1219,77 @@ module.exports = class Facção extends Command {
 						.setTitle('🎭 | Facção')
 						.setDescription(`${author}, você transferiu **R$${Utils.numberFormat(Number(valor))},00** da sua Facção para o banco de ${USER} com sucesso!`);
 
-					return message.channel.send(author, embed1);
+					return message.reply({
+						content: author.toString(),
+						embeds: [embed1]
+					});
 				}
 			}
 		} else if (args[0].toLowerCase() === 'registro') {
-			if (user.fac.dono !== author.id) {
-				return message.reply('você precisa ser o dono da Facção para ver o registro de algum membro!');
-			} else {
-				const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
+			const USER = this.client.users.cache.get(args[1]) || message.mentions.users.first();
 
-				if (!USER) return message.reply('mencione alguém para ver o registro!');
-
-				const user2 = await this.client.database.users.findOne({
-					userId: USER.id,
-					guildId: message.guild.id
+			if (!USER) {
+				return message.reply({
+					content: 'Mencione alguém para ver o registro!'
 				});
+			}
 
-				const owner = await this.client.users.fetch(fb.dono);
-				const fd = await this.client.database.users
-					.findOne({
-						userId: owner.id,
-						guildId: message.guild.id
-					})
-					.then((x) => x.fac);
+			const user2 = await this.client.database.users.findOne({
+				userId: USER.id,
+				guildId: message.guild.id
+			});
 
-				if (!fd.membros.some((x) => x === USER.id)) {
-					return message.reply(`este usuário não está em sua Facção!`);
-				}
+			const owner = await this.client.users.fetch(fb.dono);
+			const fd = await this.client.database.users.findOne({
+				userId: owner.id,
+				guildId: message.guild.id
+			}).then((x) => x.fac);
 
-				// user2.fac.registro.map((x, index) => `\`[${index++}]\` Trabalhou as: **${moment(x.tempo).format('LTS L')}** | Ganhou: **${x.xp} XP** e **R$${x.money},00**`).slice(0, 20).join('\n')
-
-				let pagina = 0;
-
-				const registroArray = user2.fac.registro.map((value, index) => ({
-					tempo: value.tempo,
-					xp: value.xp,
-					money: value.money,
-					position: index
-				}));
-
-				let embedMessage = '';
-
-				const embed = new ClientEmbed(author)
-					.setTitle('Registros - Facção');
-
-				registroArray.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
-				embed.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage}`);
-
-				const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
-				const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
-				const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
-
-				const escolha = await message.channel.send(author, {
-					embed: embed,
-					components: [botoes]
+			if (!fd.membros.some((x) => x === USER.id)) {
+				return message.reply({
+					content: 'Esse usuário não está em sua Facção!'
 				});
+			}
 
-				const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id);
+			user2.fac.registro.map((x, index) => `\`[${index++}]\` Trabalhou as: **${moment(x.tempo).format('LTS L')}** | Ganhou: **${x.xp} XP** e **R$${x.money},00**`).slice(0, 20).join('\n');
 
-				collectorEscolhas.on('collect', async (b) => {
-					if (b.id === 'voltar') {
-						b.reply.defer();
+			let pagina = 0;
+
+			const registroArray = user2.fac.registro.map((value, index) => ({
+				tempo: value.tempo,
+				xp: value.xp,
+				money: value.money,
+				position: index
+			}));
+
+			let embedMessage = '';
+
+			const embed = new ClientEmbed(author)
+				.setTitle('Registros - Facção');
+
+			registroArray.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
+			embed.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage}`);
+
+			const buttonIr = new MessageButton().setCustomId('ir').setEmoji('➡️').setStyle('PRIMARY');
+			const buttonVoltar = new MessageButton().setCustomId('voltar').setEmoji('⬅️').setStyle('PRIMARY');
+			const botoes = new MessageActionRow().addComponents([buttonIr, buttonVoltar]);
+
+			const escolha = await message.reply({
+				content: author.toString(),
+				embeds: [embed],
+				components: [botoes]
+			});
+
+			const filter = (interaction) => interaction.isButton() && ['voltar', 'ir'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter
+			});
+
+			collectorEscolhas.on('collect', async (b) => {
+				switch (b.customId) {
+					case 'voltar':
+						await b.deferUpdate();
 
 						if (pagina <= 0) {
 							pagina = 0;
@@ -1043,11 +1312,13 @@ module.exports = class Facção extends Command {
 						registroArray2.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage2 += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
 						embed2.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage2}`);
 
-						b.message.edit(author, {
-							embed: embed2
+						escolha.edit({
+							content: author.toString(),
+							embeds: [embed2]
 						});
-					} else if (b.id === 'ir') {
-						b.reply.defer();
+						break;
+					case 'ir':
+						await b.deferUpdate();
 
 						if (pagina !== ~~(user2.fac.registro.length / 20)) {
 							pagina++;
@@ -1068,28 +1339,39 @@ module.exports = class Facção extends Command {
 						registroArray3.slice(pagina * 20, pagina * 20 + 20).forEach((est) => embedMessage3 += `\`[${est.position + 1}]\` Trabalhou as: **${moment(est.tempo).format('LTS L')}** | Ganhou: **${est.xp} XP** e **R$${est.money},00**\n`);
 						embed3.setDescription(`**REGISTRO DO USUÁRIO:** ${USER}\n\n${embedMessage3}`);
 
-						b.message.edit(author, {
-							embed: embed3
+						escolha.edit({
+							content: author.toString(),
+							embeds: [embed3]
 						});
-					}
-				});
-			}
+				}
+			});
 		} else if (args[0].toLowerCase() === 'cargo') {
 			if (!args[1]) {
-				return message.reply('você precisa colocar se quer **criar** ou **deletar** um cargo!');
+				return message.reply({
+					content: 'Você precisa colocar se quer **criar** ou **deletar** um cargo!'
+				});
 			} else if (args[1].toLowerCase() === 'criar') {
 				if (user.fac.dono !== author.id) {
-					return message.reply('você precisa ser o dono da Facção para criar um cargo na Facção!');
+					return message.reply({
+						content: 'Você precisa ser o dono da Facção para criar um cargo na Facção!'
+					});
 				} else if (user.fac.cargos.length === 7) {
-					return message.reply('sua Facção já possui muitos cargos. Delete algum cargo, e crie outro novamente!');
+					return message.reply({
+						content: 'Sua Facção já possui muitos cargos. Delete algum cargo, e crie outro novamente!'
+					});
 				} else if (!args.slice(2).join(' ')) {
-					return message.reply('você precisa colocar o nome do cargo!');
+					return message.reply({
+						content: 'Você precisa colocar o nome do cargo!'
+					});
 				} else {
 					const embed = new ClientEmbed(author)
 						.setTitle('🎭 | Facção')
 						.setDescription(`${author}, você criou o cargo **${args.slice(2).join(' ')}** para sua Facção com sucesso!`);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1104,19 +1386,30 @@ module.exports = class Facção extends Command {
 				}
 			} else if (args[1].toLowerCase() === 'deletar') {
 				if (user.fac.dono !== author.id) {
-					return message.reply('você precisa ser o dono da Facção para deletar um cargo na Facção!');
+					return message.reply({
+						content: 'Você precisa ser o dono da Facção para deletar um cargo na Facção!'
+					});
 				} else if (!user.fac.cargos.length) {
-					return message.reply(`sua Facção não possui nenhum cargo ainda. Use o comando \`${prefix}facção criar\` para criar um cargo!`);
+					return message.reply({
+						content: `Sua Facção não possui nenhum cargo ainda. Use o comando \`${prefix}facção criar\` para criar um cargo!`
+					});
 				} else if (!args.slice(2).join(' ')) {
-					return message.reply('você precisa colocar o nome do cargo!');
+					return message.reply({
+						content: 'Você precisa colocar o nome do cargo!'
+					});
 				} else if (!user.fac.cargos.find((f) => f.nome === args.slice(2).join(' '))) {
-					return message.reply('não existe um cargo com esse nome na sua Facção!');
+					return message.reply({
+						content: 'Não existe um cargo com esse nome na sua Facção!'
+					});
 				} else {
 					const embed = new ClientEmbed(author)
 						.setTitle('🎭 | Facção')
 						.setDescription(`${author}, você deletou o cargo **${args.slice(2).join(' ')}** para sua Facção com sucesso!`);
 
-					message.channel.send(author, embed);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed]
+					});
 
 					return await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -1132,31 +1425,39 @@ module.exports = class Facção extends Command {
 			}
 		} else if (args[0].toLowerCase() === 'promover') {
 			if (user.fac.dono !== author.id) {
-				return message.reply('você precisa ser o dono da Facção para promover algum membro!');
+				return message.reply({
+					content: 'Você precisa ser o dono da Facção para promover algum membro!'
+				});
 			} else {
 				const USER = this.client.users.cache.get(args[2]) || message.mentions.users.first();
 
-				if (!USER) return message.reply('mencione alguém para promover!');
+				if (!USER) {
+					return message.reply({
+						content: 'Mencione alguém para promover!'
+					});
+				}
 
-				if (USER.bot) return message.reply('você não pode promover um bot!');
+				if (USER.bot) {
+					return message.reply({
+						content: 'Você não pode promover um bot!'
+					});
+				}
 
 				const user2 = await this.client.database.users.findOne({
 					userId: USER.id,
 					guildId: message.guild.id
 				});
 
-				if (!user2.cadastrado) return message.reply('peça para esse usuário se cadastrar antes de ser promovido de uma Facção!');
-
 				const owner = await this.client.users.fetch(fb.dono);
-				const fd = await this.client.database.users
-					.findOne({
-						userId: owner.id,
-						guildId: message.guild.id
-					})
-					.then((x) => x.fac);
+				const fd = await this.client.database.users.findOne({
+					userId: owner.id,
+					guildId: message.guild.id
+				}).then((x) => x.fac);
 
 				if (!fd.membros.some((x) => x === USER.id)) {
-					return message.reply(`este usuário não está em sua Facção!`);
+					return message.reply({
+						content: 'Esse usuário não está em sua Facção!'
+					});
 				}
 
 				const cargosArray = user.fac.cargos.map((value, index) => ({
@@ -1205,8 +1506,16 @@ module.exports = class Facção extends Command {
 				cargosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **Cargo:** ${eu.nome}\n`);
 				embed.setDescription(`**➡️ | Digite o número do cargo que deseja dar para o ${USER}:**\n\n${embedMessage}`);
 
-				message.channel.send(author, embed).then((msg) => {
-					const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+				message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				}).then((msg) => {
+					const filter = m => {
+						return m.author.id === author.id;
+					};
+
+					const collector = msg.channel.createMessageCollector({
+						filter,
 						time: 60000
 					});
 
@@ -1215,19 +1524,14 @@ module.exports = class Facção extends Command {
 						const findSelectedEmprego = cargosArray.find((xis) => xis.position === selected);
 
 						if (!findSelectedEmprego) {
-							message.reply(`este número não existe! Por favor, envie o número do cargo novamente.`).then(a => a.delete({
-								timeout: 5000
-							}));
-							return ce.delete();
-						} else if (findSelectedEmprego.position < user2.fac.emprego.numero) {
-							message.reply('o cargo escolhido precisa ser **maior** que o cargo atual desse usuário na Facção!').then(a => a.delete({
-								timeout: 5000
-							}));
+							message.reply({
+								content: 'Esse número não existe. Por favor, envie o número do cargo novamente.'
+							}).then(a => a.delete(), 5000);
 							return ce.delete();
 						} else if (user2.fac.emprego.nome === findSelectedEmprego.nome) {
-							message.reply('esse usuário já possui esse cargo na Facção!').then(a => a.delete({
-								timeout: 5000
-							}));
+							message.reply({
+								content: 'Esse usuário já possui esse cargo na Facção!'
+							}).then(a => a.delete(), 5000);
 							return ce.delete();
 						} else {
 							collector.stop();
@@ -1238,7 +1542,10 @@ module.exports = class Facção extends Command {
 								.addField('Cargo Anterior:', user2.fac.emprego.nome)
 								.addField('Cargo Atual:', findSelectedEmprego.nome);
 
-							message.channel.send(USER, embed2);
+							message.reply({
+								content: USER.toString(),
+								embeds: [embed2]
+							});
 
 							await this.client.database.users.findOneAndUpdate({
 								userId: USER.id,
@@ -1258,40 +1565,48 @@ module.exports = class Facção extends Command {
 						if (reason === 'time') {
 							msg.delete();
 							collector.stop();
-							return message.reply('você demorou demais para escolher o cargo. Use o comando novamente!').then((a) => a.delete({
-								timeout: 6000
-							}));
+							return message.reply({
+								content: 'Você demorou demais para escolher o cargo. Use o comando novamente!'
+							});
 						}
 					});
 				});
 			}
 		} else if (args[0].toLowerCase() === 'rebaixar') {
 			if (user.fac.dono !== author.id) {
-				return message.reply('você precisa ser o dono da Facção para rebaixar algum membro!');
+				return message.reply({
+					content: 'Você precisa ser o dono da Facção para rebaixar algum membro!'
+				});
 			} else {
 				const USER = this.client.users.cache.get(args[2]) || message.mentions.users.first();
 
-				if (!USER) return message.reply('mencione alguém para rebaixar!');
+				if (!USER) {
+					return message.reply({
+						content: 'Mencione alguém para rebaixar!'
+					});
+				}
 
-				if (USER.bot) return message.reply('você não pode rebaixar um bot!');
+				if (USER.bot) {
+					return message.reply({
+						content: 'Você não pode rebaixar um bot!'
+					});
+				}
 
 				const user2 = await this.client.database.users.findOne({
 					userId: USER.id,
 					guildId: message.guild.id
 				});
 
-				if (!user2.cadastrado) return message.reply('peça para esse usuário se cadastrar antes de ser rebaixado de uma Facção!');
-
 				const owner = await this.client.users.fetch(fb.dono);
-				const fd = await this.client.database.users
-					.findOne({
-						userId: owner.id,
-						guildId: message.guild.id
-					})
-					.then((x) => x.fac);
+				const fd = await this.client.database.users.findOne({
+					userId: owner.id,
+					guildId: message.guild.id
+				}).then((x) => x.fac);
 
 				if (!fd.membros.some((x) => x === USER.id)) {
-					return message.reply(`este usuário não está em sua Facção!`);
+					return message.reply({
+						content: 'Esse usuário não está em sua Facção!'
+					});
 				}
 
 				const cargosArray = user.fac.cargos.map((value, index) => ({
@@ -1340,8 +1655,16 @@ module.exports = class Facção extends Command {
 				cargosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **Cargo:** ${eu.nome}\n`);
 				embed.setDescription(`**➡️ | Digite o número do cargo que deseja rebaixar para o ${USER}:**\n\n${embedMessage}`);
 
-				message.channel.send(author, embed).then((msg) => {
-					const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+				message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				}).then((msg) => {
+					const filter = m => {
+						return m.author.id === author.id;
+					};
+
+					const collector = msg.channel.createMessageCollector({
+						filter,
 						time: 60000
 					});
 
@@ -1350,19 +1673,14 @@ module.exports = class Facção extends Command {
 						const findSelectedEmprego = cargosArray.find((xis) => xis.position === selected);
 
 						if (!findSelectedEmprego) {
-							message.reply(`este número não existe! Por favor, envie o número do cargo novamente.`).then(a => a.delete({
-								timeout: 5000
-							}));
-							return ce.delete();
-						} else if (findSelectedEmprego.position > user2.fac.emprego.numero) {
-							message.reply('o cargo escolhido precisa ser **menor** que o cargo atual desse usuário na Facção!').then(a => a.delete({
-								timeout: 5000
-							}));
+							message.reply({
+								content: 'Esse número não existe. Por favor, envie o número do cargo novamente.'
+							}).then(a => a.delete(), 5000);
 							return ce.delete();
 						} else if (user2.fac.emprego.nome === findSelectedEmprego.nome) {
-							message.reply('esse usuário já possui esse cargo na Facção!').then(a => a.delete({
-								timeout: 5000
-							}));
+							message.reply({
+								content: 'Esse usuário já possui esse cargo na Facção!'
+							}).then(a => a.delete(), 5000);
 							return ce.delete();
 						} else {
 							collector.stop();
@@ -1373,7 +1691,10 @@ module.exports = class Facção extends Command {
 								.addField('Cargo Anterior:', user2.fac.emprego.nome)
 								.addField('Cargo Atual:', findSelectedEmprego.nome);
 
-							message.channel.send(USER, embed2);
+							message.reply({
+								content: USER.toString(),
+								embeds: [embed2]
+							});
 
 							await this.client.database.users.findOneAndUpdate({
 								userId: USER.id,
@@ -1393,9 +1714,9 @@ module.exports = class Facção extends Command {
 						if (reason === 'time') {
 							msg.delete();
 							collector.stop();
-							return message.reply('você demorou demais para escolher o cargo. Use o comando novamente!').then((a) => a.delete({
-								timeout: 6000
-							}));
+							return message.reply({
+								content: 'Você demorou demais para escolher o cargo. Use o comando novamente!'
+							});
 						}
 					});
 				});
@@ -1405,12 +1726,10 @@ module.exports = class Facção extends Command {
 
 	async PUSH(members, list, guild) {
 		for (const employer of list) {
-			const doc = await this.client.database.users
-				.findOne({
-					userId: employer,
-					guildId: guild
-				})
-				.then((x) => x.fac);
+			const doc = await this.client.database.users.findOne({
+				userId: employer,
+				guildId: guild
+			}).then((x) => x.fac);
 			members.push({
 				user: await this.client.users.fetch(employer).then((user) => user),
 				lastWork: doc.lastWork,

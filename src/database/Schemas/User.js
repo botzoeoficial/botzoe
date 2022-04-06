@@ -517,6 +517,10 @@ const userSchema = new Schema({
 				type: Number,
 				default: 0
 			}
+		},
+		tempo: {
+			type: Number,
+			default: 0
 		}
 	},
 	crime: {
@@ -722,11 +726,7 @@ const userSchema = new Schema({
 	payBank: {
 		cooldown: {
 			type: Number,
-			default: 0
-		},
-		sucess: {
-			type: Boolean,
-			default: false
+			default: Date.now()
 		}
 	},
 	casas: {
@@ -1041,6 +1041,14 @@ const userSchema = new Schema({
 		vida: {
 			type: Number,
 			default: 100
+		},
+		tratamento: {
+			type: Boolean,
+			default: false
+		},
+		saiu: {
+			type: Number,
+			default: 0
 		}
 	},
 	cadastrandoItem: {
@@ -1052,6 +1060,34 @@ const userSchema = new Schema({
 		default: 0
 	},
 	fabricando: {
+		type: Boolean,
+		default: false
+	},
+	ovos: {
+		comuns: {
+			type: Number,
+			default: 0
+		},
+		lendarios: {
+			type: Number,
+			default: 0
+		}
+	},
+	loja: {
+		aberta: {
+			type: Boolean,
+			default: false
+		},
+		mensagem: {
+			type: String,
+			default: ''
+		},
+		canal: {
+			type: String,
+			default: ''
+		}
+	},
+	apostaAberta: {
 		type: Boolean,
 		default: false
 	}

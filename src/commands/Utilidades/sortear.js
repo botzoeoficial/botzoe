@@ -46,32 +46,66 @@ module.exports = class Sortear extends Command {
 			.join('')
 			.split(/\/|\s/);
 
-		if (!num1) return message.reply(`você precisa colocar um número! Ex: \`${prefix}sortear 1/50\``);
+		if (!num1) {
+			return message.reply({
+				content: `Você precisa colocar um número! Ex: \`${prefix}sortear 1/50\``
+			});
+		}
 
-		if (isNaN(num1)) return message.reply('o primeiro valor precisa ser um número!');
+		if (isNaN(num1)) {
+			return message.reply({
+				content: 'O primeiro valor precisa ser um número!'
+			});
+		}
 
-		if (!parseInt(num1)) return message.reply('o primeiro valor precisa ser um número válido!');
+		if (!parseInt(num1)) {
+			return message.reply({
+				content: 'O primeiro valor precisa ser um número válido!'
+			});
+		}
 
-		if (!num2) return message.reply(`você precisa colocar um número! Ex: \`${prefix}sortear 1/50\``);
+		if (!num2) {
+			return message.reply({
+				content: `Você precisa colocar um número! Ex: \`${prefix}sortear 1/50\``
+			});
+		}
 
-		if (isNaN(num2)) return message.reply('o segundo valor precisa ser um número!');
+		if (isNaN(num2)) {
+			return message.reply({
+				content: 'O segundo valor precisa ser um número!'
+			});
+		}
 
-		if (!parseInt(num2)) return message.reply('o segundo valor precisa ser um número válido!');
+		if (!parseInt(num2)) {
+			return message.reply({
+				content: 'O segundo valor precisa ser um número válido!'
+			});
+		}
 
 		const random = Utils.randomNumber(Number(num1), Number(num2));
 
 		const embedWin = new ClientEmbed(author)
-			.setAuthor('🍀 | Sorteando um número, e...');
+			.setAuthor({
+				name: '🍀 | Sorteando um número, e...'
+			});
 
 		const embed = new ClientEmbed(author)
 			.setTitle('**🎉 PARABÉNS 🎉**')
 			.setDescription(`\`O número sorteado foi o:\` **${Utils.numberFormat(random)}**!`);
 
-		const msgLoading = await message.channel.send(author, embedWin);
+		const msgLoading = await message.reply({
+			content: author.toString(),
+			embeds: [embedWin]
+		});
 
 		setTimeout(async () => {
-			msgLoading.edit(author, embed);
+			msgLoading.edit({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		}, 7000);
+
+		return;
 	}
 
 };

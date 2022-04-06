@@ -42,12 +42,26 @@ module.exports = class Investimentobtc extends Command {
 		prefix,
 		author
 	}) {
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (!server.vip.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser \`VIP\` do servidor para usar esse comando!`
+			});
+		}
+
 		const user = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
 		});
 
-		if (user.cooldown.bitcoin <= 0) return message.reply(`você não tem um investimento de bitcoin em andamento! Use o comando \`${prefix}investirbtc\`.`);
+		if (user.cooldown.bitcoin <= 0) {
+			return message.reply({
+				content: `Você não tem um investimento de bitcoin em andamento! Use o comando \`${prefix}investirbtc\`.`
+			});
+		}
 
 		if ((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin) > 0) {
 			const faltam = ms((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin));
@@ -56,7 +70,10 @@ module.exports = class Investimentobtc extends Command {
 				.setTitle('<:btc:908786996535787551> BITCOIN')
 				.setDescription(`📈 | Seu investimento de **${user.investimento.investido}** BitCoins, ainda está em andamento.\nRestam: \`${faltam.days}\` dias, \`${faltam.hours}\` horas, \`${faltam.minutes}\` minutos e \`${faltam.seconds}\` segundos.\n\n**Você receberá:** \`${user.investimento.dobro}\` bitcoins.`);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		}
 	}
 

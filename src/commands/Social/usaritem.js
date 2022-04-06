@@ -52,12 +52,18 @@ module.exports = class Usaritem extends Command {
 
 		const ope = args.join(' ');
 
-		if (!ope) return message.reply('você precisa colocar o nome de um item do seu inventário!');
+		if (!ope) {
+			return message.reply({
+				content: 'Você precisa colocar o nome de um item do seu inventário!'
+			});
+		}
 
 		const hasItem = user.inventory.find((xs) => xs.item.toLowerCase() === ope.toLowerCase());
 
 		if (!hasItem) {
-			return message.reply(`você não possui este item no seu inventário! Use \`${prefix}inv\` para ver os itens do seu inventário.`);
+			return message.reply({
+				content: `Você não possui este item no seu inventário! Use \`${prefix}inv\` para ver os itens do seu inventário.`
+			});
 		}
 
 		if (ope.toLowerCase() === 'água' || ope.toLowerCase() === 'agua') {
@@ -67,7 +73,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🥤 | Você bebeu uma \`Água\` e conseguiu as seguintes melhorias:\n\n🥤 **Sede:** +50\n😰 **Cansado:** +30\n😡 **Bravo:** +20\n🥺 **Solitário:** +0`);
 
-			message.channel.send(author, embedWater);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedWater]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -104,7 +113,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'suco') {
 			const findSuco = user.inventory.find((xs) => xs.item === 'Suco');
 
@@ -112,7 +121,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🧃 | Você bebeu um \`Suco\` e conseguiu as seguintes melhorias:\n\n🥤 **Sede:** +40\n😰 **Cansado:** +30\n😡 **Bravo:** +10\n🥺 **Solitário:** +0`);
 
-			message.channel.send(author, embedSuco);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedSuco]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -149,7 +161,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'refrigerante') {
 			const findRefrigerante = user.inventory.find((xs) => xs.item === 'Refrigerante');
 
@@ -157,7 +169,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`<:pink_soda:891034945085120572> | Você bebeu um \`Refrigerante\` e conseguiu as seguintes melhorias:\n\n🥤 **Sede:** +30\n😰 **Cansado:** +20\n😡 **Bravo:** +0\n🥺 **Solitário:** +10`);
 
-			message.channel.send(author, embedRefrigerante);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedRefrigerante]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -194,7 +209,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'café' || ope.toLowerCase() === 'cafe') {
 			const findCafe = user.inventory.find((xs) => xs.item === 'Café');
 
@@ -202,7 +217,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`☕ | Você bebeu um \`Café\` e conseguiu as seguintes melhorias:\n\n🥤 **Sede:** +0\n😰 **Cansado:** +60\n😡 **Bravo:** -20\n🥺 **Solitário:** +30`);
 
-			message.channel.send(author, embedCafe);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedCafe]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -239,7 +257,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'energético' || ope.toLowerCase() === 'energetico') {
 			const findEnergetico = user.inventory.find((xs) => xs.item === 'Energético');
 
@@ -247,7 +265,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`<:MonsterEnergyDrink:891035343262990366> | Você bebeu um \`Energético\` e conseguiu as seguintes melhorias:\n\n🥤 **Sede:** +50\n😰 **Cansado:** +30\n😡 **Bravo:** +0\n🥺 **Solitário:** +0`);
 
-			message.channel.send(author, embedEnergetico);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedEnergetico]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -284,7 +305,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'cerveja') {
 			const findCerveja = user.inventory.find((xs) => xs.item === 'Cerveja');
 
@@ -292,7 +313,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍻 | Você bebeu uma \`Cerveja\` e conseguiu as seguintes melhorias:\n\n🥤 **Sede:** +50\n😰 **Cansado:** -20\n😡 **Bravo:** -10\n🥺 **Solitário:** +50`);
 
-			message.channel.send(author, embedCerveja);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedCerveja]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -329,7 +353,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'sanduíche' || ope.toLowerCase() === 'sanduiche') {
 			const findSanduiche = user.inventory.find((xs) => xs.item === 'Sanduíche');
 
@@ -337,7 +361,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍔 | Você comeu um \`Sanduíche\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +90\n😰 **Cansado:** -10\n🥺 **Solitário:** +20`);
 
-			message.channel.send(author, embedSanduiche);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedSanduiche]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -373,7 +400,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'pizza') {
 			const findPizza = user.inventory.find((xs) => xs.item === 'Pizza');
 
@@ -381,7 +408,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍕 | Você comeu uma \`Pizza\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +80\n😰 **Cansado:** -20\n🥺 **Solitário:** +60`);
 
-			message.channel.send(author, embedPizza);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedPizza]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -417,7 +447,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'batata frita') {
 			const findBatata = user.inventory.find((xs) => xs.item === 'Batata Frita');
 
@@ -425,7 +455,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍟 | Você comeu uma \`Batata Frita\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +50\n😰 **Cansado:** +30\n🥺 **Solitário:** +20`);
 
-			message.channel.send(author, embedBatata);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedBatata]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -461,7 +494,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'misto quente') {
 			const findMisto = user.inventory.find((xs) => xs.item === 'Misto Quente');
 
@@ -469,7 +502,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🥪 | Você comeu um \`Misto Quente\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +30\n😰 **Cansado:** -10\n🥺 **Solitário:** -20`);
 
-			message.channel.send(author, embedMisto);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedMisto]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -505,7 +541,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'carne') {
 			const findCarne = user.inventory.find((xs) => xs.item === 'Carne');
 
@@ -513,7 +549,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🥩 | Você comeu uma \`Carne\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +50\n😰 **Cansado:** +40\n🥺 **Solitário:** +20`);
 
-			message.channel.send(author, embedCarne);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedCarne]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -549,7 +588,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'taco' || ope.toLowerCase() === 'tacos') {
 			const findTaco = user.inventory.find((xs) => xs.item === 'Tacos');
 
@@ -557,7 +596,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🌮 | Você comeu um \`Taco\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +60\n😰 **Cansado:** -20\n🥺 **Solitário:** +40`);
 
-			message.channel.send(author, embedTaco);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedTaco]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -593,7 +635,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'miojo') {
 			const findMiojo = user.inventory.find((xs) => xs.item === 'Miojo');
 
@@ -601,7 +643,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍜 | Você comeu um \`Miojo\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +40\n😰 **Cansado:** -10\n🥺 **Solitário:** -30`);
 
-			message.channel.send(author, embedMiojo);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedMiojo]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -637,7 +682,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'rosquinha') {
 			const findRosquinha = user.inventory.find((xs) => xs.item === 'Rosquinha');
 
@@ -645,7 +690,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍩 | Você comeu uma \`Rosquinha\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +10\n😭 **Triste:** +20\n😵‍💫 **Desanimado:** +30\n🥺 **Solitário:** +30\n🤯 **Estressado:** -20`);
 
-			message.channel.send(author, embedRosquinha);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedRosquinha]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -683,7 +731,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'chocolate') {
 			const findChocolate = user.inventory.find((xs) => xs.item === 'Chocolate');
 
@@ -691,7 +739,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍫 | Você comeu um \`Chocolate\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** -30\n😭 **Triste:** +40\n😵‍💫 **Desanimado:** +40\n🥺 **Solitário:** +60\n🤯 **Estressado:** +40`);
 
-			message.channel.send(author, embedChocolate);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedChocolate]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -729,7 +780,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'pipoca') {
 			const findPipoca = user.inventory.find((xs) => xs.item === 'Pipoca');
 
@@ -737,7 +788,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍿 | Você comeu uma \`Pipoca\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** -10\n😭 **Triste:** +20\n😵‍💫 **Desanimado:** +40\n🥺 **Solitário:** +40\n🤯 **Estressado:** +30`);
 
-			message.channel.send(author, embedPipoca);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedPipoca]
+			});
 
 			if (findPipoca.quantia > 1) {
 				await this.client.database.users.findOneAndUpdate({
@@ -775,7 +829,7 @@ module.exports = class Usaritem extends Command {
 				}
 			});
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'bolo') {
 			const findBolo = user.inventory.find((xs) => xs.item === 'Bolo');
 
@@ -783,7 +837,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍰 | Você comeu um \`Bolo\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +30\n😭 **Triste:** +30\n😵‍💫 **Desanimado:** +20\n🥺 **Solitário:** +20\n🤯 **Estressado:** +20`);
 
-			message.channel.send(author, embedBolo);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedBolo]
+			});
 
 			if (findBolo.quantia > 1) {
 				await this.client.database.users.findOneAndUpdate({
@@ -821,7 +878,7 @@ module.exports = class Usaritem extends Command {
 				}
 			});
 
-			user.save();
+			return user.save();
 		} else if (ope.toLowerCase() === 'cookie') {
 			const findCookie = user.inventory.find((xs) => xs.item === ope);
 
@@ -829,7 +886,10 @@ module.exports = class Usaritem extends Command {
 				.setTitle('Item Usado')
 				.setDescription(`🍪 | Você comeu um \`Cookie\` e conseguiu as seguintes melhorias:\n\n🍽️ **Fome:** +10\n😭 **Triste:** +20\n😵‍💫 **Desanimado:** +10\n🥺 **Solitário:** +10\n🤯 **Estressado:** -10`);
 
-			message.channel.send(author, embedCookie);
+			message.reply({
+				content: author.toString(),
+				embeds: [embedCookie]
+			});
 
 			await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
@@ -867,7 +927,7 @@ module.exports = class Usaritem extends Command {
 				});
 			}
 
-			user.save();
+			return user.save();
 		}
 	}
 

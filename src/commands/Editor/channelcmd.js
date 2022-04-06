@@ -35,11 +35,18 @@ module.exports = class Channelcmd extends Command {
 		this.ajudanteLavagem = false;
 	}
 	async run({
-		message
+		message,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
+
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
 		if (server.canal.map(a => a.id).includes(message.channel.id)) {
 			await this.client.database.guilds.findOneAndUpdate({
@@ -52,7 +59,9 @@ module.exports = class Channelcmd extends Command {
 				}
 			});
 
-			return message.reply('os comandos agora estão **ATIVADOS** nesse canal!');
+			return message.reply({
+				content: 'Os comandos agora estão **ATIVADOS** nesse canal!'
+			});
 		} else if (!server.canal.map(a => a.id).includes(message.channel.id)) {
 			await this.client.database.guilds.findOneAndUpdate({
 				_id: message.guild.id
@@ -64,7 +73,9 @@ module.exports = class Channelcmd extends Command {
 				}
 			});
 
-			return message.reply('os comandos agora estão **DESATIVADOS** nesse canal!');
+			return message.reply({
+				content: 'Os comandos agora estão **DESATIVADOS** nesse canal!'
+			});
 		}
 	}
 

@@ -37,20 +37,37 @@ module.exports = class Removerevento extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!server.eventos.length) return message.reply('não há eventos cadastrados no momento para retirar algum.');
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (!server.eventos.length) {
+			return message.reply({
+				content: 'Não há eventos cadastrados no momento para retirar algum.'
+			});
+		}
 
 		const nome = args.slice(0).join(' ');
 
-		if (!nome) return message.reply('você precisa colocar o nome do evento.');
+		if (!nome) {
+			return message.reply({
+				content: 'Você precisa colocar o nome do evento.'
+			});
+		}
 
 		if (!server.eventos.find((f) => f.nome === nome)) {
-			return message.reply('não existe um evento com esse nome na **lista de eventos**.');
+			return message.reply({
+				content: 'Não existe um evento com esse nome na **lista de eventos**.'
+			});
 		}
 
 		await this.client.database.guilds.findOneAndUpdate({
@@ -63,7 +80,9 @@ module.exports = class Removerevento extends Command {
 			}
 		});
 
-		message.reply('evento removido com sucesso.');
+		return message.reply({
+			content: `Evento removido com sucesso.`
+		});
 	}
 
 };

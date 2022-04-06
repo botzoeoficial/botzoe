@@ -36,21 +36,44 @@ module.exports = class Setfabricantedrogas extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
-		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
-
-		if (member.user.bot) return message.reply(`você não pode dar a função de Fabricante das Drogas para um bot.`);
-
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.donoFabricadeDrogas.length === 3) return message.reply('esse servidor já possui muitos Fabricantes de Drogas.');
+		if (server.cidade.donoFavela !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Dono da Favela\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
-		if (server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(member.id)) return message.reply('esse usuário já é Fabricante das Drogas desse servidor.');
+		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
+
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca poderá ser Fabricante das Drogas desse servidor.'
+			});
+		}
+
+		if (server.cidade.donoFabricadeDrogas.length === 3) {
+			return message.reply({
+				content: 'Esse servidor já possui muitos Fabricantes de Drogas.'
+			});
+		}
+
+		if (server.cidade.donoFabricadeDrogas.map((a) => a.id).includes(member.id)) {
+			return message.reply({
+				content: 'Esse usuário já é Fabricante das Drogas desse servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -62,7 +85,9 @@ module.exports = class Setfabricantedrogas extends Command {
 			}
 		});
 
-		message.reply(`o usuário ${member} virou o Fabricante das Drogas desse servidor agora.`);
+		return message.reply({
+			content: `O usuário ${member} entrou no cargo de Fabricante das Drogas desse servidor com sucesso.`
+		});
 	}
 
 };

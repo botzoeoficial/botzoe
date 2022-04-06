@@ -43,7 +43,11 @@ module.exports = class Descartarmochila extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.isMochila) return message.reply(`você não possui uma **Mochila**, vá até a Loja > Utilidades e Compre uma!`);
+		if (!user.isMochila) {
+			return message.reply({
+				content: 'Você não possui uma **Mochila**, vá até a Loja > Utilidades e Compre uma!'
+			});
+		}
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -55,7 +59,9 @@ module.exports = class Descartarmochila extends Command {
 			}
 		});
 
-		return message.reply('**Mochila** descartada com todos os itens dentro dela com sucesso!');
+		return message.reply({
+			content: '**Mochila** descartada com todos os itens dentro dela com sucesso!'
+		});
 	}
 
 };

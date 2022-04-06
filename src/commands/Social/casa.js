@@ -8,9 +8,9 @@ const {
 	filledBar
 } = require('string-progressbar');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Casa extends Command {
 
@@ -55,34 +55,44 @@ module.exports = class Casa extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.casas.tipo === '') return message.reply(`você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`);
+		if (user.casas.tipo === '') {
+			return message.reply({
+				content: `Você não possui uma **Casa** comprada. Use o comando \`${prefix}imobiliaria\` para comprar uma!`
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle(user.casas.nome)
 			.setImage(user.casas.gif)
 			.setDescription(`Você acaba de entrar na(o) sua(seu) **${user.casas.tipo}**.\n\nDeseja verificar seu baú?`);
 
-		const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+		const buttonSim = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+		const buttonNao = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-		message.channel.send(author, {
-			embed: embed,
+		message.reply({
+			content: author.toString(),
+			embeds: [embed],
 			components: [botoes]
 		}).then(async (msg) => {
-			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === author.id, {
+			const filter = (interaction) => interaction.isButton() && ['aceitar', 'negar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorBotoes = msg.createMessageComponentCollector({
+				filter,
 				time: 60000,
 				max: 1
 			});
 
 			collectorBotoes.on('collect', async (b) => {
-				if (b.id === 'negar') {
-					b.reply.defer();
+				if (b.customId === 'negar') {
+					await b.deferUpdate();
 
 					msg.delete();
-					return message.reply('você não quis olhar o baú da sua **casa** com sucesso!');
-				} else if (b.id === 'aceitar') {
-					b.reply.defer();
+					return message.reply({
+						content: 'Você não quis olhar o baú da sua **casa** com sucesso!'
+					});
+				} else if (b.customId === 'aceitar') {
+					await b.deferUpdate();
 
 					const itens = user.casas.bau.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
@@ -94,8 +104,9 @@ module.exports = class Casa extends Command {
 						.setTitle('<:bau:915734866241404969> | Baú')
 						.setDescription(`Estes são os itens do seu Baú.\nTotal de Itens: \`${total}\` **${filledBar(user.casas.quantiaItens, total || 0, 10)[0]}** (${Math.round(total / user.casas.quantiaItens * 100)}%)\n\n${itens || '**Sem Itens no Baú.**'}`);
 
-					msg.edit(author, {
-						embed: embed,
+					return msg.edit({
+						content: author.toString(),
+						embeds: [embed],
 						components: []
 					});
 				}

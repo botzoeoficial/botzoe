@@ -38,8 +38,7 @@ module.exports = class Caixote extends Command {
 	async run({
 		message,
 		author,
-		args,
-		prefix
+		args
 	}) {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
@@ -48,9 +47,11 @@ module.exports = class Caixote extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		const itens = user.caixote.map((as) => `**${as.emoji} | ${as.item}:** \`x${as.quantia}\``).join('\n');
 
@@ -64,7 +65,10 @@ module.exports = class Caixote extends Command {
 			}))
 			.setDescription(`***Total de Itens:*** \`${total}\`\n\n${itens || 'Caixote Vazio.'}`);
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

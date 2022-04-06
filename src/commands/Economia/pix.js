@@ -48,32 +48,63 @@ module.exports = class Pix extends Command {
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
 		const user2 = await this.client.database.users.findOne({
 			userId: member.id,
 			guildId: message.guild.id
 		});
 
-		if (!user2) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
+		if (!user2) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		const btc = args[1];
 
-		if (!parseInt(btc)) return message.reply('você precisa colocar uma quantia válida.');
+		if (!parseInt(btc)) {
+			return message.reply({
+				content: 'Você precisa colocar uma quantia válida.'
+			});
+		}
 
-		if (parseInt(btc) <= 0 || parseInt(btc) > 500000) return message.reply('a quantia a ser adicionada precisa ser maior que **R$0,00** e menor que **R$500.00,00**.');
+		if (parseInt(btc) <= 0 || parseInt(btc) > 500000) {
+			return message.reply({
+				content: 'A quantia a ser adicionada precisa ser maior que **R$0,00** e menor que **R$500.00,00**.'
+			});
+		}
 
-		if (isNaN(btc)) return message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) {
+			return message.reply({
+				content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**!'
+			});
+		}
 
-		if (user.saldo <= 0) return message.reply('sua carteira está negativa ou está zerada, portanto, não dá para transferir dinheiro.');
+		if (user.saldo <= 0) {
+			return message.reply({
+				content: 'Sua carteira está negativa ou está zerada, portanto, não dá para transferir dinheiro.'
+			});
+		}
 
-		if (parseInt(btc) > user.saldo) return message.reply('você não tem esse saldo todo na carteira para ser transferido.');
+		if (parseInt(btc) > user.saldo) {
+			return message.reply({
+				content: 'Você não tem esse saldo todo na carteira para ser transferido.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🏦 Transferência')
 			.setDescription(`💵 | Você transferiu \`R$${Utils.numberFormat(Number(btc))},00\` para ${member} com sucesso!`);
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,

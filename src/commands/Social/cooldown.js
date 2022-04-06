@@ -1,5 +1,4 @@
 /* eslint-disable complexity */
-/* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const ms = require('parse-ms');
@@ -50,25 +49,6 @@ module.exports = class Cooldown extends Command {
 			_id: message.guild.id
 		});
 
-		// trabalhar, auxilio, treinar-pet, estudar, fe, trabalho comunitário
-		const timeout = 3600000;
-		// gf
-		const timeout2 = 7200000;
-		// minerar
-		const timeout3 = 43200000;
-		// pescar
-		const timeout4 = 600000;
-		// beijar, abraçar, dançar, crime
-		const timeout5 = 180000;
-		// adotar
-		const timeout6 = 9000000;
-		// salario
-		const timeout7 = 86400000;
-		// roubar veículo
-		const timeout8 = 300000;
-		// garimpar
-		const timeout9 = 1200000;
-		// prisao
 		let timeout10 = 0;
 
 		if (user.prisao.isPreso && user.prisao.prenderCmd) {
@@ -81,6 +61,8 @@ module.exports = class Cooldown extends Command {
 			timeout10 = 21600000;
 		} else if (user.prisao.isPreso && user.prisao.roubarVeiculo) {
 			timeout10 = 180000;
+		} else if (user.prisao.isPreso && user.prisao.atirarPrisao) {
+			timeout10 = 129600000;
 		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.velha) {
 			timeout10 = 300000;
 		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.frentista) {
@@ -102,163 +84,167 @@ module.exports = class Cooldown extends Command {
 		} else if (user.prisao.crime && user.prisao.isPreso && user.prisao.banco) {
 			timeout10 = 14400000;
 		}
-		// roubar
-		const timeout11 = 1800000;
-		// arrumarveiculo, emplacarveiculo, liberarveiculo, desmancharveiculo
-		const timeout12 = 60000;
 
 		const embed = new ClientEmbed(author);
 
-		if (timeout - (Date.now() - user.cooldown.work) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.work));
+		if (3600000 - (Date.now() - user.cooldown.work) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.work));
 
-			embed.addField(`💼 Trabalhar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:trabalhar:958139188987981834> Trabalhar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`💼 Trabalhar`, `Pode usar!`, true);
+			embed.addField(`<:trabalhar:958139188987981834> Trabalhar`, `Pode usar!`, true);
 		}
 
-		if (timeout - (Date.now() - user.cooldown.auxilio) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.auxilio));
+		if (3600000 - (Date.now() - user.cooldown.auxilio) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.auxilio));
 
-			embed.addField(`💸 Auxilio`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:auxilio:958138997199212574> Auxilio`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`💸 Auxilio`, `Pode usar!`, true);
+			embed.addField(`<:auxilio:958138997199212574> Auxilio`, `Pode usar!`, true);
 		}
 
-		if (timeout - (Date.now() - user.cooldown.estudar) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.estudar));
+		if (3600000 - (Date.now() - user.cooldown.estudar) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.estudar));
 
-			embed.addField(`🧑‍🏫 Estudar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:estudar:958138296209375303> Estudar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🧑‍🏫 Estudar`, `Pode usar!`, true);
+			embed.addField(`<:estudar:958138296209375303> Estudar`, `Pode usar!`, true);
 		}
 
-		if (timeout - (Date.now() - user.cooldown.fe) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.fe));
+		if (3600000 - (Date.now() - user.cooldown.fe) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.fe));
 
-			embed.addField(`👨‍👩‍👧‍👦 Evento Familiar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:fe:958138021176303637> Evento Familiar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`👨‍👩‍👧‍👦 Evento Familiar`, `Pode usar!`, true);
+			embed.addField(`<:fe:958138021176303637> Evento Familiar`, `Pode usar!`, true);
 		}
 
-		if (timeout2 - (Date.now() - user.cooldown.gf) > 0) {
-			const faltam = ms(timeout2 - (Date.now() - user.cooldown.gf));
+		if (7200000 - (Date.now() - user.cooldown.gf) > 0) {
+			const faltam = ms(7200000 - (Date.now() - user.cooldown.gf));
 
 			embed.addField(`😈 Gozofone`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
 			embed.addField(`😈 Gozofone`, `Pode usar!`, true);
 		}
 
-		if (timeout7 - (Date.now() - user.cooldown.salario) > 0) {
-			const faltam = ms(timeout7 - (Date.now() - user.cooldown.salario));
+		if (86400000 - (Date.now() - user.cooldown.salario) > 0) {
+			const faltam = ms(86400000 - (Date.now() - user.cooldown.salario));
 
-			embed.addField(`💰 Salário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:salario:958137043282718720> Salário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`💰 Salário`, `Pode usar!`, true);
+			embed.addField(`<:salario:958137043282718720> Salário`, `Pode usar!`, true);
 		}
 
-		if (timeout6 - (Date.now() - user.cooldown.adotar) > 0) {
-			const faltam = ms(timeout6 - (Date.now() - user.cooldown.adotar));
+		if (3600000 - (Date.now() - user.cooldown.adotar) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.adotar));
 
-			embed.addField(`🥳 Adotar Pet`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:adotar:958136825678004304> Adotar Pet`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🥳 Adotar Pet`, `Pode usar!`, true);
+			embed.addField(`<:adotar:958136825678004304> Adotar Pet`, `Pode usar!`, true);
 		}
 
-		if (timeout - (Date.now() - user.cooldown.treinarPet) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.treinarPet));
+		if (3600000 - (Date.now() - user.cooldown.treinarPet) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.treinarPet));
 
-			embed.addField(`🦴 Treinar Pet`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:treinar_pet:958136603031781446> Treinar Pet`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🦴 Treinar Pet`, `Pode usar!`, true);
+			embed.addField(`<:treinar_pet:958136603031781446> Treinar Pet`, `Pode usar!`, true);
 		}
 
-		if (timeout9 - (Date.now() - user.cooldown.apostar) > 0) {
-			const faltam = ms(timeout9 - (Date.now() - user.cooldown.apostar));
+		if (1200000 - (Date.now() - user.cooldown.usarApostar) > 0) {
+			const faltam = ms(1200000 - (Date.now() - user.cooldown.usarApostar));
 
-			embed.addField(`🎰 Apostar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:apostar:958134372253442148> Apostar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🎰 Apostar`, `Pode usar!`, true);
+			embed.addField(`<:apostar:958134372253442148> Apostar`, `Pode usar!`, true);
 		}
 
-		if (timeout3 - (Date.now() - user.cooldown.minerar) > 0) {
-			const faltam = ms(timeout3 - (Date.now() - user.cooldown.minerar));
+		if (43200000 - (Date.now() - user.cooldown.minerar) > 0) {
+			const faltam = ms(43200000 - (Date.now() - user.cooldown.minerar));
 
-			embed.addField(`⛏️ Minerar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:minerar:957700475073998909> Minerar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`⛏️ Minerar`, `Pode usar!`, true);
+			embed.addField(`<:minerar:957700475073998909> Minerar`, `Pode usar!`, true);
 		}
 
 		if ((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin) > 0) {
 			const faltam = ms((10 * 24 * 60 * 60 * 1000) - (Date.now() - user.cooldown.bitcoin));
 
-			embed.addField(`📈 InvestimentoBTC`, `\`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:investimento_btc:958139451148763158> InvestimentoBTC`, `\`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`📈 InvestimentoBTC`, `Pode usar!`, true);
+			embed.addField(`<:investimento_btc:958139451148763158> InvestimentoBTC`, `Pode usar!`, true);
 		}
 
-		if (timeout4 - (Date.now() - user.cooldown.pescar) > 0) {
-			const faltam = ms(timeout4 - (Date.now() - user.cooldown.pescar));
+		if (600000 - (Date.now() - user.cooldown.pescar) > 0) {
+			const faltam = ms(600000 - (Date.now() - user.cooldown.pescar));
 
-			embed.addField(`🚣‍♂️ Pescar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:pescar:958133846572929075> Pescar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🚣‍♂️ Pescar`, `Pode usar!`, true);
+			embed.addField(`<:pescar:958133846572929075> Pescar`, `Pode usar!`, true);
 		}
 
-		if (timeout5 - (Date.now() - user.cooldown.beijar) > 0) {
-			const faltam = ms(timeout5 - (Date.now() - user.cooldown.beijar));
+		if (180000 - (Date.now() - user.cooldown.beijar) > 0) {
+			const faltam = ms(180000 - (Date.now() - user.cooldown.beijar));
 
-			embed.addField(`💋 Beijar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:beijar:958133237539020800> Beijar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`💋 Beijar`, `Pode usar!`, true);
+			embed.addField(`<:beijar:958133237539020800> Beijar`, `Pode usar!`, true);
 		}
 
-		if (timeout5 - (Date.now() - user.cooldown.abracar) > 0) {
-			const faltam = ms(timeout5 - (Date.now() - user.cooldown.abracar));
+		if (180000 - (Date.now() - user.cooldown.abracar) > 0) {
+			const faltam = ms(180000 - (Date.now() - user.cooldown.abracar));
 
-			embed.addField(`🫂 Abraçar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:abracar:958133495316746310> Abraçar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🫂 Abraçar`, `Pode usar!`, true);
+			embed.addField(`<:abracar:958133495316746310> Abraçar`, `Pode usar!`, true);
 		}
 
-		if (timeout5 - (Date.now() - user.cooldown.dancar) > 0) {
-			const faltam = ms(timeout5 - (Date.now() - user.cooldown.dancar));
+		if (180000 - (Date.now() - user.cooldown.dancar) > 0) {
+			const faltam = ms(180000 - (Date.now() - user.cooldown.dancar));
 
-			embed.addField(`🕺💃 Dançar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:dance:958133055917264977> Dançar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🕺💃 Dançar`, `Pode usar!`, true);
+			embed.addField(`<:dance:958133055917264977> Dançar`, `Pode usar!`, true);
 		}
 
-		if (timeout9 - (Date.now() - user.cooldown.garimpar) > 0) {
-			const faltam = ms(timeout9 - (Date.now() - user.cooldown.garimpar));
+		if (1800000 - (Date.now() - user.cooldown.roubar) > 0) {
+			const faltam = ms(1800000 - (Date.now() - user.cooldown.roubar));
 
-			embed.addField(`⚒️ Garimpar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:roubar:957699196931178556> Roubar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`⚒️ Garimpar`, `Pode usar!`, true);
+			embed.addField(`<:roubar:957699196931178556> Roubar`, `Pode usar!`, true);
 		}
 
-		if (timeout4 - (Date.now() - user.cooldown.crime) > 0) {
-			const faltam = ms(timeout4 - (Date.now() - user.cooldown.crime));
+		if (600000 - (Date.now() - user.cooldown.crime) > 0) {
+			const faltam = ms(600000 - (Date.now() - user.cooldown.crime));
 
-			embed.addField(`🔫 Crime`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:crime:958132415304466503> Crime`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🔫 Crime`, `Pode usar!`, true);
+			embed.addField(`<:crime:958132415304466503> Crime`, `Pode usar!`, true);
 		}
 
-		if (timeout8 - (Date.now() - user.cooldown.roubarVeiculo) > 0) {
-			const faltam = ms(timeout8 - (Date.now() - user.cooldown.roubarVeiculo));
+		if (300000 - (Date.now() - user.cooldown.roubarVeiculo) > 0) {
+			const faltam = ms(300000 - (Date.now() - user.cooldown.roubarVeiculo));
 
-			embed.addField(`🔫🚗 Roubar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:roubar_carro:957699196830486648> Roubar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🔫🚗 Roubar Veículo`, `Pode usar!`, true);
+			embed.addField(`<:roubar_carro:957699196830486648> Roubar Veículo`, `Pode usar!`, true);
 		}
 
-		if (timeout - (Date.now() - user.cooldown.trabalhoComunitario) > 0) {
-			const faltam = ms(timeout - (Date.now() - user.cooldown.trabalhoComunitario));
+		if (86400000 - (Date.now() - user.cooldown.atirar) > 0) {
+			const faltam = ms(86400000 - (Date.now() - user.cooldown.atirar));
 
-			embed.addField(`🧹 Trabalho Comunitário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`<:atirar:958139802379776010> Atirar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🧹 Trabalho Comunitário`, `Pode usar!`, true);
+			embed.addField(`<:atirar:958139802379776010> Atirar`, `Pode usar!`, true);
+		}
+
+		if (1200000 - (Date.now() - user.cooldown.garimpar) > 0) {
+			const faltam = ms(1200000 - (Date.now() - user.cooldown.garimpar));
+
+			embed.addField(`<:garimpar:957700475556339802> Garimpar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+		} else {
+			embed.addField(`<:garimpar:957700475556339802> Garimpar`, `Pode usar!`, true);
 		}
 
 		if (timeout10 - (Date.now() - user.prisao.tempo) > 0) {
@@ -269,53 +255,67 @@ module.exports = class Cooldown extends Command {
 			embed.addField(`⏰ Tempo de Prisão`, `Livre!`, true);
 		}
 
-		if (timeout11 - (Date.now() - user.cooldown.roubar) > 0) {
-			const faltam = ms(timeout11 - (Date.now() - user.cooldown.roubar));
+		if (3600000 - (Date.now() - user.cooldown.trabalhoComunitario) > 0) {
+			const faltam = ms(3600000 - (Date.now() - user.cooldown.trabalhoComunitario));
 
-			embed.addField(`🔫 Roubar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			embed.addField(`🧹 Trabalho Comunitário`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 		} else {
-			embed.addField(`🔫 Roubar`, `Pode usar!`, true);
+			embed.addField(`🧹 Trabalho Comunitário`, `Pode usar!`, true);
 		}
 
 		if (user.policia.isPolice || server.cidade.delegado === author.id) {
-			if (timeout - (Date.now() - user.policia.revistar) > 0) {
-				const faltam = ms(timeout - (Date.now() - user.policia.revistar));
+			if (3600000 - (Date.now() - user.policia.revistar) > 0) {
+				const faltam = ms(3600000 - (Date.now() - user.policia.revistar));
 
 				embed.addField(`<:algema:898326104413188157> Revistar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 			} else {
 				embed.addField(`<:algema:898326104413188157> Revistar`, `Pode usar!`, true);
 			}
 
-			if (timeout - (Date.now() - user.policia.prender) > 0) {
-				const faltam = ms(timeout - (Date.now() - user.policia.prender));
+			if (3600000 - (Date.now() - user.policia.prender) > 0) {
+				const faltam = ms(3600000 - (Date.now() - user.policia.prender));
 
-				embed.addField(`👮 Prender`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
-				embed.addField('\u200b', '\u200b', true);
+				embed.addField(`👮 Prender/Cmd`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 			} else {
-				embed.addField(`👮 Prender`, `Pode usar!`, true);
-				embed.addField('\u200b', '\u200b', true);
+				embed.addField(`👮 Prender/Cmd`, `Pode usar!`, true);
+			}
+
+			if (5400000 - (Date.now() - user.policia.prenderRoubar) > 0) {
+				const faltam = ms(5400000 - (Date.now() - user.policia.prenderRoubar));
+
+				embed.addField(`👮 Prender/Roubo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			} else {
+				embed.addField(`👮 Prender/Roubo`, `Pode usar!`, true);
+			}
+
+			if (10800000 - (Date.now() - user.policia.prenderAtirar) > 0) {
+				const faltam = ms(10800000 - (Date.now() - user.policia.prenderAtirar));
+
+				embed.addField(`👮 Prender/Atirar`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+			} else {
+				embed.addField(`👮 Prender/Atirar`, `Pode usar!`, true);
 			}
 		}
 
 		if (server.cidade.mecanico.find((a) => a.id === author.id)) {
-			if (timeout12 - (Date.now() - user.cooldown.arrumarVeiculo) > 0) {
-				const faltam = ms(timeout12 - (Date.now() - user.cooldown.arrumarVeiculo));
+			if (60000 - (Date.now() - user.cooldown.arrumarVeiculo) > 0) {
+				const faltam = ms(60000 - (Date.now() - user.cooldown.arrumarVeiculo));
 
 				embed.addField(`🧑‍🔧 Arrumar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 			} else {
 				embed.addField(`🧑‍🔧 Arrumar Veículo`, `Pode usar!`, true);
 			}
 
-			if (timeout12 - (Date.now() - user.cooldown.emplacarVeiculo) > 0) {
-				const faltam = ms(timeout12 - (Date.now() - user.cooldown.emplacarVeiculo));
+			if (60000 - (Date.now() - user.cooldown.emplacarVeiculo) > 0) {
+				const faltam = ms(60000 - (Date.now() - user.cooldown.emplacarVeiculo));
 
 				embed.addField(`🧑‍🔧 Emplacar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 			} else {
 				embed.addField(`🧑‍🔧 Emplacar Veículo`, `Pode usar!`, true);
 			}
 
-			if (timeout12 - (Date.now() - user.cooldown.liberarVeiculo) > 0) {
-				const faltam = ms(timeout12 - (Date.now() - user.cooldown.liberarVeiculo));
+			if (60000 - (Date.now() - user.cooldown.liberarVeiculo) > 0) {
+				const faltam = ms(60000 - (Date.now() - user.cooldown.liberarVeiculo));
 
 				embed.addField(`🧑‍🔧 Liberar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
 			} else {
@@ -324,19 +324,24 @@ module.exports = class Cooldown extends Command {
 		}
 
 		if (server.cidade.donoDesmanche === author.id || server.cidade.ajudanteDesmanche.find((a) => a.id === author.id)) {
-			if (timeout12 - (Date.now() - user.cooldown.desmancharCarro) > 0) {
-				const faltam = ms(timeout12 - (Date.now() - user.cooldown.desmancharCarro));
+			if (60000 - (Date.now() - user.cooldown.desmancharCarro) > 0) {
+				const faltam = ms(60000 - (Date.now() - user.cooldown.desmancharCarro));
 
 				embed.addField(`🚗 Desmanchar Veículo`, `\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``, true);
+				embed.addField('\u200b', '\u200b', true);
 			} else {
 				embed.addField(`🚗 Desmanchar Veículo`, `Pode usar!`, true);
+				embed.addField('\u200b', '\u200b', true);
 			}
 		}
 
 		embed.setTitle('⏲️ | COOLDOWNS');
 		embed.setDescription('Veja o cooldown de cada comando abaixo:');
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

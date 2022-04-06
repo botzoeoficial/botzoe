@@ -1,14 +1,11 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
-/* eslint-disable max-nested-callbacks */
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
-const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
 
 module.exports = class BlackList extends Command {
 
@@ -101,10 +98,18 @@ module.exports = class BlackList extends Command {
 		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Usuário:** ${eu.nick} | **ID:** ${eu.id}\n`);
 		embed.setDescription(!server.blacklist.length ? 'Não há usuários cadastrados na blacklist no momento.' : `**DIGITE A POSIÇÃO DO USUÁRIO NO CHAT PARA VER INFORMAÇÕES SOBRE ELE!**\n\n${embedMessage}`);
 
-		message.channel.send(author, embed).then((msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
 			if (!server.blacklist.length) return;
 
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const filter2 = (m) => {
+				return m.author.id === author.id && !isNaN(m.content);
+			};
+
+			const sim = msg.channel.createMessageCollector({
+				filter: filter2,
 				time: 300000
 			});
 
@@ -113,9 +118,9 @@ module.exports = class BlackList extends Command {
 				const findSelectedEvento = eventosArray.find((xis) => xis.position === selected);
 
 				if (!findSelectedEvento) {
-					message.reply('número não encontrado! Por favor, envie o número novamente').then(ba => ba.delete({
-						timeout: 5000
-					}));
+					message.reply({
+						content: 'Número não encontrado. Por favor, envie o número novamente!'
+					}).then((a) => setTimeout(() => a.delete(), 6000));
 					ce.delete();
 				} else {
 					sim.stop();
@@ -129,33 +134,9 @@ module.exports = class BlackList extends Command {
 						.addField('💵 Saldo:', `R$${Utils.numberFormat(findSelectedEvento.saldo)},00`)
 						.addField('🗒️ Motivo:', findSelectedEvento.motivo);
 
-					const buttonLixeira = new MessageButton().setStyle('blurple').setEmoji('🗑️').setID('lixeira');
-					const botoes = new MessageActionRow().addComponents([buttonLixeira]);
-
-					msg.edit(author, {
-						embed: embed,
-						components: [botoes]
-					}).then(async (msg1) => {
-						const collectorBotoes = msg1.createButtonCollector((button) => button.clicker.user.id === author.id, {
-							time: 60000
-						});
-
-						collectorBotoes.on('collect', async (b) => {
-							if (b.id === 'lixeira') {
-								b.reply.defer();
-
-								return msg.delete();
-							}
-						});
-
-						collectorBotoes.on('end', async (collected, reason) => {
-							if (reason === 'time') {
-								return msg.edit(author, {
-									embed: embed,
-									components: []
-								});
-							}
-						});
+					return msg.edit({
+						content: author.toString(),
+						embeds: [embed]
 					});
 				}
 			});
@@ -163,9 +144,9 @@ module.exports = class BlackList extends Command {
 			sim.on('end', (collected, reason) => {
 				if (reason === 'time') {
 					msg.delete();
-					message.reply(`você demorou demais para escolher o usuário da blacklist! Use o comando novamente!`).then((a) => a.delete({
-						timeout: 6000
-					}));
+					message.reply({
+						content: 'Você demorou demais para escolher o usuário da blacklist. Use o comando novamente!'
+					});
 					sim.stop();
 					return;
 				}

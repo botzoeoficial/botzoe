@@ -43,23 +43,44 @@ module.exports = class Addvipdoador extends Command {
 		args,
 		author
 	}) {
+		if (!['463421520686088192', '707677540583735338'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
-		if (member.user.bot) return message.reply(`você não pode dar **VIP** para um bot.`);
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Você não pode dar **VIP** para um bot.'
+			});
+		}
 
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.vip.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é **VIP**.');
+		if (server.vip.map(a => a.id).includes(member.id)) {
+			return message.reply({
+				content: 'Esse usuário já é **VIP** desse servidor.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🔅 | VIP SETADO')
 			.setDescription(`💎 Parabéns <@${member.id}> 💎\n\n🥳 | Você acaba de se Tornar um ${message.guild.id === '885645282614861854' ? '<@&885645282644213812>' : '**❪💎❯❱❱ ❱ VIP Premium**'}\n\n🗓️ | O prazo do seu plano é de 30 Dias à partir de agora.`);
 
-		message.channel.send(member, embed);
+		message.reply({
+			content: member.toString(),
+			embeds: [embed]
+		});
 
 		if (message.guild.id === '885645282614861854') {
 			member.roles.add('885645282644213812');
@@ -77,7 +98,9 @@ module.exports = class Addvipdoador extends Command {
 		});
 
 		this.extendedSetTimeout(async () => {
-			member.roles.remove('885645282644213812');
+			if (message.guild.id === '885645282614861854') {
+				member.roles.remove('885645282644213812');
+			}
 
 			await this.client.database.guilds.findOneAndUpdate({
 				_id: message.guild.id
@@ -89,6 +112,8 @@ module.exports = class Addvipdoador extends Command {
 				}
 			});
 		}, 30 * 24 * 60 * 60 * 1000);
+
+		return;
 	}
 
 	extendedSetTimeout(callback, ms) {

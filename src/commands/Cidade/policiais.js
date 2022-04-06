@@ -51,7 +51,10 @@ module.exports = class Policiais extends Command {
 			.addField('👮 | Policiais:', !server.cidade.policiais.length ? `Essa cidade não possui **policiais** ainda! Use o comando \`${prefix}addpolicial\`.` : server.cidade.policiais.map((a) => `<@${a.id}>`).join('\n'))
 			.addField('🙎 | Carcereiros:', !server.cidade.carcereiro.length ? `Essa cidade não possui **carcereiros** ainda! Use o comando \`${prefix}addcarcereiro\`.` : server.cidade.carcereiro.map((a) => `<@${a.id}>`).join('\n'));
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

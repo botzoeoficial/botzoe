@@ -54,7 +54,10 @@ module.exports = class Bolsa extends Command {
 			.setColor('#1cfc03')
 			.addField('🕑 | Tempo para Atualização da Bolsa', `${faltam.minutes}m ${faltam.seconds}s\n\n***Faça um Bom Investimento!***`);
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

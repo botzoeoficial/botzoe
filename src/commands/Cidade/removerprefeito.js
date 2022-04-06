@@ -46,7 +46,17 @@ module.exports = class Removerprefeito extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
 
 		const {
 			channel
@@ -58,7 +68,10 @@ module.exports = class Removerprefeito extends Command {
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
 				.setDescription(`${author}, não é possível remover o Prefeito, pois está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const channel2 = server.cidade.eleicao.channel;
@@ -69,7 +82,10 @@ module.exports = class Removerprefeito extends Command {
 				.setTitle('<:Urna:895779255491911740> | Eleição')
 				.setDescription(`${author}, não é possível remover o Prefeito, pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const channel3 = server.cidade.golpeEstado.channel;
@@ -80,16 +96,31 @@ module.exports = class Removerprefeito extends Command {
 				.setTitle('🕵️ | Golpe de Estado')
 				.setDescription(`${author}, não é possível remover o Prefeito, pois está rolando um **Golpe de Estado** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel3}/${msg3})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
-		if (member.user.bot) return message.reply(`um bot não nunca irá ser Prefeito da cidade.`);
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot não nunca irá ser Prefeito desse servidor.'
+			});
+		}
 
-		if (server.cidade.governador !== member.id) return message.reply('esse usuário não é o Prefeito desse servidor.');
+		if (server.cidade.governador !== member.id) {
+			return message.reply({
+				content: 'Esse usuário não é o Prefeito desse servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -100,7 +131,9 @@ module.exports = class Removerprefeito extends Command {
 			}
 		});
 
-		message.reply('usuário removido do cargo Prefeito com sucesso.');
+		return message.reply({
+			content: `O usuário ${member} saiu do cargo de Prefeito desse servidor com sucesso.`
+		});
 	}
 
 };

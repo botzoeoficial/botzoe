@@ -36,35 +36,71 @@ module.exports = class Removersaldo extends Command {
 	}
 	async run({
 		message,
-		prefix,
-		args
+		args,
+		author
 	}) {
+		if (!['463421520686088192', '707677540583735338'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
 		const user = await this.client.database.users.findOne({
 			userId: member.id,
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no meu **banco de dados**.');
-
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no meu **banco de dados**.'
+			});
+		}
 
 		const btc = args[1];
 
-		if (!btc) return message.reply('você precisa colocar uma quantia de saldo.');
+		if (!btc) {
+			return message.reply({
+				content: 'Você precisa colocar uma quantia de saldo.'
+			});
+		}
 
-		if (!parseInt(btc)) return message.reply('você precisa colocar uma quantia válida.');
+		if (!parseInt(btc)) {
+			return message.reply({
+				content: 'Você precisa colocar uma quantia válida.'
+			});
+		}
 
-		if (parseInt(btc) <= 0) return message.reply('a quantia a ser removida precisa ser maior que **0**.');
+		if (parseInt(btc) <= 0) {
+			return message.reply({
+				content: 'A quantia a ser removida precisa ser maior que **0**.'
+			});
+		}
 
-		if (user.saldo <= 0) return message.reply('esse usuário não há saldo para ser retirado.');
+		if (user.saldo <= 0) {
+			return message.reply({
+				content: 'Esse usuário não há saldo para ser retirado.'
+			});
+		}
 
-		if (parseInt(btc) > user.saldo) return message.reply('esse usuário não tem essa quantia toda para ser retirada.');
+		if (parseInt(btc) > user.saldo) {
+			return message.reply({
+				content: 'Esse usuário não tem essa quantia toda para ser retirada.'
+			});
+		}
 
-		if (isNaN(btc)) return message.reply('você precisa colocar apenas números, não **letras** ou **números junto com letras**!');
+		if (isNaN(btc)) {
+			return message.reply({
+				content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**!'
+			});
+		}
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: member.id,
@@ -75,7 +111,9 @@ module.exports = class Removersaldo extends Command {
 			}
 		});
 
-		message.reply(`saldo retirado com sucesso para o usuário ${member}.`);
+		message.reply({
+			content: `Saldo retirado com sucesso do usuário ${member}.`
+		});
 	}
 
 };

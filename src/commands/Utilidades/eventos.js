@@ -61,7 +61,10 @@ module.exports = class Eventos extends Command {
 		eventosArray.forEach((eu) => embedMessage += `**Evento:** ${eu.nome} | **Data:** ${eu.date} | **Hora:** ${eu.hour} | **Tag:** <@&${eu.tag}>\n`);
 		embed.setDescription(!server.eventos.length ? 'Não há eventos cadastrados no momento.' : `${embedMessage}`);
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

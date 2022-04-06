@@ -55,7 +55,10 @@ module.exports = class Favela extends Command {
 			.addField('Dono da Lavagem de Dinheiro:', server.cidade.donoLavagem === '' ? `Essa cidade não possui um **Dono da Lavagem de Dinheiro** ainda! Use o comando \`${prefix}setdonolavagem\`.` : `<@${server.cidade.donoLavagem}>`)
 			.addField('Ajudantes da Lavagem de Dinheiro:', !server.cidade.ajudanteLavagem.length ? `Essa cidade não possui **Ajudantes da Lavagem de Dinheiro** ainda! Use o comando \`${prefix}setajudantelavagem\`.` : server.cidade.ajudanteLavagem.map((a) => `<@${a.id}>`).join('\n'));
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

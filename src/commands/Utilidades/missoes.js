@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-return-assign */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
@@ -91,10 +93,18 @@ module.exports = class Missoes extends Command {
 		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Missão:** ${eu.nome}\n`);
 		embed.setDescription(!server.missoes.length ? 'Não há missões cadastradas no momento.' : `**DIGITE A POSIÇÃO DA MISSÃO NO CHAT PARA VER INFORMAÇÕES SOBRE ELA!**\n\n${embedMessage}`);
 
-		message.channel.send(author, embed).then((msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
 			if (!server.missoes.length) return;
 
-			const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const filter = (m) => {
+				return m.author.id === author.id && !isNaN(m.content);
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
 				time: 60000
 			});
 
@@ -103,9 +113,9 @@ module.exports = class Missoes extends Command {
 				const findSelectedEvento = eventosArray.find((xis) => xis.position === selected);
 
 				if (!findSelectedEvento) {
-					message.reply(`este número não existe! Por favor, envie o número da missão novamente.`).then(a => a.delete({
-						timeout: 5000
-					}));
+					message.reply({
+						content: 'Este número não existe! Por favor, envie o número da missão novamente.'
+					}).then((a) => setTimeout(() => a.delete(), 6000));
 					ce.delete();
 				} else {
 					collector.stop();
@@ -115,7 +125,10 @@ module.exports = class Missoes extends Command {
 						.setDescription(findSelectedEvento.desc);
 
 					ce.delete();
-					msg.edit(author, embed);
+					return msg.edit({
+						content: author.toString(),
+						embeds: [embed]
+					});
 				}
 			});
 		});

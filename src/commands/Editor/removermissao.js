@@ -37,20 +37,37 @@ module.exports = class Removermissao extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (!server.missoes.length) return message.reply('não há missões cadastradas no momento para retirar alguma.');
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (!server.missoes.length) {
+			return message.reply({
+				content: 'Não há missões cadastradas no momento para retirar alguma.'
+			});
+		}
 
 		const nome = args.slice(0).join(' ');
 
-		if (!nome) return message.reply('você precisa colocar o nome da missão.');
+		if (!nome) {
+			return message.reply({
+				content: 'Você precisa colocar o nome da missão.'
+			});
+		}
 
 		if (!server.missoes.find((f) => f.nome === nome)) {
-			return message.reply('não existe uma missão com esse nome na **lista de missões**.');
+			return message.reply({
+				content: 'Não existe uma missão com esse nome na **lista de missões**.'
+			});
 		}
 
 		await this.client.database.guilds.findOneAndUpdate({
@@ -63,7 +80,9 @@ module.exports = class Removermissao extends Command {
 			}
 		});
 
-		message.reply('missão removida com sucesso.');
+		return message.reply({
+			content: `Missão removida com sucesso.`
+		});
 	}
 
 };

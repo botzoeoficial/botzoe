@@ -3,9 +3,9 @@
 const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Divorce extends Command {
 
@@ -50,44 +50,44 @@ module.exports = class Divorce extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.marry.has) return message.reply(`você não está casado! Use o comando \`${prefix}casar\`.`);
+		if (!user.marry.has) {
+			return message.reply({
+				content: `Você não está casado! Use o comando \`${prefix}casar\`.`
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('💔 | DIVÓRCIO')
 			.setDescription(`💍 | Você realmente deseja se divorciar de: <@${user.marry.user}>?`);
 
-		const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-		const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+		const buttonSim = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+		const buttonNao = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 		const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-		message.channel.send(author, {
-			embed: embed,
+		message.reply({
+			content: author.toString(),
+			embeds: [embed],
 			components: [botoes]
 		}).then(async (msg) => {
-			const collectorBotoes = msg.createButtonCollector((button) => button.clicker.user.id === author.id, {
+			const filter = (interaction) => interaction.isButton() && ['aceitar', 'negar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorBotoes = msg.createMessageComponentCollector({
+				filter,
 				time: 60000,
 				max: 1
 			});
 
 			collectorBotoes.on('collect', async (b) => {
-				if (b.id === 'aceitar') {
-					b.reply.defer();
+				if (b.customId === 'aceitar') {
+					await b.deferUpdate();
 
 					const embed2 = new ClientEmbed(author)
 						.setTitle('💔 | DIVÓRCIO')
 						.setDescription(`👍  | Você se divorciou de <@${user.marry.user}> com sucesso, mas ele(a) ficou com o violão e seu cachorro!!`);
 
-					message.channel.send(author, embed2);
-
-					await this.client.database.users.findOneAndUpdate({
-						userId: author.id,
-						guildId: message.guild.id
-					}, {
-						$set: {
-							'marry.user': 'Ninguém.',
-							'marry.has': false,
-							familia: []
-						}
+					message.reply({
+						content: author.toString(),
+						embeds: [embed2]
 					});
 
 					await this.client.database.users.findOneAndUpdate({
@@ -100,12 +100,27 @@ module.exports = class Divorce extends Command {
 							familia: []
 						}
 					});
-				} else if (b.id === 'negar') {
-					b.reply.defer();
+
+					await this.client.database.users.findOneAndUpdate({
+						userId: author.id,
+						guildId: message.guild.id
+					}, {
+						$set: {
+							'marry.user': 'Ninguém.',
+							'marry.has': false,
+							familia: []
+						}
+					});
+
+					return msg.delete();
+				} else if (b.customId === 'negar') {
+					await b.deferUpdate();
 
 					msg.delete();
 
-					return message.reply('pelo visto você desistiu de se divorciar! ||É uma pena, você iria ser feliz **solteiro(a)**!||');
+					return message.reply({
+						content: 'Pelo visto você desistiu de se divorciar! ||É uma pena, você iria ser feliz **solteiro(a)**!||'
+					});
 				}
 			});
 
@@ -113,7 +128,9 @@ module.exports = class Divorce extends Command {
 				if (reason === 'time') {
 					msg.delete();
 
-					return message.reply('você demorou demais para se divorciar. Use o comando novamente!');
+					return message.reply({
+						content: 'Você demorou demais para se divorciar. Use o comando novamente!'
+					});
 				}
 			});
 		});

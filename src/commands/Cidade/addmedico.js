@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
 
@@ -10,7 +11,7 @@ module.exports = class Addmedico extends Command {
 
 		this.name = 'addmedico';
 		this.category = 'Cidade';
-		this.description = 'Adicione um Médico na sua cidade!';
+		this.description = 'Adicione um Médico no seu servidor!';
 		this.usage = 'addmedico <usuário>';
 		this.aliases = ['add-medico'];
 
@@ -36,23 +37,50 @@ module.exports = class Addmedico extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.governador !== author.id && server.cidade.diretorHP !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Prefeito\` ou \`Diretor do Hospital\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
+
+		if (server.cidade.medicos.length === 10) {
+			return message.reply({
+				content: 'Esse servidor já possui o máximo de Médicos.'
+			});
+		}
 
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!member) return message.reply('você precisa mencionar um usuário junto com o comando.');
+		if (!member) {
+			return message.reply({
+				content: 'Você precisa mencionar um usuário junto com o comando.'
+			});
+		}
 
-		if (member.user.bot) return message.reply(`você não pode dar função de Médico para um bot.`);
+		if (member.user.bot) {
+			return message.reply({
+				content: 'Um bot nunca será Médico do servidor.'
+			});
+		}
 
-		if (server.cidade.medicos.length === 10) return message.reply('esse servidor já possui o máximo de Médicos.');
-
-		if (server.cidade.medicos.map(a => a.id).includes(member.id)) return message.reply('esse usuário já é Médico do servidor.');
+		if (server.cidade.medicos.map(a => a.id).includes(member.id)) {
+			return message.reply({
+				content: 'Esse usuário já é Médico do servidor.'
+			});
+		}
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -64,7 +92,9 @@ module.exports = class Addmedico extends Command {
 			}
 		});
 
-		message.reply(`o usuário ${member} virou Médico desse servidor agora.`);
+		return message.reply({
+			content: `O usuário ${member} entrou no cargo de Médico desse servidor com sucesso.`
+		});
 	}
 
 };

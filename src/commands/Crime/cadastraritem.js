@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-inline-comments */
 /* eslint-disable id-length */
 /* eslint-disable max-nested-callbacks */
@@ -52,7 +53,11 @@ module.exports = class Cadastraritem extends Command {
 			guildId: message.guild.id
 		});
 
-		if (userVenda.cadastrandoItem) return message.reply(`você usou o comando \`${prefix}vender\` ou \`${prefix}cadastraritem\` e deixou ele rodando. Digite \`0\` para cancelar ele e usar esse comando novamente!`);
+		if (userVenda.cadastrandoItem) {
+			return message.reply({
+				content: `Você usou o comando \`${prefix}vender\` ou \`${prefix}cadastraritem\` e deixou ele rodando. Digite \`0\` para cancelar ele e usar esse comando novamente!`
+			});
+		}
 
 		await this.client.database.users.findOneAndUpdate({
 			userId: author.id,
@@ -127,8 +132,16 @@ module.exports = class Cadastraritem extends Command {
 		mapCategorias.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **${eu.categoria}**\n`);
 		embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage}\nDigite \`0\` para sair.`);
 
-		message.channel.send(author, embed).then(async (msg) => {
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
+			const filter2 = (m) => {
+				return m.author.id === author.id && !isNaN(m.content);
+			};
+
+			const sim = msg.channel.createMessageCollector({
+				filter: filter2,
 				time: 300000
 			});
 
@@ -146,7 +159,9 @@ module.exports = class Cadastraritem extends Command {
 						}
 					});
 
-					return message.reply(`seleção cancelada com sucesso!`);
+					return message.reply({
+						content: 'Seleção cancelada com sucesso!'
+					});
 				} else {
 					const selected = Number(ce.content - 1);
 					const findSelectedEvento = mapCategorias.find((xis) => xis.position === selected);
@@ -165,7 +180,9 @@ module.exports = class Cadastraritem extends Command {
 							}
 						});
 
-						return message.reply('número não encontrado. Por favor, use o comando novamente!');
+						return message.reply({
+							content: 'Número não encontrado. Por favor, use o comando novamente!'
+						});
 					} else if (findSelectedEvento.position === 0) {
 						ce.delete();
 						sim.stop();
@@ -195,8 +212,16 @@ module.exports = class Cadastraritem extends Command {
 						mapDrogas.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} - ${eu.emoji} - **${eu.droga}**\n`);
 						embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage2}\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							const sim2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg1) => {
+							const filter3 = (m) => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg1.channel.createMessageCollector({
+								filter: filter3,
 								time: 300000
 							});
 
@@ -215,7 +240,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else {
 									const selected2 = Number(ce2.content - 1);
 									const findSelectedEvento2 = mapDrogas.find((xis) => xis.position === selected2);
@@ -243,7 +270,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Número não encontrado. Por favor, use o comando novamente!'
+										});
 									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.droga)) {
 										msg.delete();
 										ce2.delete();
@@ -258,7 +287,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!'
+										});
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.droga)) {
 										msg.delete();
 										ce2.delete();
@@ -273,7 +304,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										return message.reply({
+											content: ':x: | Você não possui este produto para vender.'
+										});
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -281,8 +314,16 @@ module.exports = class Cadastraritem extends Command {
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.droga}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										message.channel.send(author, embed).then(async (msg2) => {
-											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+										message.reply({
+											content: author.toString(),
+											embeds: [embed]
+										}).then(async (msg2) => {
+											const filter4 = (m) => {
+												return m.author.id === author.id && !isNaN(m.content);
+											};
+
+											const collector = msg2.channel.createMessageCollector({
+												filter: filter4,
 												time: 60000
 											});
 
@@ -301,7 +342,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`seleção cancelada com sucesso!`);
+													return message.reply({
+														content: 'Seleção cancelada com sucesso!'
+													});
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
@@ -318,7 +361,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
+													return message.reply({
+														content: 'Coloque uma quantia válida. Por favor, use o comando novamente!'
+													});
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.droga).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg2.delete();
@@ -333,7 +378,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.droga}\` na sua **mochila**. Por favor, envie o comando novamente!`);
+													return message.reply({
+														content: `:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.droga}\` na sua **mochila**. Por favor, envie o comando novamente!`
+													});
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -341,8 +388,16 @@ module.exports = class Cadastraritem extends Command {
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													message.channel.send(author, embed).then(async (msg3) => {
-														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
+													message.reply({
+														content: author.toString(),
+														embeds: [embed]
+													}).then(async (msg3) => {
+														const filter5 = (m) => {
+															return m.author.id === author.id && !isNaN(m.content);
+														};
+
+														const collector2 = msg3.channel.createMessageCollector({
+															filter: filter5,
 															time: 60000
 														});
 
@@ -361,7 +416,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`seleção cancelada com sucesso!`);
+																return message.reply({
+																	content: 'Seleção cancelada com sucesso!'
+																});
 															}
 
 															if (Number(ce4.content) <= 0 || isNaN(ce4.content)) {
@@ -378,7 +435,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
+																return message.reply({
+																	content: 'Coloque um preço válido. Por favor, use o comando novamente!'
+																});
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -424,8 +483,16 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																message.channel.send(author, embed).then(async (msg4) => {
-																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+																message.reply({
+																	content: author.toString(),
+																	embeds: [embed]
+																}).then(async (msg4) => {
+																	const filter6 = (m) => {
+																		return m.author.id === author.id && !isNaN(m.content);
+																	};
+
+																	const sim3 = msg4.channel.createMessageCollector({
+																		filter: filter6,
 																		time: 300000
 																	});
 
@@ -445,7 +512,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply(`seleção cancelada com sucesso!`);
+																			return message.reply({
+																				content: 'Seleção cancelada com sucesso!'
+																			});
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
@@ -464,7 +533,9 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
+																				return message.reply({
+																					content: 'Número não encontrado. Por favor, use o comando novamente!'
+																				});
 																			} else {
 																				msg4.delete();
 
@@ -485,7 +556,10 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				message.channel.send(author, embed);
+																				message.reply({
+																					content: author.toString(),
+																					embeds: [embed]
+																				});
 																				sim3.stop();
 																				ce5.delete();
 
@@ -638,7 +712,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
+																			return message.reply({
+																				content: 'Você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!'
+																			});
 																		}
 																	});
 																});
@@ -659,7 +735,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
+																return message.reply({
+																	content: 'Você demorou demais para mandar o preço do produto. Use o comando novamente!'
+																});
 															}
 														});
 													});
@@ -680,7 +758,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
+													return message.reply({
+														content: 'Você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!'
+													});
 												}
 											});
 										});
@@ -702,7 +782,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -747,8 +829,16 @@ module.exports = class Cadastraritem extends Command {
 						mapArmas.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} - ${eu.emoji} - **${eu.arma}**\n`);
 						embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage2}\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							const sim2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg1) => {
+							const filter3 = (m) => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg1.channel.createMessageCollector({
+								filter: filter3,
 								time: 300000
 							});
 
@@ -766,7 +856,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else {
 									const selected2 = Number(ce2.content - 1);
 									const findSelectedEvento2 = mapArmas.find((xis) => xis.position === selected2);
@@ -794,7 +886,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Número não encontrado. Por favor, use o comando novamente!'
+										});
 									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.arma)) {
 										msg.delete();
 										ce2.delete();
@@ -809,7 +903,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!'
+										});
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.arma)) {
 										msg.delete();
 										ce2.delete();
@@ -824,7 +920,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										return message.reply({
+											content: ':x: | Você não possui este produto para vender.'
+										});
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -832,8 +930,16 @@ module.exports = class Cadastraritem extends Command {
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.arma}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										message.channel.send(author, embed).then(async (msg2) => {
-											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+										message.reply({
+											content: author.toString(),
+											embeds: [embed]
+										}).then(async (msg2) => {
+											const filter4 = (m) => {
+												return m.author.id === author.id && !isNaN(m.content);
+											};
+
+											const collector = msg2.channel.createMessageCollector({
+												filter: filter4,
 												time: 60000
 											});
 
@@ -851,7 +957,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`seleção cancelada com sucesso!`);
+													return message.reply({
+														content: 'Seleção cancelada com sucesso!'
+													});
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
@@ -868,7 +976,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
+													return message.reply({
+														content: 'Coloque uma quantia válida. Por favor, use o comando novamente!'
+													});
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.arma).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg2.delete();
@@ -883,7 +993,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.arma}\` na sua **mochila**. Por favor, envie o comando novamente!`);
+													return message.reply({
+														content: `:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.arma}\` na sua **mochila**. Por favor, envie o comando novamente!`
+													});
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -891,8 +1003,16 @@ module.exports = class Cadastraritem extends Command {
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													message.channel.send(author, embed).then(async (msg3) => {
-														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
+													message.reply({
+														content: author.toString(),
+														embeds: [embed]
+													}).then(async (msg3) => {
+														const filter5 = (m) => {
+															return m.author.id === author.id && !isNaN(m.content);
+														};
+
+														const collector2 = msg3.channel.createMessageCollector({
+															filter: filter5,
 															time: 60000
 														});
 
@@ -910,7 +1030,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`seleção cancelada com sucesso!`);
+																return message.reply({
+																	content: 'Seleção cancelada com sucesso!'
+																});
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
@@ -927,7 +1049,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
+																return message.reply({
+																	content: 'Coloque um preço válido. Por favor, use o comando novamente!'
+																});
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -973,11 +1097,18 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																message.channel.send(author, embed).then(async (msg4) => {
-																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+																message.reply({
+																	content: author.toString(),
+																	embeds: [embed]
+																}).then(async (msg4) => {
+																	const filter6 = (m) => {
+																		return m.author.id === author.id && !isNaN(m.content);
+																	};
+
+																	const sim3 = msg4.channel.createMessageCollector({
+																		filter: filter6,
 																		time: 300000
 																	});
-
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
@@ -993,7 +1124,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply(`seleção cancelada com sucesso!`);
+																			return message.reply({
+																				content: 'Seleção cancelada com sucesso!'
+																			});
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
@@ -1012,7 +1145,9 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
+																				return message.reply({
+																					content: 'Número não encontrado. Por favor, use o comando novamente!'
+																				});
 																			} else {
 																				msg4.delete();
 
@@ -1033,7 +1168,10 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				message.channel.send(author, embed);
+																				message.reply({
+																					content: author.toString(),
+																					embeds: [embed]
+																				});
 																				sim3.stop();
 																				ce5.delete();
 
@@ -1184,7 +1322,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
+																			return message.reply({
+																				content: 'Você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!'
+																			});
 																		}
 																	});
 																});
@@ -1205,7 +1345,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
+																return message.reply({
+																	content: 'Você demorou demais para mandar o preço do produto. Use o comando novamente!'
+																});
 															}
 														});
 													});
@@ -1226,7 +1368,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
+													return message.reply({
+														content: 'Você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!'
+													});
 												}
 											});
 										});
@@ -1248,7 +1392,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -1278,8 +1424,16 @@ module.exports = class Cadastraritem extends Command {
 						mapMunicao.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} - ${eu.emoji} - **${eu.municao}**\n`);
 						embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage2}\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							const sim2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg1) => {
+							const filter3 = (m) => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg1.channel.createMessageCollector({
+								filter: filter3,
 								time: 300000
 							});
 
@@ -1297,7 +1451,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else {
 									const selected2 = Number(ce2.content - 1);
 									const findSelectedEvento2 = mapMunicao.find((xis) => xis.position === selected2);
@@ -1325,7 +1481,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Número não encontrado. Por favor, use o comando novamente!'
+										});
 									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.municao)) {
 										msg.delete();
 										ce2.delete();
@@ -1340,7 +1498,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!'
+										});
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.municao)) {
 										msg.delete();
 										ce2.delete();
@@ -1355,7 +1515,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										return message.reply({
+											content: ':x: | Você não possui este produto para vender.'
+										});
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1363,8 +1525,16 @@ module.exports = class Cadastraritem extends Command {
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.municao}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										message.channel.send(author, embed).then(async (msg2) => {
-											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+										message.reply({
+											content: author.toString(),
+											embeds: [embed]
+										}).then(async (msg2) => {
+											const filter4 = (m) => {
+												return m.author.id === author.id && !isNaN(m.content);
+											};
+
+											const collector = msg2.channel.createMessageCollector({
+												filter: filter4,
 												time: 60000
 											});
 
@@ -1382,7 +1552,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`seleção cancelada com sucesso!`);
+													return message.reply({
+														content: 'Seleção cancelada com sucesso!'
+													});
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
@@ -1399,7 +1571,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
+													return message.reply({
+														content: 'Coloque uma quantia válida. Por favor, use o comando novamente!'
+													});
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.municao).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg2.delete();
@@ -1414,7 +1588,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.municao}\` na sua **mochila**. Por favor, envie o comando novamente!`);
+													return message.reply({
+														content: `:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.municao}\` na sua **mochila**. Por favor, envie o comando novamente!`
+													});
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -1422,8 +1598,16 @@ module.exports = class Cadastraritem extends Command {
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													message.channel.send(author, embed).then(async (msg3) => {
-														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
+													message.reply({
+														content: author.toString(),
+														embeds: [embed]
+													}).then(async (msg3) => {
+														const filter5 = (m) => {
+															return m.author.id === author.id && !isNaN(m.content);
+														};
+
+														const collector2 = msg3.channel.createMessageCollector({
+															filter: filter5,
 															time: 60000
 														});
 
@@ -1441,7 +1625,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`seleção cancelada com sucesso!`);
+																return message.reply({
+																	content: 'Seleção cancelada com sucesso!'
+																});
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
@@ -1458,7 +1644,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
+																return message.reply({
+																	content: 'Coloque um preço válido. Por favor, use o comando novamente!'
+																});
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -1504,11 +1692,18 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																message.channel.send(author, embed).then(async (msg4) => {
-																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+																message.reply({
+																	content: author.toString(),
+																	embeds: [embed]
+																}).then(async (msg4) => {
+																	const filter6 = (m) => {
+																		return m.author.id === author.id && !isNaN(m.content);
+																	};
+
+																	const sim3 = msg4.channel.createMessageCollector({
+																		filter: filter6,
 																		time: 300000
 																	});
-
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
@@ -1524,7 +1719,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply(`seleção cancelada com sucesso!`);
+																			return message.reply({
+																				content: 'Seleção cancelada com sucesso!'
+																			});
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
@@ -1543,7 +1740,9 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
+																				return message.reply({
+																					content: 'Número não encontrado. Por favor, use o comando novamente!'
+																				});
 																			} else {
 																				msg4.delete();
 
@@ -1564,7 +1763,10 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				message.channel.send(author, embed);
+																				message.reply({
+																					content: author.toString(),
+																					embeds: [embed]
+																				});
 																				sim3.stop();
 																				ce5.delete();
 
@@ -1715,7 +1917,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
+																			return message.reply({
+																				content: 'Você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!'
+																			});
 																		}
 																	});
 																});
@@ -1736,7 +1940,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
+																return message.reply({
+																	content: 'Você demorou demais para mandar o preço do produto. Use o comando novamente!'
+																});
 															}
 														});
 													});
@@ -1757,7 +1963,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
+													return message.reply({
+														content: 'Você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!'
+													});
 												}
 											});
 										});
@@ -1779,7 +1987,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -1803,8 +2013,16 @@ module.exports = class Cadastraritem extends Command {
 						mapChave.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} - ${eu.emoji} - **${eu.chave}**\n`);
 						embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage2}\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							const sim2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg1) => {
+							const filter3 = (m) => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg1.channel.createMessageCollector({
+								filter: filter3,
 								time: 300000
 							});
 
@@ -1822,7 +2040,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else {
 									const selected2 = Number(ce2.content - 1);
 									const findSelectedEvento2 = mapChave.find((xis) => xis.position === selected2);
@@ -1850,7 +2070,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Número não encontrado. Por favor, use o comando novamente!'
+										});
 									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.chave)) {
 										msg.delete();
 										ce2.delete();
@@ -1865,7 +2087,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!'
+										});
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.chave)) {
 										msg.delete();
 										ce2.delete();
@@ -1880,7 +2104,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										return message.reply({
+											content: ':x: | Você não possui este produto para vender.'
+										});
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -1888,8 +2114,16 @@ module.exports = class Cadastraritem extends Command {
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.chave}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										message.channel.send(author, embed).then(async (msg2) => {
-											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+										message.reply({
+											content: author.toString(),
+											embeds: [embed]
+										}).then(async (msg2) => {
+											const filter4 = (m) => {
+												return m.author.id === author.id && !isNaN(m.content);
+											};
+
+											const collector = msg2.channel.createMessageCollector({
+												filter: filter4,
 												time: 60000
 											});
 
@@ -1907,7 +2141,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`seleção cancelada com sucesso!`);
+													return message.reply({
+														content: 'Seleção cancelada com sucesso!'
+													});
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
@@ -1924,7 +2160,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
+													return message.reply({
+														content: 'Coloque uma quantia válida. Por favor, use o comando novamente!'
+													});
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.chave).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg2.delete();
@@ -1939,7 +2177,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.chave}\` na sua **mochila**. Por favor, envie o comando novamente!`);
+													return message.reply({
+														content: `:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.chave}\` na sua **mochila**. Por favor, envie o comando novamente!`
+													});
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -1947,8 +2187,16 @@ module.exports = class Cadastraritem extends Command {
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													message.channel.send(author, embed).then(async (msg3) => {
-														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
+													message.reply({
+														content: author.toString(),
+														embeds: [embed]
+													}).then(async (msg3) => {
+														const filter5 = (m) => {
+															return m.author.id === author.id && !isNaN(m.content);
+														};
+
+														const collector2 = msg3.channel.createMessageCollector({
+															filter: filter5,
 															time: 60000
 														});
 
@@ -1966,7 +2214,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`seleção cancelada com sucesso!`);
+																return message.reply({
+																	content: 'Seleção cancelada com sucesso!'
+																});
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
@@ -1983,7 +2233,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
+																return message.reply({
+																	content: 'Coloque um preço válido. Por favor, use o comando novamente!'
+																});
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -2029,11 +2281,18 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																message.channel.send(author, embed).then(async (msg4) => {
-																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+																message.reply({
+																	content: author.toString(),
+																	embeds: [embed]
+																}).then(async (msg4) => {
+																	const filter6 = (m) => {
+																		return m.author.id === author.id && !isNaN(m.content);
+																	};
+
+																	const sim3 = msg4.channel.createMessageCollector({
+																		filter: filter6,
 																		time: 300000
 																	});
-
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
@@ -2049,7 +2308,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply(`seleção cancelada com sucesso!`);
+																			return message.reply({
+																				content: 'Seleção cancelada com sucesso!'
+																			});
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
@@ -2068,7 +2329,9 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
+																				return message.reply({
+																					content: 'Número não encontrado. Por favor, use o comando novamente!'
+																				});
 																			} else {
 																				msg4.delete();
 
@@ -2089,7 +2352,10 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				message.channel.send(author, embed);
+																				message.reply({
+																					content: author.toString(),
+																					embeds: [embed]
+																				});
 																				sim3.stop();
 																				ce5.delete();
 
@@ -2240,7 +2506,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
+																			return message.reply({
+																				content: 'Você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!'
+																			});
 																		}
 																	});
 																});
@@ -2261,7 +2529,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
+																return message.reply({
+																	content: 'Você demorou demais para mandar o preço do produto. Use o comando novamente!'
+																});
 															}
 														});
 													});
@@ -2282,7 +2552,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
+													return message.reply({
+														content: 'Você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!'
+													});
 												}
 											});
 										});
@@ -2304,7 +2576,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -2346,8 +2620,16 @@ module.exports = class Cadastraritem extends Command {
 						mapMinerio.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} - ${eu.emoji} - **${eu.minerio}**\n`);
 						embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage2}\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							const sim2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg1) => {
+							const filter3 = (m) => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg1.channel.createMessageCollector({
+								filter: filter3,
 								time: 300000
 							});
 
@@ -2366,7 +2648,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else {
 									const selected2 = Number(ce2.content - 1);
 									const findSelectedEvento2 = mapMinerio.find((xis) => xis.position === selected2);
@@ -2394,7 +2678,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Número não encontrado. Por favor, use o comando novamente!'
+										});
 									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.minerio)) {
 										msg.delete();
 										ce2.delete();
@@ -2409,7 +2695,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!'
+										});
 									} else if (!user2.inventory.find((a) => a.item === findSelectedEvento2.minerio)) {
 										msg.delete();
 										ce2.delete();
@@ -2424,7 +2712,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										return message.reply({
+											content: ':x: | Você não possui este produto para vender.'
+										});
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -2432,8 +2722,16 @@ module.exports = class Cadastraritem extends Command {
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.minerio}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										message.channel.send(author, embed).then(async (msg2) => {
-											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+										message.reply({
+											content: author.toString(),
+											embeds: [embed]
+										}).then(async (msg2) => {
+											const filter4 = (m) => {
+												return m.author.id === author.id && !isNaN(m.content);
+											};
+
+											const collector = msg2.channel.createMessageCollector({
+												filter: filter4,
 												time: 60000
 											});
 
@@ -2452,7 +2750,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`seleção cancelada com sucesso!`);
+													return message.reply({
+														content: 'Seleção cancelada com sucesso!'
+													});
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
@@ -2469,7 +2769,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
+													return message.reply({
+														content: 'Coloque uma quantia válida. Por favor, use o comando novamente!'
+													});
 												} else if (user2.inventory.find((a) => a.item === findSelectedEvento2.minerio).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg2.delete();
@@ -2484,7 +2786,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.minerio}\` no seu **inventário**!`);
+													return message.reply({
+														content: `:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.minerio}\` no seu **inventário**!`
+													});
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -2492,8 +2796,16 @@ module.exports = class Cadastraritem extends Command {
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													message.channel.send(author, embed).then(async (msg3) => {
-														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
+													message.reply({
+														content: author.toString(),
+														embeds: [embed]
+													}).then(async (msg3) => {
+														const filter5 = (m) => {
+															return m.author.id === author.id && !isNaN(m.content);
+														};
+
+														const collector2 = msg3.channel.createMessageCollector({
+															filter: filter5,
 															time: 60000
 														});
 
@@ -2512,7 +2824,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`seleção cancelada com sucesso!`);
+																return message.reply({
+																	content: 'Seleção cancelada com sucesso!'
+																});
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
@@ -2529,7 +2843,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
+																return message.reply({
+																	content: 'Coloque um preço válido. Por favor, use o comando novamente!'
+																});
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -2575,11 +2891,18 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																message.channel.send(author, embed).then(async (msg4) => {
-																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+																message.reply({
+																	content: author.toString(),
+																	embeds: [embed]
+																}).then(async (msg4) => {
+																	const filter6 = (m) => {
+																		return m.author.id === author.id && !isNaN(m.content);
+																	};
+
+																	const sim3 = msg4.channel.createMessageCollector({
+																		filter: filter6,
 																		time: 300000
 																	});
-
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
@@ -2596,7 +2919,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply(`seleção cancelada com sucesso!`);
+																			return message.reply({
+																				content: 'Seleção cancelada com sucesso!'
+																			});
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
@@ -2615,7 +2940,9 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
+																				return message.reply({
+																					content: 'Número não encontrado. Por favor, use o comando novamente!'
+																				});
 																			} else {
 																				msg4.delete();
 
@@ -2636,7 +2963,10 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				message.channel.send(author, embed);
+																				message.reply({
+																					content: author.toString(),
+																					embeds: [embed]
+																				});
 																				sim3.stop();
 																				ce5.delete();
 
@@ -2787,7 +3117,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
+																			return message.reply({
+																				content: 'Você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!'
+																			});
 																		}
 																	});
 																});
@@ -2808,7 +3140,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
+																return message.reply({
+																	content: 'Você demorou demais para mandar o preço do produto. Use o comando novamente!'
+																});
 															}
 														});
 													});
@@ -2829,7 +3163,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
+													return message.reply({
+														content: 'Você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!'
+													});
 												}
 											});
 										});
@@ -2851,7 +3187,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -2875,8 +3213,16 @@ module.exports = class Cadastraritem extends Command {
 						mapDisfarce.forEach((eu) => embedMessage2 += `${emojis[eu.position + 1]} - ${eu.emoji} - **${eu.item}**\n`);
 						embed.setDescription(`Qual desses itens você deseja Cadastrar?\n\n${embedMessage2}\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg1) => {
-							const sim2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg1) => {
+							const filter3 = (m) => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg1.channel.createMessageCollector({
+								filter: filter3,
 								time: 300000
 							});
 
@@ -2895,7 +3241,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else {
 									const selected2 = Number(ce2.content - 1);
 									const findSelectedEvento2 = mapDisfarce.find((xis) => xis.position === selected2);
@@ -2923,7 +3271,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('número não encontrado. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Número não encontrado. Por favor, use o comando novamente!'
+										});
 									} else if (server.mercadoNegro.filter((a) => a.dono === author.id).find((a) => a.nome === findSelectedEvento2.item)) {
 										msg.delete();
 										ce2.delete();
@@ -2938,7 +3288,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply('você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!');
+										return message.reply({
+											content: 'Você já possui esse produto no Mercado Negro. Por favor, use o comando novamente!'
+										});
 									} else if (!user2.mochila.find((a) => a.item === findSelectedEvento2.item)) {
 										msg.delete();
 										ce2.delete();
@@ -2953,7 +3305,9 @@ module.exports = class Cadastraritem extends Command {
 											}
 										});
 
-										return message.reply(`:x: | Você não possui este produto para vender.`);
+										return message.reply({
+											content: ':x: | Você não possui este produto para vender.'
+										});
 									} else {
 										ce2.delete();
 										sim2.stop();
@@ -2961,8 +3315,16 @@ module.exports = class Cadastraritem extends Command {
 
 										embed.setDescription(`Qual a quantidade de **${findSelectedEvento2.item}** que você deseja vender?\n\nDigite \`0\` para sair.`);
 
-										message.channel.send(author, embed).then(async (msg2) => {
-											const collector = msg2.channel.createMessageCollector((m) => m.author.id === author.id, {
+										message.reply({
+											content: author.toString(),
+											embeds: [embed]
+										}).then(async (msg2) => {
+											const filter4 = (m) => {
+												return m.author.id === author.id && !isNaN(m.content);
+											};
+
+											const collector = msg2.channel.createMessageCollector({
+												filter: filter4,
 												time: 60000
 											});
 
@@ -2980,7 +3342,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`seleção cancelada com sucesso!`);
+													return message.reply({
+														content: 'Seleção cancelada com sucesso!'
+													});
 												}
 
 												if (Number(ce3.content) < 0 || isNaN(ce3.content)) {
@@ -2997,7 +3361,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`coloque uma quantia válida. Por favor, use o comando novamente!`);
+													return message.reply({
+														content: 'Coloque uma quantia válida. Por favor, use o comando novamente!'
+													});
 												} else if (user2.mochila.find((a) => a.item === findSelectedEvento2.item).quantia < Number(ce3.content)) {
 													collector.stop();
 													msg2.delete();
@@ -3012,7 +3378,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply(`:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.item}\` na sua **mochila**. Por favor, envie o comando novamente!`);
+													return message.reply({
+														content: `:x: | Você não possui toda essa quantia de \`${findSelectedEvento2.item}\` na sua **mochila**. Por favor, envie o comando novamente!`
+													});
 												} else {
 													ce3.delete();
 													collector.stop();
@@ -3020,8 +3388,16 @@ module.exports = class Cadastraritem extends Command {
 
 													embed.setDescription(`Qual o preço total que você deseja por no seu produto?\n\nDigite \`0\` para sair.`);
 
-													message.channel.send(author, embed).then(async (msg3) => {
-														const collector2 = msg3.channel.createMessageCollector((m) => m.author.id === author.id, {
+													message.reply({
+														content: author.toString(),
+														embeds: [embed]
+													}).then(async (msg3) => {
+														const filter5 = (m) => {
+															return m.author.id === author.id && !isNaN(m.content);
+														};
+
+														const collector2 = msg3.channel.createMessageCollector({
+															filter: filter5,
 															time: 60000
 														});
 
@@ -3039,7 +3415,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`seleção cancelada com sucesso!`);
+																return message.reply({
+																	content: 'Seleção cancelada com sucesso!'
+																});
 															}
 
 															if (Number(ce4.content) < 0 || isNaN(ce4.content)) {
@@ -3056,7 +3434,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply(`coloque um preço válido. Por favor, use o comando novamente!`);
+																return message.reply({
+																	content: 'Coloque um preço válido. Por favor, use o comando novamente!'
+																});
 															} else {
 																collector2.stop();
 																ce4.delete();
@@ -3102,11 +3482,18 @@ module.exports = class Cadastraritem extends Command {
 																mapTempo.forEach((eu) => embedMessage3 += `${emojis[eu.position + 1]} - ${eu.tempo}\n`);
 																embed.setDescription(`Por quanto tempo você deseja adicionar seu produto?\n\n${embedMessage3}\nDigite \`0\` para sair.`);
 
-																message.channel.send(author, embed).then(async (msg4) => {
-																	const sim3 = msg4.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+																message.reply({
+																	content: author.toString(),
+																	embeds: [embed]
+																}).then(async (msg4) => {
+																	const filter6 = (m) => {
+																		return m.author.id === author.id && !isNaN(m.content);
+																	};
+
+																	const sim3 = msg4.channel.createMessageCollector({
+																		filter: filter6,
 																		time: 300000
 																	});
-
 
 																	sim3.on('collect', async (ce5) => {
 																		if (Number(ce5.content) === 0) {
@@ -3122,7 +3509,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply(`seleção cancelada com sucesso!`);
+																			return message.reply({
+																				content: 'Seleção cancelada com sucesso!'
+																			});
 																		} else {
 																			const selected3 = Number(ce5.content - 1);
 																			const findSelectedEvento3 = mapTempo.find((xis) => xis.position === selected3);
@@ -3141,7 +3530,9 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				return message.reply('número não encontrado. Por favor, use o comando novamente!');
+																				return message.reply({
+																					content: 'Número não encontrado. Por favor, use o comando novamente!'
+																				});
 																			} else {
 																				msg4.delete();
 
@@ -3162,7 +3553,10 @@ module.exports = class Cadastraritem extends Command {
 																					}
 																				});
 
-																				message.channel.send(author, embed);
+																				message.reply({
+																					content: author.toString(),
+																					embeds: [embed]
+																				});
 																				sim3.stop();
 																				ce5.delete();
 
@@ -3313,7 +3707,9 @@ module.exports = class Cadastraritem extends Command {
 																				}
 																			});
 
-																			return message.reply('você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!');
+																			return message.reply({
+																				content: 'Você demorou demais para escolher o tempo de duração do produto. Use o comando novamente!'
+																			});
 																		}
 																	});
 																});
@@ -3334,7 +3730,9 @@ module.exports = class Cadastraritem extends Command {
 																	}
 																});
 
-																return message.reply('você demorou demais para mandar o preço do produto. Use o comando novamente!');
+																return message.reply({
+																	content: 'Você demorou demais para mandar o preço do produto. Use o comando novamente!'
+																});
 															}
 														});
 													});
@@ -3355,7 +3753,9 @@ module.exports = class Cadastraritem extends Command {
 														}
 													});
 
-													return message.reply('você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!');
+													return message.reply({
+														content: 'Você demorou demais para mandar a quantia que deseja cadastrar. Use o comando novamente!'
+													});
 												}
 											});
 										});
@@ -3377,7 +3777,9 @@ module.exports = class Cadastraritem extends Command {
 										}
 									});
 
-									return message.reply('você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou demais para escolher o item que deseja cadastrar. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -3385,7 +3787,10 @@ module.exports = class Cadastraritem extends Command {
 						ce.delete();
 						sim.stop();
 						embed.setDescription(`**EM BREVE!**`);
-						msg.edit(author, embed);
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
@@ -3401,7 +3806,10 @@ module.exports = class Cadastraritem extends Command {
 						ce.delete();
 						sim.stop();
 						embed.setDescription(`**EM BREVE!**`);
-						msg.edit(author, embed);
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						await this.client.database.users.findOneAndUpdate({
 							userId: author.id,
@@ -3431,7 +3839,9 @@ module.exports = class Cadastraritem extends Command {
 						}
 					});
 
-					return message.reply('você demorou demais para escolher a categoria. Use o comando novamente!');
+					return message.reply({
+						content: 'Você demorou demais para escolher a categoria. Use o comando novamente!'
+					});
 				}
 			});
 		});

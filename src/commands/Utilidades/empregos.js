@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-assign */
 const Command = require('../../structures/Command');
@@ -96,9 +98,18 @@ module.exports = class Empregos extends Command {
 		empregosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - **Emprego:** ${eu.trabalho} | **Level:** ${eu.level} - R$${Utils.numberFormat(Number(eu.salario))},00\n`);
 		embed.setDescription(`**➡️ | Digite o número da Profissão que deseja entrar:**\n\n${embedMessage}`);
 
-		message.channel.send(author, embed).then((msg) => {
-			const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id, {
-				time: 60000
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
+			const filter = m => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
+				time: 60000,
+				max: 1
 			});
 
 			collector.on('collect', async (ce) => {
@@ -110,28 +121,39 @@ module.exports = class Empregos extends Command {
 					msg.delete();
 					collector.stop();
 
-					return message.reply(`número do emprego não encontrado. Por favor, use o comando novamente!`);
+					return message.reply({
+						content: 'Número do emprego não encontrado. Por favor, use o comando novamente!'
+					});
 				} else if (user.level < findSelectedEmprego.level) {
 					ce.delete();
 					msg.delete();
 					collector.stop();
 
-					return message.reply(`você precisa ser level **${findSelectedEmprego.level}** para escolher esse emprego. Por favor, use o comando novamente!`);
+					return message.reply({
+						content: `Você precisa ser level **${findSelectedEmprego.level}** para escolher esse emprego. Por favor, use o comando novamente!`
+					});
 				} else if (user.emprego === findSelectedEmprego.trabalho) {
 					ce.delete();
 					msg.delete();
 					collector.stop();
 
-					return message.reply('você já possui esse emprego. Por favor, use o comando novamente!');
+					return message.reply({
+						content: 'Você já possui esse emprego. Por favor, use o comando novamente!'
+					});
 				} else {
 					collector.stop();
 
 					const embed2 = new ClientEmbed(author)
-						.setAuthor(`💼 | Emprego Escolhido: ${findSelectedEmprego.trabalho}`);
+						.setAuthor({
+							name: `💼 | Emprego Escolhido: ${findSelectedEmprego.trabalho}`
+						});
 
 					ce.delete();
 					msg.delete();
-					message.channel.send(author, embed2);
+					message.reply({
+						content: author.toString(),
+						embeds: [embed2]
+					});
 
 					await this.client.database.users.findOneAndUpdate({
 						userId: author.id,
@@ -141,6 +163,8 @@ module.exports = class Empregos extends Command {
 							emprego: findSelectedEmprego.trabalho
 						}
 					});
+
+					return;
 				}
 			});
 
@@ -149,7 +173,9 @@ module.exports = class Empregos extends Command {
 					msg.delete();
 					collector.stop();
 
-					return message.reply('você demorou demais para escolher o emprego! Use o comando novamente!');
+					return message.reply({
+						content: 'Você demorou demais para escolher o emprego. Use o comando novamente!'
+					});
 				}
 			});
 		});

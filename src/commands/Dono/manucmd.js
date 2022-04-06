@@ -35,24 +35,50 @@ module.exports = class Manucmd extends Command {
 	}
 	async run({
 		message,
-		args
+		args,
+		author
 	}) {
+		if (!['463421520686088192', '707677540583735338'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
 		const command = args[0];
-		if (!command) return message.reply('coloque o nome de um comando corretamente!');
+
+		if (!command) {
+			return message.reply({
+				content: 'Coloque o nome de um comando corretamente!'
+			});
+		}
 
 		const cmd = this.client.commands.get(command) || this.client.commands.get(this.client.aliases.get(command));
-		if (!cmd) return message.reply('comando não encontrado!');
+		if (!cmd) {
+			return message.reply({
+				content: 'Comando não encontrado!'
+			});
+		}
 
-		const { name } = cmd;
+		const {
+			name
+		} = cmd;
 
 		const comando = await this.client.database.commands.findOne({
 			_id: name
 		});
 
-		if (!comando) return message.reply('não cadastrei esse comando ainda. Use o comando ao menos uma vez!');
+		if (!comando) {
+			return message.reply({
+				content: 'Não cadastrei esse comando ainda. Use o comando ao menos uma vez!'
+			});
+		}
 
 		const reason = args.slice(1).join(' ');
-		if (!reason) return message.reply('coloque um motivo!');
+		if (!reason) {
+			return message.reply({
+				content: 'Coloque um motivo!'
+			});
+		}
 
 		if (comando.manutenção) {
 			await this.client.database.commands.findOneAndUpdate({
@@ -64,7 +90,9 @@ module.exports = class Manucmd extends Command {
 				}
 			});
 
-			return message.reply(`esse comando estava em manutenção, portanto ele foi retirado da manutenção com sucesso.`);
+			return message.reply({
+				content: 'Esse comando estava em manutenção, portanto ele foi retirado da manutenção com sucesso.'
+			});
 		} else {
 			await this.client.database.commands.findOneAndUpdate({
 				_id: name
@@ -75,7 +103,9 @@ module.exports = class Manucmd extends Command {
 				}
 			});
 
-			return message.reply(`coloquei o comando **\`${name}\`** em manutenção com sucesso.\nMotivo: \`${reason}\`.`);
+			return message.reply({
+				content: `Coloquei o comando **\`${name}\`** em manutenção com sucesso.\nMotivo: \`${reason}\`.`
+			});
 		}
 	}
 

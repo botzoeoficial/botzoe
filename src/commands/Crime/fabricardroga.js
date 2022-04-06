@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-shadow */
 /* eslint-disable max-nested-callbacks */
 /* eslint-disable id-length */
@@ -10,9 +12,9 @@ const ClientEmbed = require('../../structures/ClientEmbed');
 const moment = require('moment');
 require('moment-duration-format');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Fabricardroga extends Command {
 
@@ -52,6 +54,16 @@ module.exports = class Fabricardroga extends Command {
 		author,
 		prefix
 	}) {
+		const server = await this.client.database.guilds.findOne({
+			_id: message.guild.id
+		});
+
+		if (server.cidade.donoFavela !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id) && !server.cidade.donoFabricadeDrogas.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Dono da Favela\` ou \`Fabricante das Drogas\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
 		const userAuthor = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
@@ -66,7 +78,11 @@ module.exports = class Fabricardroga extends Command {
 			}
 		});
 
-		if (userAuthor.fabricagem.fabricandoDroga) return message.reply(`você já está fabricando uma **droga**. Use o comando \`${prefix}fabricando\` para ver qual a **droga** que está sendo fabricada!`);
+		if (userAuthor.fabricagem.fabricandoDroga) {
+			return message.reply({
+				content: `Você já está fabricando uma **droga**. Use o comando \`${prefix}fabricando\` para ver qual a **droga** que está sendo fabricada!`
+			});
+		}
 
 		const drogas = require('../../json/drogas.json');
 
@@ -120,8 +136,16 @@ module.exports = class Fabricardroga extends Command {
 		drogasArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} - ${eu.img} - ${eu.droga} - Alumínio: \`${eu.aluminio}\` - Borracha: \`${eu.borracha}\` - Plástico: \`${eu.plastico}\`\n`);
 		embed.setDescription(`Qual droga você deseja fabricar?\n\n${embedMessage}\nDigite \`0\` para sair.`);
 
-		message.channel.send(author, embed).then(async (msg) => {
-			const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then(async (msg) => {
+			const filterSim = m => {
+				return m.author.id === author.id && !isNaN(m.content);
+			};
+
+			const sim = msg.channel.createMessageCollector({
+				filter: filterSim,
 				time: 300000
 			});
 
@@ -139,7 +163,9 @@ module.exports = class Fabricardroga extends Command {
 						}
 					});
 
-					return message.reply(`seleção cancelada com sucesso!`);
+					return message.reply({
+						content: 'Seleção cancelada com sucesso!'
+					});
 				} else {
 					const selected = Number(ce.content - 1);
 					const findSelectedEvento = drogasArray.find((xis) => xis.position === selected);
@@ -163,9 +189,9 @@ module.exports = class Fabricardroga extends Command {
 							}
 						});
 
-						return message.reply('número não encontrado. Por favor, envie o comando novamente!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply({
+							content: 'Número não encontrado. Por favor, envie o comando novamente!'
+						});
 					} else if (!user2.inventory.find((a) => a.item === 'Alumínio') || user2.inventory.find((a) => a.item === 'Alumínio').quantia < findSelectedEvento.aluminio) {
 						sim.stop();
 						msg.delete();
@@ -180,9 +206,9 @@ module.exports = class Fabricardroga extends Command {
 							}
 						});
 
-						return message.reply('você não possui **Alumínio** suficiente para fabricar essa droga!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply({
+							content: 'Você não possui **Alumínio** suficiente para fabricar essa droga!'
+						});
 					} else if (!user2.inventory.find((a) => a.item === 'Borracha') || user2.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha) {
 						sim.stop();
 						msg.delete();
@@ -197,9 +223,9 @@ module.exports = class Fabricardroga extends Command {
 							}
 						});
 
-						return message.reply('você não possui **Borracha** suficiente para fabricar essa droga!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply({
+							content: 'Você não possui **Borracha** suficiente para fabricar essa droga!'
+						});
 					} else if (!user2.inventory.find((a) => a.item === 'Plástico') || user2.inventory.find((a) => a.item === 'Plástico').quantia < findSelectedEvento.plastico) {
 						sim.stop();
 						msg.delete();
@@ -214,9 +240,9 @@ module.exports = class Fabricardroga extends Command {
 							}
 						});
 
-						return message.reply('você não possui **Plástico** suficiente para fabricar essa droga!').then(ba => ba.delete({
-							timeout: 6000
-						}));
+						return message.reply({
+							content: 'Você não possui **Plástico** suficiente para fabricar essa droga!'
+						});
 					} else {
 						sim.stop();
 						ce.delete();
@@ -224,8 +250,16 @@ module.exports = class Fabricardroga extends Command {
 						embed
 							.setDescription(`Qual a quantidade de drogas você deseja Fabricar?\n\nDigite \`0\` para sair.`);
 
-						msg.edit(author, embed).then(async (msg2) => {
-							const sim2 = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						}).then(async (msg2) => {
+							const filterSim2 = m => {
+								return m.author.id === author.id && !isNaN(m.content);
+							};
+
+							const sim2 = msg2.channel.createMessageCollector({
+								filter: filterSim2,
 								time: 300000
 							});
 
@@ -244,7 +278,9 @@ module.exports = class Fabricardroga extends Command {
 										}
 									});
 
-									return message.reply(`seleção cancelada com sucesso!`);
+									return message.reply({
+										content: 'Seleção cancelada com sucesso!'
+									});
 								} else if (parseInt(ce2.content) && parseInt(ce2.content) < 0) {
 									sim2.stop();
 									sim.stop();
@@ -259,9 +295,9 @@ module.exports = class Fabricardroga extends Command {
 										}
 									});
 
-									return message.reply('coloque uma quantia válida. Por favor, envie o comando novamente!').then(ba => ba.delete({
-										timeout: 6000
-									}));
+									return message.reply({
+										content: 'Coloque uma quantia válida. Por favor, envie o comando novamente!'
+									});
 								} else {
 									const user3 = await this.client.database.users.findOne({
 										userId: author.id,
@@ -283,7 +319,9 @@ module.exports = class Fabricardroga extends Command {
 											}
 										});
 
-										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)`);
+										return message.reply({
+											content: `Para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)`
+										});
 									} else if (user3.inventory.find((a) => a.item === 'Borracha').quantia < findSelectedEvento.borracha * Number(ce2.content)) {
 										sim2.stop();
 										sim.stop();
@@ -299,7 +337,9 @@ module.exports = class Fabricardroga extends Command {
 											}
 										});
 
-										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
+										return message.reply({
+											content: `Para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`
+										});
 									} else if (user3.inventory.find((a) => a.item === 'Plástico').quantia < findSelectedEvento.plastico * Number(ce2.content)) {
 										sim2.stop();
 										sim.stop();
@@ -315,7 +355,9 @@ module.exports = class Fabricardroga extends Command {
 											}
 										});
 
-										return message.reply(`para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`);
+										return message.reply({
+											content: `Para fabricar essa droga \`${ce2.content}\` vezes, você irá precisar de:\nPlástico: \`x${findSelectedEvento.plastico * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Plástico').quantia}\`||)\nBorracha: \`x${findSelectedEvento.borracha * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Borracha').quantia}\`||)\nAlumínio: \`x${findSelectedEvento.aluminio * Number(ce2.content)}\` (||Você só tem \`x${user3.inventory.find((a) => a.item === 'Alumínio').quantia}\`||)`
+										});
 									} else {
 										sim.stop();
 										sim2.stop();
@@ -324,2620 +366,2785 @@ module.exports = class Fabricardroga extends Command {
 										embed
 											.setDescription(`Você tem certeza que quer fabricar \`x${ce2.content} KG\` de **${findSelectedEvento.droga}**?`);
 
-										const buttonSim = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-										const buttonNao = new MessageButton().setStyle('blurple').setEmoji('❌').setID('negar');
+										const buttonSim = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+										const buttonNao = new MessageButton().setCustomId('negar').setEmoji('❌').setStyle('PRIMARY');
 										const botoes = new MessageActionRow().addComponents([buttonSim, buttonNao]);
 
-										msg.edit(author, {
-											embed: embed,
+										msg.edit({
+											content: author.toString(),
+											embeds: [embed],
 											components: [botoes]
 										}).then(async (msg3) => {
-											const collectorBotoes = msg3.createButtonCollector((button) => button.clicker.user.id === author.id, {
-												max: 1
+											const filter = (interaction) => interaction.isButton() && ['aceitar', 'negar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+											const collectorBotoes = msg3.createMessageComponentCollector({
+												filter
 											});
 
 											collectorBotoes.on('collect', async (b) => {
-												if (b.id === 'negar') {
-													b.reply.defer();
+												switch (b.customId) {
+													case 'negar':
+														await b.deferUpdate();
 
-													await this.client.database.users.findOneAndUpdate({
-														userId: author.id,
-														guildId: message.guild.id
-													}, {
-														$set: {
-															fabricando: false
+														await this.client.database.users.findOneAndUpdate({
+															userId: author.id,
+															guildId: message.guild.id
+														}, {
+															$set: {
+																fabricando: false
+															}
+														});
+
+														return msg3.delete();
+													case 'aceitar':
+														await b.deferUpdate();
+
+														await this.client.database.users.findOneAndUpdate({
+															userId: author.id,
+															guildId: message.guild.id
+														}, {
+															$set: {
+																fabricando: false
+															}
+														});
+
+														let time = 0;
+
+														if (findSelectedEvento.droga === 'Maconha') {
+															collectorBotoes.stop();
+															sim2.stop();
+															sim.stop();
+
+															if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
+																time = 43200000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
+																time = 21600000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
+																time = 16200000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 20) {
+																time = 10800000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															}
+														} else if (findSelectedEvento.droga === 'Cocaína') {
+															collectorBotoes.stop();
+															sim2.stop();
+															sim.stop();
+
+															if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
+																time = 54000000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
+																time = 30600000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
+																time = 21600000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 20) {
+																time = 16200000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															}
+														} else if (findSelectedEvento.droga === 'LSD') {
+															collectorBotoes.stop();
+															sim2.stop();
+															sim.stop();
+
+															if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
+																time = 1050000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
+																time = 36000000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
+																time = 30600000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 20) {
+																time = 21600000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															}
+														} else if (findSelectedEvento.droga === 'Metanfetamina') {
+															collectorBotoes.stop();
+															sim2.stop();
+															sim.stop();
+
+															if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
+																time = 72000000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
+																time = 43200000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
+																time = 37800000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															} else if (Number(ce2.content) > 20) {
+																time = 28800000 * Number(ce2.content);
+
+																embed
+																	.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
+
+																await this.client.database.users.findOneAndUpdate({
+																	userId: author.id,
+																	guildId: message.guild.id
+																}, {
+																	$set: {
+																		'fabricagem.fabricandoDroga': true,
+																		'fabricagem.drogas.tempo': Date.now(),
+																		'fabricagem.drogas.quantia': Number(ce2.content),
+																		'fabricagem.drogas.nome': findSelectedEvento.droga,
+																		'fabricagem.drogas.emoji': findSelectedEvento.img
+																	}
+																});
+
+																if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Alumínio'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Alumínio'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Borracha'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Borracha'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
+																		}
+																	});
+																}
+
+																if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$pull: {
+																			inventory: {
+																				item: 'Plástico'
+																			}
+																		}
+																	});
+																} else {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id,
+																		'inventory.item': 'Plástico'
+																	}, {
+																		$set: {
+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
+																		}
+																	});
+																}
+
+																setTimeout(async () => {
+																	await this.client.database.users.findOneAndUpdate({
+																		userId: author.id,
+																		guildId: message.guild.id
+																	}, {
+																		$set: {
+																			'fabricagem.fabricandoDroga': false,
+																			'fabricagem.drogas.tempo': 0,
+																			'fabricagem.drogas.quantia': 0,
+																			'fabricagem.drogas.nome': '',
+																			'fabricagem.drogas.emoji': ''
+																		}
+																	});
+
+																	const embedConfirm = new ClientEmbed(author)
+																		.setTitle('Pegar Droga')
+																		.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
+
+																	const buttonConfirmar = new MessageButton().setCustomId('aceitar').setEmoji('✅').setStyle('PRIMARY');
+																	const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
+
+																	message.reply({
+																		content: author.toString(),
+																		embeds: [embedConfirm],
+																		components: [botoes2]
+																	}).then(async (confirm) => {
+																		const filter = (interaction) => interaction.isButton() && ['aceitar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+																		const collectorBotoes2 = confirm.createMessageComponentCollector({
+																			filter
+																		});
+
+																		collectorBotoes2.on('collect', async (b) => {
+																			switch (b.customId) {
+																				case 'aceitar':
+																					await b.deferUpdate();
+
+																					const userMochila = await this.client.database.users.findOne({
+																						userId: author.id,
+																						guildId: message.guild.id
+																					});
+
+																					if (!userMochila.isMochila) {
+																						message.reply({
+																							content: 'Você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!'
+																						});
+																					} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id,
+																							'mochila.item': findSelectedEvento.droga
+																						}, {
+																							$set: {
+																								'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
+																							}
+																						});
+																					} else {
+																						await this.client.database.users.findOneAndUpdate({
+																							userId: author.id,
+																							guildId: message.guild.id
+																						}, {
+																							$push: {
+																								mochila: {
+																									item: findSelectedEvento.droga,
+																									emoji: findSelectedEvento.img,
+																									id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
+																									quantia: Number(ce2.content)
+																								}
+																							}
+																						});
+																					}
+
+																					collectorBotoes2.stop();
+																					confirm.delete();
+																					return message.reply({
+																						content: `Você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`
+																					});
+																			}
+																		});
+																	});
+																}, time);
+															}
 														}
-													});
 
-													return msg3.delete();
-												} else if (b.id === 'aceitar') {
-													b.reply.defer();
-
-													await this.client.database.users.findOneAndUpdate({
-														userId: author.id,
-														guildId: message.guild.id
-													}, {
-														$set: {
-															fabricando: false
-														}
-													});
-
-													let time = 0;
-
-													if (findSelectedEvento.droga === 'Maconha') {
-														collectorBotoes.stop();
-														sim2.stop();
-														sim.stop();
-
-														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
-															time = 43200000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
-															time = 21600000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
-															time = 16200000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 20) {
-															time = 10800000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														}
-													} else if (findSelectedEvento.droga === 'Cocaína') {
-														collectorBotoes.stop();
-														sim2.stop();
-														sim.stop();
-
-														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
-															time = 54000000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
-															time = 30600000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
-															time = 21600000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 20) {
-															time = 16200000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														}
-													} else if (findSelectedEvento.droga === 'LSD') {
-														collectorBotoes.stop();
-														sim2.stop();
-														sim.stop();
-
-														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
-															time = 1050000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
-															time = 36000000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
-															time = 30600000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 20) {
-															time = 21600000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														}
-													} else if (findSelectedEvento.droga === 'Metanfetamina') {
-														collectorBotoes.stop();
-														sim2.stop();
-														sim.stop();
-
-														if (Number(ce2.content) >= 1 && Number(ce2.content) <= 5) {
-															time = 72000000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 5 && Number(ce2.content) <= 9) {
-															time = 43200000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 9 && Number(ce2.content) <= 20) {
-															time = 37800000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														} else if (Number(ce2.content) > 20) {
-															time = 28800000 * Number(ce2.content);
-
-															embed
-																.setDescription(`Você está Fabricando:\n**${findSelectedEvento.img} - ${findSelectedEvento.droga}**\nQuantia: \`x${ce2.content} KG\`\n\nQue ficará pronto em: ${moment.duration(time).format('M [meses] d [dias] h [horas] m [minutos] e s [segundos]').replace('minsutos', 'minutos')}`);
-
-															await this.client.database.users.findOneAndUpdate({
-																userId: author.id,
-																guildId: message.guild.id
-															}, {
-																$set: {
-																	'fabricagem.fabricandoDroga': true,
-																	'fabricagem.drogas.tempo': Date.now(),
-																	'fabricagem.drogas.quantia': Number(ce2.content),
-																	'fabricagem.drogas.nome': findSelectedEvento.droga,
-																	'fabricagem.drogas.emoji': findSelectedEvento.img
-																}
-															});
-
-															if (user3.inventory.find((a) => a.item === 'Alumínio').quantia === findSelectedEvento.aluminio * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Alumínio'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Alumínio'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Alumínio').quantia - (findSelectedEvento.aluminio * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Borracha').quantia === findSelectedEvento.borracha * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Borracha'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Borracha'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Borracha').quantia - (findSelectedEvento.borracha * Number(ce2.content))
-																	}
-																});
-															}
-
-															if (user3.inventory.find((a) => a.item === 'Plástico').quantia === findSelectedEvento.plastico * Number(ce2.content)) {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$pull: {
-																		inventory: {
-																			item: 'Plástico'
-																		}
-																	}
-																});
-															} else {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id,
-																	'inventory.item': 'Plástico'
-																}, {
-																	$set: {
-																		'inventory.$.quantia': user3.inventory.find((a) => a.item === 'Plástico').quantia - (findSelectedEvento.plastico * Number(ce2.content))
-																	}
-																});
-															}
-
-															setTimeout(async () => {
-																await this.client.database.users.findOneAndUpdate({
-																	userId: author.id,
-																	guildId: message.guild.id
-																}, {
-																	$set: {
-																		'fabricagem.fabricandoDroga': false,
-																		'fabricagem.drogas.tempo': 0,
-																		'fabricagem.drogas.quantia': 0,
-																		'fabricagem.drogas.nome': '',
-																		'fabricagem.drogas.emoji': ''
-																	}
-																});
-
-																const embedConfirm = new ClientEmbed(author)
-																	.setTitle('Pegar Droga')
-																	.setDescription(`${author}, sua droga **${findSelectedEvento.droga}** está pronta para ser recolhida!\n\nClique na reação (✅) abaixo para pegar!`);
-
-																const buttonConfirmar = new MessageButton().setStyle('blurple').setEmoji('✅').setID('aceitar');
-																const botoes2 = new MessageActionRow().addComponents([buttonConfirmar]);
-
-																message.channel.send(author, {
-																	embed: embedConfirm,
-																	components: [botoes2]
-																}).then(async (confirm) => {
-																	const collectorBotoes2 = confirm.createButtonCollector((button) => button.clicker.user.id === author.id);
-
-																	collectorBotoes2.on('collect', async (b) => {
-																		if (b.id === 'aceitar') {
-																			b.reply.defer();
-
-																			const userMochila = await this.client.database.users.findOne({
-																				userId: author.id,
-																				guildId: message.guild.id
-																			});
-
-																			if (!userMochila.isMochila) {
-																				message.reply('você não possui uma **Mochila**. Vá até a Loja > Utilidades e compre uma!');
-																			} else if (user3.mochila.find((a) => a.item === findSelectedEvento.droga)) {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id,
-																					'mochila.item': findSelectedEvento.droga
-																				}, {
-																					$set: {
-																						'mochila.$.quantia': user3.mochila.find((a) => a.item === findSelectedEvento.droga).quantia += Number(ce2.content)
-																					}
-																				});
-																			} else {
-																				await this.client.database.users.findOneAndUpdate({
-																					userId: author.id,
-																					guildId: message.guild.id
-																				}, {
-																					$push: {
-																						mochila: {
-																							item: findSelectedEvento.droga,
-																							emoji: findSelectedEvento.img,
-																							id: findSelectedEvento.img.match(/<a?:\w{2,32}:(\d{17,18})>/)[1],
-																							quantia: Number(ce2.content)
-																						}
-																					}
-																				});
-																			}
-
-																			collectorBotoes2.stop();
-																			confirm.delete();
-																			return message.reply(`você conseguiu coletar **${findSelectedEvento.droga}** com sucesso!`);
-																		}
-																	});
-																});
-															}, time);
-														}
-													}
-
-													msg.edit(author, {
-														embed: embed,
-														components: []
-													});
+														msg.edit({
+															content: author.toString(),
+															embeds: [embed],
+															components: []
+														});
 												}
 											});
 										});
@@ -2959,7 +3166,9 @@ module.exports = class Fabricardroga extends Command {
 										}
 									});
 
-									return message.reply('você demorou de mais para escolher a droga. Use o comando novamente!');
+									return message.reply({
+										content: 'Você demorou de mais para escolher a droga. Use o comando novamente!'
+									});
 								}
 							});
 						});
@@ -2981,7 +3190,9 @@ module.exports = class Fabricardroga extends Command {
 						}
 					});
 
-					return message.reply('você demorou demais para responder. Use o comando novamente!');
+					return message.reply({
+						content: 'Você demorou demais para responder. Use o comando novamente!'
+					});
 				}
 			});
 		});

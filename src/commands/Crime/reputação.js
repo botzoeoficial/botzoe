@@ -40,7 +40,6 @@ module.exports = class Reputação extends Command {
 	async run({
 		message,
 		args,
-		prefix,
 		author
 	}) {
 		const USER = this.client.users.cache.get(args[0]) || message.mentions.users.first() || author;
@@ -50,9 +49,11 @@ module.exports = class Reputação extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		let reputacao = '';
 		let faltam;
@@ -109,7 +110,10 @@ module.exports = class Reputação extends Command {
 				embed.setDescription(`Você é um: \`${reputacao}\`\n\n> Você está no cargo máximo de reputação.`);
 			}
 
-			message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			if (user.crime.reputacao >= 0 && user.crime.reputacao < 2) {
 				reputacao = 'Cidadão de Bem';
@@ -156,7 +160,10 @@ module.exports = class Reputação extends Command {
 				embed.setDescription(`Esse usuário é um: \`${reputacao}\`\n\n> Ele está no cargo máximo de reputação.`);
 			}
 
-			message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		}
 	}
 

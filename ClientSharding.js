@@ -1,20 +1,17 @@
+/* eslint-disable no-process-env */
 const {
 	ShardingManager
 } = require('discord.js');
 
 const manager = new ShardingManager('./index.js', {
-	totalShards: 1,
-	shardList: 'auto',
+	totalShards: 'auto',
 	mode: 'process',
-	respawn: 'true'
+	respawn: true,
+	token: process.env.TOKEN
 });
 
-manager.spawn()
-	.then(shards => {
-		shards.forEach(shard => {
-			shard.on('message', message => {
-				console.log(`Shard[${shard.id}] : ${message._eval} : ${message._result}`);
-			});
-		});
-	})
-	.catch(console.error);
+manager.on('shardCreate', async (shard) => {
+	console.log(`Shard [${shard.id}] ligada com sucesso.`);
+});
+
+manager.spawn();

@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 /* eslint-disable id-length */
 /* eslint-disable max-nested-callbacks */
@@ -43,23 +44,47 @@ module.exports = class Addcard extends Command {
 		author,
 		args
 	}) {
-		const server = await this.client.database.guilds.findOne({
-			_id: message.guild.id
+		if (!['463421520686088192', '707677540583735338'].includes(author.id)) {
+			return message.reply({
+				content: 'Este comando é apenas para pessoas **ESPECIAIS**!'
+			});
+		}
+
+		const client = await this.client.database.clientUtils.findOne({
+			_id: this.client.user.id
 		});
 
 		const card = args.slice(0).join(' ');
 
-		if (!card) return message.reply('você precisa colocar o código de um card.');
+		if (!card) {
+			return message.reply({
+				content: 'Você precisa colocar o código de um card.'
+			});
+		}
 
-		if (server.card.find((fa) => fa.codigo === card)) return message.reply('esse card já está cadastrado.');
+		if (client.card.find((fa) => fa.codigo === card)) {
+			return message.reply({
+				content: 'Esse card já está cadastrado.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('💳 | Card')
 			.setDescription('💵 | Qual Valor você deseja Adicionar na Zoe?')
-			.setFooter('DIGITE A PALAVRA cancelar NO CHAT, PARA CANCELAR O CADASTRO DO CARD');
+			.setFooter({
+				text: 'DIGITE A PALAVRA cancelar NO CHAT, PARA CANCELAR O CADASTRO DO CARD'
+			});
 
-		message.channel.send(author, embed).then((msg) => {
-			const collector = msg.channel.createMessageCollector((m) => m.author.id === author.id, {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
+			const filter = m => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
 				time: 60000
 			});
 
@@ -67,13 +92,15 @@ module.exports = class Addcard extends Command {
 				if (re.content.toLowerCase() === 'cancelar') {
 					collector.stop();
 					msg.delete();
-					return message.channel.send(`${author}, você cancelou o cadastro de um **card** com sucesso!`);
+					return message.reply({
+						content: 'Você cancelou o cadastro de um **card** com sucesso!'
+					});
 				}
 
 				if (isNaN(re.content)) {
-					message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**!`).then((a) => a.delete({
-						timeout: 5000
-					}));
+					message.reply({
+						content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**!'
+					}).then((a) => a.delete(), 5000);
 					re.delete();
 				}
 
@@ -82,8 +109,16 @@ module.exports = class Addcard extends Command {
 				embed.addField('🦉 Valor Zoe:', `R$${Utils.numberFormat(Number(re.content))},00`);
 				embed.setDescription('<:btc:908786996535787551> | Quantos BitCoins Você deseja Adicionar?');
 
-				message.channel.send(author, embed).then((msg1) => {
-					const collector1 = msg1.channel.createMessageCollector((m) => m.author.id === author.id, {
+				message.reply({
+					content: author.toString(),
+					embeds: [embed]
+				}).then((msg1) => {
+					const filter1 = m => {
+						return m.author.id === author.id;
+					};
+
+					const collector1 = msg1.channel.createMessageCollector({
+						filter: filter1,
 						time: 60000
 					});
 
@@ -91,13 +126,15 @@ module.exports = class Addcard extends Command {
 						if (re2.content.toLowerCase() === 'cancelar') {
 							collector1.stop();
 							msg1.delete();
-							return message.channel.send(`${author}, você cancelou o cadastro de um **card** com sucesso!`);
+							return message.reply({
+								content: 'Você cancelou o cadastro de um **card** com sucesso!'
+							});
 						}
 
 						if (isNaN(re2.content)) {
-							message.channel.send(`${author}, você precisa colocar apenas números, não **letras** ou **números junto com letras**!`).then((a) => a.delete({
-								timeout: 5000
-							}));
+							message.reply({
+								content: 'Você precisa colocar apenas números, não **letras** ou **números junto com letras**!'
+							}).then((a) => a.delete(), 5000);
 							re2.delete();
 						}
 
@@ -106,10 +143,13 @@ module.exports = class Addcard extends Command {
 						embed.addField('<:btc:908786996535787551> BitCoins:', `${Utils.numberFormat(Number(re2.content))}`);
 						embed.setDescription('***CÓDIGO CADASTRADO COM SUCESSO!***');
 
-						message.channel.send(author, embed);
+						message.reply({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
-						return await this.client.database.guilds.findOneAndUpdate({
-							_id: message.guild.id
+						return await this.client.database.clientUtils.findOneAndUpdate({
+							_id: this.client.user.id
 						}, {
 							$push: {
 								card: {
@@ -127,7 +167,9 @@ module.exports = class Addcard extends Command {
 						if (reason === 'time') {
 							collector1.stop();
 							msg1.delete();
-							return message.channel.send(`${author}, você demorou demais para responder! Use o comando novamente!`);
+							return message.reply({
+								content: 'Você demorou demais para responder. Use o comando novamente!'
+							});
 						}
 					});
 				});
@@ -137,7 +179,9 @@ module.exports = class Addcard extends Command {
 				if (reason === 'time') {
 					collector.stop();
 					msg.delete();
-					return message.channel.send(`${author}, você demorou demais para responder! Use o comando novamente!`);
+					return message.reply({
+						content: 'Você demorou demais para responder. Use o comando novamente!'
+					});
 				}
 			});
 		});

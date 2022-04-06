@@ -48,11 +48,23 @@ module.exports = class Trabalhocomunitario extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.prisao.isPreso) return message.reply('você não está preso(a)!');
+		if (!user.prisao.isPreso) {
+			return message.reply({
+				content: 'Você não está preso(a)!'
+			});
+		}
 
-		if (user.prisao.isPreso && user.prisao.crime && user.prisao.velha || user.prisao.isPreso && user.prisao.crime && user.prisao.frentista) return message.reply(`você foi preso pelo \`${prefix}crime\` da **velha** ou do **frentista** portanto você não pode usar esse comando!`);
+		if (user.prisao.isPreso && user.prisao.crime && user.prisao.velha || user.prisao.isPreso && user.prisao.crime && user.prisao.frentista) {
+			return message.reply({
+				content: `Você foi preso pelo \`${prefix}crime\` da **velha** ou do **frentista** portanto você não pode usar esse comando!`
+			});
+		}
 
-		if (user.prisao.isPreso && user.prisao.roubarVeiculo) return message.reply(`você foi preso pelo \`${prefix}roubarcarro\` portanto você não pode usar esse comando!`);
+		if (user.prisao.isPreso && user.prisao.roubarVeiculo) {
+			return message.reply({
+				content: `Você foi preso pelo \`${prefix}roubarcarro\` portanto você não pode usar esse comando!`
+			});
+		}
 
 		const timeout = 3600000;
 
@@ -62,15 +74,21 @@ module.exports = class Trabalhocomunitario extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const embed = new ClientEmbed(author)
 				.setTitle('TRABALHO COMUNITÁRIO')
 				.setDescription(`💼 | Você fez um trabalho Comunitário e diminuiu 15 minutos no tempo da sua prisão.`);
 
-			message.channel.send(author, embed);
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 
-			await this.client.database.users.findOneAndUpdate({
+			return await this.client.database.users.findOneAndUpdate({
 				userId: author.id,
 				guildId: message.guild.id
 			}, {

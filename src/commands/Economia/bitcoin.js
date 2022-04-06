@@ -39,7 +39,6 @@ module.exports = class Bitcoin extends Command {
 	async run({
 		message,
 		args,
-		prefix,
 		author
 	}) {
 		const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
@@ -49,9 +48,11 @@ module.exports = class Bitcoin extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user) return message.reply('não achei esse usuário no **banco de dados** desse servidor.');
-
-		if (!user.cadastrado) return message.reply(`esse usuário não está cadastrado no servidor! Peça para ele se cadastrar usando o comando: \`${prefix}cadastrar\`.`);
+		if (!user) {
+			return message.reply({
+				content: 'Não achei esse usuário no **banco de dados** desse servidor.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setThumbnail(member.user.displayAvatarURL({
@@ -61,7 +62,10 @@ module.exports = class Bitcoin extends Command {
 			.setTitle(`Bitcoins do(a) ${member.user.tag}`)
 			.addField('<:btc:908786996535787551> Bitcoins:', `ㅤㅤ${Utils.numberFormat(user.bitcoin)}`);
 
-		message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

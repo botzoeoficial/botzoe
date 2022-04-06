@@ -48,15 +48,27 @@ module.exports = class Impeachment extends Command {
 			guildId: message.guild.id
 		});
 
-		if (user.level < 2) return message.reply('você precisa ser level **2** para iniciar um Impeachment!');
+		if (user.level < 2) {
+			return message.reply({
+				content: 'Você precisa ser level **2** para iniciar um Impeachment!'
+			});
+		}
 
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
 
-		if (server.cidade.golpeEstado.caos) return message.reply('a Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!');
+		if (server.cidade.golpeEstado.caos) {
+			return message.reply({
+				content: 'A Cidade sofreu um **Golpe de Estado** e por isso está em **caos** por 5 horas. Espere acabar as **5 horas**!'
+			});
+		}
 
-		if (server.cidade.governador === '') return message.reply(`essa Cidade não possui Prefeito ainda. Use o comando \`${prefix}addprefeito\`!`);
+		if (server.cidade.governador === '') {
+			return message.reply({
+				content: `Essa Cidade não possui Prefeito ainda. Use o comando \`${prefix}addprefeito\`!`
+			});
+		}
 
 		const {
 			channel
@@ -68,7 +80,10 @@ module.exports = class Impeachment extends Command {
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
 				.setDescription(`${author}, já está rolando um **Impeachment** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel}/${msg1})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const channel2 = server.cidade.eleicao.channel;
@@ -79,7 +94,10 @@ module.exports = class Impeachment extends Command {
 				.setTitle('<:Urna:895779255491911740> | Eleição')
 				.setDescription(`${author}, não é possível abrir um Impeachment pois está rolando uma **Eleição** na Cidade.\n\n> [Clique Aqui para Ir Nela](https://discord.com/channels/${message.guild.id}/${channel2}/${msg2})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const channel3 = server.cidade.golpeEstado.channel;
@@ -90,7 +108,10 @@ module.exports = class Impeachment extends Command {
 				.setTitle('🕵️ | Golpe de Estado')
 				.setDescription(`${author}, não é possível abrir um Impeachment pois está rolando um **Golpe de Estado** na Cidade.\n\n> [Clique Aqui para Ir Nele](https://discord.com/channels/${message.guild.id}/${channel3}/${msg8})`);
 
-			return message.channel.send(author, embedExistes);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embedExistes]
+			});
 		}
 
 		const timeout = 345600000;
@@ -101,20 +122,31 @@ module.exports = class Impeachment extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const canal = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
 
-			if (!canal) return message.reply('você precisa mencionar um canal onde será iniciado o Impeachment!');
+			if (!canal) {
+				return message.reply({
+					content: 'Você precisa mencionar um canal onde será iniciado o Impeachment!'
+				});
+			}
 
-			message.reply(`**Impeachment** iniciado com sucesso no canal: <#${canal.id}>.`);
+			message.reply({
+				content: `**Impeachment** iniciado com sucesso no canal: <#${canal.id}>.`
+			});
 			message.delete();
 
 			const embed = new ClientEmbed(this.client.user)
 				.setTitle('<:Urna:895779255491911740> | Impeachment')
 				.setDescription(`Clique na <:Urna:895779255491911740> para votar na retirada do Poder de Prefeito <@${server.cidade.governador}> da sua Cidade!\n\nSe chegarem a **20** votos na <:Urna:895779255491911740>, o Prefeito irá perder o seu cargo, e a Cidade ficará sem Prefeito até uma nova eleição!`);
 
-			canal.send(embed).then(async (msg) => {
+			canal.send({
+				embeds: [embed]
+			}).then(async (msg) => {
 				await this.client.database.guilds.findOneAndUpdate({
 					_id: message.guild.id
 				}, {
@@ -128,7 +160,7 @@ module.exports = class Impeachment extends Command {
 					}
 				});
 
-				await msg.react('895779255491911740');
+				return await msg.react('895779255491911740');
 			});
 		}
 	}

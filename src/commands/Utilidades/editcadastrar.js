@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable id-length */
 /* eslint-disable consistent-return */
 const Command = require('../../structures/Command');
@@ -46,7 +47,11 @@ module.exports = class Editcadastrar extends Command {
 			guildId: message.guild.id
 		});
 
-		if (!user.cadastrado) return message.reply(`você não está cadastrado ainda nesse servidor. Use o comando \`${prefix}cadastrar\`.`);
+		if (!user.cadastrado) {
+			return message.reply({
+				content: `Você não está cadastrado ainda nesse servidor. Use o comando \`${prefix}cadastrar\`.`
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('EDITAR CADASTRAR')
@@ -55,9 +60,16 @@ module.exports = class Editcadastrar extends Command {
 			}))
 			.setDescription('**O QUE VOCÊ DESEJA EDITAR NO SEU CADASTRO?**\n\nNome Verdadeiro\nIdade\nGênero');
 
-		message.channel.send(author, embed).then((msg) => {
-			const filter = (m) => m.author.id === author.id;
-			const collector = msg.channel.createMessageCollector(filter, {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
+			const filter = (m) => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
 				time: 60000
 			});
 
@@ -65,7 +77,9 @@ module.exports = class Editcadastrar extends Command {
 				if (msg1.content.toLowerCase() === 'nome verdadeiro') {
 					collector.stop();
 
-					message.channel.send(`${author}, por qual nome você deseja trocar?`).then(() => {
+					message.reply({
+						content: 'Por qual nome você deseja trocar?'
+					}).then(() => {
 						const filter2 = (m) => m.author.id === author.id;
 						const collector2 = msg1.channel.createMessageCollector(filter2, {
 							time: 60000
@@ -75,7 +89,9 @@ module.exports = class Editcadastrar extends Command {
 							collector2.stop();
 							msg.delete();
 
-							message.channel.send(`${author}, seu nome no cadastro foi alterado para: \`${msg2.content}\``);
+							message.reply({
+								content: `Seu nome no cadastro foi alterado para: \`${msg2.content}\``
+							});
 
 							return await this.client.database.users.findOneAndUpdate({
 								userId: author.id,
@@ -90,23 +106,31 @@ module.exports = class Editcadastrar extends Command {
 				} else if (msg1.content.toLowerCase() === 'idade') {
 					collector.stop();
 
-					message.channel.send(`${author}, por qual idade você deseja trocar?`).then(() => {
-						const filter2 = (m) => m.author.id === author.id;
-						const collector2 = msg1.channel.createMessageCollector(filter2, {
+					message.reply({
+						content: 'Por qual idade você deseja trocar?'
+					}).then(() => {
+						const filter2 = (m) => {
+							return m.author.id === author.id;
+						};
+
+						const collector2 = msg1.channel.createMessageCollector({
+							filter: filter2,
 							time: 60000
 						});
 
 						collector2.on('collect', async (msg2) => {
 							if (!parseInt(msg2.content)) {
-								message.channel.send(`${author}, sua idade precisa ser um número! Por favor, envie sua idade novamente no chat.`).then(ba => ba.delete({
-									timeout: 5000
-								}));
+								message.reply({
+									content: 'Sua idade precisa ser um número! Por favor, envie sua idade novamente no chat.'
+								}).then((a) => setTimeout(() => a.delete(), 6000));
 								msg2.delete();
 							} else {
 								collector2.stop();
 								msg.delete();
 
-								message.channel.send(`${author}, sua idade no cadastro foi alterado para: \`${msg2.content}\``);
+								message.reply({
+									content: `Sua idade no cadastro foi alterado para: \`${msg2.content}\``
+								});
 
 								return await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -122,28 +146,36 @@ module.exports = class Editcadastrar extends Command {
 				} else if (msg1.content.toLowerCase() === 'gênero' || msg1.content.toLowerCase() === 'genero') {
 					collector.stop();
 
-					message.channel.send(`${author}, por qual gênero você deseja trocar?`).then(() => {
-						const filter2 = (m) => m.author.id === author.id;
-						const collector2 = msg1.channel.createMessageCollector(filter2, {
+					message.reply({
+						content: 'Por qual gênero você deseja trocar?'
+					}).then(() => {
+						const filter2 = (m) => {
+							return m.author.id === author.id;
+						};
+
+						const collector2 = msg1.channel.createMessageCollector({
+							filter: filter2,
 							time: 60000
 						});
 
 						collector2.on('collect', async (msg2) => {
 							if (parseInt(msg2.content)) {
-								message.channel.send(`${author}, seu gênero não pode ser um número! Por favor, envie seu gênero novamente no chat.`).then(ba => ba.delete({
-									timeout: 5000
-								}));
+								message.reply({
+									content: 'Seu gênero não pode ser um número! Por favor, envie seu gênero novamente no chat.'
+								}).then((a) => setTimeout(() => a.delete(), 6000));
 								msg2.delete();
 							} else if (msg2.content.toLowerCase() !== 'masculino' && msg2.content.toLowerCase() !== 'feminino') {
-								message.channel.send(`${author}, seu gênero precisa ser **Masculino** ou **Feminino**! Por favor, envie seu gênero novamente no chat.`).then(ba => ba.delete({
-									timeout: 5000
-								}));
+								message.reply({
+									content: 'Seu gênero precisa ser **Masculino** ou **Feminino**! Por favor, envie seu gênero novamente no chat.'
+								}).then((a) => setTimeout(() => a.delete(), 6000));
 								msg2.delete();
 							} else {
 								collector2.stop();
 								msg.delete();
 
-								message.channel.send(`${author}, seu gênero no cadastro foi alterado para: \`${msg2.content}\``);
+								message.reply({
+									content: `Seu gênero no cadastro foi alterado para: \`${msg2.content}\``
+								});
 
 								return await this.client.database.users.findOneAndUpdate({
 									userId: author.id,
@@ -157,9 +189,9 @@ module.exports = class Editcadastrar extends Command {
 						});
 					});
 				} else {
-					message.channel.send(`${author}, informação não encontrada! Escolha novamente o que você deseja trocar no cadastro!`).then(ba => ba.delete({
-						timeout: 5000
-					}));
+					message.reply({
+						content: 'Informação não encontrada! Escolha novamente o que você deseja trocar no cadastro!'
+					}).then((a) => setTimeout(() => a.delete(), 6000));
 				}
 			});
 		});

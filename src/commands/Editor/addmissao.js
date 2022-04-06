@@ -44,23 +44,48 @@ module.exports = class Addmissao extends Command {
 			_id: message.guild.id
 		});
 
-		if (server.missoes.length >= 12) return message.reply('este servidor já possui o máximo de missões cadastradas.');
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
+		if (server.missoes.length >= 12) {
+			return message.reply({
+				content: 'Este servidor já possui o máximo de missões cadastradas.'
+			});
+		}
 
 		const missao = args[0];
 
-		if (!missao) return message.reply(`você precisa colocar o nome da missão.\n**OBS: Caso o nome seja grande, separe ele por \`_\`.**`);
+		if (!missao) {
+			return message.reply({
+				content: `Você precisa colocar o nome da missão.\n**OBS: Caso o nome seja grande, separe ele por \`_\`.**`
+			});
+		}
 
 		const descricao = args.slice(1).join(' ');
 
-		if (!descricao) return message.reply('você precisa por a descrição da missão logo após o nome da missão.');
+		if (!descricao) {
+			return message.reply({
+				content: 'Você precisa por a descrição da missão logo após o nome da missão.'
+			});
+		}
 
-		if (descricao.length > 4096) return message.reply('a descrição da missão só pode ter no máximo **4096** letras.');
+		if (descricao.length > 4096) {
+			return message.reply({
+				content: 'A descrição da missão só pode ter no máximo **4096** letras.'
+			});
+		}
 
 		const embed = new ClientEmbed(author)
 			.setTitle('🔰 | MISSÃO ADICIONADA')
 			.addField('Nome da Missão:', missao.replace(/_/g, ' '));
 
-		message.channel.send(author, embed);
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 
 		await this.client.database.guilds.findOneAndUpdate({
 			_id: message.guild.id
@@ -72,6 +97,8 @@ module.exports = class Addmissao extends Command {
 				}
 			}
 		});
+
+		return;
 	}
 
 };

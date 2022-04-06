@@ -5,9 +5,9 @@ const Command = require('../../structures/Command');
 const ClientEmbed = require('../../structures/ClientEmbed');
 const Utils = require('../../utils/Util');
 const {
-	MessageButton,
-	MessageActionRow
-} = require('discord-buttons');
+	MessageActionRow,
+	MessageButton
+} = require('discord.js');
 
 module.exports = class Garagem extends Command {
 
@@ -59,16 +59,19 @@ module.exports = class Garagem extends Command {
 
 		if (!user.garagem.length) {
 			embed.setDescription(`${author}, você não tem carros! Use o comando \`${prefix}roubarcarro\`.`);
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			embed
 				.setDescription(`**Você selecionou o Carro:** \`${user.garagem[pagina].nome}\``)
 				.addField('Modelo:', user.garagem[pagina].modelo, true)
-				.addField('Ano:', Number(user.garagem[pagina].ano), true)
+				.addField('Ano:', String(user.garagem[pagina].ano), true)
 				.addField('Valor:', `R$${Utils.numberFormat(Number(user.garagem[pagina].valor))},00`, true)
-				.addField('Velocidade:', `${user.garagem[pagina].velocidade} KM/h`, true)
-				.addField('Cavalos de Força:', `${user.garagem[pagina].cavalos} HP`, true)
-				.addField('Danificado:', `${user.garagem[pagina].danificado}%`, true)
+				.addField('Velocidade:', `${String(user.garagem[pagina].velocidade)} KM/h`, true)
+				.addField('Cavalos de Força:', `${String(user.garagem[pagina].cavalos)} HP`, true)
+				.addField('Danificado:', `${String(user.garagem[pagina].danificado)}%`, true)
 				.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(user.garagem[pagina].desmanche))},00`, true)
 				.addField('Emplacado:', `**\`${!user.garagem[pagina].emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
 				.addField('Placa:', `**${!user.garagem[pagina].emplacado ? `\`${user.garagem[pagina].placa}\` ❌` : `\`${user.garagem[pagina].placa}\` ✅`}**`, true)
@@ -77,22 +80,25 @@ module.exports = class Garagem extends Command {
 				.addField('Liberado da Oficina:', `**\`${!user.garagem[pagina].liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
 				.setImage(user.garagem[pagina].img);
 
-			const buttonVoltar = new MessageButton().setStyle('blurple').setEmoji('⬅️').setID('voltar');
-			const buttonIr = new MessageButton().setStyle('blurple').setEmoji('➡️').setID('ir');
+			const buttonVoltar = new MessageButton().setCustomId('voltar').setEmoji('⬅️').setStyle('PRIMARY');
+			const buttonIr = new MessageButton().setCustomId('ir').setEmoji('➡️').setStyle('PRIMARY');
 			const botoes = new MessageActionRow().addComponents([buttonVoltar, buttonIr]);
 
-			const escolha = await message.channel.send(author, {
-				embed: embed,
+			const escolha = await message.reply({
+				embeds: [embed],
 				components: [botoes]
 			});
 
-			const collectorEscolhas = escolha.createButtonCollector((button) => button.clicker.user.id === author.id, {
+			const filter = (interaction) => interaction.isButton() && ['ir', 'voltar'].includes(interaction.customId) && interaction.user.id === author.id;
+
+			const collectorEscolhas = escolha.createMessageComponentCollector({
+				filter,
 				time: 60000
 			});
 
 			collectorEscolhas.on('collect', async (b) => {
-				if (b.id === 'voltar') {
-					b.reply.defer();
+				if (b.customId === 'voltar') {
+					await b.deferUpdate();
 
 					if (pagina <= 0) {
 						pagina = 0;
@@ -104,11 +110,11 @@ module.exports = class Garagem extends Command {
 						.setTitle('<:garagem:901528229112844308> | Garagem')
 						.setDescription(`**Você selecionou o Carro:** \`${user.garagem[pagina].nome}\``)
 						.addField('Modelo:', user.garagem[pagina].modelo, true)
-						.addField('Ano:', Number(user.garagem[pagina].ano), true)
+						.addField('Ano:', String(user.garagem[pagina].ano), true)
 						.addField('Valor:', `R$${Utils.numberFormat(Number(user.garagem[pagina].valor))},00`, true)
-						.addField('Velocidade:', `${user.garagem[pagina].velocidade} KM/h`, true)
-						.addField('Cavalos de Força:', `${user.garagem[pagina].cavalos} HP`, true)
-						.addField('Danificado:', `${user.garagem[pagina].danificado}%`, true)
+						.addField('Velocidade:', `${String(user.garagem[pagina].velocidade)} KM/h`, true)
+						.addField('Cavalos de Força:', `${String(user.garagem[pagina].cavalos)} HP`, true)
+						.addField('Danificado:', `${String(user.garagem[pagina].danificado)}%`, true)
 						.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(user.garagem[pagina].desmanche))},00`, true)
 						.addField('Emplacado:', `**\`${!user.garagem[pagina].emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
 						.addField('Placa:', `**${!user.garagem[pagina].emplacado ? `\`${user.garagem[pagina].placa}\` ❌` : `\`${user.garagem[pagina].placa}\` ✅`}**`, true)
@@ -117,14 +123,15 @@ module.exports = class Garagem extends Command {
 						.addField('Liberado da Oficina:', `**\`${!user.garagem[pagina].liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
 						.setImage(user.garagem[pagina].img);
 
-					b.message.edit(author, {
-						embed: embed2
+					escolha.edit({
+						content: author.toString(),
+						embeds: [embed2]
 					});
-				} else if (b.id === 'ir') {
-					b.reply.defer();
+				} else if (b.customId === 'ir') {
+					await b.deferUpdate();
 
 					if (pagina >= (user.garagem.length - 1)) {
-						pagina = (user.garagem.length - 1);
+						pagina = user.garagem.length - 1;
 					} else {
 						pagina++;
 					}
@@ -133,11 +140,11 @@ module.exports = class Garagem extends Command {
 						.setTitle('<:garagem:901528229112844308> | Garagem')
 						.setDescription(`**Você selecionou o Carro:** \`${user.garagem[pagina].nome}\``)
 						.addField('Modelo:', user.garagem[pagina].modelo, true)
-						.addField('Ano:', Number(user.garagem[pagina].ano), true)
+						.addField('Ano:', String(user.garagem[pagina].ano), true)
 						.addField('Valor:', `R$${Utils.numberFormat(Number(user.garagem[pagina].valor))},00`, true)
-						.addField('Velocidade:', `${user.garagem[pagina].velocidade} KM/h`, true)
-						.addField('Cavalos de Força:', `${user.garagem[pagina].cavalos} HP`, true)
-						.addField('Danificado:', `${user.garagem[pagina].danificado}%`, true)
+						.addField('Velocidade:', `${String(user.garagem[pagina].velocidade)} KM/h`, true)
+						.addField('Cavalos de Força:', `${String(user.garagem[pagina].cavalos)} HP`, true)
+						.addField('Danificado:', `${String(user.garagem[pagina].danificado)}%`, true)
 						.addField('Valor para Desmanche:', `R$${Utils.numberFormat(Number(user.garagem[pagina].desmanche))},00`, true)
 						.addField('Emplacado:', `**\`${!user.garagem[pagina].emplacado ? 'Não está emplacado.' : 'Está emplacado.'}\`**`, true)
 						.addField('Placa:', `**${!user.garagem[pagina].emplacado ? `\`${user.garagem[pagina].placa}\` ❌` : `\`${user.garagem[pagina].placa}\` ✅`}**`, true)
@@ -146,20 +153,22 @@ module.exports = class Garagem extends Command {
 						.addField('Liberado da Oficina:', `**\`${!user.garagem[pagina].liberado ? 'Não está liberado.' : 'Está liberado.'}\`**`, true)
 						.setImage(user.garagem[pagina].img);
 
-					b.message.edit(author, {
-						embed: embed2
+					escolha.edit({
+						content: author.toString(),
+						embeds: [embed2]
 					});
 				}
 			});
 
 			collectorEscolhas.on('end', async (collected, reason) => {
 				if (reason === 'time') {
-					return escolha.edit(author, {
-						embed: embed,
+					return escolha.edit({
+						content: author.toString(),
+						embeds: [embed],
 						components: []
 					});
 				}
-			})
+			});
 		}
 	}
 

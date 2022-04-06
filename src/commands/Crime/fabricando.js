@@ -609,7 +609,10 @@ module.exports = class Fabricando extends Command {
 			embed.setDescription(`Você está fabricando nada no momento.`);
 		}
 
-		return message.channel.send(author, embed);
+		return message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		});
 	}
 
 };

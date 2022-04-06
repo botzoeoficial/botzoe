@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-return-assign */
 /* eslint-disable max-nested-callbacks */
 /* eslint-disable consistent-return */
@@ -44,6 +46,12 @@ module.exports = class Eventosdiv extends Command {
 		const server = await this.client.database.guilds.findOne({
 			_id: message.guild.id
 		});
+
+		if (!server.editor.find((a) => a.id === author.id) && !message.member.permissions.has('ADMINISTRATOR')) {
+			return message.reply({
+				content: `Você precisa ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
 
 		const eventosArray = server.eventos.map((value, index) => ({
 			nome: value.nome,
@@ -94,10 +102,18 @@ module.exports = class Eventosdiv extends Command {
 		eventosArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Evento:** ${eu.nome} | **Data:** ${eu.date} | **Hora:** ${eu.hour} | **Tag:** <@&${eu.tag}>\n`);
 		embed.setDescription(!server.eventos.length ? 'Não há eventos cadastrados no momento.' : `**DIGITE A POSIÇÃO DO EVENTO NO CHAT PARA ANUNCIAR ELE!**\n\n${embedMessage}`);
 
-		message.channel.send(author, embed).then((msg) => {
+		message.reply({
+			content: author.toString(),
+			embeds: [embed]
+		}).then((msg) => {
 			if (!server.eventos.length) return;
 
-			const collector = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+			const filter = m => {
+				return m.author.id === author.id;
+			};
+
+			const collector = msg.channel.createMessageCollector({
+				filter,
 				time: 10000
 			});
 
@@ -106,9 +122,9 @@ module.exports = class Eventosdiv extends Command {
 				const findSelectedEvento = eventosArray.find((xis) => xis.position === selected);
 
 				if (!findSelectedEvento) {
-					message.reply(`este número não existe! Por favor, envie o número do evento novamente.`).then(a => a.delete({
-						timeout: 5000
-					}));
+					message.reply({
+						content: 'Este número não existe! Por favor, envie o número do evento novamente.'
+					}).then((a) => a.delete(), 6000);
 					ce.delete();
 				} else {
 					collector.stop();
@@ -122,18 +138,26 @@ module.exports = class Eventosdiv extends Command {
 						.addField('Tag:', `<@&${findSelectedEvento.tag}>`, true);
 
 					ce.delete();
-					msg.edit(author, embed).then((msg1) => {
-						const collector2 = msg1.channel.createMessageCollector((xes) => xes.author.id === author.id, {
-							time: 120000
+					msg.edit({
+						content: author.toString(),
+						embeds: [embed]
+					}).then((msg1) => {
+						const filter2 = m => {
+							return m.author.id === author.id;
+						};
+
+						const collector2 = msg1.channel.createMessageCollector({
+							filter: filter2,
+							time: 600000
 						});
 
 						collector2.on('collect', async (ce2) => {
 							const canal = ce2.mentions.channels.first() || message.guild.channels.cache.get(ce2.content);
 
 							if (!canal) {
-								message.reply('você precisa mencionar um canal! Por favor, envie o canal novamente.').then(b => b.delete({
-									timeout: 5000
-								}));
+								message.reply({
+									content: 'Você precisa mencionar um canal! Por favor, envie o canal novamente.'
+								}).then((a) => a.delete(), 6000);
 								ce2.delete();
 							} else {
 								collector2.stop();
@@ -143,20 +167,35 @@ module.exports = class Eventosdiv extends Command {
 									.addField('Canal:', canal, true);
 
 								ce2.delete();
-								msg1.edit(author, embed).then((msg2) => {
-									const collector3 = msg2.channel.createMessageCollector((xes) => xes.author.id === author.id, {
+								msg1.edit({
+									content: author.toString(),
+									embeds: [embed]
+								}).then((msg2) => {
+									const filter3 = m => {
+										return m.author.id === author.id;
+									};
+
+									const collector3 = msg2.channel.createMessageCollector({
+										filter: filter3,
 										time: 600000
 									});
 
 									collector3.on('collect', async (ce3) => {
-										if (ce3.content.length > 4096) return message.reply('a descrição do evento só pode ter no máximo **4096** letras.');
+										if (ce3.content.length > 4096) {
+											return message.reply({
+												content: 'A descrição do evento só pode ter no máximo **4096** letras.'
+											});
+										}
 
 										embed
 											.setDescription(`Muito bem ${author}, você escolheu o evento de número: **${ce.content}**.\nVeja as **informações** do evento abaixo:`);
 
 										ce3.delete();
 										collector3.stop();
-										msg2.edit(author, embed);
+										msg2.edit({
+											content: author.toString(),
+											embeds: [embed]
+										});
 
 										const embed2 = new ClientEmbed(author)
 											.setTitle('🎉 | Evento')
@@ -167,23 +206,37 @@ module.exports = class Eventosdiv extends Command {
 											.setDescription(ce3.content);
 
 										msg2.delete();
-										const ok = await message.channel.send(`${author}, enviando o evento no canal ${canal} em \`5s\``);
+										const ok = await message.reply({
+											content: `Enviando o evento no canal ${canal} em \`5s\``
+										});
 
 										setTimeout(() => {
 											ok.delete();
-											canal.send(embed2).then((as) => {
+											canal.send({
+												embeds: [embed2]
+											}).then((as) => {
 												as.react('🎟️');
 
-												const sim = as.createReactionCollector((reaction, user) => reaction.emoji.name === '🎟️' && user.id !== this.client.user.id);
+												const filter5 = (reactionFilter, userFilter) => {
+													return reactionFilter.emoji.name === '🎟️' && userFilter.id !== this.client.user.id;
+												};
+
+												const sim = as.createReactionCollector({
+													filter: filter5
+												});
 
 												sim.on('collect', async (reaction, user) => {
-													const member = message.guild.members.cache.get(user.id);
+													if (message.guild.id === '830972296176992296') {
+														const member = message.guild.members.cache.get(user.id);
 
-													await member.roles.add('880884384884981790');
+														await member.roles.add('880884384884981790');
+													}
 												});
 											});
 
-											message.channel.send(`${author}, evento enviado no canal ${canal} com sucesso.`);
+											return message.reply({
+												content: `Evento enviado no canal ${canal} com sucesso.`
+											});
 										}, 5000);
 									});
 
@@ -191,10 +244,9 @@ module.exports = class Eventosdiv extends Command {
 										if (reason === 'time') {
 											collector3.stop();
 											msg.delete();
-											message.reply(`você demorou demais para escolher a mensagem! Use o comando novamente!`).then((a) => a.delete({
-												timeout: 6000
-											}));
-											return;
+											return message.reply({
+												content: 'Você demorou demais para escolher a mensagem. Use o comando novamente!'
+											});
 										}
 									});
 								});
@@ -205,10 +257,9 @@ module.exports = class Eventosdiv extends Command {
 							if (reason === 'time') {
 								collector2.stop();
 								msg.delete();
-								message.reply(`você demorou demais para escolher o canal! Use o comando novamente!`).then((a) => a.delete({
-									timeout: 6000
-								}));
-								return;
+								return message.reply({
+									content: 'Você demorou demais para escolher o canal. Use o comando novamente!'
+								});
 							}
 						});
 					});
@@ -219,10 +270,9 @@ module.exports = class Eventosdiv extends Command {
 				if (reason === 'time') {
 					collector.stop();
 					msg.delete();
-					message.reply(`você demorou demais para escolher o evento! Use o comando novamente!`).then((a) => a.delete({
-						timeout: 6000
-					}));
-					return;
+					return message.reply({
+						content: 'Você demorou demais para escolher o evento. Use o comando novamente!'
+					});
 				}
 			});
 		});

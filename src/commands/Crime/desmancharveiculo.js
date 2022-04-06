@@ -1,3 +1,5 @@
+/* eslint-disable id-length */
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
@@ -46,6 +48,12 @@ module.exports = class Desmancharveiculo extends Command {
 			_id: message.guild.id
 		});
 
+		if (server.cidade.donoFavela !== author.id && !message.member.permissions.has('ADMINISTRATOR') && !server.editor.find((a) => a.id === author.id) && server.cidade.donoDesmanche !== author.id && !server.cidade.ajudanteDesmanche.find((a) => a.id === author.id)) {
+			return message.reply({
+				content: `Você precisa ser o \`Dono da Favela\` ou \`Dono do Desmanche\` ou \`Ajudante do Desmanche\` da Cidade ou ser \`Editor\` ou ter permissão \`Administrador\` do servidor para usar esse comando!`
+			});
+		}
+
 		const userAuthor = await this.client.database.users.findOne({
 			userId: author.id,
 			guildId: message.guild.id
@@ -59,7 +67,10 @@ module.exports = class Desmancharveiculo extends Command {
 			const embed = new ClientEmbed(author)
 				.setDescription(`🕐 | Você está em tempo de espera, aguarde: \`${faltam.days}\`:\`${faltam.hours}\`:\`${faltam.minutes}\`:\`${faltam.seconds}\``);
 
-			return message.channel.send(author, embed);
+			return message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			});
 		} else {
 			const desmancheArray = server.desmanche.map((value, index) => ({
 				nome: value.nome,
@@ -121,10 +132,18 @@ module.exports = class Desmancharveiculo extends Command {
 			desmancheArray.forEach((eu) => embedMessage += `${emojis[eu.position + 1]} **Carro:** ${eu.nome} - **Dono:** <@${eu.dono}>\n`);
 			embed.setDescription(!server.desmanche.length ? 'Não há carros no **Desmanche** no momento.' : `**Qual veículo você deseja desmanchar?**\n\n${embedMessage}\nDigite \`0\` para cancelar.`);
 
-			message.channel.send(author, embed).then((msg) => {
+			message.reply({
+				content: author.toString(),
+				embeds: [embed]
+			}).then((msg) => {
 				if (!server.desmanche.length) return;
 
-				const sim = msg.channel.createMessageCollector((xes) => xes.author.id === author.id && !isNaN(xes.content), {
+				const filterSim = m => {
+					return m.author.id === author.id;
+				};
+
+				const sim = msg.channel.createMessageCollector({
+					filter: filterSim,
 					time: 300000
 				});
 
@@ -132,13 +151,17 @@ module.exports = class Desmancharveiculo extends Command {
 					if (Number(ce.content) === 0) {
 						msg.delete();
 						sim.stop();
-						return message.reply(`seleção cancelada com sucesso!`);
+						return message.reply({
+							content: 'Seleção cancelada com sucesso!'
+						});
 					} else {
 						const selected = Number(ce.content - 1);
 						const findSelectedEvento = desmancheArray.find((xis) => xis.position === selected);
 
 						if (!findSelectedEvento) {
-							message.reply('número não encontrado. Por favor, envie o número novamente!');
+							message.reply({
+								content: 'Número não encontrado. Por favor, envie o número novamente!'
+							});
 							ce.delete();
 						}
 
@@ -147,7 +170,10 @@ module.exports = class Desmancharveiculo extends Command {
 
 						embed.setDescription(`**✅ | Você desmanchou o veículo:**\n\n${findSelectedEvento.nome} - <@${findSelectedEvento.dono}>.\n\nVocê ganhou **10%** do valor de **Desmanche** do Carro.\n<@${findSelectedEvento.dono}> ganhou **90%** do valor de **Desmanche** do carro.`);
 
-						msg.edit(author, embed);
+						msg.edit({
+							content: author.toString(),
+							embeds: [embed]
+						});
 
 						const user = await this.client.database.users.findOne({
 							userId: author.id,
@@ -187,13 +213,17 @@ module.exports = class Desmancharveiculo extends Command {
 								}
 							}
 						});
+
+						return;
 					}
 				});
 
 				sim.on('end', (collected, reason) => {
 					if (reason === 'time') {
 						msg.delete();
-						message.reply(`você demorou demais para escolher o carro. Use o comando novamente!`);
+						message.reply({
+							content: 'Você demorou demais para escolher o carro. Use o comando novamente!'
+						});
 						sim.stop();
 						return;
 					}
